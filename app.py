@@ -12,33 +12,18 @@ st.write("レース画像をアップしてください")
 
 uploaded_file = st.file_uploader("画像アップロード", type=["png","jpg","jpeg"])
 
-import cv2
-import numpy as np
-
-img = cv2.imread(path)
-
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-th = cv2.thresholdor(gray, 150, 255, cv2.THRESH_BINARY)[1]
-
-text = pytesseract.image_to_string(th,lang="jpn"
-                                   config"--oem 3 --psm 6")
 
 def ocr_image(image):
 
     img = np.array(image)
 
-    # グレースケール
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # 画像拡大（OCR精度UP）
     scale = 2
     gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
 
-    # ノイズ除去
     gray = cv2.GaussianBlur(gray, (5,5), 0)
 
-    # 二値化
     thresh = cv2.adaptiveThreshold(
         gray,
         255,
@@ -48,7 +33,6 @@ def ocr_image(image):
         2
     )
 
-    # OCR設定
     config = "--psm 6"
 
     text = pytesseract.image_to_string(thresh, lang="jpn", config=config)
@@ -63,7 +47,6 @@ def extract_numbers(text):
     numbers = [float(n) for n in numbers]
 
     return numbers
-
 
 
 def parse_boat_data(text):
@@ -81,6 +64,7 @@ def parse_boat_data(text):
             boats.append(nums)
 
     return boats
+
 
 def split_sections(text):
 
@@ -110,22 +94,20 @@ def split_sections(text):
 
     return sections
 
+
 if uploaded_file:
 
     image = Image.open(uploaded_file)
 
     st.image(image, caption="アップロード画像", use_column_width=True)
 
-
     with st.spinner("OCR解析中..."):
 
         text = ocr_image(image)
 
-
     st.subheader("抽出テキスト")
 
     st.text(text)
-
 
     numbers = extract_numbers(text)
 
@@ -133,15 +115,17 @@ if uploaded_file:
 
     st.write(numbers)
 
-
     boats = parse_boat_data(text)
 
     st.subheader("艇データ候補")
 
     st.write(boats)
 
-
     sections = split_sections(text)
+
+    st.subheader("セクション分割")
+
+    st.write(sections)
 
     st.subheader("セクション分割")
 
