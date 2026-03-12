@@ -14,19 +14,22 @@ uploaded_file = st.file_uploader("画像アップロード", type=["png","jpg","
 # ----------------------------
 # OCR処理
 # ----------------------------
-
 def ocr_image(image):
 
     img = np.array(image)
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+    # 拡大
     gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 
+    # ノイズ除去
     gray = cv2.GaussianBlur(gray, (5,5), 0)
 
+    # コントラスト強化
     gray = cv2.equalizeHist(gray)
 
+    # 二値化
     thresh = cv2.adaptiveThreshold(
         gray,
         255,
@@ -50,7 +53,6 @@ def ocr_image(image):
 # ----------------------------
 # 数字抽出
 # ----------------------------
-
 def extract_numbers(text):
 
     numbers = re.findall(r"\d+\.\d+|\d+", text)
@@ -61,39 +63,7 @@ def extract_numbers(text):
 # ----------------------------
 # OCRゴミ修正
 # ----------------------------
-
 def fix_ocr_numbers(numbers):
-
-    def fix_ocr_numbers(numbers):
-
-    fixed = []
-
-    for n in numbers:
-
-        try:
-
-            v = float(n)
-
-            # 文字列桁崩れ修正
-            if v > 1000:
-                v = float(str(v)[-5:])
-
-            if v > 100:
-                v = v % 100
-
-            # 範囲フィルター
-            if v < 0:
-                continue
-
-            if v > 200:
-                continue
-
-            fixed.append(round(v,2))
-
-        except:
-            pass
-
-    return fixed
 
     fixed = []
 
@@ -123,40 +93,11 @@ def fix_ocr_numbers(numbers):
             pass
 
     return fixed
-    
-    fixed = []
 
-    for n in numbers:
-
-        try:
-
-            v = float(n)
-
-            # 桁崩れ修正
-            if v > 1000:
-                v = v % 100
-
-            if v > 100:
-                v = v % 100
-
-            # 範囲フィルター
-            if v < 0:
-                continue
-
-            if v > 200:
-                continue
-
-            fixed.append(round(v,2))
-
-        except:
-            pass
-
-    return fixed
 
 # ----------------------------
 # 艇データ候補抽出
 # ----------------------------
-
 def parse_boat_data(text):
 
     boats = []
@@ -168,43 +109,50 @@ def parse_boat_data(text):
         nums = re.findall(r"\d+\.\d+|\d+", line)
 
         if len(nums) >= 3:
-
             boats.append(nums)
 
     return boats
 
 
 # ----------------------------
-# 画像6分割
+# 展示部分を取得
 # ----------------------------
-
 def split_image_sections(image):
 
     img = np.array(image)
 
     h, w = img.shape[:2]
 
-    # 展示表だけ切る（画像の下30%）
+    # 画像下30%を展示情報と仮定
     y1 = int(h * 0.70)
     y2 = h
 
     table = img[y1:y2, :]
 
-    th, tw = table.shape[:2]
+    return table
 
-    # 列分割
+
+# ----------------------------
+# 列分割
+# ----------------------------
+def split_columns(image):
+
+    img = np.array(image)
+
+    h, w = img.shape[:2]
+
     cols = []
 
-    step = tw // 5
+    step = w // 5
 
     for i in range(5):
 
         x1 = i * step
         x2 = (i+1) * step
 
-        col = table[:, x1:x2]
+        crop = img[:, x1:x2]
 
-        cols.append(col)
+        cols.append(crop)
 
     return cols
 
@@ -212,7 +160,6 @@ def split_image_sections(image):
 # ----------------------------
 # メイン処理
 # ----------------------------
-
 if uploaded_file:
 
     image = Image.open(uploaded_file)
@@ -221,16 +168,18 @@ if uploaded_file:
 
     with st.spinner("OCR解析中..."):
 
-        parts = split_image_sections(image)
+        table = split_image_sections(image)
+
+        columns = split_columns(table)
 
         texts = []
 
-    for col in parts:
+        for col in columns:
 
-    txt = ocr_image(col)
+            txt = ocr_image(col)
 
-    texts.append(txt)
-    
+            texts.append(txt)
+
     all_text = "\n".join(texts)
 
     st.subheader("OCR全文")
