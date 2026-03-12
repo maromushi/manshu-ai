@@ -6,7 +6,6 @@ import numpy as np
 import re
 
 st.title("万舟AI")
-
 st.write("レース画像をアップしてください")
 
 uploaded_file = st.file_uploader("画像アップロード", type=["png","jpg","jpeg"])
@@ -22,16 +21,12 @@ def ocr_image(image):
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # 拡大
     gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 
-    # ノイズ除去
     gray = cv2.GaussianBlur(gray, (5,5), 0)
 
-    # コントラスト
     gray = cv2.equalizeHist(gray)
 
-    # 二値化
     thresh = cv2.adaptiveThreshold(
         gray,
         255,
@@ -53,28 +48,6 @@ def ocr_image(image):
 
 
 # ----------------------------
-# OCRノイズ除去
-# ----------------------------
-
-def clean_numbers(numbers):
-
-    clean = []
-
-    for n in numbers:
-
-        try:
-            v = float(n)
-
-            if v < 200:
-                clean.append(v)
-
-        except:
-            pass
-
-    return clean
-
-
-# ----------------------------
 # 数字抽出
 # ----------------------------
 
@@ -83,6 +56,40 @@ def extract_numbers(text):
     numbers = re.findall(r"\d+\.\d+|\d+", text)
 
     return numbers
+
+
+# ----------------------------
+# OCRゴミ修正
+# ----------------------------
+
+def fix_ocr_numbers(numbers):
+
+    fixed = []
+
+    for n in numbers:
+
+        try:
+
+            v = float(n)
+
+            if v > 1000:
+                v = v % 100
+
+            if v > 100:
+                v = v % 100
+
+            if v < 0:
+                continue
+
+            if v > 200:
+                continue
+
+            fixed.append(round(v,2))
+
+        except:
+            pass
+
+    return fixed
 
 
 # ----------------------------
@@ -107,7 +114,7 @@ def parse_boat_data(text):
 
 
 # ----------------------------
-# 画像を6分割
+# 画像6分割
 # ----------------------------
 
 def split_image_sections(image):
@@ -157,21 +164,18 @@ if uploaded_file:
     all_text = "\n".join(texts)
 
     st.subheader("OCR全文")
-
     st.text(all_text)
 
 
     numbers = extract_numbers(all_text)
 
-    numbers = clean_numbers(numbers)
+    numbers = fix_ocr_numbers(numbers)
 
     st.subheader("抽出数字")
-
     st.write(numbers)
 
 
     boats = parse_boat_data(all_text)
 
     st.subheader("艇データ候補")
-
     st.write(boats)
