@@ -53,7 +53,33 @@ def parse_boat_data(text):
 
     return boats
 
+def split_sections(text):
 
+    sections = {}
+
+    keys = [
+        "基本情報",
+        "勝率",
+        "今節成績",
+        "直前情報",
+        "展示情報",
+        "オリジナル展示"
+    ]
+
+    current = None
+
+    for line in text.split("\n"):
+
+        for k in keys:
+            if k in line:
+                current = k
+                sections[current] = []
+                break
+
+        if current:
+            sections[current].append(line)
+
+    return sections
 
 if uploaded_file:
 
@@ -84,3 +110,10 @@ if uploaded_file:
     st.subheader("艇データ候補")
 
     st.write(boats)
+
+
+    sections = split_sections(text)
+
+    st.subheader("セクション分割")
+
+    st.write(sections)
