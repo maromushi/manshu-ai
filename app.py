@@ -170,6 +170,8 @@ if uploaded_file:
 
         table = split_image_sections(image)
 
+        st.image(table, caption="展示表切り出し")
+
         columns = split_columns(table)
 
         texts = []
