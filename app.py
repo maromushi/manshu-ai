@@ -3,12 +3,14 @@ import pytesseract
 from PIL import Image
 import cv2
 import numpy as np
+import re
 
 st.title("万舟AI")
 
 st.write("レース画像をアップしてください")
 
 uploaded_file = st.file_uploader("画像アップロード", type=["png","jpg","jpeg"])
+
 
 def ocr_image(image):
     img = np.array(image)
@@ -20,6 +22,15 @@ def ocr_image(image):
     text = pytesseract.image_to_string(thresh, lang="jpn")
 
     return text
+
+
+def extract_numbers(text):
+
+    numbers = re.findall(r"\d+\.\d+|\d+", text)
+
+    numbers = [float(n) for n in numbers]
+
+    return numbers
 
 
 if uploaded_file:
@@ -35,3 +46,9 @@ if uploaded_file:
     st.subheader("抽出テキスト")
 
     st.text(text)
+
+    numbers = extract_numbers(text)
+
+    st.subheader("抽出数字")
+
+    st.write(numbers)
