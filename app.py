@@ -91,6 +91,27 @@ def extract_numbers(text):
 
     return numbers
 
+# ----------------------------
+# OCRノイズ除去
+# ----------------------------
+
+def clean_numbers(numbers):
+
+    clean = []
+
+    for n in numbers:
+
+        try:
+            v = float(n)
+
+            if v < 200:
+                clean.append(v)
+
+        except:
+            pass
+
+    return clean
+
 
 # ----------------------------
 # OCRテキストから艇データ候補抽出
@@ -175,6 +196,7 @@ if uploaded_file:
 
 
     numbers = extract_numbers(all_text)
+numbers = clean_numbers(numbers)
 
     st.subheader("抽出数字")
 
