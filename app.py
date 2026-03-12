@@ -44,36 +44,14 @@ def detect_table(image):
 
     img = np.array(image)
 
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    h,w = img.shape[:2]
 
-    edges = cv2.Canny(gray,50,150)
+    # 下25%を展示表とする
+    y1 = int(h * 0.75)
 
-    contours,_ = cv2.findContours(
-        edges,
-        cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE
-    )
+    table = img[y1:h, :]
 
-    biggest=None
-    area=0
-
-    for c in contours:
-
-        x,y,w,h = cv2.boundingRect(c)
-
-        a = w*h
-
-        if a > area and w > img.shape[1]*0.5:
-
-            area=a
-            biggest=(x,y,w,h)
-
-    if biggest:
-
-        x,y,w,h=biggest
-        return img[y:y+h,x:x+w]
-
-    return img
+    return table
 
 
 # =====================
