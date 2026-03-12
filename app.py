@@ -16,41 +16,18 @@ uploaded_file = st.file_uploader("画像アップロード", type=["png","jpg","
 # OCR処理
 # ----------------------------
 
-def split_image(image, parts=6):
-
-    img = np.array(image)
-
-    h, w = img.shape[:2]
-
-    block = h // parts
-
-    images = []
-
-    for i in range(parts):
-
-        y1 = i * block
-        y2 = (i+1) * block
-
-        crop = img[y1:y2, 0:w]
-
-        images.append(crop)
-
-    return images
-
 def ocr_image(image):
 
     img = np.array(image)
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # OCR精度向上のため拡大
+    # OCR精度向上
     scale = 2
     gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
 
-    # ノイズ除去
     gray = cv2.GaussianBlur(gray, (5,5), 0)
 
-    # 二値化
     thresh = cv2.adaptiveThreshold(
         gray,
         255,
@@ -65,6 +42,32 @@ def ocr_image(image):
     text = pytesseract.image_to_string(thresh, lang="jpn", config=config)
 
     return text
+
+
+# ----------------------------
+# 画像を6分割
+# ----------------------------
+
+def split_image(image, parts=6):
+
+    img = np.array(image)
+
+    h, w = img.shape[:2]
+
+    block = h // parts
+
+    images = []
+
+    for i in range(parts):
+
+        y1 = i * block
+        y2 = (i + 1) * block
+
+        crop = img[y1:y2, 0:w]
+
+        images.append(crop)
+
+    return images
 
 
 # ----------------------------
@@ -135,28 +138,6 @@ def split_sections(text):
 
 
 # ----------------------------
-# 画像を6分割
-# ----------------------------
-
-def split_image_sections(image):
-
-    img = np.array(image)
-
-    h, w = img.shape[:2]
-
-    sections = {}
-
-    sections["基本情報"] = img[int(h*0.00):int(h*0.20), :]
-    sections["勝率"] = img[int(h*0.20):int(h*0.35), :]
-    sections["今節成績"] = img[int(h*0.35):int(h*0.50), :]
-    sections["直前情報"] = img[int(h*0.50):int(h*0.65), :]
-    sections["展示情報"] = img[int(h*0.65):int(h*0.80), :]
-    sections["オリジナル展示"] = img[int(h*0.80):int(h*1.00), :]
-
-    return sections
-
-
-# ----------------------------
 # メイン処理
 # ----------------------------
 
@@ -168,23 +149,15 @@ if uploaded_file:
 
     with st.spinner("OCR解析中..."):
 
-        sections_img = split_image_sections(image)
+        blocks = split_image(image)
 
-        sections_text = {}
+        all_text = ""
 
-        for key, img in sections_img.items():
+        for b in blocks:
 
-            txt = ocr_image(img)
+            txt = ocr_image(b)
 
-            sections_text[key] = txt
-
-
-    st.subheader("セクションOCR結果")
-
-    st.write(sections_text)
-
-
-    all_text = "\n".join(sections_text.values())
+            all_text += txt + "\n"
 
 
     st.subheader("OCR全文")
