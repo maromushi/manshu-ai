@@ -16,6 +16,27 @@ uploaded_file = st.file_uploader("画像アップロード", type=["png","jpg","
 # OCR処理
 # ----------------------------
 
+def split_image(image, parts=6):
+
+    img = np.array(image)
+
+    h, w = img.shape[:2]
+
+    block = h // parts
+
+    images = []
+
+    for i in range(parts):
+
+        y1 = i * block
+        y2 = (i+1) * block
+
+        crop = img[y1:y2, 0:w]
+
+        images.append(crop)
+
+    return images
+
 def ocr_image(image):
 
     img = np.array(image)
