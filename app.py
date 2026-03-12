@@ -12,6 +12,17 @@ st.write("レース画像をアップしてください")
 
 uploaded_file = st.file_uploader("画像アップロード", type=["png","jpg","jpeg"])
 
+import cv2
+import numpy as np
+
+img = cv2.imread(path)
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+th = cv2.thresholdor(gray, 150, 255, cv2.THRESH_BINARY)[1]
+
+text = pytesseract.image_to_string(th,lang="jpn"
+                                   config"--psm 6")
 
 def ocr_image(image):
 
