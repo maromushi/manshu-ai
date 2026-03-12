@@ -22,12 +22,17 @@ def ocr_image(image):
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # OCR精度向上
+    # 画像拡大
     scale = 2
     gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
 
+    # ノイズ除去
     gray = cv2.GaussianBlur(gray, (5,5), 0)
 
+    # コントラスト強化
+    gray = cv2.equalizeHist(gray)
+
+    # 二値化
     thresh = cv2.adaptiveThreshold(
         gray,
         255,
@@ -37,12 +42,16 @@ def ocr_image(image):
         2
     )
 
-    config = "--psm 6"
+    # OCR設定（数字特化）
+    config="--psm 6 -c tessedit_char_whitelist=0123456789./"
 
-    text = pytesseract.image_to_string(thresh, lang="jpn", config=config)
+    text = pytesseract.image_to_string(
+        thresh,
+        lang="eng",
+        config=config
+    )
 
     return text
-
 
 # ----------------------------
 # 画像を6分割
