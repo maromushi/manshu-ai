@@ -150,6 +150,29 @@ def split_columns_start(image):
 
     return cols
 
+# ----------------------------
+# 行分割（6艇）
+# ----------------------------
+def split_rows(image):
+
+    img = np.array(image)
+
+    h, w = img.shape[:2]
+
+    rows = []
+
+    step = h // 6
+
+    for i in range(6):
+
+        y1 = i * step
+        y2 = (i+1) * step
+
+        crop = img[y1:y2, :]
+
+        rows.append(crop)
+
+    return rows
 
 # ----------------------------
 # メイン処理
@@ -171,10 +194,14 @@ if uploaded_file:
         texts = []
 
         for col in columns:
-
-            txt = ocr_image(col)
-
-            texts.append(txt)
+            
+            rows = split_rows(col)
+            
+            for r in rows:
+                
+                txt = ocr_image(r)
+                
+                texts.append(txt)
 
     all_text = "\n".join(texts)
 
