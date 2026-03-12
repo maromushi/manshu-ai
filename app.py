@@ -22,14 +22,13 @@ def ocr_image(image):
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # 画像拡大
-    scale = 2
-    gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
+    # 拡大
+    gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 
     # ノイズ除去
     gray = cv2.GaussianBlur(gray, (5,5), 0)
 
-    # コントラスト強化
+    # コントラスト
     gray = cv2.equalizeHist(gray)
 
     # 二値化
@@ -42,8 +41,7 @@ def ocr_image(image):
         2
     )
 
-    # OCR設定（数字特化）
-    config="--psm 6 -c tessedit_char_whitelist=0123456789./"
+    config="--psm 6 -c tessedit_char_whitelist=0123456789./AB"
 
     text = pytesseract.image_to_string(
         thresh,
@@ -53,43 +51,6 @@ def ocr_image(image):
 
     return text
 
-# ----------------------------
-# 画像を6分割
-# ----------------------------
-
-def split_image(image, parts=6):
-
-    img = np.array(image)
-
-    h, w = img.shape[:2]
-
-    block = h // parts
-
-    images = []
-
-    for i in range(parts):
-
-        y1 = i * block
-        y2 = (i + 1) * block
-
-        crop = img[y1:y2, 0:w]
-
-        images.append(crop)
-
-    return images
-
-
-# ----------------------------
-# 数字抽出
-# ----------------------------
-
-def extract_numbers(text):
-
-    numbers = re.findall(r"\d+\.\d+|\d+", text)
-
-    numbers = [float(n) for n in numbers]
-
-    return numbers
 
 # ----------------------------
 # OCRノイズ除去
@@ -114,7 +75,18 @@ def clean_numbers(numbers):
 
 
 # ----------------------------
-# OCRテキストから艇データ候補抽出
+# 数字抽出
+# ----------------------------
+
+def extract_numbers(text):
+
+    numbers = re.findall(r"\d+\.\d+|\d+", text)
+
+    return numbers
+
+
+# ----------------------------
+# 艇データ候補抽出
 # ----------------------------
 
 def parse_boat_data(text):
@@ -135,34 +107,27 @@ def parse_boat_data(text):
 
 
 # ----------------------------
-# セクション分割（テキスト）
+# 画像を6分割
 # ----------------------------
 
-def split_sections(text):
+def split_image_sections(image):
 
-    sections = {}
+    img = np.array(image)
 
-    keys = [
-        "基本情報",
-        "勝率",
-        "今節成績",
-        "直前情報",
-        "展示情報",
-        "オリジナル展示"
-    ]
+    h, w = img.shape[:2]
 
-    current = None
+    sections = []
 
-    for line in text.split("\n"):
+    step = h // 6
 
-        for k in keys:
-            if k in line:
-                current = k
-                sections[current] = []
-                break
+    for i in range(6):
 
-        if current:
-            sections[current].append(line)
+        y1 = i * step
+        y2 = (i+1) * step
+
+        crop = img[y1:y2, :]
+
+        sections.append(crop)
 
     return sections
 
@@ -179,16 +144,17 @@ if uploaded_file:
 
     with st.spinner("OCR解析中..."):
 
-        blocks = split_image(image)
+        parts = split_image_sections(image)
 
-        all_text = ""
+        texts = []
 
-        for b in blocks:
+        for p in parts:
 
-            txt = ocr_image(b)
+            txt = ocr_image(p)
 
-            all_text += txt + "\n"
+            texts.append(txt)
 
+    all_text = "\n".join(texts)
 
     st.subheader("OCR全文")
 
@@ -196,6 +162,7 @@ if uploaded_file:
 
 
     numbers = extract_numbers(all_text)
+
     numbers = clean_numbers(numbers)
 
     st.subheader("抽出数字")
@@ -208,10 +175,3 @@ if uploaded_file:
     st.subheader("艇データ候補")
 
     st.write(boats)
-
-
-    sections = split_sections(all_text)
-
-    st.subheader("セクション分割")
-
-    st.write(sections)
