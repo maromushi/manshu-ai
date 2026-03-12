@@ -39,7 +39,7 @@ def ocr_image(image):
         2
     )
 
-    config="--psm 6 -c tessedit_char_whitelist=0123456789./AB"
+    config="--psm 7 -c tessedit_char_whitelist=0123456789./AB"
 
     text = pytesseract.image_to_string(
         thresh,
@@ -162,11 +162,12 @@ def split_rows(image):
     rows = []
 
     step = h // 6
+    offset = int(step * 0.1)
 
     for i in range(6):
 
-        y1 = i * step
-        y2 = (i+1) * step
+        y1 = i * step + offset
+        y2 = (i+1) * step - offset
 
         crop = img[y1:y2, :]
 
