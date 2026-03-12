@@ -23,39 +23,21 @@ def ocr_image(image):
 
     gray = cv2.resize(gray,None,fx=2,fy=2,interpolation=cv2.INTER_CUBIC)
 
-    gray = cv2.GaussianBlur(gray,(5,5),0)
+    # ノイズ除去
+    gray = cv2.GaussianBlur(gray,(3,3),0)
 
-    gray = cv2.equalizeHist(gray)
+    # 軽い二値化
+    _,thresh=cv2.threshold(gray,150,255,cv2.THRESH_BINARY)
 
-    thresh = cv2.adaptiveThreshold(
-        gray,
-        255,
-        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY,
-        11,
-        2
-    )
+    config="--psm 6 -c tessedit_char_whitelist=0123456789."
 
-    config="--psm 6 -c tessedit_char_whitelist=0123456789./-"
-
-    text1 = pytesseract.image_to_string(
+    text = pytesseract.image_to_string(
         thresh,
         lang="eng",
         config=config
     )
 
-    inv=cv2.bitwise_not(thresh)
-
-    text2 = pytesseract.image_to_string(
-        inv,
-        lang="eng",
-        config=config
-    )
-
-    if len(text2)>len(text1):
-        return text2
-    else:
-        return text1
+    return text
 
 
 # ==========================
