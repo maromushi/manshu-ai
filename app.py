@@ -124,8 +124,8 @@ def split_image_sections(image):
     h, w = img.shape[:2]
 
     # 画像下40~60%を展示情報と仮定
-    y1 = int(h * 0.45)
-    y2 = int(h * 0.65)
+    y1 = int(h * 0.55)
+    y2 = int(h * 0.72)
 
     table = img[y1:y2, :]
 
