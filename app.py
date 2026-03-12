@@ -22,7 +22,7 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 th = cv2.thresholdor(gray, 150, 255, cv2.THRESH_BINARY)[1]
 
 text = pytesseract.image_to_string(th,lang="jpn"
-                                   config"--psm 6")
+                                   config"--oem 3 --psm 6")
 
 def ocr_image(image):
 
