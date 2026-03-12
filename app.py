@@ -143,16 +143,10 @@ def split_columns_start(image):
 
     cols = []
 
-    step = w // 2
+    step = int(w * 0.45)
 
-    for i in range(2):
-
-        x1 = i * step
-        x2 = (i+1) * step
-
-        crop = img[:, x1:x2]
-
-        cols.append(crop)
+    cols.append(img[:, 0:step])
+    cols.append(img[:, step:w])
 
     return cols
 
@@ -172,7 +166,7 @@ if uploaded_file:
 
         st.image(table, caption="展示表切り出し")
 
-        columns = split_columns(table)
+        columns = split_columns_start(table)
 
         texts = []
 
