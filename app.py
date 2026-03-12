@@ -125,7 +125,7 @@ def split_image_sections(image):
 
     # 画像下を展示情報と仮定
     y1 = int(h * 0.65)
-    y2 = int(h * 0.100)
+    y2 = int(h * 1.00)
 
     table = img[y1:y2, :]
 
