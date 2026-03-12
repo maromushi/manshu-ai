@@ -36,7 +36,7 @@ def ocr_image(image):
         2
     )
 
-    config="--psm 7 -c tessedit_char_whitelist=0123456789./-"
+    config="--psm 6 -c tessedit_char_whitelist=0123456789./-"
 
     text1 = pytesseract.image_to_string(
         thresh,
