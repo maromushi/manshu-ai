@@ -72,9 +72,9 @@ def performance_engine(data):
     StraightScore=normalize(StraightDiff)
 
     RawFoot=(
-        0.40*TurnScore+
-        0.25*LapScore+
-        0.25*StraightScore+
+        0.55*TurnScore+
+        0.20*LapScore+
+        0.15*StraightScore+
         0.10*Exhibit
     )
 
@@ -162,6 +162,10 @@ def manshu_hunter(boats,InsideSurvival_1):
 
     PerformanceSpread=max(CPI)-min(CPI)
 
+    if TurnGap >= 0.60:
+        TurnTop = np.argmax(Turn)
+        CPI[TurnTOP] = CPI[TurnTop] * 1.20
+
     MidCluster=max(CPI[1],CPI[2],CPI[3])-min(CPI[1],CPI[2],CPI[3])
     MidClusterFlag=1 if MidCluster<=0.05 else 0
 
@@ -248,12 +252,12 @@ def manshu_hunter(boats,InsideSurvival_1):
 
     LaneBonus=[0.05,0.06,0.05,0.10,0.15,0.18]
 
-    SecondScore=0.40*Turn+0.35*Foot+0.25*Velocity
+    SecondScore=(0.50*Turn+0.30*Foot+0.15*Velocity+0.05*Engine)
 
     ThirdScore=(
-        0.35*Velocity+
+        0.45*Velocity+
         0.30*Foot+
-        0.20*Engine+
+        0.15*Engine+
         0.10*np.array(LaneBonus)
     )
 
