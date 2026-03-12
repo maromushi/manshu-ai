@@ -135,7 +135,7 @@ def split_image_sections(image):
 # ----------------------------
 # 列分割
 # ----------------------------
-def split_columns(image):
+def split_columns_start(image):
 
     img = np.array(image)
 
@@ -143,9 +143,9 @@ def split_columns(image):
 
     cols = []
 
-    step = w // 5
+    step = w // 2
 
-    for i in range(5):
+    for i in range(2):
 
         x1 = i * step
         x2 = (i+1) * step
