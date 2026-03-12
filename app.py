@@ -17,14 +17,32 @@ def ocr_image(image):
 
     img = np.array(image)
 
+    # グレースケール
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1]
+    # 画像拡大（OCR精度UP）
+    scale = 2
+    gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
 
-    text = pytesseract.image_to_string(thresh, lang="jpn")
+    # ノイズ除去
+    gray = cv2.GaussianBlur(gray, (5,5), 0)
+
+    # 二値化
+    thresh = cv2.adaptiveThreshold(
+        gray,
+        255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY,
+        11,
+        2
+    )
+
+    # OCR設定
+    config = "--psm 6"
+
+    text = pytesseract.image_to_string(thresh, lang="jpn", config=config)
 
     return text
-
 
 
 def extract_numbers(text):
