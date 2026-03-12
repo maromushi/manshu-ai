@@ -64,6 +64,8 @@ def extract_numbers(text):
 
 def fix_ocr_numbers(numbers):
 
+    def fix_ocr_numbers(numbers):
+
     fixed = []
 
     for n in numbers:
@@ -72,12 +74,14 @@ def fix_ocr_numbers(numbers):
 
             v = float(n)
 
+            # 文字列桁崩れ修正
             if v > 1000:
-                v = v % 100
+                v = float(str(v)[-5:])
 
             if v > 100:
                 v = v % 100
 
+            # 範囲フィルター
             if v < 0:
                 continue
 
@@ -91,6 +95,63 @@ def fix_ocr_numbers(numbers):
 
     return fixed
 
+    fixed = []
+
+    for n in numbers:
+
+        try:
+
+            v = float(n)
+
+            # OCR連結ミス修正
+            if v > 1000:
+                v = v % 100
+
+            if v > 100:
+                v = v % 100
+
+            # 不正値除外
+            if v < 0:
+                continue
+
+            if v > 200:
+                continue
+
+            fixed.append(round(v,2))
+
+        except:
+            pass
+
+    return fixed
+    
+    fixed = []
+
+    for n in numbers:
+
+        try:
+
+            v = float(n)
+
+            # 桁崩れ修正
+            if v > 1000:
+                v = v % 100
+
+            if v > 100:
+                v = v % 100
+
+            # 範囲フィルター
+            if v < 0:
+                continue
+
+            if v > 200:
+                continue
+
+            fixed.append(round(v,2))
+
+        except:
+            pass
+
+    return fixed
 
 # ----------------------------
 # 艇データ候補抽出
@@ -123,20 +184,29 @@ def split_image_sections(image):
 
     h, w = img.shape[:2]
 
-    sections = []
+    # 展示表だけ切る（画像の下30%）
+    y1 = int(h * 0.70)
+    y2 = h
 
-    step = h // 6
+    table = img[y1:y2, :]
 
-    for i in range(6):
+    th, tw = table.shape[:2]
 
-        y1 = i * step
-        y2 = (i+1) * step
+    # 列分割
+    cols = []
 
-        crop = img[y1:y2, :]
+    step = tw // 5
 
-        sections.append(crop)
+    for i in range(5):
 
-    return sections
+        x1 = i * step
+        x2 = (i+1) * step
+
+        col = table[:, x1:x2]
+
+        cols.append(col)
+
+    return cols
 
 
 # ----------------------------
@@ -155,12 +225,12 @@ if uploaded_file:
 
         texts = []
 
-        for p in parts:
+    for col in parts:
 
-            txt = ocr_image(p)
+    txt = ocr_image(col)
 
-            texts.append(txt)
-
+    texts.append(txt)
+    
     all_text = "\n".join(texts)
 
     st.subheader("OCR全文")
