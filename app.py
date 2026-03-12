@@ -11,125 +11,132 @@ st.write("レース画像をアップしてください")
 uploaded_file = st.file_uploader("画像アップロード", type=["png","jpg","jpeg"])
 
 
-# ==========================
-# OCRエンジン
-# ==========================
+# =====================
+# OCR
+# =====================
 
-def ocr_image(image):
-
-    img = np.array(image)
+def ocr_image(img):
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     gray = cv2.resize(gray,None,fx=2,fy=2,interpolation=cv2.INTER_CUBIC)
 
-    # ノイズ除去
     gray = cv2.GaussianBlur(gray,(3,3),0)
 
-    # 軽い二値化
-    _,thresh=cv2.threshold(gray,150,255,cv2.THRESH_BINARY)
+    _,th = cv2.threshold(gray,150,255,cv2.THRESH_BINARY)
 
     config="--psm 6 -c tessedit_char_whitelist=0123456789."
 
-    text = pytesseract.image_to_string(
-        thresh,
+    txt = pytesseract.image_to_string(
+        th,
         lang="eng",
         config=config
     )
 
-    return text
+    return txt
 
 
-# ==========================
-# 展示部分切り出し
-# ==========================
+# =====================
+# 展示表検出
+# =====================
 
-def split_image_sections(image):
+def detect_table(image):
 
-    img=np.array(image)
+    img = np.array(image)
 
-    h,w=img.shape[:2]
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
-    y1=int(h*0.65)
+    edges = cv2.Canny(gray,50,150)
 
-    return img[y1:h,:]
+    contours,_ = cv2.findContours(
+        edges,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE
+    )
+
+    biggest=None
+    area=0
+
+    for c in contours:
+
+        x,y,w,h = cv2.boundingRect(c)
+
+        a = w*h
+
+        if a > area and w > img.shape[1]*0.5:
+
+            area=a
+            biggest=(x,y,w,h)
+
+    if biggest:
+
+        x,y,w,h=biggest
+        return img[y:y+h,x:x+w]
+
+    return img
 
 
-# ==========================
-# 列分割
-# ==========================
+# =====================
+# 列検出
+# =====================
 
-def split_columns(image):
+def split_columns(img):
 
-    img=np.array(image)
+    gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
-    h,w=img.shape[:2]
-
-    col_width=int(w/4)
+    proj=np.sum(gray,axis=0)
 
     cols=[]
 
-    for i in range(5):
+    width=img.shape[1]
 
-        x1=i*col_width
-        x2=(i+1)*col_width
+    step=width//4
 
-        crop=img[:,x1:x2]
+    for i in range(4):
 
-        cols.append(crop)
+        x1=i*step
+        x2=(i+1)*step
+
+        cols.append(img[:,x1:x2])
 
     return cols
 
 
-# ==========================
-# 行分割（6艇）
-# ==========================
+# =====================
+# 行検出
+# =====================
 
-def split_rows(image):
+def split_rows(img):
 
-    img=np.array(image)
+    h=img.shape[0]
 
-    h,w=img.shape[:2]
+    step=h//6
 
     rows=[]
 
-    row_h=int(h/6)
-
     for i in range(6):
 
-        y1=i*row_h
-        y2=(i+1)*row_h
+        y1=i*step
+        y2=(i+1)*step
 
-        crop=img[y1:y2,:]
-
-        rows.append(crop)
+        rows.append(img[y1:y2,:])
 
     return rows
 
 
-# ==========================
-# OCR結果修正
-# ==========================
+# =====================
+# 数字抽出
+# =====================
 
-def fix_numbers(numbers):
+def extract_numbers(text):
+
+    nums=re.findall(r"\d+\.\d+|\d+",text)
 
     fixed=[]
 
-    for n in numbers:
+    for n in nums:
 
         try:
-
-            s=str(n)
-
-            # 連結修正
-            parts=re.findall(r"\d+\.\d+",s)
-
-            if len(parts)>=2:
-
-                for p in parts:
-                    fixed.append(float(p))
-
-                continue
 
             v=float(n)
 
@@ -144,38 +151,31 @@ def fix_numbers(numbers):
     return fixed
 
 
-# ==========================
-# 数字抽出
-# ==========================
-
-def extract_numbers(text):
-
-    return re.findall(r"\d+\.\d+|\d+",text)
-
-
-# ==========================
-# メイン
-# ==========================
+# =====================
+# MAIN
+# =====================
 
 if uploaded_file:
 
-    image=Image.open(uploaded_file)
+    image = Image.open(uploaded_file)
 
-    st.image(image,use_column_width=True)
+    img=np.array(image)
 
-    table=split_image_sections(image)
+    st.image(img,use_column_width=True)
 
-    st.subheader("展示切り出し")
+    table = detect_table(img)
+
+    st.subheader("展示表")
 
     st.image(table,use_column_width=True)
 
-    columns=split_columns(table)
+    columns = split_columns(table)
 
     texts=[]
 
     for col in columns:
 
-        rows=split_rows(col)
+        rows = split_rows(col)
 
         for r in rows:
 
@@ -191,8 +191,7 @@ if uploaded_file:
 
     numbers=extract_numbers(all_text)
 
-    numbers=fix_numbers(numbers)
-
     st.subheader("抽出数字")
 
+    st.write(numbers)
     st.write(numbers)
