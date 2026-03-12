@@ -196,7 +196,7 @@ if uploaded_file:
 
 
     numbers = extract_numbers(all_text)
-numbers = clean_numbers(numbers)
+　　numbers = clean_numbers(numbers)
 
     st.subheader("抽出数字")
 
