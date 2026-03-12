@@ -83,7 +83,7 @@ def split_columns(image):
 
     h,w=img.shape[:2]
 
-    col_width=int(w/5)
+    col_width=int(w/4)
 
     cols=[]
 
