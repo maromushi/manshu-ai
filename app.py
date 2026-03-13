@@ -169,7 +169,7 @@ Velocity = normalize(VelocityRaw)
 # INSIDE SURVIVAL
 # =========================
 
-InsideSurvival_i = [
+InsideSurvival = [
 0.40 * Skill[i] +
 0.30 * Engine[i] +
 0.20 * Start[i] +
@@ -216,7 +216,7 @@ OuterPower = (
 0.2 * (sum(CPI[3:6]) / 3)
 )
 
-InsideWeak = 1 - InsideSurvival_i[0]
+InsideWeak = 1 - InsideSurvival[0]
 
 ChaosScore = (
 0.20 * OuterPower +
@@ -229,7 +229,8 @@ ChaosScore = max(0,min(1,ChaosScore))
 
 
 # =========================
-# STAGE17（第一）
+# STAGE17A BASE PROBABILITY MODEL
+# （能力 → 基礎確率計算）
 # =========================
 
 AvgStart = sum(Start)/6
@@ -284,7 +285,7 @@ ThirdScore = [
 0.30 * Foot[i] +
 0.20 * Engine[i] +
 0.10 * LaneBonus[i] +
-0.05 * InsideSurvival_i[i]
+0.05 * InsideSurvival[i]
 for i in range(6)
 ]
 
@@ -335,7 +336,8 @@ for i,r in enumerate(Final,1):
     print(i,r[0],r[1],r[2],r[3])
 
 # ==========================================
-# STAGE17 TRIFECTA PROBABILITY MODEL
+# STAGE17B ADVANCED TRIFECTA MODEL
+# （攻撃補正・展開補正）
 # ==========================================
 
 # --------------------------
@@ -368,6 +370,7 @@ elif StartSpread >= 0.60:
 
     DynamicInsideFactor = 0.82
 
+STCrashIndex = StartSpread * (1 - Start[0])
 
 if STCrashIndex >= 0.45:
 
@@ -552,7 +555,12 @@ for A in range(6):
 
         for C in range(6):
 
+for A in range(6):
+    for B in range(6):
+        for C in range(6):
+
             if A != B and B != C and A != C:
+
                 p = (
                     P1[A]
                     *
@@ -575,6 +583,9 @@ for A in range(6):
                     )
                 )
 
+                results.append(
+                    (A+1, B+1, C+1, p)
+                )
 # --------------------------
 # STAGE17.6 SORT
 # --------------------------
