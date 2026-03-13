@@ -1,301 +1,335 @@
-import numpy as np
-from itertools import permutations
+import itertools
+import math
 
 # =========================
-# utility
+# NORMALIZE
 # =========================
 
-def normalize(x):
-    x = np.array(x,dtype=float)
-    return (x - np.min(x))/(np.max(x)-np.min(x)+0.01)
+def normalize(values):
 
-def clamp(x,a,b):
-    return max(a,min(b,x))
+    mn = min(values)
+    mx = max(values)
 
-def pos(x):
-    return max(0,x)
+    if mx - mn < 1e-6:
+        return [0.5] * len(values)
 
-
-# =========================
-# PERFORMANCE ENGINE
-# =========================
-
-def performance_engine(data):
-
-    WinRate=np.array(data["WinRate"])
-    PlaceRate=np.array(data["PlaceRate"])
-    AvgST=np.array(data["AvgST"])
-
-    Motor2=np.array(data["Motor2"])
-    Boat2=np.array(data["Boat2"])
-
-    ExTime=np.array(data["ExTime"])
-    ExST=np.array(data["ExST"])
-
-    TurnTime=np.array(data["TurnTime"])
-    LapTime=np.array(data["LapTime"])
-    StraightTime=np.array(data["StraightTime"])
-
-    Class=data["Class"]
-
-    WinRateScore=normalize(WinRate)
-    PlaceRateScore=normalize(PlaceRate)
-
-    SkillRaw=0.55*WinRateScore+0.45*PlaceRateScore
-    Skill=normalize(SkillRaw)
-
-    MotorScore=normalize(Motor2)
-    BoatScore=normalize(Boat2)
-
-    EngineRaw=0.65*MotorScore+0.35*BoatScore
-    Engine=normalize(EngineRaw)
-
-    AvgExTime=np.mean(ExTime)
-
-    TimeDiff=AvgExTime-ExTime
-    TimeScore=normalize(TimeDiff)
-
-    ExSTScore=normalize(0.30-ExST)
-
-    Exhibit=0.80*TimeScore+0.20*ExSTScore
-
-    AvgTurn=np.mean(TurnTime)
-    AvgLap=np.mean(LapTime)
-    AvgStraight=np.mean(StraightTime)
-
-    TurnDiff=AvgTurn-TurnTime
-    LapDiff=AvgLap-LapTime
-    StraightDiff=AvgStraight-StraightTime
-
-    TurnScore=normalize(TurnDiff)
-    LapScore=normalize(LapDiff)
-    StraightScore=normalize(StraightDiff)
-
-    RawFoot=(
-        0.55*TurnScore+
-        0.20*LapScore+
-        0.15*StraightScore+
-        0.10*Exhibit
-    )
-
-    Foot=normalize(RawFoot)
-
-    BaseStart=np.array([clamp((0.20-x)/0.10,0,1) for x in AvgST])
-    ExhibitStart=np.array([clamp((0.20-x)/0.10,0,1) for x in ExST])
-
-    Start=0.65*BaseStart+0.35*ExhibitStart
-
-    TurnRaw=0.30*Skill+0.55*Foot+0.15*Engine
-    Turn=normalize(TurnRaw)
-
-    VelocityRaw=0.50*Foot+0.35*Engine+0.15*Start
-    Velocity=normalize(VelocityRaw)
-
-    InsideSurvival_1=(
-        0.40*Skill[0]+
-        0.30*Engine[0]+
-        0.20*Start[0]+
-        0.10*Foot[0]
-    )
-
-    boats=[]
-
-    for i in range(6):
-        boats.append({
-            "lane":i+1,
-            "Skill":Skill[i],
-            "Engine":Engine[i],
-            "Foot":Foot[i],
-            "Start":Start[i],
-            "Turn":Turn[i],
-            "Velocity":Velocity[i],
-            "Class":Class[i]
-        })
-
-    return boats,InsideSurvival_1
+    return [(v - mn) / (mx - mn) for v in values]
 
 
 # =========================
-# MANSHU HUNTER VER23
+# INPUT (例)
 # =========================
 
-def manshu_hunter(boats,InsideSurvival_1):
+Boat = [1,2,3,4,5,6]
 
-    Skill=np.array([b["Skill"] for b in boats])
-    Engine=np.array([b["Engine"] for b in boats])
-    Foot=np.array([b["Foot"] for b in boats])
-    Start=np.array([b["Start"] for b in boats])
-    Turn=np.array([b["Turn"] for b in boats])
-    Velocity=np.array([b["Velocity"] for b in boats])
+WinRate = [0,0,0,0,0,0]
+PlaceRate = [0,0,0,0,0,0]
+AvgST = [0,0,0,0,0,0]
 
-    # =================
-    # CPI
-    # =================
+Motor2 = [0,0,0,0,0,0]
+Boat2 = [0,0,0,0,0,0]
 
-    CPI=[]
+ExTime = [0,0,0,0,0,0]
+ExST = [0,0,0,0,0,0]
 
-    for i in range(6):
+TurnTime = [0,0,0,0,0,0]
+LapTime = [0,0,0,0,0,0]
+StraightTime = [0,0,0,0,0,0]
 
-        lane=i+1
+Class = ["B1","B1","B1","B1","B1","B1"]
 
-        if lane==4:
-            StartWeight=0.17
-        elif lane==5:
-            StartWeight=0.10
-        elif lane==6:
-            StartWeight=0.08
-        else:
-            StartWeight=0.15
 
-        val=(
-            0.30*Skill[i]+
-            0.22*Engine[i]+
-            0.22*Foot[i]+
-            StartWeight*Start[i]+
-            0.11*Turn[i]+
-            0.07*Velocity[i]
-        )
+# =========================
+# SKILL
+# =========================
 
-        CPI.append(val)
+WinRateScore = normalize(WinRate)
+PlaceRateScore = normalize(PlaceRate)
 
-    CPI=np.array(CPI)
+SkillRaw = [
+0.55 * WinRateScore[i] +
+0.45 * PlaceRateScore[i]
+for i in range(6)
+]
 
-    PerformanceSpread=max(CPI)-min(CPI)
+Skill = normalize(SkillRaw)
 
-    if TurnGap >= 0.60:
-        TurnTop = np.argmax(Turn)
-        CPI[TurnTOP] = CPI[TurnTop] * 1.20
 
-    MidCluster=max(CPI[1],CPI[2],CPI[3])-min(CPI[1],CPI[2],CPI[3])
-    MidClusterFlag=1 if MidCluster<=0.05 else 0
+# =========================
+# ENGINE
+# =========================
 
-    outer=CPI[3:6]
-    outer_sorted=np.sort(outer)
+MotorScore = normalize(Motor2)
+BoatScore = normalize(Boat2)
 
-    OuterPower=(
-        0.5*outer_sorted[-1]+
-        0.3*outer_sorted[-2]+
-        0.2*np.mean(outer)
+EngineRaw = [
+0.65 * MotorScore[i] +
+0.35 * BoatScore[i]
+for i in range(6)
+]
+
+Engine = normalize(EngineRaw)
+
+
+# =========================
+# EXHIBITION
+# =========================
+
+AvgExTime = sum(ExTime) / 6
+
+TimeDiff = [AvgExTime - x for x in ExTime]
+TimeScore = normalize(TimeDiff)
+
+ExSTScore = normalize([0.30 - x for x in ExST])
+
+Exhibit = [
+0.80 * TimeScore[i] +
+0.20 * ExSTScore[i]
+for i in range(6)
+]
+
+
+# =========================
+# FOOT
+# =========================
+
+AvgTurn = sum(TurnTime) / 6
+AvgLap = sum(LapTime) / 6
+AvgStraight = sum(StraightTime) / 6
+
+TurnDiff = [AvgTurn - x for x in TurnTime]
+LapDiff = [AvgLap - x for x in LapTime]
+StraightDiff = [AvgStraight - x for x in StraightTime]
+
+TurnScore = normalize(TurnDiff)
+LapScore = normalize(LapDiff)
+StraightScore = normalize(StraightDiff)
+
+RawFoot = [
+0.40 * TurnScore[i] +
+0.25 * LapScore[i] +
+0.25 * StraightScore[i] +
+0.10 * Exhibit[i]
+for i in range(6)
+]
+
+Foot = normalize(RawFoot)
+
+
+# =========================
+# START
+# =========================
+
+BaseStart = [
+max(0,min(1,(0.20 - AvgST[i]) / 0.10))
+for i in range(6)
+]
+
+ExhibitStart = [
+max(0,min(1,(0.20 - ExST[i]) / 0.10))
+for i in range(6)
+]
+
+Start = [
+0.65 * BaseStart[i] +
+0.35 * ExhibitStart[i]
+for i in range(6)
+]
+
+
+# =========================
+# TURN
+# =========================
+
+TurnRaw = [
+0.30 * Skill[i] +
+0.55 * Foot[i] +
+0.15 * Engine[i]
+for i in range(6)
+]
+
+Turn = normalize(TurnRaw)
+
+
+# =========================
+# VELOCITY
+# =========================
+
+VelocityRaw = [
+0.50 * Foot[i] +
+0.35 * Engine[i] +
+0.15 * Start[i]
+for i in range(6)
+]
+
+Velocity = normalize(VelocityRaw)
+
+
+# =========================
+# INSIDE SURVIVAL
+# =========================
+
+InsideSurvival_i = [
+0.40 * Skill[i] +
+0.30 * Engine[i] +
+0.20 * Start[i] +
+0.10 * Foot[i]
+for i in range(6)
+]
+
+# =========================
+# LANE BONUS
+# =========================
+
+LaneBonus = [0.08,0.07,0.06,0.09,0.12,0.14]
+
+# =========================
+# CPI (Start削除版)
+# =========================
+
+CPI = [
+0.33 * Skill[i] +
+0.25 * Engine[i] +
+0.27 * Foot[i] +
+0.10 * Turn[i] +
+0.05 * Velocity[i]
+for i in range(6)
+]
+
+
+# =========================
+# START SPREAD
+# =========================
+
+StartSpread = max(Start) - min(Start)
+
+
+# =========================
+# CHAOS SCORE
+# =========================
+
+PerformanceSpread = max(CPI) - min(CPI)
+
+OuterPower = (
+0.5 * max(CPI[3:6]) +
+0.3 * sorted(CPI[3:6])[-2] +
+0.2 * (sum(CPI[3:6]) / 3)
+)
+
+InsideWeak = 1 - InsideSurvival_i[0]
+
+ChaosScore = (
+0.20 * OuterPower +
+0.25 * InsideWeak +
+0.25 * StartSpread +
+0.16 * PerformanceSpread
+)
+
+ChaosScore = max(0,min(1,ChaosScore))
+
+
+# =========================
+# STAGE17
+# =========================
+
+AvgStart = sum(Start)/6
+
+StartBoost = [
+1 + (0.5 + 0.5 * ChaosScore) * (Start[i] - AvgStart)
+for i in range(6)
+]
+
+DynamicInsideFactor = 1
+
+if StartSpread >= 0.80:
+    DynamicInsideFactor = 0.70
+elif StartSpread >= 0.60:
+    DynamicInsideFactor = 0.82
+
+
+LaneWin = [
+0.50 * DynamicInsideFactor,
+0.17 + (0.50*(1-DynamicInsideFactor)*0.40),
+0.15 + (0.50*(1-DynamicInsideFactor)*0.30),
+0.11 + (0.50*(1-DynamicInsideFactor)*0.20),
+0.05 + (0.50*(1-DynamicInsideFactor)*0.07),
+0.02 + (0.50*(1-DynamicInsideFactor)*0.03)
+]
+
+
+LaneCPI = [
+CPI[i] * LaneWin[i] * StartBoost[i]
+for i in range(6)
+]
+
+TotalLaneCPI = sum(LaneCPI)
+
+P1 = [x / TotalLaneCPI for x in LaneCPI]
+
+
+# =========================
+# SECOND / THIRD SCORE
+# =========================
+
+SecondScore = [
+0.35 * Turn[i] +
+0.35 * Foot[i] +
+0.20 * Velocity[i]
+0.10 * LaneBonus[i] +
+for i in range(6)
+]
+
+ThirdScore = [
+0.35 * Velocity[i] +
+0.30 * Foot[i] +
+0.20 * Engine[i] +
+0.10 * LaneBonus[i] +
+0.05 * InsideSurvival_i[i]
+for i in range(6)
+]
+
+
+TotalSecond = sum(SecondScore)
+TotalThird = sum(ThirdScore)
+
+
+# =========================
+# TRIFECTA
+# =========================
+
+results = []
+
+for A,B,C in itertools.permutations(range(6),3):
+
+    p = (
+    P1[A] *
+    (SecondScore[B] / (TotalSecond - SecondScore[A])) *
+    (ThirdScore[C] / (TotalThird - ThirdScore[A] - ThirdScore[B]))
     )
 
-    OutsideStackFlag=1 if outer_sorted[-2]>=0.50 else 0
+    results.append((A+1,B+1,C+1,p))
 
-    InsideWeak=1-InsideSurvival_1
 
-    StartSpread=max(Start)-min(Start)
+results.sort(key=lambda x:x[3], reverse=True)
 
-    FastLane=np.argmax(Start)+1
-    StartPressureFlag=1 if FastLane in [2,4] else 0
 
-    TopStart=np.argmax(Start)+1
-    StartShockFlag=1 if TopStart>=4 else 0
+Coverage = 0
+Final = []
 
-    WallSashiFlag=1 if (
-        Turn[2]>=0.80 and
-        CPI[2]>=0.52 and
-        Engine[1]>=0.70
-    ) else 0
+for r in results:
 
-    TwoLaneAttackFlag=1 if (
-        Start[1]<=Start[0]+0.05 and
-        CPI[1]>=0.55
-    ) else 0
+    Coverage += r[3]
+    Final.append(r)
 
-    ThreeLaneAttackFlag=1 if (
-        Start[2]<=0.18 and
-        CPI[2]>=0.55 and
-        Start[2]<=Start[1]+0.03
-    ) else 0
+    if Coverage >= 0.90:
+        break
 
-    FourLaneAttackFlag=1 if (
-        Start[3]<=Start[1] and
-        Start[3]<=Start[2] and
-        Start[3]<=0.15 and
-        CPI[3]>=0.55
-    ) else 0
+    if len(Final) >= 20:
+        break
 
-    TwoLaneAttackScore=(
-        0.22*TwoLaneAttackFlag+
-        0.28*pos(Start[1]-Start[0])+
-        0.22*pos(CPI[1]-CPI[0])+
-        0.15*pos(Engine[1]-Engine[0])+
-        0.13*pos(Turn[1]-Turn[0])
-    )
 
-    ThreeLaneAttackScore=(
-        0.22*ThreeLaneAttackFlag+
-        0.28*pos(Start[2]-Start[1])+
-        0.22*pos(CPI[2]-CPI[0])+
-        0.15*pos(Engine[2]-Engine[0])+
-        0.13*pos(Turn[2]-Turn[0])
-    )
+print("Coverage:",Coverage)
 
-    FourLaneAttackScore=(
-        0.22*FourLaneAttackFlag+
-        0.28*pos(Start[3]-Start[2])+
-        0.22*pos(CPI[3]-CPI[0])+
-        0.15*pos(Engine[3]-Engine[0])+
-        0.13*pos(Turn[3]-Turn[0])
-    )
+for i,r in enumerate(Final,1):
 
-    DoubleAttackScore=(
-        (ThreeLaneAttackScore*FourLaneAttackScore)+
-        0.5*(TwoLaneAttackScore*ThreeLaneAttackScore)
-    )
-
-    AttackBoost1=1-0.4*max(TwoLaneAttackScore,ThreeLaneAttackScore,FourLaneAttackScore)
-    AttackBoost2=1+0.5*TwoLaneAttackScore
-    AttackBoost3=1+0.6*ThreeLaneAttackScore
-    AttackBoost4=1+0.5*FourLaneAttackScore
-    AttackBoost5=1+0.9*DoubleAttackScore
-    AttackBoost6=1+0.7*DoubleAttackScore
-
-    LaneBonus=[0.05,0.06,0.05,0.10,0.15,0.18]
-
-    SecondScore=(0.50*Turn+0.30*Foot+0.15*Velocity+0.05*Engine)
-
-    ThirdScore=(
-        0.45*Velocity+
-        0.30*Foot+
-        0.15*Engine+
-        0.10*np.array(LaneBonus)
-    )
-
-    LaneWin=[0.50,0.17,0.15,0.11,0.05,0.02]
-
-    AttackBoost=[AttackBoost1,AttackBoost2,AttackBoost3,AttackBoost4,AttackBoost5,AttackBoost6]
-
-    LaneCPI=CPI*np.array(LaneWin)*np.array(AttackBoost)
-
-    TotalLaneCPI=sum(LaneCPI)
-    P1=LaneCPI/TotalLaneCPI
-
-    TotalSecond=sum(SecondScore)
-    TotalThird=sum(ThirdScore)
-
-    combos=[]
-
-    for A,B,C in permutations(range(6),3):
-
-        p=(
-            P1[A]*
-            (SecondScore[B]/(TotalSecond-SecondScore[A]))*
-            (ThirdScore[C]/(TotalThird-ThirdScore[A]-ThirdScore[B]))
-        )
-
-        combos.append((A+1,B+1,C+1,p))
-
-    combos.sort(key=lambda x:-x[3])
-
-    coverage=0
-    bets=[]
-
-    for c in combos:
-
-        coverage+=c[3]
-        bets.append(c)
-
-        if coverage>=0.90 or len(bets)>=20:
-            break
-
-    return bets
+    print(i,r[0],r[1],r[2],r[3])
