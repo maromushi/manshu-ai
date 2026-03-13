@@ -553,28 +553,27 @@ for A in range(6):
         for C in range(6):
 
             if A != B and B != C and A != C:
-
-p = (
-    P1[A]
-    *
-    (
-        SecondScore[B]
-        /
-        (TotalSecondScore - SecondScore[A])
-    )
-    *
-    (
-        ThirdScore[C]
-        /
-        (
-            TotalThirdScore
-            -
-            ThirdScore[A]
-            -
-            ThirdScore[B]
-        )
-    )
-)
+                p = (
+                    P1[A]
+                    *
+                    (
+                        SecondScore[B]
+                        /
+                        (TotalSecondScore - SecondScore[A])
+                    )
+                    *
+                    (
+                        ThirdScore[C]
+                        /
+                        (
+                            TotalThirdScore
+                            -
+                            ThirdScore[A]
+                            -
+                            ThirdScore[B]
+                        )
+                    )
+                )
 
 # --------------------------
 # STAGE17.6 SORT
