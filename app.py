@@ -274,7 +274,7 @@ P1 = [x / TotalLaneCPI for x in LaneCPI]
 SecondScore = [
 0.35 * Turn[i] +
 0.35 * Foot[i] +
-0.20 * Velocity[i]
+0.20 * Velocity[i]  +
 0.10 * LaneBonus[i] +
 for i in range(6)
 ]
