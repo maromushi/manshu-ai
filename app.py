@@ -229,7 +229,7 @@ ChaosScore = max(0,min(1,ChaosScore))
 
 
 # =========================
-# STAGE17
+# STAGE17（第一）
 # =========================
 
 AvgStart = sum(Start)/6
