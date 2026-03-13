@@ -241,9 +241,9 @@ for i in range(6)
 
 DynamicInsideFactor = 1
 
-if StartSpread >= 0.80:
+if StartSpread >= 0.12:
     DynamicInsideFactor = 0.70
-elif StartSpread >= 0.60:
+elif StartSpread >= 0.08:
     DynamicInsideFactor = 0.82
 
 
