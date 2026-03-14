@@ -498,10 +498,14 @@ def run_ai(order):
     SecondTotal=sum(SecondScore)
     ThirdTotal=sum(ThirdScore)
 
+    if SecondTotal<=0:
+        SecondTotal=1e-6
+
+    if ThirdTotal<=0:
+        ThirdTotal=1e-6
 
     SecondProb=[x/SecondTotal for x in SecondScore]
     ThirdProb=[x/ThirdTotal for x in ThirdScore]
-
 
     results=[]
 
