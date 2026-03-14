@@ -375,8 +375,8 @@ def run_ai(order):
 
     ChaosScore=max(0,min(1,ChaosScore))
 
-    if ChaosScore<0.55:
-        return []
+    #if ChaosScore<0.55:
+    #    return []
 
     # ===============================
     # STAGE17
