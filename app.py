@@ -503,8 +503,8 @@ if st.button("計算"):
 
         SecondScore=[
         0.45*Turn[i]+
-        0.35*Foot[i]+
-        0.20*Velocity[i]+
+        0.30*Foot[i]+
+        0.15*Velocity[i]+
         0.10*LaneBonus[i]
         for i in range(6)
         ]
