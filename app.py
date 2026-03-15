@@ -439,12 +439,12 @@ if st.button("計算"):
 
         LaneWin=[
 
-        0.50*DynamicInsideFactor,
-        0.17+(0.50*(1-DynamicInsideFactor)*0.40),
-        0.15+(0.50*(1-DynamicInsideFactor)*0.30),
-        0.11+(0.50*(1-DynamicInsideFactor)*0.20),
-        0.05+(0.50*(1-DynamicInsideFactor)*0.07),
-        0.02+(0.50*(1-DynamicInsideFactor)*0.03)
+        0.65*DynamicInsideFactor,
+        0.17+(0.45*(1-DynamicInsideFactor)*0.40),
+        0.15+(0.45*(1-DynamicInsideFactor)*0.30),
+        0.11+(0.45*(1-DynamicInsideFactor)*0.20),
+        0.05+(0.45*(1-DynamicInsideFactor)*0.07),
+        0.02+(0.45*(1-DynamicInsideFactor)*0.03)
 
         ]
 
@@ -454,18 +454,18 @@ if st.button("計算"):
 
         AttackBoost1 = max(
         0.70,
-        1 - 0.4 * max(
+        1 - 0.25 * max(
         TwoLaneAttackScore,
         ThreeLaneAttackScore,
         FourLaneAttackScore
         )
         )
 
-        AttackBoost2 = 1 + 0.5 * TwoLaneAttackScore
-        AttackBoost3 = 1 + 0.6 * ThreeLaneAttackScore
-        AttackBoost4 = 1 + 0.5 * FourLaneAttackScore
-        AttackBoost5 = 1 + 0.9 * DoubleAttackScore
-        AttackBoost6 = 1 + 0.7 * DoubleAttackScore
+        AttackBoost2 = 1 + 0.40 * TwoLaneAttackScore
+        AttackBoost3 = 1 + 0.45 * ThreeLaneAttackScore
+        AttackBoost4 = 1 + 0.40 * FourLaneAttackScore
+        AttackBoost5 = 1 + 0.70 * DoubleAttackScore
+        AttackBoost6 = 1 + 0.55 * DoubleAttackScore
 
         AttackBoost=[
         AttackBoost1,
