@@ -11,25 +11,37 @@ if st.button("計算"):
         st.stop()
 
     local_vars={}
-    exec(data,{},local_vars)
 
-    WinRate=local_vars["WinRate"]
-    PlaceRate=local_vars["PlaceRate"]
-    AvgST=local_vars["AvgST"]
-    Motor2=local_vars["Motor2"]
-    Boat2=local_vars["Boat2"]
+    try:
+        exec(data,{"__builtins__":{}},local_vars)
+    except:
+        st.write("抽出データの形式が正しくありません")
+        st.stop()
 
-    ExTime=local_vars["ExTime"]
-    ExST=local_vars["ExST"]
+    WinRate=local_vars.get("WinRate",[0]*6)
+    PlaceRate=local_vars.get("PlaceRate",[0]*6)
 
-    TurnTime=local_vars["TurnTime"]
-    LapTime=local_vars["LapTime"]
-    StraightTime=local_vars["StraightTime"]
+    AvgST=local_vars.get("AvgST",[0]*6)
+
+    Motor2=local_vars.get("Motor2",[0]*6)
+    Boat2=local_vars.get("Boat2",[0]*6)
+
+    ExTime=local_vars.get("ExTime",[0]*6)
+    ExST=local_vars.get("ExST",[0]*6)
+
+    TurnTime=local_vars.get("TurnTime",[0]*6)
+    LapTime=local_vars.get("LapTime",[0]*6)
+    StraightTime=local_vars.get("StraightTime",[0]*6)
+
+    Class=local_vars.get("Class",["B1"]*6)
+    Fcount=local_vars.get("Fcount",[0]*6)
+    ExEntry=local_vars.get("ExEntry",[1,2,3,4,5,6])
+
+    Boat=[1,2,3,4,5,6]
 
     # ↓ここから万舟AIコード
 
     import itertools
-    import copy
 
     # =====================================
     # NORMALIZE
@@ -45,7 +57,6 @@ if st.button("計算"):
 
         return [(v-mn)/(mx-mn) for v in values]
 
-
     # =====================================
     # FIX FUNCTIONS
     # =====================================
@@ -58,7 +69,6 @@ if st.button("計算"):
             arr+=[fill]*(6-len(arr))
 
         return arr[:6]
-
 
     def to_float_list(arr):
 
@@ -73,7 +83,6 @@ if st.button("計算"):
 
         return out
 
-
     def to_int_list(arr):
 
         out=[]
@@ -87,7 +96,6 @@ if st.button("計算"):
 
         return out
 
-
     def clamp(arr, lo, hi):
 
         out=[]
@@ -100,7 +108,6 @@ if st.button("計算"):
                 out.append(x)
 
         return out
-
 
     def fix_class(arr):
 
@@ -116,7 +123,6 @@ if st.button("計算"):
                 out.append("B1")
 
         return fix_length(out,"B1")
-
 
     def fix_exentry(arr):
 
@@ -246,7 +252,38 @@ if st.button("計算"):
         StartRaw=[0.75*BaseStart[i]+0.25*ExhibitStart[i] for i in range(6)]
 
         Start=normalize(StartRaw)
+        # F補正（階級 + 展示ST）
 
+        F_TABLE = {
+        "A1":{"F1":0.96,"F2":0.92},
+        "A2":{"F1":0.94,"F2":0.88},
+        "B1":{"F1":0.92,"F2":0.84},
+        "B2":{"F1":0.88,"F2":0.78}
+        }
+
+        for i in range(6):
+
+            cls = Class[i]
+
+            factor = 1
+
+            if Fcount[i] == 1:
+                factor = F_TABLE[cls]["F1"]
+
+            elif Fcount[i] >= 2:
+                factor = F_TABLE[cls]["F2"]
+
+            # 展示ST補正
+            if EST[i] <= 0.10:
+                factor *= 1.10
+
+            elif EST[i] <= 0.13:
+                factor *= 1.05
+
+            elif EST[i] >= 0.20:
+                factor *= 0.90
+
+            Start[i] *= factor
         # ===============================
         # TURN
         # ===============================
@@ -394,7 +431,6 @@ if st.button("計算"):
 
             StartBoost.append(value)
 
-
         DynamicInsideFactor=1
 
         if StartSpread>=0.12:
@@ -403,7 +439,6 @@ if st.button("計算"):
             DynamicInsideFactor=0.82
 
         DynamicInsideFactor=max(0.60,DynamicInsideFactor)
-
 
         LaneWin=[
 
@@ -415,7 +450,6 @@ if st.button("計算"):
         0.02+(0.50*(1-DynamicInsideFactor)*0.03)
 
         ]
-
 
         # ===============================
         # ATTACK BOOST
@@ -436,7 +470,6 @@ if st.button("計算"):
         AttackBoost5 = 1 + 0.9 * DoubleAttackScore
         AttackBoost6 = 1 + 0.7 * DoubleAttackScore
 
-
         AttackBoost=[
         AttackBoost1,
         AttackBoost2,
@@ -445,7 +478,6 @@ if st.button("計算"):
         AttackBoost5,
         AttackBoost6
         ]
-
 
         LaneCPI=[]
 
@@ -463,18 +495,14 @@ if st.button("計算"):
 
             LaneCPI.append(value)
 
-
         TotalLaneCPI=sum(LaneCPI)
 
         if TotalLaneCPI<=0:
             TotalLaneCPI=1e-6
 
-
         P1=[x/TotalLaneCPI for x in LaneCPI]
 
-
         LaneBonus=[0.08,0.07,0.08,0.09,0.12,0.14]
-
 
         SecondScore=[
         0.35*Turn[i]+
@@ -483,7 +511,6 @@ if st.button("計算"):
         0.10*LaneBonus[i]
         for i in range(6)
         ]
-
 
         ThirdScore=[
         0.35*Velocity[i]+
@@ -494,11 +521,8 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-
         SecondTotal=sum(SecondScore)
         ThirdTotal=sum(ThirdScore)
-
-
 
         if SecondTotal<=0:
             SecondTotal=1e-6
@@ -510,7 +534,6 @@ if st.button("計算"):
         ThirdProb=[x/ThirdTotal for x in ThirdScore]
 
         results=[]
-
 
         for a,b,c in itertools.permutations(range(6),3):
 
@@ -527,7 +550,6 @@ if st.button("計算"):
 
             results.append((boats[a],boats[b],boats[c],p))
 
-
         return results
 
     # =====================================
@@ -541,10 +563,8 @@ if st.button("計算"):
     if len(order_ex)!=6:
         order_ex=[0,1,2,3,4,5]
 
-
     res_waku=run_ai(order_waku)
     res_ex=run_ai(order_ex)
-
 
     # =====================================
     # 合成
@@ -558,18 +578,15 @@ if st.button("計算"):
 
         final[key]=final.get(key,0)+0.3*p
 
-
     for a,b,c,p in res_ex:
 
         key=(a,b,c)
 
         final[key]=final.get(key,0)+0.7*p
 
-
     results=[(k[0],k[1],k[2],v) for k,v in final.items()]
 
     results.sort(key=lambda x:x[3],reverse=True)
-
 
     # =====================================
     # OUTPUT
