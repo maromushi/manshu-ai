@@ -315,13 +315,11 @@ if st.button("計算"):
         # ===============================
 
         CPI=[
-        0.33*Skill[i]+
-        0.25*Engine[i]+
-        0.27*Foot[i]+
-        0.10*Turn[i]+
-        0.05*Velocity[i]
-        for i in range(6)
-        ]
+        Skill   0.28
+        Engine  0.27
+        Foot    0.30
+        Turn    0.10
+        Velocity0.05
 
         # ===============================
         # MID CLUSTER
@@ -483,7 +481,6 @@ if st.button("計算"):
             value=(
                 CPI[i]*
                 LaneWin[i]*
-                (0.6+0.4*AttackBoost[i])*
                 (0.7+0.3*StartBoost[i])
                 )
 
@@ -502,10 +499,11 @@ if st.button("計算"):
         LaneBonus=[0.06,0.06,0.07,0.10,0.14,0.17]
 
         SecondScore=[
-        0.45*Turn[i]+
-        0.30*Foot[i]+
-        0.15*Velocity[i]+
-        0.10*LaneBonus[i]
+        0.35*Turn[i]+
+        0.25*Foot[i]+
+        0.20*Engine[i]+
+        0.10*Velocity[i]+
+        
         for i in range(6)
         ]
 
