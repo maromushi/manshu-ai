@@ -240,7 +240,9 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        Foot=normalize(RawFoot)
+        FourLaneAttackFlag = 1 if (
+        Start[3] <= min(Start[1],Start[2])
+        ) else 0
 
         # ===============================
         # START
@@ -251,7 +253,7 @@ if st.button("計算"):
 
         StartRaw=[0.75*BaseStart[i]+0.25*ExhibitStart[i] for i in range(6)]
 
-        Start=normalize(StartRaw)
+        Start=StartRaw
         # F補正（階級 + 展示ST）
 
         F_TABLE = {
@@ -338,19 +340,16 @@ if st.button("計算"):
         # ATTACK FLAG
         # ===============================
 
-        TwoLaneAttackFlag=1 if (Start[1]<=Start[0]+0.05 and CPI[1]>=0.55) else 0
-
-        ThreeLaneAttackFlag=1 if (
-        Start[2]<=0.18 and
-        CPI[2]>=0.55 and
-        Start[2]<=Start[1]+0.03
+        TwoLaneAttackFlag = 1 if (
+        Start[1] <= Start[0] + 0.03
         ) else 0
 
-        FourLaneAttackFlag=1 if (
-        Start[3]<=Start[1] and
-        Start[3]<=Start[2] and
-        Start[3]<=0.15 and
-        CPI[3]>=0.55
+        ThreeLaneAttackFlag = 1 if (
+        Start[2] <= Start[1] + 0.02
+        ) else 0
+
+        FourLaneAttackFlag = 1 if (
+        Start[3] <= min(Start[1],Start[2])
         ) else 0
 
         # ===============================
@@ -484,11 +483,11 @@ if st.button("計算"):
         for i in range(6):
 
             value=(
-            CPI[i]*
-            LaneWin[i]*
-            AttackBoost[i]*
-            StartBoost[i]
-            )
+                CPI[i]*
+                LaneWin[i]*
+                (0.6+0.4*AttackBoost[i])*
+                (0.7+0.3*StartBoost[i])
+                )
 
             if i>=3:
                 value=value*(1+0.4*DoubleAttackScore)
@@ -530,25 +529,44 @@ if st.button("計算"):
         if ThirdTotal<=0:
             ThirdTotal=1e-6
 
-        SecondProb=[x/SecondTotal for x in SecondScore]
-        ThirdProb=[x/ThirdTotal for x in ThirdScore]
-
         results=[]
 
-        for a,b,c in itertools.permutations(range(6),3):
+        for a in range(6):
 
-            den2=1-SecondProb[a]
-            den3=1-ThirdProb[a]-ThirdProb[b]
+            P_first = P1[a]
 
-            if den2<=0:
-                den2=1e-6
+            # 残り5艇
+            remain1=[i for i in range(6) if i!=a]
 
-            if den3<=0:
-                den3=1e-6
+            second_scores=[SecondScore[i] for i in remain1]
+            total2=sum(second_scores)
 
-            p=P1[a]*(SecondProb[b]/den2)*(ThirdProb[c]/den3)
+            if total2<=0:
+                total2=1e-6
 
-            results.append((boats[a],boats[b],boats[c],p))
+            second_probs=[s/total2 for s in second_scores]
+
+            for idx_b,b in enumerate(remain1):
+
+                P_second = second_probs[idx_b]
+
+                remain2=[i for i in remain1 if i!=b]
+
+                third_scores=[ThirdScore[i] for i in remain2]
+                total3=sum(third_scores)
+
+                if total3<=0:
+                    total3=1e-6
+
+                third_probs=[s/total3 for s in third_scores]
+
+                for idx_c,c in enumerate(remain2):
+
+                    P_third = third_probs[idx_c]
+
+                    p = P_first * P_second * P_third
+
+                    results.append((boats[a],boats[b],boats[c],p))
 
         return results
 
@@ -611,3 +629,6 @@ if st.button("計算"):
     for i,r in enumerate(Final,1):
 
         st.write(i,r)
+
+
+    
