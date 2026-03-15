@@ -499,10 +499,10 @@ if st.button("計算"):
 
         P1=[x/TotalLaneCPI for x in LaneCPI]
 
-        LaneBonus=[0.08,0.07,0.08,0.09,0.12,0.14]
+        LaneBonus=[0.06,0.06,0.07,0.10,0.14,0.17]
 
         SecondScore=[
-        0.35*Turn[i]+
+        0.45*Turn[i]+
         0.35*Foot[i]+
         0.20*Velocity[i]+
         0.10*LaneBonus[i]
@@ -510,8 +510,8 @@ if st.button("計算"):
         ]
 
         ThirdScore=[
-        0.35*Velocity[i]+
-        0.30*Foot[i]+
+        0.40*Velocity[i]+
+        0.25*Foot[i]+
         0.20*Engine[i]+
         0.10*LaneBonus[i]+
         0.05*InsideSurvival[i]
@@ -627,6 +627,3 @@ if st.button("計算"):
     for i,r in enumerate(Final,1):
 
         st.write(i,r)
-
-
-    
