@@ -240,9 +240,7 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        FourLaneAttackFlag = 1 if (
-        Start[3] <= min(Start[1],Start[2])
-        ) else 0
+        Foot=normalize(RawFoot)
 
         # ===============================
         # START
