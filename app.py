@@ -518,11 +518,11 @@ if st.button("計算"):
 
             if main_attacker is not None:
 
-            if i == main_attacker:
-                value = value*(1+0.20*DoubleAttackScore)
+                if i == main_attacker:
+                    value = value*(1+0.20*DoubleAttackScore)
 
-            elif i > main_attacker:
-                value = value*(1+0.12*DoubleAttackScore)
+                elif i > main_attacker:
+                    value = value*(1+0.12*DoubleAttackScore)
 
             LaneCPI.append(value)
 
