@@ -331,6 +331,14 @@ if st.button("計算"):
         for i in range(6)
         ]
 
+        AttackIndex=[
+        0.45*Start[i]+
+        0.30*Foot[i]+
+        0.15*Turn[i]+
+        0.10*Engine[i]
+        for i in range(6)
+        ]
+
         # ===============================
         # MID CLUSTER
         # ===============================
@@ -489,6 +497,10 @@ if st.button("計算"):
         AttackBoost6
         ]
 
+        outer_attackers = AttackIndex[3:6]
+
+        main_attacker = outer_attackers.index(max(outer_attackers)) + 3
+
         LaneCPI=[]
 
         for i in range(6):
@@ -499,8 +511,11 @@ if st.button("計算"):
                 (0.7+0.3*StartBoost[i])
                 )
 
-            if i>=3:
-                value=value*(1+0.25*DoubleAttackScore)
+            if i == main_attacker:
+                value = value*(1+0.20*DoubleAttackScore)
+
+            elif i > main_attacker:
+                value = value*(1+0.12*DoubleAttackScore)
 
             LaneCPI.append(value)
 
