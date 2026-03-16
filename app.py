@@ -533,15 +533,6 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        SecondTotal=sum(SecondScore)
-        ThirdTotal=sum(ThirdScore)
-
-        if SecondTotal<=0:
-            SecondTotal=1e-6
-
-        if ThirdTotal<=0:
-            ThirdTotal=1e-6
-
         results=[]
 
         for a in range(6):
