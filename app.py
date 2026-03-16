@@ -499,7 +499,12 @@ if st.button("計算"):
 
         outer_attackers = AttackIndex[3:6]
 
-        main_attacker = outer_attackers.index(max(outer_attackers)) + 3
+        max_outer = max(outer_attackers)
+
+        main_attacker = None
+
+        if max_outer > AttackIndex[2] + 0.05:
+            main_attacker = outer_attackers.index(max_outer) + 3
 
         LaneCPI=[]
 
@@ -510,6 +515,8 @@ if st.button("計算"):
                 LaneWin[i]*
                 (0.7+0.3*StartBoost[i])
                 )
+
+            if main_attacker is not None:
 
             if i == main_attacker:
                 value = value*(1+0.20*DoubleAttackScore)
