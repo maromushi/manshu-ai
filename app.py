@@ -452,8 +452,8 @@ if st.button("計算"):
 
         LaneWin=[
 
-        0.65*DynamicInsideFactor,
-        0.17+(0.45*(1-DynamicInsideFactor)*0.40)*(1-0.35*ChaosScore),
+        0.65*DynamicInsideFactor*(1-0.35*ChaosScore),
+        0.17+(0.45*(1-DynamicInsideFactor)*0.40),
         0.15+(0.45*(1-DynamicInsideFactor)*0.30),
         0.11+(0.45*(1-DynamicInsideFactor)*0.20),
         0.05+(0.45*(1-DynamicInsideFactor)*0.07),
@@ -555,12 +555,12 @@ if st.button("計算"):
                         SecondAdj[i] *= 1.12
                         ThirdAdj[i] *= 1.18
 
-        P_first = P1[a]
+            P_first = P1[a]
 
            # 残り5艇
             remain1=[i for i in range(6) if i!=a]
 
-            second_scores=[Secondadj[i] for i in remain1]
+            second_scores=[SecondAdj[i] for i in remain1]
             total2=sum(second_scores)
 
             if total2<=0:
@@ -574,7 +574,7 @@ if st.button("計算"):
 
                 remain2=[i for i in remain1 if i!=b]
 
-                third_scores=[Thirdadj[i] for i in remain2]
+                third_scores=[ThirdAdj[i] for i in remain2]
                 total3=sum(third_scores)
 
                 if total3<=0:
