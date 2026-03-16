@@ -517,7 +517,7 @@ if st.button("計算"):
         0.35*Turn[i]+
         0.25*Foot[i]+
         0.20*Engine[i]+
-        0.10*Velocity[i]+
+        0.10*Velocity[i]
         
         for i in range(6)
         ]
@@ -557,7 +557,7 @@ if st.button("計算"):
 
             P_first = P1[a]
 
-           # 残り5艇
+            # 残り5艇
             remain1=[i for i in range(6) if i!=a]
 
             second_scores=[SecondAdj[i] for i in remain1]
