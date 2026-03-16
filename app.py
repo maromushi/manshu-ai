@@ -536,7 +536,7 @@ if st.button("計算"):
                 CrashFactor[i]*
                 SashiBoost[i]
             )
-)
+        
             if main_attacker is not None:
 
                 if i == main_attacker:
