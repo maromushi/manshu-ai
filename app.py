@@ -519,7 +519,7 @@ if st.button("計算"):
 
             # 前潰れ
             for j in range(main_attacker):
-                CrashFactor[j] = 1 - 0.18*attack_power
+                CrashFactor[j] = 1 - 0.15*attack_power
 
             # 差し
             for j in range(main_attacker+1,6):
