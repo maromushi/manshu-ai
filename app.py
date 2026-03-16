@@ -461,11 +461,11 @@ if st.button("計算"):
         LaneWin=[
 
         0.58*DynamicInsideFactor*(1-0.15*ChaosScore),
-        0.17+(0.45*(1-DynamicInsideFactor)*0.40),
-        0.15+(0.45*(1-DynamicInsideFactor)*0.30),
-        0.11+(0.45*(1-DynamicInsideFactor)*0.20),
-        0.05+(0.45*(1-DynamicInsideFactor)*0.07),
-        0.02+(0.45*(1-DynamicInsideFactor)*0.03)
+        0.19+(0.45*(1-DynamicInsideFactor)*0.40),
+        0.16+(0.45*(1-DynamicInsideFactor)*0.30),
+        0.12+(0.45*(1-DynamicInsideFactor)*0.20),
+        0.07+(0.45*(1-DynamicInsideFactor)*0.07),
+        0.04+(0.45*(1-DynamicInsideFactor)*0.03)
 
         ]
 
