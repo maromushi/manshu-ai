@@ -315,11 +315,11 @@ if st.button("計算"):
         # ===============================
 
         CPI=[
-        0.28*Skill[i]+
-        0.27*Engine[i]+
-        0.30*Foot[i]+
+        0.27*Skill[i]+
+        0.26*Engine[i]+
+        0.27*Foot[i]+
         0.10*Turn[i]+
-        0.05*Velocity[i]
+        0.10*Velocity[i]
         for i in range(6)
         ]
 
