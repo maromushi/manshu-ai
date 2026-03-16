@@ -315,11 +315,21 @@ if st.button("計算"):
         # ===============================
 
         CPI=[
-        Skill   0.28
-        Engine  0.27
-        Foot    0.30
-        Turn    0.10
-        Velocity0.05
+        0.28*Skill[i]+
+        0.27*Engine[i]+
+        0.30*Foot[i]+
+        0.10*Turn[i]+
+        0.05*Velocity[i]
+        for i in range(6)
+        ]
+
+        AttackCPI=[
+        0.35*Foot[i]+
+        0.25*Turn[i]+
+        0.20*Start[i]+
+        0.20*Engine[i]
+        for i in range(6)
+        ]
 
         # ===============================
         # MID CLUSTER
@@ -355,7 +365,7 @@ if st.button("計算"):
         TwoLaneAttackScore = (
         0.22 * TwoLaneAttackFlag +
         0.28 * max(0, Start[1] - Start[0]) +
-        0.22 * max(0, CPI[1] - CPI[0]) +
+        0.22 * max(0, AttackCPI[1] - AttackCPI[0]) +
         0.15 * max(0, Engine[1] - Engine[0]) +
         0.13 * max(0, Turn[1] - Turn[0])
         )
@@ -363,7 +373,7 @@ if st.button("計算"):
         ThreeLaneAttackScore = (
         0.22 * ThreeLaneAttackFlag +
         0.28 * max(0, Start[2] - Start[1]) +
-        0.22 * max(0, CPI[2] - CPI[0]) +
+        0.22 * max(0, AttackCPI[2] - AttackCPI[0]) +
         0.15 * max(0, Engine[2] - Engine[0]) +
         0.13 * max(0, Turn[2] - Turn[0])
         )
@@ -371,9 +381,14 @@ if st.button("計算"):
         FourLaneAttackScore = (
         0.22 * FourLaneAttackFlag +
         0.28 * max(0, Start[3] - Start[2]) +
-        0.22 * max(0, CPI[3] - CPI[0]) +
+        0.22 * max(0, AttackCPI[3] - AttackCPI[0]) +
         0.15 * max(0, Engine[3] - Engine[0]) +
         0.13 * max(0, Turn[3] - Turn[0])
+        )
+
+        OutsideFlow = (
+        0.6*ThreeLaneAttackScore +
+        0.8*FourLaneAttackScore
         )
 
         DoubleAttackScore = (
@@ -438,7 +453,7 @@ if st.button("計算"):
         LaneWin=[
 
         0.65*DynamicInsideFactor,
-        0.17+(0.45*(1-DynamicInsideFactor)*0.40),
+        0.17+(0.45*(1-DynamicInsideFactor)*0.40)*(1-0.35*ChaosScore),
         0.15+(0.45*(1-DynamicInsideFactor)*0.30),
         0.11+(0.45*(1-DynamicInsideFactor)*0.20),
         0.05+(0.45*(1-DynamicInsideFactor)*0.07),
@@ -485,7 +500,7 @@ if st.button("計算"):
                 )
 
             if i>=3:
-                value=value*(1+0.4*DoubleAttackScore)
+                value=value*(1+0.25*DoubleAttackScore)
 
             LaneCPI.append(value)
 
@@ -513,6 +528,8 @@ if st.button("計算"):
         0.20*Engine[i]+
         0.10*LaneBonus[i]+
         0.05*InsideSurvival[i]
+
+            
         for i in range(6)
         ]
 
@@ -529,12 +546,21 @@ if st.button("計算"):
 
         for a in range(6):
 
-            P_first = P1[a]
+            SecondAdj = SecondScore.copy()
+            ThirdAdj = ThirdScore.copy()
 
-            # 残り5艇
+            if a >= 2:
+                for i in range(6):
+                    if i >= a:
+                        SecondAdj[i] *= 1.12
+                        ThirdAdj[i] *= 1.18
+
+        P_first = P1[a]
+
+           # 残り5艇
             remain1=[i for i in range(6) if i!=a]
 
-            second_scores=[SecondScore[i] for i in remain1]
+            second_scores=[Secondadj[i] for i in remain1]
             total2=sum(second_scores)
 
             if total2<=0:
@@ -548,7 +574,7 @@ if st.button("計算"):
 
                 remain2=[i for i in remain1 if i!=b]
 
-                third_scores=[ThirdScore[i] for i in remain2]
+                third_scores=[Thirdadj[i] for i in remain2]
                 total3=sum(third_scores)
 
                 if total3<=0:
