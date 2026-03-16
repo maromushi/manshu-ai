@@ -460,7 +460,7 @@ if st.button("計算"):
 
         LaneWin=[
 
-        0.65*DynamicInsideFactor*(1-0.35*ChaosScore),
+        0.65*DynamicInsideFactor*(1-0.15*ChaosScore),
         0.17+(0.45*(1-DynamicInsideFactor)*0.40),
         0.15+(0.45*(1-DynamicInsideFactor)*0.30),
         0.11+(0.45*(1-DynamicInsideFactor)*0.20),
@@ -506,6 +506,25 @@ if st.button("計算"):
         if max_outer > AttackIndex[2] + 0.05:
             main_attacker = outer_attackers.index(max_outer) + 3
 
+        # ===============================
+        # 展開モデル
+        # ===============================
+
+        CrashFactor=[1.0]*6
+        SashiBoost=[1.0]*6
+
+        if main_attacker is not None:
+
+            attack_power = DoubleAttackScore
+
+            # 前潰れ
+            for j in range(main_attacker):
+                CrashFactor[j] = 1 - 0.18*attack_power
+
+            # 差し
+            for j in range(main_attacker+1,6):
+                SashiBoost[j] = 1 + 0.15*attack_power
+
         LaneCPI=[]
 
         for i in range(6):
@@ -513,9 +532,11 @@ if st.button("計算"):
             value=(
                 CPI[i]*
                 LaneWin[i]*
-                (0.7+0.3*StartBoost[i])
-                )
-
+                (0.7+0.3*StartBoost[i])*
+                CrashFactor[i]*
+                SashiBoost[i]
+            )
+)
             if main_attacker is not None:
 
                 if i == main_attacker:
