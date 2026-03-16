@@ -523,7 +523,7 @@ if st.button("計算"):
 
             # 差し
             for j in range(main_attacker+1,6):
-                SashiBoost[j] = 1 + 0.15*attack_power
+                SashiBoost[j] = 1 + 0.12*attack_power
 
         LaneCPI=[]
 
