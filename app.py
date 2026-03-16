@@ -543,7 +543,7 @@ if st.button("計算"):
                     value = value*(1+0.20*DoubleAttackScore)
 
                 elif i > main_attacker:
-                    value = value*(1+0.12*DoubleAttackScore)
+                    value = value*(1+0.08*DoubleAttackScore)
 
             LaneCPI.append(value)
 
