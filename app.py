@@ -665,6 +665,9 @@ if st.button("計算"):
                 elif i > main_attacker:
                     value = value*(1+0.08*DoubleAttackScore)
 
+                elif i == main_attacker - 1:
+                    value *= (1+0.06*DoubleAttackScore)
+
             LaneCPI.append(value)
 
         TotalLaneCPI = sum([LaneCPI[i] for i in range(6) if Active[i]==1])
@@ -677,7 +680,7 @@ if st.button("計算"):
              for i in range(6)
         ]
 
-        LaneBonus=[0.08,0.08,0.08,0.008,0.075,0.07]
+        LaneBonus=[0.08,0.08,0.08,0.085,0.075,0.07]
 
         SecondScore=[
         0.33*Turn[i]+
@@ -720,7 +723,7 @@ if st.button("計算"):
 
                 elif dist == 1:
                     SecondAdj[i] *= 1.12
-                    ThirdAdj[i] *= 1.05
+                    ThirdAdj[i] *= 1.08
 
                 elif dist >= 2:
                     SecondAdj[i] *= 1.05
