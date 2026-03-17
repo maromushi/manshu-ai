@@ -247,10 +247,10 @@ if st.button("計算"):
         StraightScore=normalize([AvgStraight-x for x in STT])
 
         RawFoot=[
-        0.40*TurnScore[i]+
-        0.25*LapScore[i]+
+        0.42*TurnScore[i]+
+        0.28*LapScore[i]+
         0.25*StraightScore[i]+
-        0.10*Exhibit[i]
+        0.05*Exhibit[i]
         for i in range(6)
         ]
 
@@ -309,7 +309,7 @@ if st.button("計算"):
         # VELOCITY
         # ===============================
 
-        VelocityRaw=[0.50*Foot[i]+0.35*Engine[i]+0.15*Start[i] for i in range(6)]
+        VelocityRaw=[0.45*Foot[i]+0.35*Engine[i]+0.20*Start[i] for i in range(6)]
         Velocity=normalize(VelocityRaw)
 
         # ===============================
@@ -568,7 +568,7 @@ if st.button("計算"):
 
         P1=[x/TotalLaneCPI for x in LaneCPI]
 
-        LaneBonus=[0.06,0.06,0.07,0.10,0.12,0.14]
+        LaneBonus=[0.06,0.06,0.07,0.9,0.10,0.11]
 
         SecondScore=[
         0.30*Turn[i]+
