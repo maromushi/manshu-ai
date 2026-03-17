@@ -441,6 +441,23 @@ if st.button("計算"):
         )
 
         # ===============================
+        # 攻め主体判定（改良版）
+        # ===============================
+
+        Attack2 = 1 if (
+            Start[1] > Start[0] + 0.02
+            and AttackIndex[1] > AttackIndex[0]
+            and (Foot[1] >= Foot[0] or Engine[1] >= Engine[0])
+        ) else 0
+
+
+        Attack3 = 1 if (
+            Start[2] > Start[1] + 0.02
+            and AttackIndex[2] > AttackIndex[1]
+            and (Foot[2] >= Foot[1] or Engine[2] >= Engine[1])
+        ) else 0
+
+        # ===============================
         # CHAOS CORE
         # ===============================
 
@@ -572,6 +589,40 @@ if st.button("計算"):
                 SashiBoost[i]
             )
 
+            # ===============================
+            # 2まくり（弱め）
+            # ===============================
+            if Attack2 == 1:
+
+                if i == 0:
+                    value *= 0.80
+
+                if i == 1:
+                    value *= 1.18
+
+                if i == 2:
+                    value *= 0.92
+
+                if i >= 3:
+                    value *= 1.05
+
+            # ===============================
+            # 3まくり（弱め）
+            # ===============================
+            if Attack3 == 1:
+
+                if i == 0:
+                    value *= 0.85
+
+                if i == 1:
+                    value *= 0.90
+
+                if i == 2:
+                    value *= 1.22
+
+                if i >= 3:
+                    value *= 1.06
+
             # 展開艇補正
             if ExhibitLeader[i] == 1 and i >= 3:
                 value *= 1.15
@@ -633,11 +684,21 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
 
-            if a >= 2:
-                for i in range(6):
-                    if i >= a:
-                        SecondAdj[i] *= 1.04
-                        ThirdAdj[i] *= 1.05
+            for i in range(6):
+
+    dist = i - a
+
+        if dist < 0:
+            SecondAdj[i] *= (1 - 0.04*DoubleAttackScore)
+            ThirdAdj[i] *= (1 - 0.06*DoubleAttackScore)
+
+            elif dist == 1:
+                SecondAdj[i] *= 1.07
+                ThirdAdj[i] *= 1.09
+
+            elif dist >= 2:
+                SecondAdj[i] *= 1.05
+                ThirdAdj[i] *= 1.0705
 
             P_first = P1[a]
 
