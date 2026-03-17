@@ -649,13 +649,13 @@ if st.button("計算"):
 
             # 差し補正
             if i==1:
-                value*=1+0.30*SashiGap[i]
+                value*=1+0.22*SashiGap[i]
             elif i==2:
-                value*=1+0.18*SashiGap[i]
+                value*=1+0.15*SashiGap[i]
             elif i==3:
-                value*=1+0.10*SashiGap[i]
+                value*=1+0.08*SashiGap[i]
             elif i==4:
-                value*=1+0.05*SashiGap[i]
+                value*=1+0.04*SashiGap[i]
         
             if main_attacker is not None:
 
@@ -677,7 +677,7 @@ if st.button("計算"):
              for i in range(6)
         ]
 
-        LaneBonus=[0.08,0.08,0.08,0.09,0.08,0.07]
+        LaneBonus=[0.08,0.08,0.08,0.008,0.075,0.07]
 
         SecondScore=[
         0.33*Turn[i]+
