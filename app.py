@@ -698,7 +698,7 @@ if st.button("計算"):
 
                 elif dist >= 2:
                     SecondAdj[i] *= 1.05
-                    ThirdAdj[i] *= 1.0705
+                    ThirdAdj[i] *= 1.07
 
             P_first = P1[a]
 
@@ -807,7 +807,7 @@ if st.button("計算"):
 
         st.write(i,r)
 
-        Confidence = (
+    Confidence = (
         0.5*TopGap +
         0.3*Coverage +
         0.2*(1 - ChaosScore)
