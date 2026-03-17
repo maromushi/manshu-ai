@@ -568,7 +568,7 @@ if st.button("計算"):
 
         P1=[x/TotalLaneCPI for x in LaneCPI]
 
-        LaneBonus=[0.06,0.06,0.07,0.9,0.10,0.11]
+        LaneBonus=[0.07,0.07,0.08,0.09,0.09,0.10]
 
         SecondScore=[
         0.30*Turn[i]+
