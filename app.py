@@ -365,6 +365,18 @@ if st.button("計算"):
         StartSpread=max(Start)-min(Start)
 
         # ===============================
+        # EXHIBIT LEADER
+        # ===============================
+
+        min_exst = min(EST)
+
+        ExhibitLeader = [0]*6
+
+        for i in range(6):
+            if EST[i] == min_exst:
+                ExhibitLeader[i] = 1
+
+        # ===============================
         # SASHI CHANCE
         # ===============================
 
@@ -559,6 +571,10 @@ if st.button("計算"):
                 CrashFactor[i]*
                 SashiBoost[i]
             )
+
+            # 展開艇補正
+            if ExhibitLeader[i] == 1 and i >= 3:
+                value *= 1.15
 
             # 差し補正
             if i==1:
