@@ -628,7 +628,7 @@ if st.button("計算"):
             if Attack2 == 1:
 
                 if i == 0:
-                    value *= 0.80
+                    value *= 0.90
 
                 if i == 1:
                     value *= 1.18
