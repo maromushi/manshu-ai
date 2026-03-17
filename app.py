@@ -49,13 +49,18 @@ if st.button("計算"):
 
     def normalize(values):
 
-        mn=min(values)
-        mx=max(values)
+        valid = [v for v in values if v is not None]
 
-        if mx-mn<1e-6:
-            return [0.5]*len(values)
+        mn = min(valid)
+        mx = max(valid)
 
-        return [(v-mn)/(mx-mn) for v in values]
+        if mx-mn < 1e-6:
+            return [0.5 if v is not None else 0 for v in values]
+
+        return [
+            ((v-mn)/(mx-mn)) if v is not None else 0
+            for v in values
+        ]
 
     # =====================================
     # FIX FUNCTIONS
@@ -143,11 +148,20 @@ if st.button("計算"):
     # SANITIZE INPUT
     # =====================================
 
-    WinRate=clamp(to_float_list(fix_length(WinRate)),0,10)
-    # 勝率0補正
-    avg_win = sum(WinRate)/6
-    WinRate=[x if x>0 else avg_win*0.9 for x in WinRate]
+    # ① 先に欠場判定
+    Active = [1]*6
 
+    for i in range(6):
+        if WinRate[i]==0 and PlaceRate[i]==0:
+            Active[i]=0
+
+    # ② そのあと補正
+    avg_win = sum([WinRate[i] for i in range(6) if Active[i]==1])/max(1,sum(Active))
+
+    WinRate=[
+        x if Active[i]==1 else 0
+        for i,x in enumerate(WinRate)
+    ]
     PlaceRate=clamp(to_float_list(fix_length(PlaceRate)),0,100)
 
     AvgST=clamp(to_float_list(fix_length(AvgST)),0,0.40)
@@ -156,14 +170,21 @@ if st.button("計算"):
     Boat2=clamp(to_float_list(fix_length(Boat2)),0,100)
 
     # モーター0補正
-    avg_motor=sum(Motor2)/6
-    if avg_motor==0:
-        avg_motor=50    
-    Motor2=[x if x>0 else avg_motor for x in Motor2]
+    avg_motor = sum([Motor2[i] for i in range(6) if Active[i]==1]) / max(1,sum(Active))
+    Motor2 = [
+        Motor2[i] if Active[i]==1 else None
+        for i in range(6)
+    ]
+
     avg_boat=sum(Boat2)/6
     if avg_boat==0:
         avg_boat=50
-    Boat2=[x if x>0 else avg_boat for x in Boat2]
+    avg_boat = sum([Boat2[i] for i in range(6) if Active[i]==1]) / max(1,sum(Active))
+
+    Boat2 = [
+        Boat2[i] if Active[i]==1 else None
+        for i in range(6)
+    ]
     
     ExTime=clamp(to_float_list(fix_length(ExTime)),6,8)
     ExST=clamp(to_float_list(fix_length(ExST)),0,0.40)
@@ -181,28 +202,15 @@ if st.button("計算"):
     ExhibitionF=[0,0,0,0,0,0]
 
     # =====================================
-    # 欠場判定
-    # =====================================
-
-    Active = [1]*6
-
-    for i in range(6):
-        if (
-            WinRate[i]==0 and
-            PlaceRate[i]==0 and
-            AvgST[i]==0 and
-            Motor2[i]==0 and
-            ExTime[i]==0
-        ):
-            Active[i] = 0
-
-    # =====================================
     # AI CORE
     # =====================================
 
     def run_ai(order):
 
-        boats=[Boat[i] for i in order]
+        boats = [
+            Boat[i] if Active[i]==1 else -1
+            for i in order
+        ]
 
         WR=[WinRate[i] for i in order]
         PR=[PlaceRate[i] for i in order]
@@ -276,8 +284,11 @@ if st.button("計算"):
         # START
         # ===============================
 
-        BaseStart=[max(0,min(1,(0.20-ST[i])/0.10)) for i in range(6)]
-        ExhibitStart=[max(0,min(0.80,(0.20-EST[i])/0.10)) for i in range(6)]
+        M=[Motor2[i] for i in order]
+        BO=[Boat2[i] for i in order]
+
+        MotorScore = normalize(M)
+        BoatScore  = normalize(BO)
 
         StartRaw=[0.75*BaseStart[i]+0.25*ExhibitStart[i] for i in range(6)]
 
@@ -757,7 +768,7 @@ if st.button("計算"):
                 third_scores = [
                 ThirdAdj[i] if Active[i]==1 else 0
                 for i in remain2
-]
+                ]
                 total3=sum(third_scores)
 
                 if total3<=0:
@@ -766,6 +777,7 @@ if st.button("計算"):
                 third_probs=[s/total3 for s in third_scores]
 
                 for idx_c,c in enumerate(remain2):
+
                     if Active[c] == 0:
                         continue
 
@@ -773,7 +785,8 @@ if st.button("計算"):
 
                     p = P_first * P_second * P_third
 
-                    results.append((boats[a],boats[b],boats[c],p))
+                    if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
+                        results.append((boats[a],boats[b],boats[c],p))
 
         return results
 
