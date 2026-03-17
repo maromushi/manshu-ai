@@ -701,6 +701,9 @@ if st.button("計算"):
 
         for a in range(6):
 
+            if Active[a] == 0:
+                continue
+
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
 
