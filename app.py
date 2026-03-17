@@ -144,6 +144,10 @@ if st.button("計算"):
     # =====================================
 
     WinRate=clamp(to_float_list(fix_length(WinRate)),0,10)
+    # 勝率0補正
+    avg_win = sum(WinRate)/6
+    WinRate=[x if x>0 else avg_win*0.9 for x in WinRate]
+
     PlaceRate=clamp(to_float_list(fix_length(PlaceRate)),0,100)
 
     AvgST=clamp(to_float_list(fix_length(AvgST)),0,0.40)
@@ -151,6 +155,13 @@ if st.button("計算"):
     Motor2=clamp(to_float_list(fix_length(Motor2)),0,100)
     Boat2=clamp(to_float_list(fix_length(Boat2)),0,100)
 
+    # モーター0補正
+    avg_motor=sum(Motor2)/6
+    Motor2=[x if x>0 else avg_motor for x in Motor2]
+
+    avg_boat=sum(Boat2)/6
+    Boat2=[x if x>0 else avg_boat for x in Boat2]
+    
     ExTime=clamp(to_float_list(fix_length(ExTime)),6,8)
     ExST=clamp(to_float_list(fix_length(ExST)),0,0.40)
 
