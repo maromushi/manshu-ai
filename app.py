@@ -363,7 +363,7 @@ if st.button("計算"):
         ) else 0
 
         FourLaneAttackFlag = 1 if (
-        Start[3] <= min(Start[1],Start[2])
+        Start[3] <= min(Start[1],Start[2]) + 0.02
         ) else 0
 
         # ===============================
