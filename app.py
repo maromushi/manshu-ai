@@ -557,20 +557,21 @@ if st.button("計算"):
         LaneBonus=[0.06,0.06,0.07,0.10,0.12,0.14]
 
         SecondScore=[
-        0.35*Turn[i]+
+        0.30*Turn[i]+
         0.25*Foot[i]+
         0.20*Engine[i]+
-        0.10*Velocity[i]
+        0.10*Velocity[i]+
+        0.15*LaneBonus[i]
         
         for i in range(6)
         ]
 
         ThirdScore=[
-        0.40*Velocity[i]+
-        0.25*Foot[i]+
+        0.25*Velocity[i]+
+        0.30*Foot[i]+
         0.20*Engine[i]+
         0.10*LaneBonus[i]+
-        0.05*InsideSurvival[i]
+        0.10*InsideSurvival[i]
 
             
         for i in range(6)
@@ -586,8 +587,8 @@ if st.button("計算"):
             if a >= 2:
                 for i in range(6):
                     if i >= a:
-                        SecondAdj[i] *= 1.12
-                        ThirdAdj[i] *= 1.18
+                        SecondAdj[i] *= 1.06
+                        ThirdAdj[i] *= 1.08
 
             P_first = P1[a]
 
