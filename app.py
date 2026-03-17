@@ -2,6 +2,29 @@ import streamlit as st
 
 st.title("万舟AI")
 
+# ====================================
+# NORMALIZE
+# =====================================
+
+def normalize(values):
+
+    valid = [v for v in values if v is not None]
+
+    if len(valid) == 0:
+        return [0]*len(values)
+
+    mn = min(valid)
+    mx = max(valid)
+
+    if mx-mn < 1e-6:
+        return [0.5 if v is not None else 0 for v in values]
+
+    return [
+       ((v-mn)/(mx-mn)) if v is not None else 0
+       for v in values
+    ]
+
+
 data = st.text_area("抽出データを貼り付け")
 
 if st.button("計算"):
@@ -42,28 +65,6 @@ if st.button("計算"):
     # ↓ここから万舟AIコード
 
     import itertools
-
-    # =====================================
-    # NORMALIZE
-    # =====================================
-
-    def normalize(values):
-
-        valid = [v for v in values if v is not None]
-
-        if len(valid) == 0:
-            return [0]*len(values)
-
-        mn = min(valid)
-        mx = max(valid)
-
-        if mx-mn < 1e-6:
-            return [0.5 if v is not None else 0 for v in values]
-
-        return [
-            ((v-mn)/(mx-mn)) if v is not None else 0
-            for v in values
-        ]
             
 
     # =====================================
