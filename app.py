@@ -363,6 +363,15 @@ if st.button("計算"):
         PerformanceSpread=max(CPI)-min(CPI)
 
         StartSpread=max(Start)-min(Start)
+
+        # ===============================
+        # SASHI CHANCE
+        # ===============================
+
+        SashiGap=[0]*6
+
+        for i in range(1,6):
+            SashiGap[i]=max(0,Start[i]-Start[i-1])
     
         # ===============================
         # ATTACK FLAG
@@ -550,6 +559,16 @@ if st.button("計算"):
                 CrashFactor[i]*
                 SashiBoost[i]
             )
+
+            # 差し補正
+            if i==1:
+                value*=1+0.30*SashiGap[i]
+            elif i==2:
+                value*=1+0.18*SashiGap[i]
+            elif i==3:
+                value*=1+0.10*SashiGap[i]
+            elif i==4:
+                value*=1+0.05*SashiGap[i]
         
             if main_attacker is not None:
 
