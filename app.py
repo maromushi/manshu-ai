@@ -157,9 +157,13 @@ if st.button("計算"):
 
     # モーター0補正
     avg_motor=sum(Motor2)/6
+    
     Motor2=[x if x>0 else avg_motor for x in Motor2]
-
+    if avg_motor==0:
+        avg_motor=50
     avg_boat=sum(Boat2)/6
+    if avg_boat==0:
+        avg_boat=50
     Boat2=[x if x>0 else avg_boat for x in Boat2]
     
     ExTime=clamp(to_float_list(fix_length(ExTime)),6,8)
