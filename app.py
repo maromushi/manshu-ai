@@ -288,6 +288,9 @@ if st.button("計算"):
         # START
         # ===============================
 
+        BaseStart = normalize([0.30 - x for x in ST])
+        ExhibitStart = normalize([0.30 - x for x in EST])
+        
         StartRaw=[0.75*BaseStart[i]+0.25*ExhibitStart[i] for i in range(6)]
 
         Start=StartRaw
@@ -857,20 +860,3 @@ if st.button("計算"):
     for i,r in enumerate(Final,1):
 
         st.write(i,r)
-
-    Confidence = (
-        0.5*TopGap +
-        0.3*Coverage +
-        0.2*(1 - ChaosScore)
-    )
-
-    st.write("Confidence:", Confidence)
-
-    if Confidence < 0.15:
-        st.write("⚠️ 不安定レース（見送り推奨）")
-
-    # 1位の信頼度（単体）
-    Top1 = results[0][3]
-
-    if Top1 < 0.08:
-        st.write("⚠️ 頭不安定")    
