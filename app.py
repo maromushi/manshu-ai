@@ -181,6 +181,22 @@ if st.button("計算"):
     ExhibitionF=[0,0,0,0,0,0]
 
     # =====================================
+    # 欠場判定
+    # =====================================
+
+    Active = [1]*6
+
+    for i in range(6):
+        if (
+            WinRate[i]==0 and
+            PlaceRate[i]==0 and
+            AvgST[i]==0 and
+            Motor2[i]==0 and
+            ExTime[i]==0
+        ):
+            Active[i] = 0
+
+    # =====================================
     # AI CORE
     # =====================================
 
@@ -577,6 +593,12 @@ if st.button("計算"):
             for j in range(main_attacker+1,6):
                 SashiBoost[j] = 1 + 0.12*attack_power
 
+        for i in range(6):
+
+            if Active[i] == 0:
+                LaneCPI.append(0)
+                continue
+            
         LaneCPI=[]
 
         for i in range(6):
@@ -705,7 +727,10 @@ if st.button("計算"):
             # 残り5艇
             remain1=[i for i in range(6) if i!=a]
 
-            second_scores=[SecondAdj[i] for i in remain1]
+            second_scores = [
+                SecondAdj[i] if Active[i]==1 else 0
+                for i in remain1
+            ]
             total2=sum(second_scores)
 
             if total2<=0:
@@ -719,7 +744,10 @@ if st.button("計算"):
 
                 remain2=[i for i in remain1 if i!=b]
 
-                third_scores=[ThirdAdj[i] for i in remain2]
+            third_scores = [
+                ThirdAdj[i] if Active[i]==1 else 0
+                for i in remain2
+]
                 total3=sum(third_scores)
 
                 if total3<=0:
