@@ -486,7 +486,7 @@ if st.button("計算"):
         0.58*DynamicInsideFactor*(1-0.15*ChaosScore),
         0.19+(0.45*(1-DynamicInsideFactor)*0.40),
         0.16+(0.45*(1-DynamicInsideFactor)*0.30),
-        0.12+(0.45*(1-DynamicInsideFactor)*0.20),
+        0.14+(0.45*(1-DynamicInsideFactor)*0.20),
         0.07+(0.45*(1-DynamicInsideFactor)*0.07),
         0.04+(0.45*(1-DynamicInsideFactor)*0.03)
 
