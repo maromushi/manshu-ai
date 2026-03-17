@@ -157,10 +157,9 @@ if st.button("計算"):
 
     # モーター0補正
     avg_motor=sum(Motor2)/6
-    
-    Motor2=[x if x>0 else avg_motor for x in Motor2]
     if avg_motor==0:
-        avg_motor=50
+        avg_motor=50    
+    Motor2=[x if x>0 else avg_motor for x in Motor2]
     avg_boat=sum(Boat2)/6
     if avg_boat==0:
         avg_boat=50
@@ -585,7 +584,7 @@ if st.button("計算"):
         0.25*Velocity[i]+
         0.30*Foot[i]+
         0.20*Engine[i]+
-        0.10*LaneBonus[i]+
+        0.15*LaneBonus[i]+
         0.10*InsideSurvival[i]
 
             
