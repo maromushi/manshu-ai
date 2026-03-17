@@ -51,6 +51,9 @@ if st.button("計算"):
 
         valid = [v for v in values if v is not None]
 
+        if len(valid) == 0:
+            return [0]*len(values)
+
         mn = min(valid)
         mx = max(valid)
 
@@ -61,6 +64,7 @@ if st.button("計算"):
             ((v-mn)/(mx-mn)) if v is not None else 0
             for v in values
         ]
+            ]
 
     # =====================================
     # FIX FUNCTIONS
