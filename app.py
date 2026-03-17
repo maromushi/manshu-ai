@@ -592,16 +592,14 @@ if st.button("計算"):
             # 差し
             for j in range(main_attacker+1,6):
                 SashiBoost[j] = 1 + 0.12*attack_power
+          
+        LaneCPI=[]
 
         for i in range(6):
 
             if Active[i] == 0:
                 LaneCPI.append(0)
                 continue
-            
-        LaneCPI=[]
-
-        for i in range(6):
 
             value=(
                 CPI[i]*
@@ -744,7 +742,7 @@ if st.button("計算"):
 
                 remain2=[i for i in remain1 if i!=b]
 
-            third_scores = [
+                third_scores = [
                 ThirdAdj[i] if Active[i]==1 else 0
                 for i in remain2
 ]
