@@ -284,12 +284,6 @@ if st.button("計算"):
         # START
         # ===============================
 
-        M=[Motor2[i] for i in order]
-        BO=[Boat2[i] for i in order]
-
-        MotorScore = normalize(M)
-        BoatScore  = normalize(BO)
-
         StartRaw=[0.75*BaseStart[i]+0.25*ExhibitStart[i] for i in range(6)]
 
         Start=StartRaw
