@@ -712,6 +712,32 @@ if st.button("計算"):
 
     results.sort(key=lambda x:x[3],reverse=True)
 
+    # ===============================
+    # 予想信頼度
+    # ===============================
+
+    if len(results) >= 2:
+        TopGap = results[0][3] - results[1][3]
+    else:
+        TopGap = 0
+
+    Confidence = (
+        0.5*TopGap +
+        0.3*Coverage +
+        0.2*(1 - ChaosScore)
+    )
+
+    st.write("Confidence:", Confidence)
+
+    if Confidence < 0.15:
+        st.write("⚠️ 不安定レース（見送り推奨）")
+
+    # 1位の信頼度（単体）
+    Top1 = results[0][3]
+
+    if Top1 < 0.08:
+        st.write("⚠️ 頭不安定")
+
     # =====================================
     # OUTPUT
     # =====================================
