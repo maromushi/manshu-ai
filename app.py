@@ -332,9 +332,9 @@ if st.button("計算"):
         ]
 
         AttackIndex=[
-        0.45*Start[i]+
+        0.40*Start[i]+
         0.30*Foot[i]+
-        0.15*Turn[i]+
+        0.20*Turn[i]+
         0.10*Engine[i]
         for i in range(6)
         ]
@@ -355,11 +355,11 @@ if st.button("計算"):
         # ===============================
 
         TwoLaneAttackFlag = 1 if (
-        Start[1] <= Start[0] + 0.03
+        Start[1] <= Start[0] + 0.05
         ) else 0
 
         ThreeLaneAttackFlag = 1 if (
-        Start[2] <= Start[1] + 0.02
+        Start[2] <= Start[1] + 0.04
         ) else 0
 
         FourLaneAttackFlag = 1 if (
@@ -503,7 +503,7 @@ if st.button("計算"):
 
         main_attacker = None
 
-        if max_outer > AttackIndex[2] + 0.05:
+        if max_outer > AttackIndex[2] + 0.03:
             main_attacker = outer_attackers.index(max_outer) + 3
 
         # ===============================
