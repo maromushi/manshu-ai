@@ -667,12 +667,15 @@ if st.button("計算"):
 
             LaneCPI.append(value)
 
-        TotalLaneCPI=sum(LaneCPI)
+        TotalLaneCPI = sum([LaneCPI[i] for i in range(6) if Active[i]==1])
 
-        if TotalLaneCPI<=0:
-            TotalLaneCPI=1e-6
+        if TotalLaneCPI <= 0:
+             TotalLaneCPI = 1e-6
 
-        P1=[x/TotalLaneCPI for x in LaneCPI]
+        P1 = [
+            (LaneCPI[i]/TotalLaneCPI) if Active[i]==1 else 0
+             for i in range(6)
+        ]
 
         LaneBonus=[0.08,0.08,0.08,0.09,0.08,0.07]
 
