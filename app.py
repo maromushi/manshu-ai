@@ -571,17 +571,17 @@ if st.button("計算"):
         LaneBonus=[0.07,0.07,0.08,0.09,0.09,0.10]
 
         SecondScore=[
-        0.30*Turn[i]+
-        0.25*Foot[i]+
+        0.33*Turn[i]+
+        0.27*Foot[i]+
         0.20*Engine[i]+
-        0.10*Velocity[i]+
+        0.05*Velocity[i]+
         0.15*LaneBonus[i]
         
         for i in range(6)
         ]
 
         ThirdScore=[
-        0.25*Velocity[i]+
+        0.35*Velocity[i]+
         0.30*Foot[i]+
         0.20*Engine[i]+
         0.15*LaneBonus[i]+
