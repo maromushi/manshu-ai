@@ -694,7 +694,7 @@ if st.button("計算"):
         0.30*Foot[i]+
         0.20*Engine[i]+
         0.15*LaneBonus[i]+
-        0.10*InsideSurvival[i]
+        0.05*InsideSurvival[i]
 
             
         for i in range(6)
@@ -719,12 +719,12 @@ if st.button("計算"):
                     ThirdAdj[i] *= (1 - 0.06*DoubleAttackScore)
 
                 elif dist == 1:
-                    SecondAdj[i] *= 1.07
-                    ThirdAdj[i] *= 1.09
+                    SecondAdj[i] *= 1.12
+                    ThirdAdj[i] *= 1.05
 
                 elif dist >= 2:
                     SecondAdj[i] *= 1.05
-                    ThirdAdj[i] *= 1.07
+                    ThirdAdj[i] *= 1.06
 
             P_first = P1[a]
 
