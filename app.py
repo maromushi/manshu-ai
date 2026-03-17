@@ -64,7 +64,7 @@ if st.button("計算"):
             ((v-mn)/(mx-mn)) if v is not None else 0
             for v in values
         ]
-            ]
+            
 
     # =====================================
     # FIX FUNCTIONS
