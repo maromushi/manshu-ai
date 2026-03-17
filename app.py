@@ -329,10 +329,10 @@ if st.button("計算"):
         # ===============================
 
         CPI=[
-        0.27*Skill[i]+
-        0.26*Engine[i]+
+        0.28*Skill[i]+
+        0.27*Engine[i]+
         0.27*Foot[i]+
-        0.10*Turn[i]+
+        0.08*Turn[i]+
         0.10*Velocity[i]
         for i in range(6)
         ]
@@ -601,8 +601,8 @@ if st.button("計算"):
             if a >= 2:
                 for i in range(6):
                     if i >= a:
-                        SecondAdj[i] *= 1.06
-                        ThirdAdj[i] *= 1.08
+                        SecondAdj[i] *= 1.04
+                        ThirdAdj[i] *= 1.05
 
             P_first = P1[a]
 
