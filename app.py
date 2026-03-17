@@ -729,7 +729,7 @@ if st.button("計算"):
             P_first = P1[a]
 
             # 残り5艇
-            remain1=[i for i in range(6) if i!=a]
+            remain1=[i for i in range(6) if i!=a and Active[i]==1]
 
             second_scores = [
                 SecondAdj[i] if Active[i]==1 else 0
@@ -746,7 +746,7 @@ if st.button("計算"):
 
                 P_second = second_probs[idx_b]
 
-                remain2=[i for i in remain1 if i!=b]
+                remain2=[i for i in remain1 if i!=b and Active[i]==1]
 
                 third_scores = [
                 ThirdAdj[i] if Active[i]==1 else 0
