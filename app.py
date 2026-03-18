@@ -212,6 +212,8 @@ if st.button("計算"):
 
     def run_ai(order):
 
+        FC-[Fcount[i] for i in order]
+        
         CLS=[Class[i] for i in order]
         
         boats = [
@@ -312,10 +314,10 @@ if st.button("計算"):
 
             factor = 1
 
-            if Fcount[i] == 1:
+            if FC[i] == 1:
                 factor = F_TABLE[cls]["F1"]
 
-            elif Fcount[i] >= 2:
+            elif FC[i] >= 2:
                 factor = F_TABLE[cls]["F2"]
 
             # 展示ST補正
