@@ -247,7 +247,7 @@ if st.button("計算"):
         # ENGINE
         # ===============================
 
-        EngineRaw=[0.65*M[i]+0.35*BO[i] for i in range(6)]
+        EngineRaw=[0.65*(M[i]/100)+0.35*(BO[i]/100) for i in range(6)]
 
         Engine = []
 
