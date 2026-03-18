@@ -610,6 +610,8 @@ if st.button("計算"):
 
         ]
 
+        LaneWin[0] *= 1.05
+
         # ===============================
         # ATTACK BOOST
         # ===============================
@@ -699,7 +701,7 @@ if st.button("計算"):
                 value *= 0.70
 
             if i == 0 and CLS[0] in ["A1","A2"]:
-                value *= 1.10
+                value *= 1.15
 
             # イン崩壊
             if InsideCollapse == 1:
@@ -709,7 +711,7 @@ if st.button("計算"):
             # 外まとまり
             if OuterClusterFlag == 1:
                 if i >= 4:
-                    value *= 1.03
+                    value *= 1.01
                     
 
             # ===============================
