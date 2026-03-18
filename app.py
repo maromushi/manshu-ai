@@ -279,10 +279,10 @@ if st.button("計算"):
                 factor = 0.92
             elif cls == "B1":
                 factor = 0.80
-            else:  # B2
+            else:  
                 factor = 0.65
 
-                Exhibit.append(ExhibitRaw[i]*factor)
+            Exhibit.append(ExhibitRaw[i]*factor)
 
         # ===============================
         # FOOT
