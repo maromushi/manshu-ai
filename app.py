@@ -422,14 +422,6 @@ if st.button("計算"):
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
 
-        FirstScore=[
-        0.30*Start[i]+
-        0.25*Skill[i]+
-        0.20*Engine[i]+
-        0.15*Foot[i]+
-        0.10*LaneWin[i]
-        for i in range(6)
-        ]
 
         # ===============================
         # MID CLUSTER
@@ -620,6 +612,15 @@ if st.button("計算"):
         ]
 
         LaneWin[0] *= 1.05
+
+        FirstScore=[
+        0.30*Start[i]+
+        0.25*Skill[i]+
+        0.20*Engine[i]+
+        0.15*Foot[i]+
+        0.10*LaneWin[i]
+        for i in range(6)
+        ]
 
         # ===============================
         # ATTACK BOOST
