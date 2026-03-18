@@ -265,7 +265,24 @@ if st.button("計算"):
         TimeScore=normalize([AvgEx-x for x in ET])
         ExSTScore=normalize([0.30-x for x in EST])
 
-        Exhibit=[0.80*TimeScore[i]+0.20*ExSTScore[i] for i in range(6)]
+        ExhibitRaw=[0.80*TimeScore[i]+0.20*ExSTScore[i] for i in range(6)]
+
+        Exhibit=[]
+
+        for i in range(6):
+
+            Cls = CLS[i]
+
+                if cls == "A1":
+                    factor = 1.00
+                elif cls == "A2":
+                    factor = 0.92
+                elif cls == "B1":
+                    factor = 0.80
+                else:  # B2
+                    factor = 0.65
+
+                Exhibit.append(ExhibitRaw[i]*factor)
 
         # ===============================
         # FOOT
@@ -283,7 +300,7 @@ if st.button("計算"):
         0.42*TurnScore[i]+
         0.28*LapScore[i]+
         0.25*StraightScore[i]+
-        0.05*Exhibit[i]
+        0.08*Exhibit[i]
         for i in range(6)
         ]
 
