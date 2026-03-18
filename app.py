@@ -316,7 +316,7 @@ if st.button("計算"):
 
         for i in range(6):
 
-                if Active[i]==0:
+            if Active[i]==0:
                 continue
 
             motor_ratio = Motor2[i] / max(avg_motor,1e-6)
