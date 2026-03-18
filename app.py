@@ -177,7 +177,7 @@ if st.button("計算"):
     # モーター0補正
     avg_motor = sum([Motor2[i] for i in range(6) if Active[i]==1]) / max(1,sum(Active))
     Motor2 = [
-        Motor2[i] if Active[i]==1 else None
+        Motor2[i] if Active[i]==1 else 0.0
         for i in range(6)
     ]
 
@@ -187,7 +187,7 @@ if st.button("計算"):
     avg_boat = sum([Boat2[i] for i in range(6) if Active[i]==1]) / max(1,sum(Active))
 
     Boat2 = [
-        Boat2[i] if Active[i]==1 else None
+        Boat2[i] if Active[i]==1 else 0.0
         for i in range(6)
     ]
     
