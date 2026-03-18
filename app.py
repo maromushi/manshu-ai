@@ -841,8 +841,7 @@ if st.button("計算"):
         ThirdAdj = ThirdScore.copy()
 
         for i in range(6):
-
-             dist = i - a
+            dist = i - a
 
             if dist < 0:
                 SecondAdj[i] *= (1 - 0.04*DoubleAttackScore)                    
