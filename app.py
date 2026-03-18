@@ -840,7 +840,7 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
 
-            for i in range(6):
+           for i in range(6):
 
                 dist = i - a
 
@@ -853,8 +853,17 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.08
 
                 elif dist >= 2:
-                    SecondAdj[i] *= 1.05
-                    ThirdAdj[i] *= 1.06
+                    SecondAdj[i] *= 1.03
+                    ThirdAdj[i] *= 0.98
+
+                if i <= 2:
+                    ThirdAdj[i] *= 1.05
+
+                if i == 0:
+                    ThirdAdj[i] *= 1.05
+
+                if Skill[i] < 0.3:
+                    ThirdAdj[i] *= 0.90
 
             P_first = P1[a]
 
