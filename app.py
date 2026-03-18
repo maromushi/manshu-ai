@@ -181,9 +181,6 @@ if st.button("計算"):
         for i in range(6)
     ]
 
-    avg_boat=sum(Boat2)/6
-    if avg_boat==0:
-        avg_boat=50
     avg_boat = sum([Boat2[i] for i in range(6) if Active[i]==1]) / max(1,sum(Active))
 
     Boat2 = [
@@ -250,12 +247,13 @@ if st.button("計算"):
         # ENGINE
         # ===============================
 
-        EngineRaw=[0.65*MotorScore[i]+0.35*BoatScore[i] for i in range(6)]
+        EngineRaw=[0.65*M[i]+0.35*BO[i] for i in range(6)]
+
         Engine = []
 
         for i in range(6):
 
-            if Active[i]==0:
+    　　    if Active[i]==0:
                 Engine.append(0)
                 continue
 
