@@ -422,6 +422,15 @@ if st.button("計算"):
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
 
+        FirstScore=[
+        0.30*Start[i]+
+        0.25*Skill[i]+
+        0.20*Engine[i]+
+        0.15*Foot[i]+
+        0.10*LaneWin[i]
+        for i in range(6)
+        ]
+
         # ===============================
         # MID CLUSTER
         # ===============================
@@ -799,14 +808,14 @@ if st.button("計算"):
 
             LaneCPI.append(value)
 
-        TotalLaneCPI = sum([LaneCPI[i] for i in range(6) if Active[i]==1])
+        TotalFirst = sum([FirstScore[i] for i in range(6) if Active[i]==1])
 
-        if TotalLaneCPI <= 0:
-             TotalLaneCPI = 1e-6
-
+        if TotalFirst <= 0:
+            TotalFirst = 1e-6
+        
         P1 = [
-            (LaneCPI[i]/TotalLaneCPI) if Active[i]==1 else 0
-             for i in range(6)
+        (FirstScore[i]/TotalFirst) if Active[i]==1 else 0
+        for i in range(6)
         ]
 
         LaneBonus=[0.10,0.09,0.08,0.07,0.06,0.05]
