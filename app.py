@@ -603,11 +603,11 @@ if st.button("計算"):
         )
         )
 
-        AttackBoost2 = 1 + 0.40 * TwoLaneAttackScore
-        AttackBoost3 = 1 + 0.45 * ThreeLaneAttackScore
-        AttackBoost4 = 1 + 0.40 * FourLaneAttackScore
-        AttackBoost5 = 1 + 0.70 * DoubleAttackScore
-        AttackBoost6 = 1 + 0.55 * DoubleAttackScore
+        AttackBoost2 = 1 + 0.20 * TwoLaneAttackScore
+        AttackBoost3 = 1 + 0.30 * ThreeLaneAttackScore
+        AttackBoost4 = 1 + 0.25 * FourLaneAttackScore
+        AttackBoost5 = 1 + 0.35 * DoubleAttackScore
+        AttackBoost6 = 1 + 0.25 * DoubleAttackScore
 
         AttackBoost=[
         AttackBoost1,
@@ -683,12 +683,12 @@ if st.button("計算"):
             # イン崩壊
             if InsideCollapse == 1:
                 if i <= 2:
-                    value *= 0.75
+                    value *= 0.88
 
             # 外まとまり
             if OuterClusterFlag == 1:
                 if i >= 4:
-                    value *= 1.15
+                    value *= 1.08
                     
 
             # ===============================
