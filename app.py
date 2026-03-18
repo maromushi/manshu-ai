@@ -24,17 +24,10 @@ def normalize(values):
        for v in values
     ]
 
-
 data = st.text_area("抽出データを貼り付け")
-
+        
 mode = st.selectbox("モード", ["ana","safe"])
 
-if mode == "safe":
-    
-    for i in range(6):
-    
-        if i == 0 and Skill[i] < 0.35 and Start[i] < 0.15:
-            FirstScore[i] *= 0.70
 
 if st.button("計算"):
 
@@ -375,18 +368,20 @@ if st.button("計算"):
             Start[i] *= factor
             
             # 遅いSTペナルティ（基本）
+
+            penalty = 1.0
+            
             if ST[i] > 0.20:
                 Start[i] *= 0.90
 
             if ST[i] > 0.25:
                 Start[i] *= 0.80
 
-            # A1ブラフ補正
+            # A1は軽減だけ（打ち消さない）
             if CLS[i] == "A1":
-                if ST[i] > 0.25:
-                    Start[i] *= 1.20
-                elif ST[i] > 0.20:
-                    Start[i] *= 1.10
+                penalty = max(penalty, 0.85)
+            
+            Start[i] *= penalty
     
         # ===============================
         # TURN
@@ -645,12 +640,11 @@ if st.button("計算"):
         0.15*LaneWin[i]
         for i in range(6)
         ]
-
+        
         if mode == "safe":
-        
+            
             for i in range(6):
-        
-                # 弱いインを削る
+            
                 if i == 0 and Skill[i] < 0.35 and Start[i] < 0.15:
                     FirstScore[i] *= 0.70
 
