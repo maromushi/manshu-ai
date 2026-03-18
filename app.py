@@ -253,7 +253,7 @@ if st.button("計算"):
 
         for i in range(6):
 
-                if Active[i]==0:
+            if Active[i]==0:
                 Engine.append(0)
                 continue
 
