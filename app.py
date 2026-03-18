@@ -370,14 +370,14 @@ if st.button("計算"):
         # ===============================
 
         TurnRaw=[0.30*Skill[i]+0.55*Foot[i]+0.15*Engine[i] for i in range(6)]
-        Turn=normalize(TurnRaw)
+        Turn=TurnRaw
 
         # ===============================
         # VELOCITY
         # ===============================
 
         VelocityRaw=[0.45*Foot[i]+0.35*Engine[i]+0.20*Start[i] for i in range(6)]
-        Velocity=normalize(VelocityRaw)
+        Velocity=VelocityRaw
 
         # ===============================
         # INSIDE SURVIVAL
@@ -396,10 +396,10 @@ if st.button("計算"):
         # ===============================
 
         CPI=[
-        0.22*Skill[i]+
-        0.23*Engine[i]+
-        0.23*Foot[i]+
-        0.12*Turn[i]+
+        0.20*Skill[i]+
+        0.20*Engine[i]+
+        0.22*Foot[i]+
+        0.18*Turn[i]+
         0.20*Velocity[i]
         for i in range(6)
         ]
@@ -689,7 +689,7 @@ if st.button("計算"):
             value=(
                 CPI[i]*
                 LaneWin[i]*
-                (0.7+0.3*StartBoost[i]*chaos_weight)*
+                (0.8+0.2*StartBoost[i]*chaos_weight)*
                 CrashFactor[i]*
                 SashiBoost[i]*
                 AttackBoost[i]
