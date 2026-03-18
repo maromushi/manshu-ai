@@ -668,7 +668,7 @@ if st.button("計算"):
                         )
 
                         if weak_inside:
-                        FirstScore[i] *= 0.65
+                            FirstScore[i] *= 0.65
 
 
 
