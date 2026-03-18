@@ -271,16 +271,16 @@ if st.button("計算"):
 
         for i in range(6):
 
-            Cls = CLS[i]
+            cls = CLS[i]
 
-                if cls == "A1":
-                    factor = 1.00
-                elif cls == "A2":
-                    factor = 0.92
-                elif cls == "B1":
-                    factor = 0.80
-                else:  # B2
-                    factor = 0.65
+            if cls == "A1":
+                factor = 1.00
+            elif cls == "A2":
+                factor = 0.92
+            elif cls == "B1":
+                factor = 0.80
+            else:  # B2
+                factor = 0.65
 
                 Exhibit.append(ExhibitRaw[i]*factor)
 
@@ -666,6 +666,14 @@ if st.button("計算"):
                 SashiBoost[i]
             )
 
+            value=(
+                CPI[i]*
+                LaneWin[i]*
+                (0.7+0.3*StartBoost[i])*
+                CrashFactor[i]*
+                SashiBoost[i]
+            )
+
             if i == 0 and InsideBreak == 1:
                 value *= 0.70
 
@@ -681,6 +689,7 @@ if st.button("計算"):
             if OuterClusterFlag == 1:
                 if i >= 4:
                     value *= 1.15
+                    
 
             # ===============================
             # 2まくり（弱め）
