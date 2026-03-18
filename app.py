@@ -784,7 +784,7 @@ if st.button("計算"):
             
             # 展開艇補正
             if ExhibitLeader[i] == 1 and i >= 3:
-                value *= 1.15
+                value *= 1.08
 
             # 差し補正
             if i==1:
@@ -832,11 +832,11 @@ if st.button("計算"):
         ]
 
         ThirdScore=[
-        0.40*Velocity[i]+
+        0.35*Velocity[i]+
         0.30*Foot[i]+
-        0.15*Engine[i]+
+        0.10*Engine[i]+
         0.10*LaneBonus[i]+
-        0.10*InsideSurvival[i]
+        0.15*InsideSurvival[i]
 
             
         for i in range(6)
@@ -865,7 +865,7 @@ if st.button("計算"):
     
                 elif dist >= 2:
                     SecondAdj[i] *= 1.03
-                    ThirdAdj[i] *= 0.98
+                    ThirdAdj[i] *= 0.95
     
                 if i <= 2:
                     ThirdAdj[i] *= 1.05
