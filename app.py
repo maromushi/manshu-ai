@@ -837,8 +837,8 @@ if st.button("計算"):
             if Active[a] == 0:
                 continue
 
-            SecondAdj = SecondScore.copy()
-            ThirdAdj = ThirdScore.copy()
+        SecondAdj = SecondScore.copy()
+        ThirdAdj = ThirdScore.copy()
 
         for i in range(6):
 
