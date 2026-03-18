@@ -257,7 +257,7 @@ if st.button("計算"):
                 Engine.append(0)
                 continue
 
-            motor_ratio = Motor2[i] / max(avg_motor,1e-6)
+            motor_ratio = M[i] / max(avg_motor,1e-6)
 
             factor = 0.90+ 0.10*motor_ratio
 
@@ -318,7 +318,7 @@ if st.button("計算"):
             if Active[i]==0:
                 continue
 
-            motor_ratio = Motor2[i] / max(avg_motor,1e-6)
+            motor_ratio = M[i] / max(avg_motor,1e-6)
 
             Foot[i] *= (0.90 + 0.10*motor_ratio)
 
