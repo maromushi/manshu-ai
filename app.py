@@ -247,7 +247,7 @@ if st.button("計算"):
         # ENGINE
         # ===============================
 
-        EngineRaw=[0.65*(M[i]/100)+0.35*(BO[i]/100) for i in range(6)]
+        EngineRaw=[M[i]/100 for i in range(6)]
 
         Engine = []
 
@@ -258,9 +258,8 @@ if st.button("計算"):
                 continue
 
             motor_ratio = Motor2[i] / max(avg_motor,1e-6)
-            boat_ratio  = Boat2[i] / max(avg_boat,1e-6)
 
-            factor = 0.85 + 0.10*motor_ratio + 0.05*boat_ratio
+            factor = 0.90+ 0.10*motor_ratio
 
             Engine.append(EngineRaw[i] * factor)
 
