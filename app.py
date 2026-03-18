@@ -216,7 +216,7 @@ if st.button("計算"):
     # AI CORE
     # =====================================
 
-    def run_ai(order):
+    def run_ai(order, mode):
 
         FC=[Fcount[i] for i in order]
         
@@ -969,8 +969,8 @@ if st.button("計算"):
     if len(order_ex)!=6:
         order_ex=[0,1,2,3,4,5]
 
-    res_waku=run_ai(order_waku)
-    res_ex=run_ai(order_ex)
+    res_waku=run_ai(order_waku, mode)
+    res_ex=run_ai(order_ex, mode)
 
     # =====================================
     # 合成
