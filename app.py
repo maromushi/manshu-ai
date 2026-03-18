@@ -709,7 +709,7 @@ if st.button("計算"):
             # 外まとまり
             if OuterClusterFlag == 1:
                 if i >= 4:
-                    value *= 1.08
+                    value *= 1.03
                     
 
             # ===============================
@@ -807,7 +807,7 @@ if st.button("計算"):
              for i in range(6)
         ]
 
-        LaneBonus=[0.08,0.08,0.08,0.085,0.075,0.07]
+        LaneBonus=[0.10,0.09,0.08,0.07,0.06,0.05]
 
         SecondScore=[
         0.33*Turn[i]+
@@ -820,11 +820,11 @@ if st.button("計算"):
         ]
 
         ThirdScore=[
-        0.35*Velocity[i]+
+        0.40*Velocity[i]+
         0.30*Foot[i]+
-        0.20*Engine[i]+
-        0.15*LaneBonus[i]+
-        0.05*InsideSurvival[i]
+        0.15*Engine[i]+
+        0.10*LaneBonus[i]+
+        0.10*InsideSurvival[i]
 
             
         for i in range(6)
