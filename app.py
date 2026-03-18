@@ -656,11 +656,19 @@ if st.button("計算"):
                     FirstScore[i] *= 0.90
         
         if mode == "safe":
-            
+
             for i in range(6):
-            
-                if i == 0 and Skill[i] < 0.45:
-                    FirstScore[i] *= 0.75
+
+                if i == 0:
+
+                    weak_inside = (
+                        Skill[i] < 0.45 and
+                        Start[i] < 0.18 and
+                        InsideSurvival[i] < 0.50
+                    )
+
+                    if weak_inside:
+                    FirstScore[i] *= 0.65
 
 
 
