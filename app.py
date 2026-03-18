@@ -594,6 +594,13 @@ if st.button("計算"):
         # ATTACK BOOST
         # ===============================
 
+        OuterPowerCheck = max(AttackCPI[3:6])
+
+        if OuterPowerCheck < 0.55:
+            AttackBoost[3] *= 0.85
+            AttackBoost[4] *= 0.80
+            AttackBoost[5] *= 0.75
+
         AttackBoost1 = max(
         0.70,
         1 - 0.25 * max(
