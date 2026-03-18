@@ -403,6 +403,9 @@ if st.button("計算"):
         for i in range(6)
         ]
 
+        OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
+        OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
+
         # ===============================
         # MID CLUSTER
         # ===============================
@@ -413,6 +416,8 @@ if st.button("計算"):
         PerformanceSpread=max(CPI)-min(CPI)
 
         StartSpread=max(Start)-min(Start)
+
+        InsideCollapse = 1 if (StartSpread > 0.10 and OuterClusterFlag == 1) else 0
 
         # ===============================
         # EXHIBIT LEADER
@@ -619,6 +624,10 @@ if st.button("計算"):
 
         main_attacker = None
 
+        if OuterClusterFlag == 1:
+            for j in range(3,6):
+                AttackBoost[j] *= 1.10
+
         if max_outer > AttackIndex[2] + 0.03:
             main_attacker = outer_attackers.index(max_outer) + 3
 
@@ -663,7 +672,15 @@ if st.button("計算"):
             if i == 0 and CLS[0] in ["A1","A2"]:
                 value *= 1.10
 
-            
+            # イン崩壊
+            if InsideCollapse == 1:
+                if i <= 2:
+                    value *= 0.75
+
+            # 外まとまり
+            if OuterClusterFlag == 1:
+                if i >= 4:
+                    value *= 1.15
 
             # ===============================
             # 2まくり（弱め）
