@@ -29,12 +29,12 @@ data = st.text_area("抽出データを貼り付け")
 
 mode = st.selectbox("モード", ["ana","safe"])
 
-    if mode == "safe":
+if mode == "safe":
     
-        for i in range(6):
+    for i in range(6):
     
-            if i == 0 and Skill[i] < 0.35 and Start[i] < 0.15:
-                FirstScore[i] *= 0.70
+        if i == 0 and Skill[i] < 0.35 and Start[i] < 0.15:
+            FirstScore[i] *= 0.70
 
 if st.button("計算"):
 
