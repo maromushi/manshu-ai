@@ -244,17 +244,27 @@ if st.button("計算"):
         PlaceScore=normalize(PR)
 
         SkillRaw=[0.55*WinScore[i]+0.45*PlaceScore[i] for i in range(6)]
-        Skill=normalize(SkillRaw)  
+        Skill=SkillRaw 
         
         # ===============================
         # ENGINE
         # ===============================
 
-        MotorScore=normalize(M)
-        BoatScore=normalize(BO)
-
         EngineRaw=[0.65*MotorScore[i]+0.35*BoatScore[i] for i in range(6)]
-        Engine=normalize(EngineRaw)
+        Engine = []
+
+        for i in range(6):
+
+            if Active[i]==0:
+                Engine.append(0)
+                continue
+
+            motor_ratio = Motor2[i] / max(avg_motor,1e-6)
+            boat_ratio  = Boat2[i] / max(avg_boat,1e-6)
+
+            factor = 0.85 + 0.10*motor_ratio + 0.05*boat_ratio
+
+            Engine.append(EngineRaw[i] * factor)
 
         # ===============================
         # EXHIBIT
@@ -304,14 +314,23 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        Foot=normalize(RawFoot)
+        Foot=RawFoot
+
+        for i in range(6):
+
+            if Active[i]==0:
+                continue
+
+            motor_ratio = Motor2[i] / max(avg_motor,1e-6)
+
+            Foot[i] *= (0.90 + 0.10*motor_ratio)
 
         # ===============================
         # START
         # ===============================
 
-        BaseStart = normalize([0.30 - x for x in ST])
-        ExhibitStart = normalize([0.30 - x for x in EST])
+        BaseStart = ([0.30 - x for x in ST])
+        ExhibitStart = ([0.30 - x for x in EST])
         
         StartRaw=[0.75*BaseStart[i]+0.25*ExhibitStart[i] for i in range(6)]
 
@@ -379,11 +398,11 @@ if st.button("計算"):
         # ===============================
 
         CPI=[
-        0.28*Skill[i]+
-        0.27*Engine[i]+
-        0.27*Foot[i]+
-        0.08*Turn[i]+
-        0.10*Velocity[i]
+        0.22*Skill[i]+
+        0.23*Engine[i]+
+        0.23*Foot[i]+
+        0.12*Turn[i]+
+        0.20*Velocity[i]
         for i in range(6)
         ]
 
@@ -551,8 +570,12 @@ if st.button("計算"):
 
         ChaosScore=max(0,min(1,ChaosScore))
 
-        #if ChaosScore<0.55:
-        #    return []
+        if ChaosScore < 0.45:
+            chaos_weight = 0.7   # 安定レース
+        elif ChaosScore < 0.65:
+            chaos_weight = 1.0   # 通常
+        else:
+            chaos_weight = 1.3   # 荒れ
 
         # ===============================
         # STAGE17
@@ -581,12 +604,12 @@ if st.button("計算"):
 
         LaneWin=[
 
-        0.58*DynamicInsideFactor*(1-0.15*ChaosScore),
-        0.19+(0.45*(1-DynamicInsideFactor)*0.40),
-        0.16+(0.45*(1-DynamicInsideFactor)*0.30),
-        0.14+(0.45*(1-DynamicInsideFactor)*0.20),
-        0.07+(0.45*(1-DynamicInsideFactor)*0.07),
-        0.04+(0.45*(1-DynamicInsideFactor)*0.03)
+        0.58*DynamicInsideFactor*(1-0.25*ChaosScore),
+        0.19+(0.45*(1-DynamicInsideFactor)*0.40)*(1+0.20*ChaosScore),
+        0.16+(0.45*(1-DynamicInsideFactor)*0.30)*(1+0.25*ChaosScore),
+        0.14+(0.45*(1-DynamicInsideFactor)*0.20)*(1+0.30*ChaosScore),
+        0.07+(0.45*(1-DynamicInsideFactor)*0.07)*(1+0.35*ChaosScore),
+        0.04+(0.45*(1-DynamicInsideFactor)*0.03)*(1+0.40*ChaosScore)
 
         ]
 
@@ -595,11 +618,6 @@ if st.button("計算"):
         # ===============================
 
         OuterPowerCheck = max(AttackCPI[3:6])
-
-        if OuterPowerCheck < 0.55:
-            AttackBoost[3] *= 0.85
-            AttackBoost[4] *= 0.80
-            AttackBoost[5] *= 0.75
 
         AttackBoost1 = max(
         0.70,
@@ -624,6 +642,11 @@ if st.button("計算"):
         AttackBoost5,
         AttackBoost6
         ]
+
+        if OuterPowerCheck < 0.55:
+            AttackBoost[3] *= 0.85
+            AttackBoost[4] *= 0.80
+            AttackBoost[5] *= 0.75
 
         outer_attackers = AttackIndex[3:6]
 
@@ -668,18 +691,12 @@ if st.button("計算"):
             value=(
                 CPI[i]*
                 LaneWin[i]*
-                (0.7+0.3*StartBoost[i])*
+                (0.7+0.3*StartBoost[i]*chaos_weight)*
                 CrashFactor[i]*
-                SashiBoost[i]
+                SashiBoost[i]*
+                AttackBoost[i]
             )
 
-            value=(
-                CPI[i]*
-                LaneWin[i]*
-                (0.7+0.3*StartBoost[i])*
-                CrashFactor[i]*
-                SashiBoost[i]
-            )
 
             if i == 0 and InsideBreak == 1:
                 value *= 0.70
