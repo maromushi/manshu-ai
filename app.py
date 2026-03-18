@@ -640,13 +640,28 @@ if st.button("計算"):
         0.15*LaneWin[i]
         for i in range(6)
         ]
+
+        # 外の1着抑制（重要）
+        for i in range(6):
+
+            if i >= 4:
+        
+                # インより遅いなら強く削る
+                if Start[i] < Start[0]:
+                    FirstScore[i] *= 0.75
+        
+                # 同等なら軽く削る
+                else:
+                    FirstScore[i] *= 0.90
         
         if mode == "safe":
             
             for i in range(6):
             
-                if i == 0 and Skill[i] < 0.35 and Start[i] < 0.15:
-                    FirstScore[i] *= 0.70
+                if i == 0 and Skill[i] < 0.45:
+                    FirstScore[i] *= 0.75
+
+
 
         # ===============================
         # ATTACK BOOST
