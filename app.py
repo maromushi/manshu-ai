@@ -212,7 +212,7 @@ if st.button("計算"):
 
     def run_ai(order):
 
-        FC-[Fcount[i] for i in order]
+        FC=[Fcount[i] for i in order]
         
         CLS=[Class[i] for i in order]
         
