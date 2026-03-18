@@ -212,6 +212,8 @@ if st.button("計算"):
 
     def run_ai(order):
 
+        CLS=[Class[i] for i in order]
+        
         boats = [
             Boat[i] if Active[i]==1 else -1
             for i in order
@@ -306,7 +308,7 @@ if st.button("計算"):
 
         for i in range(6):
 
-            cls = Class[i]
+            cls = CLS[i]
 
             factor = 1
 
@@ -485,7 +487,7 @@ if st.button("計算"):
             and AttackIndex[2] > AttackIndex[1]
             and (Foot[2] >= Foot[1] or Engine[2] >= Engine[1])
             and (
-                Class[2] in ["A1","A2"]
+                CLS[2] in ["A1","A2"]
                 or (Start[2] > Start[1] + 0.04)
             )
         ) else 0
@@ -639,7 +641,7 @@ if st.button("計算"):
             if i == 0 and InsideBreak == 1:
                 value *= 0.70
 
-            if i == 0 and Class[0] in ["A1","A2"]:
+            if i == 0 and CLS[0] in ["A1","A2"]:
                 value *= 1.10
 
             
@@ -674,7 +676,7 @@ if st.button("計算"):
 
                 if i == 2:
 
-                    if Class[2] in ["B1","B2"]:
+                    if CLS[2] in ["B1","B2"]:
 
                         if Attack3Power < 0.05:
                             value *= 0.90
@@ -691,7 +693,7 @@ if st.button("計算"):
                 if i >= 3:
                     value *= 1.06
 
-            if Attack3 == 1 and Class[2] in ["B1","B2"] and i >= 4:
+            if Attack3 == 1 and CLS[2] in ["B1","B2"] and i >= 4:
                 value *= 0.85
 
             if Attack3 == 1 and Attack3Power < 0.08:
