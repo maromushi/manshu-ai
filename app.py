@@ -484,8 +484,22 @@ if st.button("計算"):
             Start[2] > Start[1] + 0.02
             and AttackIndex[2] > AttackIndex[1]
             and (Foot[2] >= Foot[1] or Engine[2] >= Engine[1])
+            and (
+                Class[2] in ["A1","A2"]
+                or (Start[2] > Start[1] + 0.04)
+            )
         ) else 0
 
+        Attack3Power = (
+            max(0, Start[2] - Start[1]) +
+            max(0, AttackIndex[2] - AttackIndex[1])
+        )
+
+        InsideBreak = 1 if (
+            Start[0] < Start[1] - 0.03
+            and Attack3 == 1
+        ) else 0
+        
         # ===============================
         # CHAOS CORE
         # ===============================
@@ -622,6 +636,14 @@ if st.button("計算"):
                 SashiBoost[i]
             )
 
+            if i == 0 and InsideBreak == 1:
+                value *= 0.70
+
+            if i == 0 and Class[0] in ["A1","A2"]:
+                value *= 1.10
+
+            
+
             # ===============================
             # 2まくり（弱め）
             # ===============================
@@ -651,11 +673,35 @@ if st.button("計算"):
                     value *= 0.90
 
                 if i == 2:
-                    value *= 1.22
+
+                    if Class[2] in ["B1","B2"]:
+
+                        if Attack3Power < 0.05:
+                            value *= 0.90
+
+                        elif Attack3Power < 0.10:
+                            value *= 1.00
+
+                        else:
+                            value *= 1.10
+
+                    else:
+                        value *= 1.10
 
                 if i >= 3:
                     value *= 1.06
 
+            if Attack3 == 1 and Class[2] in ["B1","B2"] and i >= 4:
+                value *= 0.85
+
+            if Attack3 == 1 and Attack3Power < 0.08:
+
+                if i == 1:
+                    value *= 1.20
+
+                if i == 0:
+                    value *= 1.05
+            
             # 展開艇補正
             if ExhibitLeader[i] == 1 and i >= 3:
                 value *= 1.15
