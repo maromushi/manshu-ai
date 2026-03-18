@@ -614,11 +614,11 @@ if st.button("計算"):
         LaneWin[0] *= 1.05
 
         FirstScore=[
-        0.30*Start[i]+
+        0.35*Start[i]+
         0.25*Skill[i]+
-        0.20*Engine[i]+
-        0.15*Foot[i]+
-        0.10*LaneWin[i]
+        0.15*Engine[i]+
+        0.10*Foot[i]+
+        0.15*LaneWin[i]
         for i in range(6)
         ]
 
