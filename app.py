@@ -995,7 +995,7 @@ if st.button("計算"):
                 elif i == 3: # 4号艇
                     ThirdAdj[i] *= 1.06
                 elif i == 4: # 5号艇
-                    if Foot[i] < 0.50
+                    if Foot[i] < 0.50:
                         ThirdAdj[i] *= 0.95
                     else:
                         ThirdAdj[i] *= 1.00
