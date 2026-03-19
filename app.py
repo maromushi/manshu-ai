@@ -953,6 +953,9 @@ if st.button("計算"):
 
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
+
+            # 残り5艇（ここ追加）
+            remain1 = [i for i in range(6) if i != a and Active[i] == 1]
     
             for i in range(6):
 
