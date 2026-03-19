@@ -1003,7 +1003,10 @@ if st.button("計算"):
                     if Foot[i] < 0.60
                         ThirdAdj[i] *= 0.75
                     else:
-                        ThirdAdj[i] *= 0.90
+                        if DoubleAttackScore > 0.08:
+                            ThirdAdj[i] *= 0.95   # 展開ありなら残す
+                        else:
+                            ThirdAdj[i] *= 0.85   # 普通は沈める
 
                 # 展開ある時だけ6を少し戻す
                 if i == 5 and DoubleAttackScore > 0.08:
