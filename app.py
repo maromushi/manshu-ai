@@ -1000,7 +1000,8 @@ if st.button("計算"):
 
                 # 弱すぎる艇だけ削る
                 if Skill[i] < 0.30:
-                    ThirdAdj[i] *= 0.90        
+                    ThirdAdj[i] *= 0.90  
+                    
 
             second_scores = [
                 SecondAdj[i] if Active[i]==1 else 0
