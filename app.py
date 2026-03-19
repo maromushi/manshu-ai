@@ -639,7 +639,7 @@ if st.button("計算"):
 
         for i in range(6):
 
-            value=1+(0.35+0.45*ChaosScore)*(Start[i]-AvgStart)
+            value=1+(0.25+0.35*ChaosScore)*(Start[i]-AvgStart)
 
             value=max(0.75,value)
 
@@ -677,8 +677,7 @@ if st.button("計算"):
         # 外の1着抑制（重要）
         for i in range(6):
 
-            if i >= 4 and Foot[i] < 0.5:
-                FirstScore[i] *= 0.85
+            if i >= 4:
         
                 # インより遅いなら強く削る
                 if Start[i] < Start[0]:
