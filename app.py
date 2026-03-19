@@ -665,8 +665,6 @@ if st.button("計算"):
 
         ]
 
-        LaneWin[0] *= 1.05
-
         FirstScore=[
         0.35*Start[i]+
         0.25*Skill[i]+
@@ -690,19 +688,18 @@ if st.button("計算"):
                 else:
                     FirstScore[i] *= 0.90
         
-            if mode == "safe":
-                 LaneWin[0] *= 1.05
+        if use_mode == "safe":
+            LaneWin[0] *= 1.05
                 
-                for i in range(6):
+            for i in range(6):
 
-                    # 弱いイン削る
-                    if i == 0 and Skill[i] < 0.45:
-                        FirstScore[i] *= 0.75
+                # 弱いイン削る
+                if i == 0 and Skill[i] < 0.45:
+                    FirstScore[i] *= 0.75
                         
-                     # 外の1着を抑える
-                     if i >= 4:
-                         FirstScore[i] *= 0.80
-
+                # 外の1着を抑える
+                if i >= 4:
+                    FirstScore[i] *= 0.80
 
 
         # ===============================
