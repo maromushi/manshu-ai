@@ -995,9 +995,15 @@ if st.button("計算"):
                 elif i == 3: # 4号艇
                     ThirdAdj[i] *= 1.06
                 elif i == 4: # 5号艇
-                    ThirdAdj[i] *= 0.97
+                    if Foot[i] < 0.50
+                        ThirdAdj[i] *= 0.95
+                    else:
+                        ThirdAdj[i] *= 1.00
                 elif i == 5: # 6号艇
-                    ThirdAdj[i] *= 0.90
+                    if Foot[i] < 0.55 and Engine[i] < 0.55:
+                        ThirdAdj[i] *= 0.80
+                    else:
+                        ThirdAdj[i] *= 0.95
 
                 # 展開ある時だけ6を少し戻す
                 if i == 5 and DoubleAttackScore > 0.08:
