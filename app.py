@@ -26,7 +26,7 @@ def normalize(values):
 
 data = st.text_area("抽出データを貼り付け")
         
-mode = st.selectbox("モード", ["ana","safe"])
+mode = st.selectbox("モード", ["auto","ana","safe"])
 
 
 if st.button("計算"):
@@ -593,7 +593,42 @@ if st.button("計算"):
             chaos_weight = 1.0   # 通常
         else:
             chaos_weight = 1.3   # 荒れ
+            
+        # ===============================
+        # AUTO MODE 判定
+        # ===============================
+        
+        race_score = 0
+        
+        # イン弱い
+        if Skill[0] < 0.45:
+            race_score += 1
+        
+        # スタートばらつき
+        if max(Start) - min(Start) > 0.08:
+            race_score += 1
+        
+        # 外強い
+        if max(CPI[3:6]) > CPI[0]:
+            race_score += 1
+        
+        # 展開あり
+        if DoubleAttackScore > 0.08:
+            race_score += 1
+        
+        # 判定
+        if race_score >= 2:
+            mode_auto = "ana"
+        else:
+            mode_auto = "safe"
+        
+        # 最終モード決定
+        if mode == "auto":
+            use_mode = mode_auto
+        else:
+            use_mode = mode
 
+        
         # ===============================
         # STAGE17
         # ===============================
@@ -656,19 +691,17 @@ if st.button("計算"):
                     FirstScore[i] *= 0.90
         
             if mode == "safe":
-
+                 LaneWin[0] *= 1.05
+                
                 for i in range(6):
 
-                    if i == 0:
-
-                        weak_inside = (
-                            Skill[i] < 0.45 and
-                            Start[i] < 0.18 and
-                            InsideSurvival[i] < 0.50
-                        )
-
-                        if weak_inside:
-                            FirstScore[i] *= 0.65
+                    # 弱いイン削る
+                    if i == 0 and Skill[i] < 0.45:
+                        FirstScore[i] *= 0.75
+                        
+                     # 外の1着を抑える
+                     if i >= 4:
+                         FirstScore[i] *= 0.80
 
 
 
