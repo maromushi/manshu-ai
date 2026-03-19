@@ -981,20 +981,26 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.02
             
                 # ===============================
-                # 外救済（追加）
+                # 3着バランス補正（シンプル版）
                 # ===============================
-                if i >= 4 and Foot[i] > 0.5:
+
+                # 基本位置
+                if i == 2:   # 3号艇
                     ThirdAdj[i] *= 1.08
-            
-                # 弱い艇削る
-                if Skill[i] < 0.3:
+                elif i == 3: # 4号艇
+                    ThirdAdj[i] *= 1.06
+                elif i == 4: # 5号艇
+                    ThirdAdj[i] *= 0.97
+                elif i == 5: # 6号艇
                     ThirdAdj[i] *= 0.90
 
-            P_first = P1[a]
+                # 展開ある時だけ6を少し戻す
+                if i == 5 and DoubleAttackScore > 0.08:
+                    ThirdAdj[i] *= 1.05
 
-            # 残り5艇
-            remain1=[i for i in range(6) if i!=a and Active[i]==1]
-        
+                # 弱すぎる艇だけ削る
+                if Skill[i] < 0.30:
+                    ThirdAdj[i] *= 0.90        
 
             second_scores = [
                 SecondAdj[i] if Active[i]==1 else 0
