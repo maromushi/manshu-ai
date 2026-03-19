@@ -1000,7 +1000,7 @@ if st.button("計算"):
                     else:
                         ThirdAdj[i] *= 1.00
                 elif i == 5: # 6号艇
-                    if Foot[i] < 0.60
+                    if Foot[i] < 0.60:
                         ThirdAdj[i] *= 0.75
                     else:
                         if DoubleAttackScore > 0.08:
