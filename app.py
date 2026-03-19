@@ -688,7 +688,7 @@ if st.button("計算"):
                     FirstScore[i] *= 0.90
         
         if use_mode == "safe":
-            LaneWin[0] *= 1.05
+            FirstScore[0] *= 1.08
                 
             for i in range(6):
 
