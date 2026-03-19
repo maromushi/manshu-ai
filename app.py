@@ -931,14 +931,18 @@ if st.button("計算"):
         ]
 
         ThirdScore=[
-        0.35*Velocity[i]+
-        0.30*Foot[i]+
-        0.10*Engine[i]+
-        0.10*LaneBonus[i]+
-        0.15*InsideSurvival[i]
-            
+        0.30*Velocity[i]+
+        0.25*Foot[i]+
+        0.20*Engine[i]+
+        0.15*LaneBonus[i]+
+        0.10*InsideSurvival[i]
         for i in range(6)
         ]
+
+        # 弱い外は3着削る
+        for i in range(6):
+            if i >= 4 and Engine[i] < 0.50:
+                ThirdScore[i] *= 0.80
 
         results=[]
 
