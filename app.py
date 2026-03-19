@@ -951,6 +951,8 @@ if st.button("計算"):
             if Active[a] == 0:
                 continue
 
+            P_first = P1[a]
+
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
 
