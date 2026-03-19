@@ -242,7 +242,7 @@ if st.button("計算"):
         WinScore=normalize(WR)
         PlaceScore=normalize(PR)
 
-        SkillRaw=[0.55*WinScore[i]+0.45*PlaceScore[i] for i in range(6)]
+        SkillRaw=[0.55*WinScore[i] for i in range(6)]
         Skill=SkillRaw 
         
         # ===============================
@@ -931,8 +931,8 @@ if st.button("計算"):
         ]
 
         ThirdScore=[
-        0.30*Velocity[i]+
-        0.25*Foot[i]+
+        0.25*Velocity[i]+
+        0.30*Foot[i]+
         0.20*Engine[i]+
         0.15*LaneBonus[i]+
         0.10*InsideSurvival[i]
@@ -964,7 +964,7 @@ if st.button("計算"):
                 dist = i - a
             
                 if dist < 0:
-                    SecondAdj[i] *= (1 - 0.04*DoubleAttackScore)                    
+                    SecondAdj[i] *= (1 - 0.04*DoubleAttacScore)                  
                     ThirdAdj[i] *= (1 - 0.06*DoubleAttackScore)
             
                 elif dist == 1:
@@ -1003,22 +1003,18 @@ if st.button("計算"):
 
                 # 基本位置
                 if i == 2:   # 3号艇
-                    ThirdAdj[i] *= 1.08
+                    ThirdAdj[i] *= 1.10
                 elif i == 3: # 4号艇
-                    ThirdAdj[i] *= 1.06
+                    ThirdAdj[i] *= 1.08
                 elif i == 4: # 5号艇
-                    if Foot[i] < 0.50:
-                        ThirdAdj[i] *= 0.95
+                    ThirdAdj[i] *= 0.97
                     else:
                         ThirdAdj[i] *= 1.00
                 elif i == 5: # 6号艇
                     if Foot[i] < 0.60:
                         ThirdAdj[i] *= 0.75
                     else:
-                        if DoubleAttackScore > 0.08:
-                            ThirdAdj[i] *= 0.95   # 展開ありなら残す
-                        else:
-                            ThirdAdj[i] *= 0.85   # 普通は沈める
+                        ThirdAdj[i] *= 0.90  # 普通は沈める
 
                 # 展開ある時だけ6を少し戻す
                 if i == 5 and DoubleAttackScore > 0.08:
