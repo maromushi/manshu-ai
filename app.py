@@ -674,6 +674,15 @@ if st.button("計算"):
         for i in range(6)
         ]
 
+        # ===============================
+        # ST遅い艇の頭抑制（追加）
+        # ===============================
+        AvgStart = sum(Start)/6
+
+        for i in range(6):
+            if Start[i] < AvgStart - 0.03:
+                FirstScore[i] *= 0.80
+
         # 外の1着抑制（重要）
         for i in range(6):
 
@@ -696,10 +705,12 @@ if st.button("計算"):
                 if i == 0 and Skill[i] < 0.45:
                     FirstScore[i] *= 0.75
                         
-                # 外の1着を抑える
+                # ===============================
+                # 外の頭条件化（修正）
+                # ===============================
                 if i >= 4:
-                    FirstScore[i] *= 0.80
-
+                    if AttackIndex[i] < max(AttackIndex):
+                        FirstScore[i] *= 0.70
 
         # ===============================
         # ATTACK BOOST
