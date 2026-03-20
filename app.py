@@ -716,6 +716,10 @@ if st.button("計算"):
         for i in range(6)
         ]
 
+        # ===== イン最低保証 =====
+        if i == 0 and Skill[0] >= 0.55 and Engine[0] >= 0.50:
+            FirstScore[0] *= 1.08
+
         # ===== 2差し直撃補正（最重要） =====
 
         if CPI[1] >= CPI[0] - 0.04 and Start[1] <= Start[0] + 0.03:
