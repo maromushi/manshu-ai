@@ -773,20 +773,28 @@ if st.button("計算"):
                     if AttackIndex[i] < max(AttackIndex):
                         FirstScore[i] *= 0.70
 
-        # ===== 6頭解放 =====
+        # ===== 6頭処理 =====
 
         if SixHeadFlag == 1:
 
-            FirstScore[5] *= 1.35
+            boost = 1.20 + 0.30 * (CPI[5] - 0.50)
 
+            FirstScore[5] *= boost
             FirstScore[0] *= 0.85
             FirstScore[1] *= 0.90
 
-        # ===== 6抑制 =====
+        else:
 
-        if SixHeadFlag == 0:
+            # ===== 6抑制（強弱分岐） =====
 
-            FirstScore[5] *= 0.75
+            if CPI[5] < 0.50:
+                FirstScore[5] *= 0.60
+
+            elif Start[5] < Start[3]:
+                FirstScore[5] *= 0.70
+
+            else:
+                FirstScore[5] *= 0.80
 
         # ===============================
         # ATTACK BOOST
@@ -1026,6 +1034,39 @@ if st.button("計算"):
         0.10*InsideSurvival[i]
         for i in range(6)
         ]
+
+        # ===== 6の2着残り強化 =====
+
+        SixSecondFlag = 0
+
+        if (
+            CPI[5] >= 0.50
+            and Foot[5] >= 0.55
+            and (
+                DoubleAttackScore > 0.06
+                or OuterClusterFlag == 1
+            )
+        ):
+            SixSecondFlag = 1
+
+
+        if SixSecondFlag == 1:
+
+            # 2着に強く寄せる
+            SecondScore[5] *= 1.35
+
+            # 1〜3を少し削る（前残り崩れ）
+            SecondScore[0] *= 0.92
+            SecondScore[1] *= 0.95
+            SecondScore[2] *= 0.97
+
+        else:
+
+            # 弱い6はしっかり消す
+            if Foot[5] < 0.50:
+                SecondScore[5] *= 0.70
+            else:
+                SecondScore[5] *= 0.85
 
         # ===== 3号艇の自然流入 =====
 
