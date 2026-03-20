@@ -1026,14 +1026,6 @@ if st.button("計算"):
         if CPI[1] >= CPI[0] - 0.05:
             SecondScore[1] *= 1.10
 
-        ThirdScore=[
-        0.28*Velocity[i]+
-        0.28*Foot[i]+
-        0.20*Engine[i]+
-        0.14*LaneBonus[i]+
-        0.10*InsideSurvival[i]
-        for i in range(6)
-        ]
 
         # ===== 6の2着残り強化 =====
 
@@ -1067,6 +1059,15 @@ if st.button("計算"):
                 SecondScore[5] *= 0.70
             else:
                 SecondScore[5] *= 0.85
+
+        ThirdScore=[
+        0.28*Velocity[i]+
+        0.28*Foot[i]+
+        0.20*Engine[i]+
+        0.14*LaneBonus[i]+
+        0.10*InsideSurvival[i]
+        for i in range(6)
+        ]
 
         # ===== 3号艇の自然流入 =====
 
