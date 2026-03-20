@@ -242,7 +242,7 @@ if st.button("計算"):
         WinScore=normalize(WR)
         PlaceScore=normalize(PR)
 
-        SkillRaw=[0.55*WinScore[i] for i in range(6)]
+        SkillRaw=[WinScore[i] for i in range(6)]
         Skill=SkillRaw 
         
         # ===============================
@@ -973,7 +973,7 @@ if st.button("計算"):
                 dist = i - a
             
                 if dist < 0:
-                    SecondAdj[i] *= (1 - 0.04*DoubleAttacScore)                  
+                    SecondAdj[i] *= (1 - 0.04*DoubleAttackScore)                  
                     ThirdAdj[i] *= (1 - 0.06*DoubleAttackScore)
             
                 elif dist == 1:
@@ -983,15 +983,6 @@ if st.button("計算"):
                 elif dist >= 2:
                     SecondAdj[i] *= 1.03
                     ThirdAdj[i] *= 0.95
-
-                # 弱い外の2着削り
-                if i >= 4:
-                    if Foot[i] < 0.55:
-                        SecondAdj[i] *= 0.88
-
-                if i == 5:
-                    if Foot[i] < 0.60:
-                        SecondAdj[i] *= 0.80
 
                 # ===============================
                 # 弱い外の2着削り（ここ追加）
@@ -1026,8 +1017,6 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.08
                 elif i == 4: # 5号艇
                     ThirdAdj[i] *= 0.97
-                    else:
-                        ThirdAdj[i] *= 1.00
                 elif i == 5: # 6号艇
                     if Foot[i] < 0.60:
                         ThirdAdj[i] *= 0.75
