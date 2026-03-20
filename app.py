@@ -663,6 +663,11 @@ if st.button("計算"):
 
         DynamicInsideFactor=max(0.60,DynamicInsideFactor)
 
+        # ===== イン過信抑制 =====
+
+        if CPI[1] >= CPI[0] - 0.04 and Start[1] <= Start[0] + 0.03:
+            DynamicInsideFactor *= 0.92
+
         LaneWin=[
 
         0.58*DynamicInsideFactor*(1-0.25*ChaosScore),
@@ -674,6 +679,18 @@ if st.button("計算"):
 
         ]
 
+        # ===== 2差し強化補正 =====
+
+        if CPI[1] >= CPI[0] - 0.03 and Start[1] <= Start[0] + 0.03:
+
+            LaneWin[1] += 0.07
+            LaneWin[0] -= 0.07
+
+        elif CPI[1] >= CPI[0] - 0.06 and Start[1] <= Start[0] + 0.05:
+
+            LaneWin[1] += 0.04
+            LaneWin[0] -= 0.04
+
         FirstScore=[
         0.35*Start[i]+
         0.25*Skill[i]+
@@ -682,6 +699,18 @@ if st.button("計算"):
         0.15*LaneWin[i]
         for i in range(6)
         ]
+
+        # ===== 2差し直撃補正（最重要） =====
+
+        if CPI[1] >= CPI[0] - 0.04 and Start[1] <= Start[0] + 0.03:
+
+            FirstScore[1] *= 1.12
+            FirstScore[0] *= 0.92
+
+        elif CPI[1] >= CPI[0] - 0.06 and Start[1] <= Start[0] + 0.05:
+
+            FirstScore[1] *= 1.08
+            FirstScore[0] *= 0.95
 
         # ===============================
         # ST遅い艇の頭抑制（追加）
@@ -939,6 +968,11 @@ if st.button("計算"):
         for i in range(6)
         ]
 
+        # ===== 2の差し残り強化 =====
+
+        if CPI[1] >= CPI[0] - 0.05:
+            SecondScore[1] *= 1.10
+
         ThirdScore=[
         0.28*Velocity[i]+
         0.28*Foot[i]+
@@ -947,6 +981,11 @@ if st.button("計算"):
         0.10*InsideSurvival[i]
         for i in range(6)
         ]
+
+        # ===== 3号艇の自然流入 =====
+
+        if 0.45 <= CPI[2] <= 0.60 and OuterPower <= 0.55:
+            ThirdScore[2] *= 1.10
 
         # 弱い外は3着削る
         for i in range(6):
