@@ -324,6 +324,11 @@ if st.button("計算"):
 
             Foot[i] *= (0.90 + 0.10*motor_ratio)
 
+        # 外は展示過信を少し下げる
+        for i in range(6):
+            if i >= 4:
+                Foot[i] *= 0.95
+
         # ===============================
         # START
         # ===============================
@@ -396,6 +401,10 @@ if st.button("計算"):
 
         VelocityRaw=[0.45*Foot[i]+0.35*Engine[i]+0.20*Start[i] for i in range(6)]
         Velocity=VelocityRaw
+
+        for i in range(6):
+            if i >= 4 and Engine[i] > 0.60:
+                Velocity[i] *= 1.05
 
         # ===============================
         # INSIDE SURVIVAL
@@ -931,10 +940,10 @@ if st.button("計算"):
         ]
 
         ThirdScore=[
-        0.25*Velocity[i]+
-        0.30*Foot[i]+
+        0.28*Velocity[i]+
+        0.28*Foot[i]+
         0.20*Engine[i]+
-        0.15*LaneBonus[i]+
+        0.14*LaneBonus[i]+
         0.10*InsideSurvival[i]
         for i in range(6)
         ]
