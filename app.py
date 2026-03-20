@@ -956,6 +956,13 @@ if st.button("計算"):
             if P1[i] == top:        
                 P1[i] *= 1.15
 
+        # ===== 正規化 =====
+
+        total_p1 = sum(P1)
+
+        if total_p1 > 0:
+            P1 = [p / total_p1 for p in P1]
+
         LaneBonus=[0.10,0.09,0.08,0.07,0.06,0.05]
 
         SecondScore=[
