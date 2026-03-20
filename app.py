@@ -450,6 +450,22 @@ if st.button("計算"):
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
 
+        # ===== 6頭検知フラグ =====
+
+        SixHeadFlag = 0
+
+        if (
+            CPI[5] >= max(CPI[3:6]) - 0.015
+            and Start[5] >= Start[3]
+            and Engine[5] >= 0.58
+            and Foot[5] >= 0.55
+            and (
+                InsideSurvival[0] < 0.55
+                or Start[0] < Start[1] - 0.03
+            )
+        ):
+            SixHeadFlag = 1
+
 
         # ===============================
         # MID CLUSTER
@@ -712,6 +728,13 @@ if st.button("計算"):
             FirstScore[1] *= 1.08
             FirstScore[0] *= 0.95
 
+        # ===== 2の頭確定ゾーン =====
+
+        if CPI[1] > CPI[0] and Start[1] >= Start[0]:
+
+            FirstScore[1] *= 1.15
+            FirstScore[0] *= 0.88
+
         # ===============================
         # ST遅い艇の頭抑制（追加）
         # ===============================
@@ -749,6 +772,21 @@ if st.button("計算"):
                 if i >= 4:
                     if AttackIndex[i] < max(AttackIndex):
                         FirstScore[i] *= 0.70
+
+                # ===== 6頭解放 =====
+
+                if SixHeadFlag == 1:
+
+                    FirstScore[5] *= 1.35
+
+                    FirstScore[0] *= 0.85
+                    FirstScore[1] *= 0.90
+
+                # ===== 6抑制 =====
+
+                if SixHeadFlag == 0:
+
+                   FirstScore[5] *= 0.75
 
         # ===============================
         # ATTACK BOOST
