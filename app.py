@@ -767,26 +767,26 @@ if st.button("計算"):
                     FirstScore[i] *= 0.75
                         
                 # ===============================
-                # 外の頭条件化（修正）
+                #  外の頭条件化（修正）
                 # ===============================
                 if i >= 4:
                     if AttackIndex[i] < max(AttackIndex):
                         FirstScore[i] *= 0.70
 
-                # ===== 6頭解放 =====
+        # ===== 6頭解放 =====
 
-                if SixHeadFlag == 1:
+        if SixHeadFlag == 1:
 
-                    FirstScore[5] *= 1.35
+            FirstScore[5] *= 1.35
 
-                    FirstScore[0] *= 0.85
-                    FirstScore[1] *= 0.90
+            FirstScore[0] *= 0.85
+            FirstScore[1] *= 0.90
 
-                # ===== 6抑制 =====
+        # ===== 6抑制 =====
 
-                if SixHeadFlag == 0:
+        if SixHeadFlag == 0:
 
-                   FirstScore[5] *= 0.75
+            FirstScore[5] *= 0.75
 
         # ===============================
         # ATTACK BOOST
