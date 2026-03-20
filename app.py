@@ -681,8 +681,8 @@ if st.button("計算"):
 
         # ===== イン過信抑制 =====
 
-        if CPI[1] >= CPI[0] - 0.04 and Start[1] <= Start[0] + 0.03:
-            DynamicInsideFactor *= 0.92
+        if CPI[1] >= CPI[0] - 0.05 and Start[1] <= Start[0] + 0.04:
+            DynamicInsideFactor *= 0.88
 
         LaneWin=[
 
@@ -741,8 +741,8 @@ if st.button("計算"):
         AvgStart = sum(Start)/6
 
         for i in range(6):
-            if Start[i] < AvgStart - 0.03:
-                FirstScore[i] *= 0.80
+            if Start[i] < AvgStart - 0.04:
+                FirstScore[i] *= 0.82
 
         # 外の1着抑制（重要）
         for i in range(6):
@@ -1071,8 +1071,8 @@ if st.button("計算"):
 
         # ===== 3号艇の自然流入 =====
 
-        if 0.45 <= CPI[2] <= 0.60 and OuterPower <= 0.55:
-            ThirdScore[2] *= 1.10
+        if 0.43 <= CPI[2] <= 0.62:
+            ThirdScore[2] *= 1.12
 
         # 弱い外は3着削る
         for i in range(6):
