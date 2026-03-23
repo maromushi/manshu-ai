@@ -1294,7 +1294,7 @@ if st.button("計算"):
 
         target = 0.82 + 0.12 * ChaosScore
 
-        if Coverage >= target:
+            if Coverage >= target:
 
         if len(Final)>=20:
             break
