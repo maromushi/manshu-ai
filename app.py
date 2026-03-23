@@ -1166,7 +1166,14 @@ if st.button("計算"):
 
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
-
+            
+            # ===============================
+            # ★ 3頭時の2過剰抑制
+            # ===============================
+            if a == 2:  # 3号艇が1着
+                if Turn[2] > Turn[1]:
+                    SecondAdj[1] *= 0.92
+            
             # 残り5艇（ここ追加）
             remain1 = [i for i in range(6) if i != a and Active[i] == 1]
     
