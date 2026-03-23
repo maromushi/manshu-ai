@@ -1283,20 +1283,20 @@ if st.button("計算"):
     # OUTPUT
     # =====================================
 
-    Coverage=0
-    Final=[]
-
+    Coverage = 0
+    Final = []
+    
+    target = 0.82 + 0.12 * ChaosScore  # ← ループの外でOK
+    
     for r in results:
-
-        Coverage+=r[3]
-
+    
+        Coverage += r[3]
         Final.append(r)
-
-        target = 0.82 + 0.12 * ChaosScore
-
-            if Coverage >= target:
-
-        if len(Final)>=20:
+    
+        if Coverage >= target:
+            break
+    
+        if len(Final) >= 20:
             break
 
     st.write("Coverage:",Coverage)
