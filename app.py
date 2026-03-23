@@ -1277,7 +1277,6 @@ if st.button("計算"):
             filtered.append(r)
     
     results = filtered
-]
 
     results.sort(key=lambda x:x[3],reverse=True)
 
