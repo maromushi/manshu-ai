@@ -1246,7 +1246,7 @@ if st.button("計算"):
     # ===============================
     
     # ① シャープ化
-    power = 1.2 + 0.3 * ChaosScore
+    power = 1.2 + 0.2 * ChaosScore
     
     results = [
         (a,b,c, p**power)
@@ -1297,7 +1297,7 @@ if st.button("計算"):
     Coverage = 0
     Final = []
     
-    target = 0.85 + 0.10 * ChaosScore  # ← ループの外でOK
+    target = 0.80 + 0.10 * ChaosScore  # ← ループの外でOK
     min_bets = 12
     
     for r in results:
@@ -1311,7 +1311,7 @@ if st.button("計算"):
         if len(Final) >= 20:
             break
 
-    st.write("Coverage:",Coverage)
+    st.write([round(r[3],4) for r in results[:10]])
     for i,r in enumerate(Final,1):
 
         st.write(i,r)
