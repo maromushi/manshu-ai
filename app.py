@@ -1262,10 +1262,21 @@ if st.button("計算"):
             for (a,b,c,p) in results
         ]
     
-    # ④ 軽いカット
-    results = [
-        r for r in results
-        if r[3] >= 0.008
+    filtered = []
+
+    for r in results:
+    
+        p = r[3]
+    
+        # 中穴ゾーン保護
+        if 0.01 <= p <= 0.03:
+            filtered.append(r)
+    
+        # 通常カット条件
+        elif p >= 0.006:
+            filtered.append(r)
+    
+    results = filtered
 ]
 
     results.sort(key=lambda x:x[3],reverse=True)
@@ -1287,7 +1298,8 @@ if st.button("計算"):
     Coverage = 0
     Final = []
     
-    target = 0.82 + 0.12 * ChaosScore  # ← ループの外でOK
+    target = 0.85 + 0.10 * ChaosScore  # ← ループの外でOK
+    min_bets = 12
     
     for r in results:
     
