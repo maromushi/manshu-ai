@@ -1239,6 +1239,33 @@ if st.button("計算"):
         final[key]=final.get(key,0)+0.7*p
 
     results=[(k[0],k[1],k[2],v) for k,v in final.items()]
+    
+    # ===============================
+    # ★ シャープ化 & 正規化 & カット
+    # ===============================
+    
+    # ① シャープ化
+    power = 1.2 + 0.3 * ChaosScore
+    
+    results = [
+        (a,b,c, p**power)
+        for (a,b,c,p) in results
+    ]
+    
+    # ② 正規化
+    total = sum(r[3] for r in results)
+    
+    if total > 0:
+        results = [
+            (a,b,c, p/total)
+            for (a,b,c,p) in results
+        ]
+    
+    # ④ 軽いカット
+    results = [
+        r for r in results
+        if r[3] >= 0.008
+]
 
     results.sort(key=lambda x:x[3],reverse=True)
 
@@ -1265,8 +1292,9 @@ if st.button("計算"):
 
         Final.append(r)
 
-        if Coverage>=0.90:
-            break
+        target = 0.82 + 0.12 * ChaosScore
+
+        if Coverage >= target:
 
         if len(Final)>=20:
             break
