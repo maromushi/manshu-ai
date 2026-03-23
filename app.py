@@ -1204,7 +1204,7 @@ if st.button("計算"):
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
 
-        return results
+        return results, ChaosScore
 
     # =====================================
     # 進入パターン
@@ -1219,6 +1219,8 @@ if st.button("計算"):
 
     res_waku=run_ai(order_waku, mode)
     res_ex=run_ai(order_ex, mode)
+
+    ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
 
     # =====================================
     # 合成
