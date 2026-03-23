@@ -711,7 +711,8 @@ if st.button("計算"):
         0.35*Start[i]+
         0.25*Skill[i]+
         0.15*Engine[i]+
-        0.10*Foot[i]+
+        0.15*Foot[i]+
+        0.20*Turn +
         0.15*LaneWin[i]
         for i in range(6)
         ]
@@ -729,6 +730,15 @@ if st.button("計算"):
             
         if i == 1 and Start[1] > Start[0] + 0.03:
             FirstScore[1] *= 0.90
+            
+        # ===============================
+        # ★ 攻め条件（←ここ！！！）
+        # ===============================
+        if (
+            Turn[2] == max(Turn)
+            and Foot[2] >= Foot[1]
+        ):
+            FirstScore[2] *= 1.15
         
         # ===============================
         # ★ イン残り補正（追加）
