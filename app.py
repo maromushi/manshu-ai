@@ -725,10 +725,10 @@ if st.button("計算"):
             and Start[0] >= 0.13
             and InsideSurvival[0] >= 0.55
         ):
-            FirstScore[0] *= 1.15
+            FirstScore[0] *= 1.25
             
         if i == 1 and Start[1] > Start[0] + 0.03:
-            FirstScore[1] *= 0.95
+            FirstScore[1] *= 0.90
         
         # ===============================
         # ★ イン残り補正（追加）
