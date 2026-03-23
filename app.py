@@ -715,6 +715,26 @@ if st.button("計算"):
         0.15*LaneWin[i]
         for i in range(6)
         ]
+        
+        # ===============================
+        # ★ 外A1複数 → 軸分散モード
+        # ===============================
+        
+        outer_a1 = 0
+
+        for i in range(4,6):  # 5・6コース
+            if CLS[i] == "A1" and Engine[i] >= 0.55:
+                outer_a1 += 1
+        
+        if outer_a1 >= 2:
+        
+            for i in range(4,6):
+                if CLS[i] == "A1":
+                    FirstScore[i] *= 1.15   # 外の頭を引き上げ
+        
+            # イン少し弱める
+            FirstScore[0] *= 0.90
+            FirstScore[1] *= 0.95
 
         # ===== イン最低保証 =====
         if i == 0 and Skill[0] >= 0.55 and Engine[0] >= 0.50:
