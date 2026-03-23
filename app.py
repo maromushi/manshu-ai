@@ -765,7 +765,7 @@ if st.button("計算"):
 
         # ===== 2差し直撃補正（最重要） =====
 
-        if CPI[1] >= CPI[0] - 0.04 and Start[1] <= Start[0] + 0.03:
+        if CPI[1] >= CPI[0] - 0.03 and Start[1] <= Start[0] + 0.02:
 
             FirstScore[1] *= 1.12
             FirstScore[0] *= 0.92
