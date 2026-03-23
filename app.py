@@ -712,7 +712,7 @@ if st.button("計算"):
         0.25*Skill[i]+
         0.15*Engine[i]+
         0.15*Foot[i]+
-        0.20*Turn +
+        0.20*Turn[i]+
         0.15*LaneWin[i]
         for i in range(6)
         ]
