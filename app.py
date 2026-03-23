@@ -717,6 +717,15 @@ if st.button("計算"):
         ]
         
         # ===============================
+        # ★ イン残り補正（追加）
+        # ===============================
+        if Skill[0] >= 0.45:
+            FirstScore[0] *= 1.10
+        
+        if Start[0] >= 0.14:
+            FirstScore[0] *= 1.05
+        
+        # ===============================
         # ★ 外A1複数 → 軸分散モード
         # ===============================
         
@@ -737,7 +746,7 @@ if st.button("計算"):
             FirstScore[1] *= 0.95
 
         # ===== イン最低保証 =====
-        if i == 0 and Skill[0] >= 0.55 and Engine[0] >= 0.50:
+        if Skill[0] >= 0.55 and Engine[0] >= 0.50:
             FirstScore[0] *= 1.08
 
         # ===== 2差し直撃補正（最重要） =====
@@ -772,6 +781,9 @@ if st.button("計算"):
         for i in range(6):
 
             if i >= 4:
+                
+                if outer_a1 >= 2:
+                    continue  # ←外A1強い時は絶対殺さない
         
                 # インより遅いなら強く削る
                 if Start[i] < Start[0]:
@@ -1266,7 +1278,7 @@ if st.button("計算"):
     # ===============================
     
     # ① シャープ化
-    power = 1.2 + 0.2 * ChaosScore
+    power = 1.25 + 0.25 * ChaosScore
     
     results = [
         (a,b,c, p**power)
@@ -1293,7 +1305,7 @@ if st.button("計算"):
             filtered.append(r)
     
         # 通常カット条件
-        elif p >= 0.006:
+        elif p >= 0.004:
             filtered.append(r)
     
     results = filtered
