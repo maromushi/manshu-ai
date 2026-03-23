@@ -1278,7 +1278,7 @@ if st.button("計算"):
     # ===============================
     
     # ① シャープ化
-    power = 1.25 + 0.25 * ChaosScore
+    power = 1.30 + 0.30 * ChaosScore
     
     results = [
         (a,b,c, p**power)
@@ -1329,18 +1329,22 @@ if st.button("計算"):
     Coverage = 0
     Final = []
     
-    target = 0.80 + 0.10 * ChaosScore  # ← ループの外でOK
-    min_bets = 12
+    target = 0.78 + 0.12 * ChaosScore
+    
+    # ★ 追加（超重要）
+    max_bets = int(8 + 8 * ChaosScore)   # 8〜16点に制御
     
     for r in results:
     
         Coverage += r[3]
         Final.append(r)
     
+        # カバレッジ条件
         if Coverage >= target:
             break
     
-        if len(Final) >= 20:
+        # ★ 点数制限（最重要）
+        if len(Final) >= max_bets:
             break
 
     st.write([round(r[3],4) for r in results[:10]])
