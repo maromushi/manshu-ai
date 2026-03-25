@@ -912,11 +912,11 @@ if st.button("計算"):
         if NoAttackFlag == 1:
         
             # イン残り強化
-            FirstScore[0] *= 1.18
+            FirstScore[0] *= 1.15
         
             # 攻め側弱める
-            FirstScore[2] *= 0.92
-            FirstScore[3] *= 0.92
+            FirstScore[2] *= 0.90
+            FirstScore[3] *= 0.90
 
         # ===============================
         # ATTACK BOOST
@@ -1247,9 +1247,8 @@ if st.button("計算"):
             # ===============================
             # ★ 6の2着バランス補正
             # ===============================
-            if a in [2,3]:  # 3 or 4が頭
-                if a in [2,3] and DoubleAttackScore > 0.08:
-                    SecondAdj[5] *= 0.88
+            if a in [2,3] and DoubleAttackScore > 0.08:
+                SecondAdj[5] *= 0.88
             
             # ===============================
             # ★ 3頭時の2過剰抑制
