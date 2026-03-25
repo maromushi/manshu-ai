@@ -1175,12 +1175,14 @@ if st.button("計算"):
         if SixSecondFlag == 1:
 
             # 2着に強く寄せる
-            SecondScore[5] *= 1.10
+            SecondScore[5] *= 1.08
 
             # 1〜3を少し削る（前残り崩れ）
             SecondScore[0] *= 0.92
             SecondScore[1] *= 0.95
             SecondScore[2] *= 0.97
+
+        if SixSecondFlag == 1 and Start[5] >= Start[2]:
 
         else:
 
@@ -1246,8 +1248,8 @@ if st.button("計算"):
                 ThirdAdj[3] *= 0.90
             
                 # 外と内に流す
-                SecondAdj[5] *= 1.08
-                ThirdAdj[5] *= 1.10
+                SecondAdj[5] *= 1.02
+                ThirdAdj[5] *= 1.05
             
                 SecondAdj[0] *= 1.05
                 ThirdAdj[0] *= 1.05
