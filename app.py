@@ -1550,3 +1550,14 @@ if st.button("計算"):
     for i,r in enumerate(Final,1):
 
         st.write(i,r)
+
+    # ===============================
+    # ★ コピペ用出目
+    # ===============================
+    
+    copy_text = " ".join([
+        f"{r[0]}-{r[1]}-{r[2]}"
+        for r in Final
+    ])
+    
+    st.text_area("コピペ用", copy_text, height=200)
