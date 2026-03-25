@@ -750,6 +750,7 @@ if st.button("計算"):
         if (
             Turn[2] == max(Turn)
             and Foot[2] >= Foot[1]
+            and DoubleAttackScore > 0.06   # ←これ追加
         ):
             FirstScore[2] *= 1.25
         
@@ -769,6 +770,7 @@ if st.button("計算"):
             Skill[2] >= 0.50
             and Foot[2] >= max(Foot[0], Foot[1])
             and Turn[2] >= max(Turn[0], Turn[1])
+            and DoubleAttackScore > 0.06   # ←これ追加
         ):
             FirstScore[2] *= 1.20
             
@@ -920,8 +922,8 @@ if st.button("計算"):
             FirstScore[0] *= 1.15
         
             # 攻め側弱める
-            FirstScore[2] *= 0.90
-            FirstScore[3] *= 0.90
+            FirstScore[2] *= 0.85
+            FirstScore[3] *= 0.85
 
         # ★ 6の最終制御（絶対必要）
         if FirstScore[5] == max(FirstScore):
