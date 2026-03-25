@@ -716,6 +716,21 @@ if st.button("計算"):
         0.15*LaneWin[i]
         for i in range(6)
         ]
+
+        # ===============================
+        # ★ 攻め競合（共倒れ）
+        # ===============================
+        if (
+            Turn[2] > 0.55
+            and Turn[3] > 0.55
+            and abs(Turn[2] - Turn[3]) < 0.04
+        ):
+            # 両方少し下げる
+            FirstScore[2] *= 0.90
+            FirstScore[3] *= 0.90
+        
+            # 外を少し上げる
+            FirstScore[5] *= 1.08
         
         # ===============================
         # ★ イン安定補正（これが本命）
@@ -871,6 +886,37 @@ if st.button("計算"):
 
             else:
                 FirstScore[5] *= 0.80
+
+        # ===============================
+        # ★ 攻め不発判定
+        # ===============================
+        NoAttackScore = 0
+        
+        if max(Start) - min(Start) < 0.05:
+            NoAttackScore += 1
+        
+        if DoubleAttackScore < 0.06:
+            NoAttackScore += 1
+        
+        if InsideSurvival[0] > 0.55:
+            NoAttackScore += 1
+        
+        if max(CPI[3:6]) < CPI[0] + 0.02:
+            NoAttackScore += 1
+        
+        NoAttackFlag = 1 if NoAttackScore >= 2 else 0
+
+        # ===============================
+        # ★ 攻め不発補正
+        # ===============================
+        if NoAttackFlag == 1:
+        
+            # イン残り強化
+            FirstScore[0] *= 1.18
+        
+            # 攻め側弱める
+            FirstScore[2] *= 0.92
+            FirstScore[3] *= 0.92
 
         # ===============================
         # ATTACK BOOST
@@ -1166,6 +1212,36 @@ if st.button("計算"):
 
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
+
+            # ===============================
+            # ★ 共倒れ時の着順補正
+            # ===============================
+            if (
+                Turn[2] > 0.55
+                and Turn[3] > 0.55
+                and abs(Turn[2] - Turn[3]) < 0.04
+            ):
+            
+                # 3・4の残りを削る
+                SecondAdj[2] *= 0.90
+                SecondAdj[3] *= 0.90
+            
+                ThirdAdj[2] *= 0.90
+                ThirdAdj[3] *= 0.90
+            
+                # 外と内に流す
+                SecondAdj[5] *= 1.08
+                ThirdAdj[5] *= 1.10
+            
+                SecondAdj[0] *= 1.05
+                ThirdAdj[0] *= 1.05
+
+            # ===============================
+            # ★ 6の2着バランス補正
+            # ===============================
+            if a in [2,3]:  # 3 or 4が頭
+                if a in [2,3] and DoubleAttackScore > 0.08:
+                    SecondAdj[5] *= 0.88
             
             # ===============================
             # ★ 3頭時の2過剰抑制
@@ -1282,6 +1358,14 @@ if st.button("計算"):
 
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
+
+            if NoAttackFlag == 1:
+            
+                SecondAdj[0] *= 1.10
+                ThirdAdj[0] *= 1.08
+            
+                SecondAdj[2] *= 0.93
+                SecondAdj[3] *= 0.93
 
         return results, ChaosScore
 
