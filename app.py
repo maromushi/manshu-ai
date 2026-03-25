@@ -455,7 +455,7 @@ if st.button("計算"):
         SixHeadFlag = 0
 
         if (
-            CPI[5] >= max(CPI[3:6]) - 0.015
+            CPI[5] >= max(CPI[3:6]) - 0.005
             and Start[5] >= Start[3]
             and Engine[5] >= 0.58
             and Foot[5] >= 0.55
@@ -847,6 +847,10 @@ if st.button("計算"):
                 # 同等なら軽く削る
                 else:
                     FirstScore[i] *= 0.90
+
+        # 6頭の最終ブレーキ
+        if i == 5 and Start[5] <= Start[1]:
+            FirstScore[5] *= 0.85
         
         if use_mode == "safe":
             FirstScore[0] *= 1.08
@@ -1143,8 +1147,6 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        # ★ 6は基本2着に残りすぎるので常時削る
-        SecondScore[5] *= 0.88
 
         # ===== 2の差し残り強化 =====
 
