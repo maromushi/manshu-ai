@@ -729,8 +729,6 @@ if st.button("計算"):
             FirstScore[2] *= 0.90
             FirstScore[3] *= 0.90
         
-            # 外を少し上げる
-            FirstScore[5] *= 1.08
         
         # ===============================
         # ★ イン安定補正（これが本命）
@@ -924,6 +922,10 @@ if st.button("計算"):
             # 攻め側弱める
             FirstScore[2] *= 0.90
             FirstScore[3] *= 0.90
+
+        # ★ 6の最終制御（絶対必要）
+        if FirstScore[5] == max(FirstScore):
+            FirstScore[5] *= 0.85
 
         # ===============================
         # ATTACK BOOST
