@@ -1172,7 +1172,7 @@ if st.button("計算"):
             SixSecondFlag = 1
 
 
-        if SixSecondFlag == 1:
+        if SixSecondFlag == 1 and Start[5] >= Start[2]:
 
             # 2着に強く寄せる
             SecondScore[5] *= 1.08
@@ -1181,8 +1181,6 @@ if st.button("計算"):
             SecondScore[0] *= 0.92
             SecondScore[1] *= 0.95
             SecondScore[2] *= 0.97
-
-        if SixSecondFlag == 1 and Start[5] >= Start[2]:
 
         else:
 
