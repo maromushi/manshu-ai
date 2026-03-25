@@ -743,7 +743,7 @@ if st.button("計算"):
         ):
             FirstScore[0] *= 1.25
             
-        if i == 1 and Start[1] > Start[0] + 0.03:
+        if Start[1] > Start[0] + 0.03:
             FirstScore[1] *= 0.90
             
         # ===============================
@@ -1213,6 +1213,14 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
 
+            if NoAttackFlag == 1:
+            
+                SecondAdj[0] *= 1.10
+                ThirdAdj[0] *= 1.08
+            
+                SecondAdj[2] *= 0.93
+                SecondAdj[3] *= 0.93
+
             # ===============================
             # ★ 共倒れ時の着順補正
             # ===============================
@@ -1358,14 +1366,6 @@ if st.button("計算"):
 
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
-
-            if NoAttackFlag == 1:
-            
-                SecondAdj[0] *= 1.10
-                ThirdAdj[0] *= 1.08
-            
-                SecondAdj[2] *= 0.93
-                SecondAdj[3] *= 0.93
 
         return results, ChaosScore
 
