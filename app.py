@@ -1555,8 +1555,8 @@ if st.button("計算"):
     # ★ コピペ用出目
     # ===============================
     
-    copy_text = " ".join([
-        f"{r[0]}-{r[1]}-{r[2]}"
+    copy_text = "\n".join([
+        f"{r[0]}-{r[1]}-{r[2]} ({round(r[3],4)})"
         for r in Final
     ])
     
