@@ -849,8 +849,11 @@ if st.button("計算"):
                     FirstScore[i] *= 0.90
 
         # 6頭の最終ブレーキ
-        if i == 5 and Start[5] <= Start[1]:
-            FirstScore[5] *= 0.85
+        if Start[5] < Start[0] - 0.01:
+            FirstScore[5] *= 0.70
+        
+        elif Start[5] <= Start[1] or Start[5] <= Start[0]:
+            FirstScore[5] *= 0.80
         
         if use_mode == "safe":
             FirstScore[0] *= 1.08
@@ -1172,7 +1175,7 @@ if st.button("計算"):
         if SixSecondFlag == 1:
 
             # 2着に強く寄せる
-            SecondScore[5] *= 1.15
+            SecondScore[5] *= 1.10
 
             # 1〜3を少し削る（前残り崩れ）
             SecondScore[0] *= 0.92
