@@ -1177,7 +1177,7 @@ if st.button("計算"):
         if SixSecondFlag == 1 and Start[5] >= Start[2]:
 
             # 2着に強く寄せる
-            SecondScore[5] *= 1.05
+            SecondScore[5] *= 1.02
 
             # 1〜3を少し削る（前残り崩れ）
             SecondScore[0] *= 0.92
