@@ -936,11 +936,13 @@ if st.button("計算"):
         NoAttackFlag = 0
         
         if (
-            StartSpread < 0.04
-            and DoubleAttackScore < 0.06
+            StartSpread < 0.06
+            and DoubleAttackScore < 0.10
         ):
             NoAttackFlag = 1
-        
+
+        if StartSpread < 0.05:
+            NoAttackFlag = 1
         
         if NoAttackFlag == 1:
         
