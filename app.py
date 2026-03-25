@@ -916,8 +916,6 @@ if st.button("計算"):
         # ===============================
         
         NoAttackFlag = 0
-        
-        NoAttackFlag = 0
 
         if StartSpread < 0.07:
             NoAttackFlag = 1
