@@ -894,24 +894,6 @@ if st.button("計算"):
             else:
                 FirstScore[5] *= 0.80
 
-        # ===============================
-        # ★ 攻め不発判定
-        # ===============================
-        NoAttackScore = 0
-        
-        if max(Start) - min(Start) < 0.05:
-            NoAttackScore += 1
-        
-        if DoubleAttackScore < 0.06:
-            NoAttackScore += 1
-        
-        if InsideSurvival[0] > 0.55:
-            NoAttackScore += 1
-        
-        if max(CPI[3:6]) < CPI[0] + 0.02:
-            NoAttackScore += 1
-        
-        NoAttackFlag = 1 if NoAttackScore >= 2 else 0
 
         # ===============================
         # ★ 攻め不発補正
@@ -935,13 +917,9 @@ if st.button("計算"):
         
         NoAttackFlag = 0
         
-        if (
-            StartSpread < 0.06
-            and DoubleAttackScore < 0.10
-        ):
-            NoAttackFlag = 1
+        NoAttackFlag = 0
 
-        if StartSpread < 0.05:
+        if StartSpread < 0.07:
             NoAttackFlag = 1
         
         if NoAttackFlag == 1:
