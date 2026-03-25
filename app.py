@@ -718,6 +718,29 @@ if st.button("計算"):
         ]
 
         # ===============================
+        # ★ 攻め不発（最重要）
+        # ===============================
+        
+        NoAttackFlag = 0
+
+        if StartSpread < 0.07:
+            NoAttackFlag = 1
+        
+        if NoAttackFlag == 1:
+        
+            # イン残り強化
+            FirstScore[0] *= 1.15
+        
+            # 2・3は“攻めない”
+            FirstScore[1] *= 0.95
+            FirstScore[2] *= 0.95
+            FirstScore[3] *= 0.95
+        
+            # 外はさらに弱く
+            FirstScore[4] *= 0.90
+            FirstScore[5] *= 0.90
+
+        # ===============================
         # ★ 攻め競合（共倒れ）
         # ===============================
         if (
@@ -910,29 +933,6 @@ if st.button("計算"):
         # ★ 6の最終制御（絶対必要）
         if FirstScore[5] == max(FirstScore):
             FirstScore[5] *= 0.85
-
-        # ===============================
-        # ★ 攻め不発（最重要）
-        # ===============================
-        
-        NoAttackFlag = 0
-
-        if StartSpread < 0.07:
-            NoAttackFlag = 1
-        
-        if NoAttackFlag == 1:
-        
-            # イン残り強化
-            FirstScore[0] *= 1.15
-        
-            # 2・3は“攻めない”
-            FirstScore[1] *= 0.95
-            FirstScore[2] *= 0.95
-            FirstScore[3] *= 0.95
-        
-            # 外はさらに弱く
-            FirstScore[4] *= 0.90
-            FirstScore[5] *= 0.90
 
         # ===============================
         # ATTACK BOOST
