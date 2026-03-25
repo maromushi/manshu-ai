@@ -1167,7 +1167,7 @@ if st.button("計算"):
         if SixSecondFlag == 1:
 
             # 2着に強く寄せる
-            SecondScore[5] *= 1.35
+            SecondScore[5] *= 1.15
 
             # 1〜3を少し削る（前残り崩れ）
             SecondScore[0] *= 0.92
@@ -1286,7 +1286,7 @@ if st.button("計算"):
                 # 6号艇はさらに厳しく
                 if i == 5:
                     if Foot[i] < 0.60:
-                        SecondAdj[i] *= 0.92
+                        SecondAdj[i] *= 0.90
             
                 # ===============================
                 # 内残り（条件付きに変更）
