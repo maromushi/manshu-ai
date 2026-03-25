@@ -728,8 +728,14 @@ if st.button("計算"):
         
         if NoAttackFlag == 1:
         
-            # イン残り強化
-            FirstScore[0] *= 1.15
+            # イン残りはするが“信頼しすぎない”
+            if InsideSurvival[0] >= 0.60:
+                FirstScore[0] *= 1.10
+            else:
+                FirstScore[0] *= 1.03
+
+            if Skill[0] < 0.50:
+                FirstScore[0] *= 0.92
         
             # 2・3は“攻めない”
             FirstScore[1] *= 0.95
