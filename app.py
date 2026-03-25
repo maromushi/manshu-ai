@@ -736,6 +736,17 @@ if st.button("計算"):
 
             if Skill[0] < 0.50:
                 FirstScore[0] *= 0.92
+
+            # ★ ここ追加（これ）
+            if Skill[0] < 0.55:
+                FirstScore[0] *= 0.95
+        
+            FirstScore[1] *= 0.95
+            FirstScore[2] *= 0.95
+            FirstScore[3] *= 0.95
+        
+            FirstScore[4] *= 0.85
+            FirstScore[5] *= 0.75
         
             # 2・3は“攻めない”
             FirstScore[1] *= 0.95
