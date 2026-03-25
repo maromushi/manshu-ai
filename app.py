@@ -922,8 +922,8 @@ if st.button("計算"):
             FirstScore[0] *= 1.15
         
             # 攻め側弱める
-            FirstScore[2] *= 0.85
-            FirstScore[3] *= 0.85
+            FirstScore[2] *= 0.92
+            FirstScore[3] *= 0.92
 
         # ★ 6の最終制御（絶対必要）
         if FirstScore[5] == max(FirstScore):
@@ -1226,12 +1226,17 @@ if st.button("計算"):
             ThirdAdj = ThirdScore.copy()
 
             if NoAttackFlag == 1:
-            
+                
+                # イン残り
                 SecondAdj[0] *= 1.10
                 ThirdAdj[0] *= 1.08
             
-                SecondAdj[2] *= 0.93
-                SecondAdj[3] *= 0.93
+                # 3の残り（ちゃんと効かせる）
+                SecondAdj[2] *= 1.10
+                ThirdAdj[2] *= 1.10
+            
+                # 攻め役だけ少し削る（軽く）
+                SecondAdj[3] *= 0.95        
 
             # ===============================
             # ★ 共倒れ時の着順補正
