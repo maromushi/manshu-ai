@@ -1271,11 +1271,9 @@ if st.button("計算"):
         # ===============================
         
         if NoAttackFlag == 0:
-            FirstScore[2] *= 1.05  # 3号艇
-            FirstScore[3] *= 1.06  # 4号艇
-            
-        if NoAttackFlag == 0:
-            FirstScore[0] *= 0.95
+            FirstScore[2] *= 1.10
+            FirstScore[3] *= 1.12
+            FirstScore[0] *= 0.92
 
         ThirdScore=[
         0.28*Velocity[i]+
