@@ -873,6 +873,10 @@ if st.button("計算"):
 
             FirstScore[1] *= 1.08
             FirstScore[0] *= 0.95
+            
+        # ★ 2頭うっすら拾う（追加）
+        if Start[1] >= Start[0] - 0.01:
+            FirstScore[1] *= 1.08
 
         # ===== 2の頭確定ゾーン =====
 
