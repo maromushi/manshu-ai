@@ -951,6 +951,9 @@ if st.button("計算"):
 
             else:
                 FirstScore[5] *= 0.80
+                
+                
+        NoAttackFlag = 0
 
 
         # ===============================
@@ -968,6 +971,17 @@ if st.button("計算"):
         # ★ 6の最終制御（絶対必要）
         if FirstScore[5] == max(FirstScore):
             FirstScore[5] *= 0.85
+            
+        # ===============================
+        # ★ 弱インなら強制攻め
+        # ===============================
+        
+        if (
+            WinRate[0] < 5.2
+            or Fcount[0] >= 1
+            or AvgST[0] > 0.16
+        ):
+            NoAttackFlag = 0
             
         # 弱イン補正
             
@@ -1252,6 +1266,17 @@ if st.button("計算"):
                 SecondScore[5] *= 0.70
             else:
                 SecondScore[5] *= 0.85
+                
+        # ===============================
+        # ★ 攻め展開時の外強化
+        # ===============================
+        
+        if NoAttackFlag == 0:
+            FirstScore[2] *= 1.05  # 3号艇
+            FirstScore[3] *= 1.06  # 4号艇
+            
+        if NoAttackFlag == 0:
+            FirstScore[0] *= 0.95
 
         ThirdScore=[
         0.28*Velocity[i]+
