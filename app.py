@@ -786,7 +786,7 @@ if st.button("計算"):
         ):
             # 共倒れ
             FirstScore[2] *= 0.90
-            FirstScore[3] *= 0.90
+            FirstScore[3] *= 0.85
         
             # 外浮上（重要）
             for i in range(4,6):
