@@ -981,7 +981,6 @@ if st.button("計算"):
             or Fcount[0] >= 1
             or AvgST[0] > 0.16
         ):
-            NoAttackFlag = 0
             
         # 弱イン補正
             
