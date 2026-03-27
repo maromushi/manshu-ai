@@ -782,11 +782,15 @@ if st.button("計算"):
             Turn[2] > 0.55
             and Turn[3] > 0.55
             and abs(Turn[2] - Turn[3]) < 0.04
+            and DoubleAttackScore > 0.06
         ):
-            # 両方少し下げる
+            # 共倒れ
             FirstScore[2] *= 0.90
             FirstScore[3] *= 0.90
         
+            # 外浮上（重要）
+            for i in range(4,6):
+                FirstScore[i] *= 1.05
         
         # ===============================
         # ★ イン安定補正（これが本命）
