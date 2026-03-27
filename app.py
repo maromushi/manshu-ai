@@ -968,6 +968,15 @@ if st.button("計算"):
         # ★ 6の最終制御（絶対必要）
         if FirstScore[5] == max(FirstScore):
             FirstScore[5] *= 0.85
+            
+        # 弱イン補正
+            
+        if (
+            WinRate[0] < 5.2
+            or Fcount[0] >= 1
+            or AvgST[0] > 0.16
+        ):
+            FirstScore[0] *= 0.92
 
         # ===============================
         # ATTACK BOOST
