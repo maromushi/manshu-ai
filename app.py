@@ -731,7 +731,7 @@ if st.button("計算"):
             and CPI[5] >= 0.55
             and Start[5] >= Start[3] - 0.01
             and DoubleAttackScore > 0.08
-)
+        )
         
         # ===============================
         # ★ 低性能カット（ここ）
@@ -1485,8 +1485,14 @@ if st.button("計算"):
                 if (
                     DoubleAttackScore > 0.08
                     and Start[5] >= Start[3] - 0.01
+                ):
+                SecondAdj[5] *= 1.25
+                
+            if (
+                a == 3
+                and Strong6
             ):
-                SecondAdj[5] *= 1.15
+                SecondAdj[5] *= 1.10
                     
 
             second_scores = [
