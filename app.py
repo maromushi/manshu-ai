@@ -1340,7 +1340,7 @@ if st.button("計算"):
                     DoubleAttackScore > 0.08
                     and Start[5] >= Start[3] - 0.01
                 ):
-                    SecondAdj[5] *= 1.15
+                    SecondAdj[5] *= 1.20
 
             if NoAttackFlag == 1:
                 
