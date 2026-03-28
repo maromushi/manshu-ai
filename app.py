@@ -716,6 +716,17 @@ if st.button("計算"):
         0.15*LaneWin[i]
         for i in range(6)
         ]
+        
+        # ===============================
+        # ★ 低性能カット（ここ）
+        # ===============================
+        for i in range(6):
+        
+            if Foot[i] < 0.45 and Engine[i] < 0.50:
+                FirstScore[i] *= 0.80
+        
+            if Foot[i] < 0.40:
+                FirstScore[i] *= 0.75
 
         # ===============================
         # ★ 攻め不発（最重要）
@@ -936,6 +947,16 @@ if st.button("計算"):
                 if i >= 4:
                     if AttackIndex[i] < max(AttackIndex):
                         FirstScore[i] *= 0.70
+                        
+        # ===============================
+        # ★ 6の展開連動ブースト（ここ）
+        # ===============================
+        if (
+            DoubleAttackScore > 0.08
+            and Start[5] >= Start[3] - 0.01
+            and Foot[5] >= 0.50
+        ):
+            FirstScore[5] *= 1.05
 
         # ===== 6頭処理 =====
 
