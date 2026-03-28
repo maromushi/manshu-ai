@@ -938,10 +938,9 @@ if st.button("計算"):
         if (
             DoubleAttackScore > 0.08
             and Start[5] >= Start[3] - 0.01
-            and Foot[5] >= 0.50
             and NoAttackFlag == 0
         ):
-            FirstScore[5] *= 1.05
+            FirstScore[5] *= 1.15
         
         if use_mode == "safe":
             FirstScore[0] *= 1.08
