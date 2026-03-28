@@ -1365,15 +1365,7 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
-            # ===============================
-            # ★ 4頭時の6流入（ここに入れる）
-            # ===============================
-            if a == 3:  # 4号艇が1着
-                if (
-                    DoubleAttackScore > 0.08
-                    and Start[5] >= Start[3] - 0.01
-                ):
-                    SecondAdj[5] *= 1.25
+            
 
             if NoAttackFlag == 1:
                 
@@ -1486,6 +1478,16 @@ if st.button("計算"):
                 # 弱すぎる艇だけ削る
                 if Skill[i] < 0.30:
                     ThirdAdj[i] *= 0.90  
+                    
+                # ===============================
+                # ★ 4頭時の6流入（ここに入れる）
+                # ===============================
+                if a == 3:  # 4号艇が1着
+                    if (
+                        DoubleAttackScore > 0.08
+                        and Start[5] >= Start[3] - 0.01
+                ):
+                    SecondAdj[5] *= 1.25
                     
 
             second_scores = [
