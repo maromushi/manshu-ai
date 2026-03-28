@@ -1046,7 +1046,7 @@ if st.button("計算"):
             FirstScore[3] *= 0.92
 
         # ★ 6の最終制御（絶対必要）
-        if FirstScore[5] == max(FirstScore) and not Strong6:
+        if FirstScore[5] == max(FirstScore) and not (Strong6 or Normal6):
             FirstScore[5] *= 0.92
             
         # ===============================
