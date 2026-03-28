@@ -1273,10 +1273,12 @@ if st.button("計算"):
             SixSecondFlag = 1
 
 
-        if SixSecondFlag == 1 and Start[5] >= Start[2]:
-
-            # 2着に強く寄せる
-            SecondScore[5] *= 1.02
+        if (
+            DoubleAttackScore > 0.08
+            and Start[5] >= Start[3] - 0.01
+            and Foot[5] >= 0.50
+        ):
+            SecondScore[5] *= 1.15
 
             # 1〜3を少し削る（前残り崩れ）
             SecondScore[0] *= 0.92
