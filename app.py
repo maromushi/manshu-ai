@@ -1426,6 +1426,27 @@ if st.button("計算"):
                 continue
 
             P_first = P1[a]
+            
+            # ===============================
+            # ★ 非頭艇の残り補正（最重要）
+            # ===============================
+            
+            for i in range(6):
+            
+                # 頭候補じゃない艇でも残れるようにする
+                if P1[i] < 0.18:
+            
+                    # ST強いやつは残す
+                    if Start[i] >= max(Start) - 0.02:
+            
+                        SecondAdj[i] *= 1.20
+                        ThirdAdj[i] *= 1.25
+            
+                    # A1は残す
+                    if CLS[i] == "A1":
+            
+                        SecondAdj[i] *= 1.15
+                        ThirdAdj[i] *= 1.20
 
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
