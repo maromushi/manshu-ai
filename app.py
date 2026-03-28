@@ -931,6 +931,16 @@ if st.button("計算"):
         
         elif Start[5] <= Start[1] or Start[5] <= Start[0]:
             FirstScore[5] *= 0.80
+            
+        # ===============================
+        # ★ 6の展開連動ブースト（ここ）
+        # ===============================
+        if (
+            DoubleAttackScore > 0.08
+            and Start[5] >= Start[3] - 0.01
+            and Foot[5] >= 0.50
+        ):
+            FirstScore[5] *= 1.05
         
         if use_mode == "safe":
             FirstScore[0] *= 1.08
