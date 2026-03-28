@@ -1015,6 +1015,10 @@ if st.button("計算"):
         else:
 
             # ===== 6抑制（強弱分岐） =====
+            
+            # ★ Normal6は殺さない（最重要）
+            if Normal6:
+                FirstScore[5] *= 0.95
 
             if CPI[5] < 0.50:
                 FirstScore[5] *= 0.60
