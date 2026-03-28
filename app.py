@@ -718,6 +718,22 @@ if st.button("計算"):
         ]
         
         # ===============================
+        # ★ 6の強さ分類（追加）
+        # ===============================
+        Strong6 = (
+            CLS[5] == "A1"
+            and CPI[5] >= 0.52
+            and Start[5] >= Start[3] - 0.02
+        )
+        
+        SemiStrong6 = (
+            CLS[5] == "A2"
+            and CPI[5] >= 0.55
+            and Start[5] >= Start[3] - 0.01
+            and DoubleAttackScore > 0.08
+)
+        
+        # ===============================
         # ★ 低性能カット（ここ）
         # ===============================
         for i in range(6):
@@ -917,13 +933,30 @@ if st.button("計算"):
                 if outer_a1 >= 2:
                     continue  # ←外A1強い時は絶対殺さない
         
-                # インより遅いなら強く削る
-                if Start[i] < Start[0]:
-                    FirstScore[i] *= 0.75
-        
-                # 同等なら軽く削る
-                else:
-                    FirstScore[i] *= 0.90
+                # ===== 6コース =====
+                if i == 5:
+            
+                    if Strong6:
+                        FirstScore[5] *= 1.18
+            
+                    elif SemiStrong6:
+                        FirstScore[5] *= 1.08
+            
+                    else:
+                        if Start[5] < Start[0]:
+                            FirstScore[5] *= 0.70
+                        else:
+                            FirstScore[5] *= 0.85
+            
+                # ===== 5コース =====
+                elif i == 4:
+            
+                    if CLS[4] == "A1":
+                        FirstScore[4] *= 1.08
+                    elif CLS[4] == "A2":
+                        FirstScore[4] *= 1.02
+                    else:
+                        FirstScore[4] *= 0.80
 
         # 6頭の最終ブレーキ
         if Start[5] < Start[0] - 0.01:
@@ -999,7 +1032,7 @@ if st.button("計算"):
             FirstScore[3] *= 0.92
 
         # ★ 6の最終制御（絶対必要）
-        if FirstScore[5] == max(FirstScore):
+        if FirstScore[5] == max(FirstScore) and not Strong6:
             FirstScore[5] *= 0.85
             
         # ===============================
@@ -1378,11 +1411,6 @@ if st.button("計算"):
                 SecondAdj[0] *= 1.05
                 ThirdAdj[0] *= 1.05
 
-            # ===============================
-            # ★ 6の2着バランス補正
-            # ===============================
-            if a in [2,3] and DoubleAttackScore > 0.08:
-                SecondAdj[5] *= 0.85
             
             # ===============================
             # ★ 3頭時の2過剰抑制
