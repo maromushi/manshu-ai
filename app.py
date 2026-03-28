@@ -1418,6 +1418,19 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
+            # ===============================
+            # ★ 頭弱い艇の残り救済（最重要）
+            # ===============================
+            if P1[a] < 0.18:   # ←ここがキモ
+            
+                # 6
+                SecondAdj[5] *= 1.20
+                ThirdAdj[5] *= 1.25
+            
+                # 5
+                SecondAdj[4] *= 1.15
+                ThirdAdj[4] *= 1.20
+            
             
 
             if NoAttackFlag == 1:
