@@ -1454,21 +1454,23 @@ if st.button("計算"):
             # ===============================
             # ★ 弱頭でも残り計算させる（最重要）
             # ===============================
-            if P1[a] < 0.15:
-                P_first *= 1.25
-            
-                SecondAdj[5] *= 1.30
-                ThirdAdj[5] *= 1.35
+            if (
+                P1[a] < 0.15
+                and DoubleAttackScore > 0.08
+            ):
+                P_first *= 1.10
             
             # ===============================
             # ★ 頭弱い艇の残り救済（最重要）
             # ===============================
             outer_power = max(CPI[4:6])
 
-            if outer_power > CPI[a] - 0.03:
-            
-                SecondAdj[5] *= 1.20
-                ThirdAdj[5] *= 1.25
+            if (
+                outer_power > CPI[a] + 0.02
+                and DoubleAttackScore > 0.06
+            ):
+                SecondAdj[5] *= 1.25
+                ThirdAdj[5] *= 1.30
             
                 SecondAdj[4] *= 1.10
                 ThirdAdj[4] *= 1.15
