@@ -455,17 +455,15 @@ if st.button("計算"):
         SixHeadFlag = 0
 
         if (
-            CPI[5] >= max(CPI[3:6]) - 0.005
-            and Start[5] >= Start[3]
+            CPI[5] >= max(CPI[3:6]) - 0.02
+            and Start[5] >= Start[3] - 0.01
             and Engine[5] >= 0.58
-            and Foot[5] >= 0.55
             and (
                 InsideSurvival[0] < 0.55
                 or Start[0] < Start[1] - 0.03
             )
         ):
             SixHeadFlag = 1
-
 
         # ===============================
         # MID CLUSTER
@@ -997,6 +995,10 @@ if st.button("計算"):
         if SixHeadFlag == 1:
 
             boost = 1.20 + 0.30 * (CPI[5] - 0.50)
+            
+            # ★ここ追加
+            if Engine[5] >= 0.60:
+                boost += 0.05
 
             FirstScore[5] *= boost
             FirstScore[0] *= 0.85
