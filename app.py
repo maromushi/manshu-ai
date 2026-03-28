@@ -939,6 +939,7 @@ if st.button("計算"):
             DoubleAttackScore > 0.08
             and Start[5] >= Start[3] - 0.01
             and Foot[5] >= 0.50
+            and NoAttackFlag == 0
         ):
             FirstScore[5] *= 1.05
         
