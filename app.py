@@ -1302,6 +1302,32 @@ if st.button("計算"):
         ]
         
         # ===============================
+        # ★ 外の勝者だけ残す（5・6共通）
+        # ===============================
+        outer_max = max(CPI[4], CPI[5])
+        
+        for i in range(4,6):
+        
+            if CPI[i] >= outer_max - 0.03:
+        
+                if DoubleAttackScore > 0.07:
+                    SecondScore[i] *= (1 + 0.25 * DoubleAttackScore)
+        
+            else:
+                SecondScore[i] *= 0.90
+        
+        
+        # ===============================
+        # ★ 展開6（性能じゃない6を拾う）
+        # ===============================
+        if (
+            DoubleAttackScore > 0.08
+            and Start[5] >= Start[3] - 0.02
+            and CLS[5] in ["A1","A2"]
+        ):
+            SecondScore[5] *= 1.20
+        
+        # ===============================
         # ★ 外残りフラグ（5・6用）
         # ===============================
         
@@ -1399,6 +1425,32 @@ if st.button("計算"):
         0.10*InsideSurvival[i]
         for i in range(6)
         ]
+        
+        # ===============================
+        # ★ 外の勝者だけ残す（5・6）
+        # ===============================
+        outer_max = max(CPI[4], CPI[5])
+        
+        for i in range(4,6):
+        
+            if CPI[i] >= outer_max - 0.03:
+        
+                if DoubleAttackScore > 0.07:
+                    ThirdScore[i] *= (1 + 0.30 * DoubleAttackScore)
+        
+            else:
+                ThirdScore[i] *= 0.88
+        
+        
+        # ===============================
+        # ★ 展開6（性能じゃない6）
+        # ===============================
+        if (
+            DoubleAttackScore > 0.08
+            and Start[5] >= Start[3] - 0.02
+            and CLS[5] in ["A1","A2"]
+        ):
+            ThirdScore[5] *= 1.25
         
         # ===============================
         # ★ 3着強化
