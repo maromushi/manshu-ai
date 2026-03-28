@@ -1236,6 +1236,11 @@ if st.button("計算"):
                     value *= (1+0.06*DoubleAttackScore)
 
             LaneCPI.append(value)
+            
+        # ★ デバッグここ
+        st.write("FirstScore", [round(x,3) for x in FirstScore])
+        st.write("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True))
+        st.write("SixHeadFlag", SixHeadFlag)
 
         TotalFirst = sum([FirstScore[i] for i in range(6) if Active[i]==1])
 
@@ -1650,9 +1655,6 @@ if st.button("計算"):
         if len(Final) >= max_bets:
             break
             
-    st.write("FirstScore", [round(x,3) for x in FirstScore])
-    st.write("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True))
-
     st.write([round(r[3],4) for r in results[:10]])
     for i,r in enumerate(Final,1):
 
