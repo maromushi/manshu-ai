@@ -1649,6 +1649,9 @@ if st.button("計算"):
         # ★ 点数制限（最重要）
         if len(Final) >= max_bets:
             break
+            
+    st.write("FirstScore", [round(x,3) for x in FirstScore])
+    st.write("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True))
 
     st.write([round(r[3],4) for r in results[:10]])
     for i,r in enumerate(Final,1):
