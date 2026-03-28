@@ -1279,6 +1279,53 @@ if st.button("計算"):
         
         for i in range(6)
         ]
+        
+        # ===============================
+        # ★ 外残りフラグ（5・6用）
+        # ===============================
+        
+        FlowOuter = (
+            DoubleAttackScore > 0.08
+            or OuterClusterFlag == 1
+        )
+        
+        FiveFlowFlag = (
+            FlowOuter
+            and (
+                Foot[4] >= 0.48
+                or CPI[4] >= 0.46
+            )
+            and Start[4] >= Start[2] - 0.03
+        )
+        
+        SixFlowFlag = (
+            FlowOuter
+            and (
+                Foot[5] >= 0.50
+                or CPI[5] >= 0.48
+            )
+            and Start[5] >= Start[3] - 0.03
+            
+        # ===============================
+        # ★ 2着強化
+        # ===============================
+        
+        if FiveFlowFlag:
+            SecondScore[4] *= 1.20
+        
+        if SixFlowFlag:
+            SecondScore[5] *= 1.25
+        )
+        
+        # ===============================
+        # ★ 3着強化
+        # ===============================
+        
+        if FiveFlowFlag:
+            ThirdScore[4] *= 1.15
+        
+        if SixFlowFlag:
+            ThirdScore[5] *= 1.20
 
         # ===============================
         # ★ 6の過剰2着抑制（追加）
