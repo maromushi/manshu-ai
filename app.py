@@ -1061,6 +1061,15 @@ if st.button("計算"):
             or AvgST[0] > 0.16
         ):
             FirstScore[0] *= 0.92
+            
+        # ===============================
+        # ★ 攻め展開時の外強化
+        # ===============================
+        
+        if NoAttackFlag == 0:
+            FirstScore[2] *= 1.10
+            FirstScore[3] *= 1.12
+            FirstScore[0] *= 0.92
 
         # ===============================
         # ATTACK BOOST
@@ -1380,14 +1389,7 @@ if st.button("計算"):
             else:
                 SecondScore[5] *= 1.00
                 
-        # ===============================
-        # ★ 攻め展開時の外強化
-        # ===============================
-        
-        if NoAttackFlag == 0:
-            FirstScore[2] *= 1.10
-            FirstScore[3] *= 1.12
-            FirstScore[0] *= 0.92
+
 
         ThirdScore=[
         0.28*Velocity[i]+
@@ -1640,7 +1642,7 @@ if st.button("計算"):
 
                     P_third = third_probs[idx_c]
 
-                    p = (P_first**0.6) * P_second * P_third
+                    p = (P_first**0.7) * P_second * P_third
 
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
