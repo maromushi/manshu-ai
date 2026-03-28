@@ -1422,6 +1422,19 @@ if st.button("計算"):
                 continue
 
             P_first = P1[a]
+            
+            # ===============================
+            # ★ 弱頭でも残り計算させる（最重要）
+            # ===============================
+            if P1[a] < 0.15:
+            
+                # 疑似的に残り確率を増やす
+                P_first *= 1.25
+                
+            if P1[a] < 0.15:
+
+            SecondAdj[5] *= 1.30
+            ThirdAdj[5] *= 1.35
 
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
