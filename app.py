@@ -1433,8 +1433,8 @@ if st.button("計算"):
                 
             if P1[a] < 0.15:
 
-            SecondAdj[5] *= 1.30
-            ThirdAdj[5] *= 1.35
+                SecondAdj[5] *= 1.30
+                ThirdAdj[5] *= 1.35
 
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
