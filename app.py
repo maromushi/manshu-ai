@@ -1332,6 +1332,17 @@ if st.button("計算"):
 
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
+            
+            # ===============================
+            # ★ 4頭時の6流入（ここに入れる）
+            # ===============================
+            if a == 3:  # 4号艇が1着
+                if (
+                    DoubleAttackScore > 0.08
+                    and Start[5] >= Start[3] - 0.01
+                    and Foot[5] >= 0.50
+                ):
+                    SecondAdj[5] *= 1.20
 
             if NoAttackFlag == 1:
                 
