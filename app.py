@@ -1596,8 +1596,19 @@ if st.button("計算"):
 
                     if i == 5:
                         if not (Strong6 or Normal6):
-                            if Foot[i] < 0.50:
-                                SecondAdj[i] *= 0.90
+
+                            # ★ 展開6は殺さない
+                            if not (
+                                DoubleAttackScore > 0.08
+                                and Start[i] >= Start[3] - 0.02
+                            ):
+                                if not (
+                                    i == 5
+                                    and DoubleAttackScore > 0.08
+                                    and Start[i] >= Start[3] - 0.02
+                                ):
+                                    if Foot[i] < 0.50:
+                                        ThirdAdj[i] *= 0.90
                     else:
                         if Foot[i] < 0.55:
                             SecondAdj[i] *= 0.88
