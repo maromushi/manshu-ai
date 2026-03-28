@@ -1487,7 +1487,7 @@ if st.button("計算"):
                         DoubleAttackScore > 0.08
                         and Start[5] >= Start[3] - 0.01
                 ):
-                    SecondAdj[5] *= 1.25
+                    SecondAdj[5] *= 1.15
                     
 
             second_scores = [
