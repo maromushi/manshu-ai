@@ -958,15 +958,6 @@ if st.button("計算"):
                     if AttackIndex[i] < max(AttackIndex):
                         FirstScore[i] *= 0.70
                         
-        # ===============================
-        # ★ 6の展開連動ブースト（ここ）
-        # ===============================
-        if (
-            DoubleAttackScore > 0.08
-            and Start[5] >= Start[3] - 0.01
-            and Foot[5] >= 0.50
-        ):
-            FirstScore[5] *= 1.05
 
         # ===== 6頭処理 =====
 
