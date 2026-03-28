@@ -1463,18 +1463,16 @@ if st.button("計算"):
             # ===============================
             # ★ 頭弱い艇の残り救済（最重要）
             # ===============================
-            if P1[a] < 0.18:   # ←ここがキモ
+            outer_power = max(CPI[4:6])
+
+            if outer_power > CPI[a] - 0.03:
             
-                # 6
                 SecondAdj[5] *= 1.20
                 ThirdAdj[5] *= 1.25
             
-                # 5
-                SecondAdj[4] *= 1.15
-                ThirdAdj[4] *= 1.20
+                SecondAdj[4] *= 1.10
+                ThirdAdj[4] *= 1.15
             
-            
-
             if NoAttackFlag == 1:
                 
                 # イン残り
