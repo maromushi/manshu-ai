@@ -1033,7 +1033,7 @@ if st.button("計算"):
 
         # ★ 6の最終制御（絶対必要）
         if FirstScore[5] == max(FirstScore) and not Strong6:
-            FirstScore[5] *= 0.85
+            FirstScore[5] *= 0.92
             
         # ===============================
         # ★ 弱インなら強制攻め
@@ -1430,17 +1430,16 @@ if st.button("計算"):
                     SecondAdj[i] *= 1.03
                     ThirdAdj[i] *= 0.95
 
-                # ===============================
-                # 弱い外の2着削り（ここ追加）
-                # ===============================
                 if i >= 4:
-                    if Foot[i] < 0.55:
-                        SecondAdj[i] *= 0.88
 
-                # 6号艇はさらに厳しく
-                if i == 5:
-                    if Foot[i] < 0.60:
-                        SecondAdj[i] *= 0.80
+                    if i == 5:
+                        if not Strong6:
+                            if Foot[i] < 0.55:
+                                SecondAdj[i] *= 0.85
+                    else:
+                        if Foot[i] < 0.55:
+                            SecondAdj[i] *= 0.88
+
             
                 # ===============================
                 # 内残り（条件付きに変更）
@@ -1479,15 +1478,15 @@ if st.button("計算"):
                 if Skill[i] < 0.30:
                     ThirdAdj[i] *= 0.90  
                     
-                # ===============================
-                # ★ 4頭時の6流入（ここに入れる）
-                # ===============================
-                if a == 3:  # 4号艇が1着
-                    if (
-                        DoubleAttackScore > 0.08
-                        and Start[5] >= Start[3] - 0.01
-                ):
-                    SecondAdj[5] *= 1.15
+            # ===============================
+            # ★ 4頭時の6流入（ここに入れる）
+            # ===============================
+            if a == 3:  # 4号艇が1着
+                if (
+                    DoubleAttackScore > 0.08
+                    and Start[5] >= Start[3] - 0.01
+            ):
+                SecondAdj[5] *= 1.15
                     
 
             second_scores = [
