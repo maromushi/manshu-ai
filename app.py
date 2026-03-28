@@ -1375,10 +1375,10 @@ if st.button("計算"):
         else:
 
             # 弱い6はしっかり消す
-            if Foot[5] < 0.50:
-                SecondScore[5] *= 0.80
+            if Foot[5] < 0.45:
+                SecondScore[5] *= 0.90
             else:
-                SecondScore[5] *= 0.95
+                SecondScore[5] *= 1.00
                 
         # ===============================
         # ★ 攻め展開時の外強化
@@ -1520,9 +1520,9 @@ if st.button("計算"):
                 if i >= 4:
 
                     if i == 5:
-                        if not Strong6:
-                            if Foot[i] < 0.55:
-                                SecondAdj[i] *= 0.85
+                        if not (Strong6 or Normal6):
+                            if Foot[i] < 0.50:
+                                SecondAdj[i] *= 0.90
                     else:
                         if Foot[i] < 0.55:
                             SecondAdj[i] *= 0.88
