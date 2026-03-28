@@ -724,6 +724,11 @@ if st.button("計算"):
             and Start[5] >= Start[3] - 0.02
         )
         
+        Normal6 = (
+            CPI[5] >= 0.45
+            and Foot[5] >= 0.48
+        )
+        
         SemiStrong6 = (
             CLS[5] == "A2"
             and CPI[5] >= 0.55
@@ -939,6 +944,9 @@ if st.button("計算"):
             
                     elif SemiStrong6:
                         FirstScore[5] *= 1.08
+                        
+                    elif Normal6:
+                        FirstScore[5] *= 0.95
             
                     else:
                         if Start[5] < Start[0]:
