@@ -1326,9 +1326,6 @@ if st.button("計算"):
         if NoAttackFlag == 1:
             SecondScore[5] *= 0.85
 
-        if CPI[5] < 0.55:
-            FirstScore[5] *= 0.85
-
 
         # ===== 2の差し残り強化 =====
 
@@ -1367,9 +1364,9 @@ if st.button("計算"):
 
             # 弱い6はしっかり消す
             if Foot[5] < 0.50:
-                SecondScore[5] *= 0.70
+                SecondScore[5] *= 0.80
             else:
-                SecondScore[5] *= 0.85
+                SecondScore[5] *= 0.95
                 
         # ===============================
         # ★ 攻め展開時の外強化
@@ -1520,11 +1517,11 @@ if st.button("計算"):
                     ThirdAdj[i] *= 0.97
                 elif i == 5: # 6号艇
 
-                    if Foot[i] < 0.55:
-                        ThirdAdj[i] *= 0.80   # 弱いときだけ削る
+                    if Foot[i] < 0.50:
+                        ThirdAdj[i] *= 0.90   # 弱いときだけ削る
                 
                     else:
-                        ThirdAdj[i] *= 0.95   # 基本はあまり削らない
+                        ThirdAdj[i] *= 1.00   # 基本はあまり削らない
 
                 # 展開ある時だけ6を少し戻す
                 if i == 5 and DoubleAttackScore > 0.08:
