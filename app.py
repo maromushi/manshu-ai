@@ -1623,7 +1623,17 @@ if st.button("計算"):
                     else:
                         if Foot[i] < 0.55:
                             SecondAdj[i] *= 0.90
-
+                            
+                    # ===== 外の復活（最重要） =====
+                    if i >= 4:
+                    
+                        if Foot[i] >= 0.50 or CPI[i] >= 0.48:
+                    
+                            # SecondScoreベースに戻す
+                            SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.15)
+                    
+                            ThirdAdj[i] = max(ThirdAdj[i], ThirdScore[i] * 1.10)
+    
             
                 # ===============================
                 # 内残り（条件付きに変更）
