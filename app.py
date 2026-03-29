@@ -1275,7 +1275,7 @@ if st.button("計算"):
         st.write("FirstScore", [round(x,3) for x in FirstScore])
         st.write("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True))
         st.write("SixHeadFlag", SixHeadFlag)
-        st.write("SecondScore", [round(x,3) for x in SecondScore])
+         
         st.write("CPI", [round(x,3) for x in CPI])
         st.write("Start", [round(x,3) for x in Start])
 
@@ -1313,9 +1313,10 @@ if st.button("計算"):
         0.20*Engine[i]+
         0.10*Velocity[i]+
         0.10*LaneBonus[i]
-        
         for i in range(6)
         ]
+        
+        st.write("SecondScore", [round(x,3) for x in SecondScore])
         
         # ===============================
         # ★ 外の“展開じゃない強さ”を拾う（これ）
