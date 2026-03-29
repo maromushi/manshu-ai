@@ -1070,6 +1070,19 @@ if st.button("計算"):
             FirstScore[2] *= 1.10
             FirstScore[3] *= 1.12
             FirstScore[0] *= 0.92
+            
+        # ===============================
+        # ★ 2の過剰頭抑制（最重要）
+        # ===============================
+        if FirstScore[1] >= max(FirstScore)*0.95:
+        
+            # 攻め展開なら2は頭じゃない
+            if DoubleAttackScore > 0.06:
+                FirstScore[1] *= 0.88
+        
+            # 4が強い時も頭じゃない
+            if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
+                FirstScore[1] *= 0.90
 
         # ===============================
         # ATTACK BOOST
