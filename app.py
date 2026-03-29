@@ -1301,6 +1301,17 @@ if st.button("計算"):
         for i in range(6)
         ]
         
+        for i in range(6):
+        
+            # 外のポテンシャル艇を救う
+            if i >= 4:
+                if Foot[i] >= 0.50 or CPI[i] >= 0.48:
+                    SecondScore[i] *= 1.20
+                    
+                    # スタート残り
+            if i >= 4 and Start[i] >= max(Start[2:6]) - 0.02:
+                SecondScore[i] *= 1.15
+        
         # ===============================
         # ★ 外の勝者だけ残す（5・6共通）
         # ===============================
