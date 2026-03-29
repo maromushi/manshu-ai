@@ -898,10 +898,10 @@ if st.button("計算"):
 
         # ===== 2差し直撃補正（最重要） =====
 
-        if CPI[1] >= CPI[0] - 0.03 and Start[1] <= Start[0] + 0.02:
+        #if CPI[1] >= CPI[0] - 0.03 and Start[1] <= Start[0] + 0.02:
 
-            FirstScore[1] *= 1.12
-            FirstScore[0] *= 0.92
+            #FirstScore[1] *= 1.12
+            #FirstScore[0] *= 0.92
 
         elif CPI[1] >= CPI[0] - 0.06 and Start[1] <= Start[0] + 0.05:
 
@@ -909,15 +909,15 @@ if st.button("計算"):
             FirstScore[0] *= 0.95
             
         # ★ 2頭うっすら拾う（追加）
-        if Start[1] >= Start[0] - 0.01:
-            FirstScore[1] *= 1.08
+        #if Start[1] >= Start[0] - 0.01:
+            #FirstScore[1] *= 1.08
 
         # ===== 2の頭確定ゾーン =====
 
-        if CPI[1] > CPI[0] and Start[1] >= Start[0]:
+        #if CPI[1] > CPI[0] and Start[1] >= Start[0]:
 
-            FirstScore[1] *= 1.15
-            FirstScore[0] *= 0.88
+            #FirstScore[1] *= 1.15
+            #FirstScore[0] *= 0.88
 
         # ===============================
         # ST遅い艇の頭抑制（追加）
