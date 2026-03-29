@@ -1590,7 +1590,7 @@ if st.button("計算"):
             
                 elif dist >= 2:
                     SecondAdj[i] *= 1.03
-                    ThirdAdj[i] *= 0.95
+                    ThirdAdj[i] *= 1.00
 
                 if i >= 4:
 
