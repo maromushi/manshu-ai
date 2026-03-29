@@ -1705,8 +1705,8 @@ if st.button("計算"):
 
                     P_third = third_probs[idx_c]
 
-                    p = (P_first**0.7) * P_second * P_third
-
+                    p = (0.6*P_first + 0.4) * P_second * P_third
+                    
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
 
