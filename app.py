@@ -1275,7 +1275,7 @@ if st.button("計算"):
         st.write("FirstScore", [round(x,3) for x in FirstScore])
         st.write("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True))
         st.write("SixHeadFlag", SixHeadFlag)
-        st.write("SecondScore", [round(x,3) for x in SecondScore
+        st.write("SecondScore", [round(x,3) for x in SecondScore])
 
         TotalFirst = sum([FirstScore[i] for i in range(6) if Active[i]==1])
 
