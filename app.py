@@ -1608,10 +1608,10 @@ if st.button("計算"):
                                     and Start[i] >= Start[3] - 0.02
                                 ):
                                     if Foot[i] < 0.50:
-                                        ThirdAdj[i] *= 0.90
+                                        ThirdAdj[i] *= 0.95
                     else:
                         if Foot[i] < 0.55:
-                            SecondAdj[i] *= 0.88
+                            SecondAdj[i] *= 0.90
 
             
                 # ===============================
