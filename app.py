@@ -1362,7 +1362,7 @@ if st.button("計算"):
                     SecondScore[i] *= (1 + 0.25 * DoubleAttackScore)
         
             else:
-                SecondScore[i] *= 0.90
+                SecondScore[i] *= 0.97
         
         
         # ===============================
@@ -1504,6 +1504,17 @@ if st.button("計算"):
         
             else:
                 ThirdScore[i] *= 0.88
+                
+        # ===============================
+        # ★ 外単独強者救済（これが本命）
+        # ===============================
+        for i in range(4,6):
+        
+            if (
+                Start[i] >= Start[3] - 0.02
+                and Foot[i] >= 0.48
+            ):
+                SecondScore[i] *= 1.10
         
         
         # ===============================
