@@ -1088,11 +1088,7 @@ if st.button("計算"):
             
         # 弱イン補正
             
-        if (
-            WinRate[0] < 5.2
-            or Fcount[0] >= 1
-            or AvgST[0] > 0.16
-        ):
+        if AvgST[0] > 0.20:
             FirstScore[0] *= 0.92
             
         # ===============================
