@@ -1903,8 +1903,13 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.10
                 elif i == 3: # 4号艇
                     ThirdAdj[i] *= 1.08
-                elif i == 4: # 5号艇
-                    ThirdAdj[i] *= 0.97
+                elif i == 4:
+                
+                    if DoubleAttackScore > 0.06:
+                        ThirdAdj[i] *= 1.05
+                    else:
+                        ThirdAdj[i] *= 0.98
+                        
                 elif i == 5: # 6号艇
 
                     if Foot[i] < 0.50:
