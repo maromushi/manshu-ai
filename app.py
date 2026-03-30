@@ -1749,6 +1749,21 @@ if st.button("計算"):
             ThirdAdj = ThirdScore.copy()
             
             # ===============================
+            # ★ 5を2着に引き上げる（核心）
+            # ===============================
+            if (
+                i == 4
+                and DoubleAttackScore > 0.05
+                and Start[4] >= Start[2] - 0.03
+            ):
+                SecondAdj[4] *= 1.25
+                
+            if i >= 4:
+                if Foot[i] >= 0.50 or CPI[i] >= 0.48:
+                    SecondAdj[i] *= 1.20
+                    ThirdAdj[i] *= 1.10
+            
+            # ===============================
             # ★ 3着候補の繰り上げ（最重要）
             # ===============================
             for i in range(6):
@@ -1916,9 +1931,13 @@ if st.button("計算"):
                         if Foot[i] >= 0.50 or CPI[i] >= 0.48:
                     
                             # SecondScoreベースに戻す
-                            SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.15)
+                            #SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.15)
                     
-                            ThirdAdj[i] = max(ThirdAdj[i], ThirdScore[i] * 1.10)
+                            #ThirdAdj[i] = max(ThirdAdj[i], ThirdScore[i] * 1.10)
+
+                    
+                            SecondAdj[i] *= 1.20
+                            ThirdAdj[i] *= 1.10
     
             
                 # ===============================
