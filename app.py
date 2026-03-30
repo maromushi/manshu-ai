@@ -1481,20 +1481,23 @@ if st.button("計算"):
             SecondScore[1] *= 1.10
             
         # ===============================
-        # ★ F持ち最終補正（整理版）
+        # ★ F持ち最終補正（完全版）
         # ===============================
         for i in range(6):
         
             if Fcount[i] >= 1:
         
-                # 基本削り
-                factor = 0.95
+                # 基本
+                if Fcount[i] == 1:
+                    factor = 0.95
+                elif Fcount[i] >= 2:
+                    factor = 0.88   # ←ここが重要
         
-                # 差し役は追加で少しだけ
+                # 差し役は追加で少し
                 if i in [1,2]:
-                    factor *= 0.97   # ←ここでまとめる
+                    factor *= 0.97
         
-                SecondScore[i] *= facto
+                SecondScore[i] *= factor
 
 
         # ===== 6の2着残り強化 =====
