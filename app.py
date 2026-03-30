@@ -1517,17 +1517,33 @@ if st.button("計算"):
         for i in range(6):
         
             if Fcount[i] >= 1:
-        
-                # 基本
+
                 if Fcount[i] == 1:
-                    factor = 0.95
+            
+                    if CLS[i] == "A1":
+                        factor = 0.97
+                    elif CLS[i] == "A2":
+                        factor = 0.95
+                    elif CLS[i] == "B1":
+                        factor = 0.93
+                    else:
+                        factor = 0.90
+            
                 elif Fcount[i] >= 2:
-                    factor = 0.88   # ←ここが重要
-        
-                # 差し役は追加で少し
+            
+                    if CLS[i] == "A1":
+                        factor = 0.92
+                    elif CLS[i] == "A2":
+                        factor = 0.88
+                    elif CLS[i] == "B1":
+                        factor = 0.85
+                    else:
+                        factor = 0.80
+            
+                # 差し役は少しだけ追加ペナ
                 if i in [1,2]:
                     factor *= 0.97
-        
+            
                 SecondScore[i] *= factor
 
 
