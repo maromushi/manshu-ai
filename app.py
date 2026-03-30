@@ -1495,9 +1495,6 @@ if st.button("計算"):
         if FiveFlowFlag:
             SecondScore[4] *= 1.20
         
-        #if SixFlowFlag:
-            #SecondScore[5] *= 1.25
-        
 
         # ===============================
         # ★ 6の過剰2着抑制（追加）
@@ -1578,11 +1575,6 @@ if st.button("計算"):
             else:
                 SecondScore[5] *= 1.00
                 
-        # ===============================
-        # ★ 6の過剰2着抑制（これ）
-        # ===============================
-        if DoubleAttackScore < 0.08:
-            SecondScore[5] *= 0.90
 
         ThirdScore=[
         0.28*Velocity[i]+
@@ -1973,11 +1965,7 @@ if st.button("計算"):
             # ★ 4頭時の6流入（ここに入れる）
             # ===============================
             if a == 3:  # 4号艇が1着
-                if (
-                    DoubleAttackScore > 0.08
-                    and Start[5] >= Start[3] - 0.01
-                ):
-                    SecondAdj[5] *= 1.25
+                
                 
             if (
                 a == 3
