@@ -751,8 +751,11 @@ if st.button("計算"):
         # ★ 攻め不発（最重要）
         # ===============================
         NoAttackFlag = 0
-        
-        if StartSpread < 0.07:
+
+        if (
+            StartSpread < 0.08
+            and DoubleAttackScore < 0.06
+        ):
             NoAttackFlag = 1
         
         if NoAttackFlag == 1:
