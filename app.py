@@ -1474,7 +1474,10 @@ if st.button("計算"):
 
         # ===== 2の差し残り強化 =====
 
-        if CPI[1] >= CPI[0] - 0.05:
+        if (
+            CPI[1] >= CPI[0] - 0.05
+            and Fcount[1] == 0   # ←これ追加
+        ):
             SecondScore[1] *= 1.10
 
 
