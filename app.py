@@ -905,8 +905,25 @@ if st.button("計算"):
 
         elif CPI[1] >= CPI[0] - 0.06 and Start[1] <= Start[0] + 0.05:
 
-            FirstScore[1] *= 1.08
+            FirstScore[1] *= 1.03
             FirstScore[0] *= 0.95
+            
+        # ★ 2の頭制限（これが本命）
+        if DoubleAttackScore > 0.06:
+            FirstScore[1] *= 0.96
+            
+        # ===============================
+        # ★ 2の頭精査（これが正解）
+        # ===============================
+        if FirstScore[1] >= max(FirstScore)*0.95:
+        
+            # 攻め展開なら2は頭じゃない
+            if DoubleAttackScore > 0.06:
+                FirstScore[1] *= 0.88
+        
+            # 4が強いなら2は頭じゃない
+            if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
+                FirstScore[1] *= 0.90
             
         # ★ 2頭うっすら拾う（追加）
         #if Start[1] >= Start[0] - 0.01:
