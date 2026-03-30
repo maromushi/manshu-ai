@@ -1419,17 +1419,17 @@ if st.button("計算"):
         # ===============================
         # ★ 強制外シナリオ（ここ！！）
         # ===============================
-        if DoubleAttackScore > 0.07:
+        #if DoubleAttackScore > 0.07:
         
-            for i in range(4,6):
-                SecondScore[i] *= 1.25
+            #for i in range(4,6):
+                #SecondScore[i] *= 1.25
         
         for i in range(6):
         
             # 外のポテンシャル艇を救う
-            if i >= 4:
-                if Foot[i] >= 0.50 or CPI[i] >= 0.48:
-                    SecondScore[i] *= 1.20
+            #if i >= 4:
+                #if Foot[i] >= 0.50 or CPI[i] >= 0.48:
+                    #SecondScore[i] *= 1.20
                     
                     # スタート残り
             if i >= 4 and Start[i] >= max(Start[2:6]) - 0.02:
@@ -1495,8 +1495,8 @@ if st.button("計算"):
         if FiveFlowFlag:
             SecondScore[4] *= 1.20
         
-        if SixFlowFlag:
-            SecondScore[5] *= 1.25
+        #if SixFlowFlag:
+            #SecondScore[5] *= 1.25
         
 
         # ===============================
@@ -1564,14 +1564,6 @@ if st.button("計算"):
             )
         ):
             SixSecondFlag = 1
-
-
-        if (
-            DoubleAttackScore > 0.08
-            and Start[5] >= Start[3] - 0.01
-            and Foot[5] >= 0.50
-        ):
-            SecondScore[5] *= 1.15
 
             # 1〜3を少し削る（前残り崩れ）
             SecondScore[0] *= 0.92
@@ -1756,7 +1748,6 @@ if st.button("計算"):
                 
             if i >= 4:
                 if Foot[i] >= 0.50 or CPI[i] >= 0.48:
-                    SecondAdj[i] *= 1.20
                     ThirdAdj[i] *= 1.10
             
             # ===============================
