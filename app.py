@@ -1309,7 +1309,7 @@ if st.button("計算"):
 
         for i in range(6):
             if P1[i] == top:        
-                P1[i] *= 1.15
+                P1[i] *= 1.05
 
         # ===== 正規化 =====
 
