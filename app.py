@@ -788,8 +788,6 @@ if st.button("計算"):
             # 外はさらに弱く
             FirstScore[4] *= 0.85
 
-            # ★ ここ追加（最重要）
-            FirstScore[5] *= 0.75
 
         # ===============================
         # ★ 弱イン分散（最重要）
@@ -1370,22 +1368,6 @@ if st.button("計算"):
         
         
         # ===============================
-        # ★ F × 階級（最重要）
-        # ===============================
-        for i in range(6):
-        
-            if Fcount[i] >= 1:
-        
-                if CLS[i] == "A1":
-                    SecondScore[i] *= 0.97
-        
-                elif CLS[i] == "B1":
-                    SecondScore[i] *= 0.93
-        
-                elif CLS[i] == "B2":
-                    SecondScore[i] *= 0.88
-        
-        # ===============================
         # ★ 中途半端展開（イン残り＋外1枚）
         # ===============================
         if (
@@ -1393,7 +1375,7 @@ if st.button("計算"):
             and DoubleAttackScore < 0.09
         ):
             SecondScore[1] *= 1.08
-            ThirdScore[3] *= 1.08
+            SecondScore[3] *= 1.05
         
         
         # ===============================
@@ -1585,10 +1567,7 @@ if st.button("計算"):
         # ===============================
         # ★ 6の過剰2着抑制（これ）
         # ===============================
-        if (
-            i == 5
-            and DoubleAttackScore < 0.08
-        ):
+        if DoubleAttackScore < 0.08:
             SecondScore[5] *= 0.90
 
         ThirdScore=[
