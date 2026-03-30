@@ -1814,7 +1814,6 @@ if st.button("計算"):
                 outer_power > CPI[a] + 0.02
                 and DoubleAttackScore > 0.06
             ):
-                SecondAdj[5] *= 1.25
                 ThirdAdj[5] *= 1.30
             
                 SecondAdj[4] *= 1.10
