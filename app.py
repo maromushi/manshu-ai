@@ -1753,17 +1753,23 @@ if st.button("計算"):
         
                 if i != a:
 
-                    # 頭より外は残りやすい
+                    # ★ 外の序列補正（最重要）
                     if i > a:
-                
+                    
                         if Start[i] >= Start[a] - 0.02:
-                            SecondAdj[i] *= 1.20
-                            ThirdAdj[i] *= 1.25
-                
-                    # A1は無条件で少し残す
-                    if CLS[i] == "A1":
-                        SecondAdj[i] *= 1.10
-                        ThirdAdj[i] *= 1.15
+                    
+                            attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
+                    
+                            if i == attack_center:
+                                SecondAdj[i] *= 1.30
+                    
+                            elif i == attack_center + 1:
+                                SecondAdj[i] *= 1.25
+                    
+                            else:
+                                SecondAdj[i] *= 1.10
+                    
+                            ThirdAdj[i] *= 1.20
                         
             # ===============================
             # ★ 展開ライン連動（最重要）
