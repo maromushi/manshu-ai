@@ -1099,6 +1099,16 @@ if st.button("計算"):
             # 4が強い時も頭じゃない
             if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
                 FirstScore[1] *= 0.90
+                
+        # ===============================
+        # ★ 中間展開のイン復活（最重要）
+        # ===============================
+        if (
+            DoubleAttackScore > 0.04
+            and DoubleAttackScore < 0.09
+            and NoAttackFlag == 0
+        ):
+            FirstScore[0] *= 1.12
 
         # ===============================
         # ATTACK BOOST
