@@ -1355,6 +1355,37 @@ if st.button("計算"):
         st.write("SecondScore", [round(x,3) for x in SecondScore])
         
         # ===============================
+        # ★ 階級補正（最重要）
+        # ===============================
+        for i in range(6):
+        
+            if CLS[i] == "A1":
+                SecondScore[i] *= 1.05
+        
+            elif CLS[i] == "A2":
+                SecondScore[i] *= 1.03
+        
+            elif CLS[i] == "B2":
+                SecondScore[i] *= 0.95
+        
+        
+        # ===============================
+        # ★ F × 階級（最重要）
+        # ===============================
+        for i in range(6):
+        
+            if Fcount[i] >= 1:
+        
+                if CLS[i] == "A1":
+                    SecondScore[i] *= 0.97
+        
+                elif CLS[i] == "B1":
+                    SecondScore[i] *= 0.93
+        
+                elif CLS[i] == "B2":
+                    SecondScore[i] *= 0.88
+        
+        # ===============================
         # ★ 中途半端展開（イン残り＋外1枚）
         # ===============================
         if (
