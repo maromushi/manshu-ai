@@ -1083,9 +1083,19 @@ if st.button("計算"):
         # ===============================
         
         if NoAttackFlag == 0:
-            FirstScore[2] *= 1.10
-            FirstScore[3] *= 1.12
-            FirstScore[0] *= 0.92
+
+            if DoubleAttackScore > 0.09:
+                FirstScore[2] *= 1.10
+                FirstScore[3] *= 1.12
+                FirstScore[0] *= 0.92
+        
+            elif DoubleAttackScore > 0.04:
+                FirstScore[2] *= 1.05
+                FirstScore[3] *= 1.06
+                FirstScore[0] *= 0.98   # ←ここが本質
+        
+            else:
+                FirstScore[0] *= 1.05
             
         # ===============================
         # ★ 2の過剰頭抑制（最重要）
