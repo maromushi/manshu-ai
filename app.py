@@ -1764,6 +1764,24 @@ if st.button("計算"):
                     if CLS[i] == "A1":
                         SecondAdj[i] *= 1.10
                         ThirdAdj[i] *= 1.15
+                        
+            # ===============================
+            # ★ 展開ライン連動（最重要）
+            # ===============================
+            if (
+                DoubleAttackScore > 0.06
+                and NoAttackFlag == 0
+            ):
+            
+                attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
+            
+                for j in range(6):
+            
+                    if j > attack_center:
+                        ThirdAdj[j] *= 1.15
+            
+                    if j == attack_center + 1:
+                        ThirdAdj[j] *= 1.20
             
             # ===============================
             # ★ 弱頭でも残り計算させる（最重要）
