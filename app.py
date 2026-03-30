@@ -1334,6 +1334,15 @@ if st.button("計算"):
         
         st.write("SecondScore", [round(x,3) for x in SecondScore])
         
+        # ===============================
+        # ★ 中途半端展開（イン残り＋外1枚）
+        # ===============================
+        if (
+            DoubleAttackScore > 0.04
+            and DoubleAttackScore < 0.09
+        ):
+            SecondScore[1] *= 1.08
+            ThirdScore[3] *= 1.08
         
         
         # ===============================
