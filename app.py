@@ -1331,6 +1331,8 @@ if st.button("計算"):
         
         st.write("SecondScore", [round(x,3) for x in SecondScore])
         
+        
+        
         # ===============================
         # ★ 外の“展開じゃない強さ”を拾う（これ）
         # ===============================
@@ -1479,7 +1481,14 @@ if st.button("計算"):
             else:
                 SecondScore[5] *= 1.00
                 
-
+        # ===============================
+        # ★ 6の過剰2着抑制（これ）
+        # ===============================
+        if (
+            i == 5
+            and DoubleAttackScore < 0.08
+        ):
+            SecondScore[5] *= 0.90
 
         ThirdScore=[
         0.28*Velocity[i]+
