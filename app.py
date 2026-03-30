@@ -750,7 +750,8 @@ if st.button("計算"):
         # ===============================
         # ★ 攻め不発（最重要）
         # ===============================
-
+        NoAttackFlag = 0
+        
         if StartSpread < 0.07:
             NoAttackFlag = 1
         
@@ -1043,9 +1044,6 @@ if st.button("計算"):
 
             else:
                 FirstScore[5] *= 0.80
-                
-                
-        NoAttackFlag = 0
 
 
         # ===============================
