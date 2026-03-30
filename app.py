@@ -1721,10 +1721,16 @@ if st.button("計算"):
         if 0.43 <= CPI[2] <= 0.62:
             ThirdScore[2] *= 1.12
 
-        # 弱い外は3着削る
-        for i in range(6):
-            if i >= 4 and Engine[i] < 0.50:
-                ThirdScore[i] *= 0.80
+        # ===============================
+        # ★ 弱外でも展開なら残す（最重要）
+        # ===============================
+        for i in range(4,6):
+        
+            if (
+                DoubleAttackScore > 0.06
+                and Start[i] >= Start[2] - 0.03
+            ):
+                ThirdScore[i] *= 1.10
 
         results=[]
             
