@@ -1424,7 +1424,7 @@ if st.button("計算"):
             #for i in range(4,6):
                 #SecondScore[i] *= 1.25
         
-        for i in range(6):
+        #for i in range(6):
         
             # 外のポテンシャル艇を救う
             #if i >= 4:
