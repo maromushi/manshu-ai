@@ -852,6 +852,12 @@ if st.button("計算"):
         ):
             FirstScore[0] *= 1.25
             
+        # ←ここに入れる👇
+        
+        # ★ 差し役なのにスタート遅い → 消す
+        if Start[1] < Start[0] - 0.02:
+            FirstScore[1] *= 0.85
+            
         if Start[1] > Start[0] + 0.03:
             FirstScore[1] *= 0.90
             
