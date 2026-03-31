@@ -1757,11 +1757,7 @@ if st.button("計算"):
                         if Start[i] >= Start[a] - 0.02:
                     
                             attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
-                    
-                            else:
-                                SecondAdj[i] *= 1.10
-                    
-                            ThirdAdj[i] *= 1.20
+            
                         
             # ===============================
             # ★ 展開ライン連動（最重要）
