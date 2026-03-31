@@ -1036,32 +1036,37 @@ if st.button("計算"):
 
         # ===== 6頭処理 =====
 
-        if SixHeadFlag == 1:
-
-            boost = 1.20 + 0.30 * (CPI[5] - 0.50)
-            
-            # ★ここ追加
+        # ★ 条件を強化（ここが本質）
+        StrongSixHead = (
+            CPI[5] >= 0.60
+            and Start[5] >= Start[3]
+            and DoubleAttackScore > 0.10
+        )
+        
+        if SixHeadFlag == 1 and StrongSixHead:
+        
+            boost = 1.15 + 0.25 * (CPI[5] - 0.50)
+        
             if Engine[5] >= 0.60:
-                boost += 0.05
-
+                boost += 0.03
+        
             FirstScore[5] *= boost
             FirstScore[0] *= 0.85
             FirstScore[1] *= 0.90
-
+        
         else:
-
+        
             # ===== 6抑制（強弱分岐） =====
             
-            # ★ Normal6は殺さない（最重要）
             if Normal6:
                 FirstScore[5] *= 0.95
-
+        
             if CPI[5] < 0.50:
                 FirstScore[5] *= 0.60
-
+        
             elif Start[5] < Start[3]:
                 FirstScore[5] *= 0.70
-
+        
             else:
                 FirstScore[5] *= 0.80
 
