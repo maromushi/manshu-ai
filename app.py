@@ -1011,11 +1011,11 @@ if st.button("計算"):
         # ★ 6の展開連動ブースト（ここ）
         # ===============================
         if (
-            DoubleAttackScore > 0.08
-            and Start[5] >= Start[3] - 0.01
-            and NoAttackFlag == 0
+            DoubleAttackScore > 0.10
+            and Start[5] >= Start[3] - 0.005
+            and CLS[5] == "A1"
         ):
-            FirstScore[5] *= 1.15
+            FirstScore[5] *= 1.08
         
         if use_mode == "safe":
             FirstScore[0] *= 1.08
