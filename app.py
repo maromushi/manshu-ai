@@ -1376,6 +1376,10 @@ if st.button("計算"):
         for i in range(6)
         ]
         
+        # ★ イン残り（2着に出すための本体）
+        if InsideSurvival[0] > 0.50:
+            SecondScore[0] *= 1.10
+        
         st.write("SecondScore", [round(x,3) for x in SecondScore])
         
         # ★ 展示ST最速は“展開役”扱い（進入関係なし）
