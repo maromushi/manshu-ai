@@ -1376,9 +1376,6 @@ if st.button("計算"):
         for i in range(6)
         ]
         
-        # ★ イン残り（2着に出すための本体）
-        if InsideSurvival[0] > 0.50:
-            SecondScore[0] *= 1.10
         
         st.write("SecondScore", [round(x,3) for x in SecondScore])
         
@@ -1597,11 +1594,7 @@ if st.button("計算"):
         0.10*InsideSurvival[i]
         for i in range(6)
         ]
-        
-        # ★ イン最低限の残り保証（ここ）
-        for i in range(6):
-            if i == 0 and InsideSurvival[0] > 0.50:
-                ThirdScore[0] *= 1.08
+    
         
         # ===============================
         # ★ 展開艇の3着流入（最重要）
