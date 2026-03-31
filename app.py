@@ -1431,9 +1431,6 @@ if st.button("計算"):
                 #if Foot[i] >= 0.50 or CPI[i] >= 0.48:
                     #SecondScore[i] *= 1.20
                     
-                    # スタート残り
-            if i >= 4 and Start[i] >= max(Start[2:6]) - 0.02:
-                SecondScore[i] *= 1.15
         
         # ===============================
         # ★ 外の勝者だけ残す（5・6共通）
@@ -1455,11 +1452,12 @@ if st.button("計算"):
         # ★ 展開6（性能じゃない6を拾う）
         # ===============================
         if (
-            DoubleAttackScore > 0.08
-            and Start[5] >= Start[3] - 0.02
+            DoubleAttackScore > 0.10
+            and Start[5] >= Start[3] - 0.01
             and CLS[5] in ["A1","A2"]
+            and Foot[5] >= 0.50
         ):
-            SecondScore[5] *= 1.20
+            SecondScore[5] *= 1.12
         
         # ===============================
         # ★ 外残りフラグ（5・6用）
