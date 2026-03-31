@@ -1745,15 +1745,6 @@ if st.button("計算"):
             # ===============================
             # ★ 3着候補の繰り上げ（最重要）
             # ===============================
-            for i in range(6):
-            
-                # 展開で来る外は2着にも上げる
-                if (
-                    i >= 4
-                    and DoubleAttackScore > 0.06
-                    and Start[i] >= Start[2] - 0.03
-                ):
-                    SecondAdj[i] *= 1.15
         
             # ★ここに入れる
             for i in range(6):
@@ -1766,12 +1757,6 @@ if st.button("計算"):
                         if Start[i] >= Start[a] - 0.02:
                     
                             attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
-                    
-                            if i == attack_center:
-                                SecondAdj[i] *= 1.30
-                    
-                            elif i == attack_center + 1:
-                                SecondAdj[i] *= 1.25
                     
                             else:
                                 SecondAdj[i] *= 1.10
