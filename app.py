@@ -987,10 +987,12 @@ if st.button("計算"):
         if (
             ExST[4] <= 0.05
             and Start[4] >= Start[2] - 0.02
-            and Foot[4] < 0.52
-            and Turn[4] < max(Turn[1:4])
         ):
-            FirstScore[4] *= 0.88
+            if not (
+                Foot[4] >= max(Foot[1:4])
+                or Turn[4] >= max(Turn[1:4])
+            ):
+                FirstScore[4] *= 0.85
             
                 
         # ===============================
