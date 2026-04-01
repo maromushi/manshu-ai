@@ -212,7 +212,7 @@ if st.button("計算"):
     # AI CORE
     # =====================================
 
-    def run_ai(order, mode):
+    def run_ai(order):
 
         FC=[Fcount[i] for i in order]
         
@@ -2147,8 +2147,8 @@ if st.button("計算"):
     if len(order_ex)!=6:
         order_ex=[0,1,2,3,4,5]
 
-    res_waku, chaos1 = run_ai(order_waku, None)
-    res_ex, chaos2 = run_ai(order_ex, None)
+    res_waku, chaos1 = run_ai(order_waku)
+    res_ex, chaos2 = run_ai(order_ex)
 
     ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
     # =====================================
