@@ -571,7 +571,10 @@ if st.button("計算"):
             and (Foot[2] >= Foot[1] or Engine[2] >= Engine[1])
             and (
                 CLS[2] in ["A1","A2"]
-                or (Start[2] > Start[1] + 0.04)
+                or (
+                    ExST[2] <= 0.05
+                    and Start[2] >= Start[1]   # ★これ追加（ブレーキ）
+                )
             )
         ) else 0
 
