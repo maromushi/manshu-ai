@@ -1376,37 +1376,7 @@ if st.button("計算"):
         for i in range(6)
         ]
         
-        # ===============================
-        # ★ 6の2着過剰抑制（改良版）
-        # ===============================
         
-        strong_flow6 = (
-            DoubleAttackScore > 0.10
-            and Start[5] >= Start[3] - 0.02
-        )
-        
-        light_flow6 = (
-            DoubleAttackScore > 0.06
-            and Start[5] >= Start[2] - 0.03
-        )
-        
-        six_power = (
-            Foot[5] >= 0.50
-            or CPI[5] >= 0.48
-        )
-        
-        # 削る条件
-        if not ((strong_flow6 or light_flow6) and six_power):
-            SecondScore[5] *= 0.88
-        
-        st.write("SecondScore", [round(x,3) for x in SecondScore])
-        
-        # ★ 展示ST最速は“展開役”扱い（進入関係なし）
-        min_est = min(EST)
-        
-        for i in range(6):
-            if EST[i] == min_est:
-                SecondScore[i] *= 1.15
         
         # ===============================
         # ★ 階級補正（最重要）
@@ -1682,21 +1652,7 @@ if st.button("計算"):
             if CPI[i] >= 0.46:
                 ThirdScore[i] *= 1.15
                 
-        # ===============================
-        # ★ 6の過剰抑制（最重要）
-        # ===============================
-        flow6 = (
-            DoubleAttackScore > 0.08
-            and Start[5] >= Start[3] - 0.02
-        )
         
-        six_ok = (
-            Foot[5] >= 0.48
-            or CPI[5] >= 0.48
-        )
-        
-        if not (flow6 and six_ok):
-            ThirdScore[5] *= 0.85
         
         # ===============================
         # ★ 外の勝者だけ残す（5・6）
@@ -1776,6 +1732,45 @@ if st.button("計算"):
         
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
+            
+            # ===============================
+            # ★ 6の2着過剰抑制（ここが本命）
+            # ===============================
+            
+            strong_flow6 = (
+                DoubleAttackScore > 0.10
+                and Start[5] >= Start[3] - 0.02
+            )
+            
+            light_flow6 = (
+                DoubleAttackScore > 0.06
+                and Start[5] >= Start[2] - 0.03
+            )
+            
+            six_power = (
+                Foot[5] >= 0.50
+                or CPI[5] >= 0.48
+            )
+            
+            if not ((strong_flow6 or light_flow6) and six_power):
+                SecondAdj[5] *= 0.85
+            
+            
+            # ===============================
+            # ★ 6の過剰抑制（最重要）
+            # ===============================
+            flow6 = (
+                DoubleAttackScore > 0.08
+                and Start[5] >= Start[3] - 0.02
+            )
+            
+            six_ok = (
+                Foot[5] >= 0.48
+                or CPI[5] >= 0.48
+            )
+            
+            if not (flow6 and six_ok):
+                ThirdScore[5] *= 0.85
             
             # ===============================
             # ★ 5を2着に引き上げる（核心）
