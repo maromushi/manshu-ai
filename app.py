@@ -1398,12 +1398,12 @@ if st.button("計算"):
             LaneCPI.append(value)
             
         # ★ デバッグここ
-        st.write("FirstScore", [round(x,3) for x in FirstScore])
-        st.write("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True))
-        st.write("SixHeadFlag", SixHeadFlag)
-         
-        st.write("CPI", [round(x,3) for x in CPI])
-        st.write("Start", [round(x,3) for x in Start])
+        debug_log = []
+
+        debug_log.append(("FirstScore", [round(x,3) for x in FirstScore]))
+        debug_log.append(("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True)))
+        debug_log.append(("CPI", [round(x,3) for x in CPI]))
+        debug_log.append(("Start", [round(x,3) for x in Start]))
 
         TotalFirst = sum([FirstScore[i] for i in range(6) if Active[i]==1])
 
@@ -2134,8 +2134,7 @@ if st.button("計算"):
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
 
-        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival
-
+        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log
     # =====================================
     # 進入パターン
     # =====================================
@@ -2148,7 +2147,7 @@ if st.button("計算"):
         order_ex=[0,1,2,3,4,5]
 
     res_waku, chaos1, P1_waku, DAS1, IS1 = run_ai(order_waku)
-    res_ex, chaos2, P1_ex, DAS2, IS2 = run_ai(order_ex)
+    res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex)
 
     ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
     P1 = P1_ex
@@ -2331,6 +2330,11 @@ if st.button("計算"):
         filtered_marked.append((mark,a,b,c,p))
     
     marked = filtered_marked
+    
+        st.write("▼デバッグ")
+    
+    for name, val in debug_log:
+        st.write(name, val)
         
     # ===============================
     # 表示
