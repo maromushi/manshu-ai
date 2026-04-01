@@ -2248,6 +2248,15 @@ if st.button("計算"):
         if len(Final) >= max_bets:
             break
             
+    unique = {}
+
+    for a,b,c,p in Final:
+        key = (a,b,c)
+        if key not in unique or unique[key] < p:
+                unique[key] = p
+        
+        Final = [(k[0],k[1],k[2],v) for k,v in unique.items()]
+                    
     st.write([round(r[3],4) for r in results[:10]])
     for i,r in enumerate(Final,1):
 
@@ -2291,11 +2300,16 @@ if st.button("計算"):
     
         head_p = P1[a-1]
     
-        if head_p >= 0.22:
+        sorted_p1 = sorted(P1, reverse=True)
+
+        rank = sorted(set(P1), reverse=True).index(head_p)
+        
+        # マーク決定
+        if rank == 0:
             mark = "◎"
-        elif head_p >= 0.15:
+        elif rank <= 2:
             mark = "○"
-        elif head_p >= 0.10:
+        elif rank <= 4:
             mark = "▲"
         else:
             mark = "△"
