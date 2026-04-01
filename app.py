@@ -2331,7 +2331,7 @@ if st.button("計算"):
     
     marked = filtered_marked
     
-        st.write("▼デバッグ")
+    st.write("▼デバッグ")
     
     for name, val in debug_log:
         st.write(name, val)
