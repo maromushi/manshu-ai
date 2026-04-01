@@ -2325,7 +2325,7 @@ if st.button("計算"):
     
     for mark,a,b,c,p in marked:
     
-        if mark == "△" and p < 0.025:
+        if mark == "△" and (p < 0.025 or P1[a-1] < 0.12):
             continue
     
         filtered_marked.append((mark,a,b,c,p))
