@@ -870,6 +870,13 @@ if st.button("計算"):
             and DoubleAttackScore > 0.06   # ←これ追加
         ):
             FirstScore[2] *= 1.25
+            
+        # ★ 3の展示攻め補強（追加）
+        if (
+            Start[2] >= Start[1] + 0.02
+            and ExST[2] <= 0.05
+        ):
+            FirstScore[2] *= 1.15
         
         # ===============================
         # ★ イン残り補正（追加）
@@ -1652,7 +1659,12 @@ if st.button("計算"):
             if CPI[i] >= 0.46:
                 ThirdScore[i] *= 1.15
                 
-        
+        # ★ 外の単発強者（追加）
+        if (
+            Engine[4] >= 0.55
+            and Start[4] >= Start[2] - 0.03
+        ):
+            ThirdScore[4] *= 1.15
         
         # ===============================
         # ★ 外の勝者だけ残す（5・6）
