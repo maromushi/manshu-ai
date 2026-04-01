@@ -2146,7 +2146,7 @@ if st.button("計算"):
     if len(order_ex)!=6:
         order_ex=[0,1,2,3,4,5]
 
-    res_waku, chaos1, P1_waku, DAS1, IS1 = run_ai(order_waku)
+    res_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
     res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex)
 
     ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
@@ -2331,7 +2331,7 @@ if st.button("計算"):
     
     marked = filtered_marked
     
-    st.write("▼デバッグ")
+        st.write("▼デバッグ")
     
     for name, val in debug_log:
         st.write(name, val)
