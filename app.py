@@ -2324,10 +2324,10 @@ if st.button("計算"):
     
         marked.append((mark,a,b,c,p))
         
-        # ===============================
-        # 表示
-        # ===============================
+    # ===============================
+    # 表示
+    # ===============================
             
-        for m in marked:
-            mark,a,b,c,p = m
-            st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
+    for m in marked:
+        mark,a,b,c,p = m
+        st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
