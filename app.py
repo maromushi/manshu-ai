@@ -2319,6 +2319,18 @@ if st.button("計算"):
                 mark = "△"
         
             marked.append((mark,a,b,c,p))
+            
+    # △の中でも弱いの消す
+    filtered_marked = []
+    
+    for mark,a,b,c,p in marked:
+    
+        if mark == "△" and p < 0.025:
+            continue
+    
+        filtered_marked.append((mark,a,b,c,p))
+    
+    marked = filtered_marked
         
     # ===============================
     # 表示
