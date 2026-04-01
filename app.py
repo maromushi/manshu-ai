@@ -2247,20 +2247,17 @@ if st.button("計算"):
         # ★ 点数制限（最重要）
         if len(Final) >= max_bets:
             break
-            
+
     unique = {}
 
     for a,b,c,p in Final:
         key = (a,b,c)
         if key not in unique or unique[key] < p:
-                unique[key] = p
-        
-        Final = [(k[0],k[1],k[2],v) for k,v in unique.items()]
+            unique[key] = p
+    
+    Final = [(k[0],k[1],k[2],v) for k,v in unique.items()]
                     
     st.write([round(r[3],4) for r in results[:10]])
-    for i,r in enumerate(Final,1):
-
-        st.write(i,r)
         
     
     # ===============================
@@ -2326,11 +2323,6 @@ if st.button("計算"):
             mark = "◎"
     
         marked.append((mark,a,b,c,p))
-    
-    
-    for m in marked:
-        mark,a,b,c,p = m
-        st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
         
         # ===============================
         # 表示
