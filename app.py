@@ -42,6 +42,8 @@ if st.button("計算"):
     except:
         st.write("抽出データの形式が正しくありません")
         st.stop()
+        
+    venue = st.selectbox("会場", ["蒲郡","常滑","多摩川","びわこ","その他"])
 
     WinRate=local_vars.get("WinRate",[0]*6)
     PlaceRate=local_vars.get("PlaceRate",[0]*6)
@@ -979,6 +981,18 @@ if st.button("計算"):
                 and DoubleAttackScore < 0.08
             ):
                 FirstScore[0] *= 1.05
+                
+        # ===============================
+        # ★ 会場補正（ここに入れる）
+        # ===============================
+        
+        if venue == "多摩川":
+            DynamicInsideFactor *= 1.08
+            FirstScore[0] *= 1.10
+        
+        if venue == "びわこ":
+            if StartSpread > 0.10:
+                chaos_weight *= 0.9
         
         
         # ===============================
@@ -993,19 +1007,6 @@ if st.button("計算"):
                 or Turn[4] >= max(Turn[1:4])
             ):
                 FirstScore[4] *= 0.85
-            
-                
-        # ===============================
-        # ★ イン残り補正（B1）
-        # ===============================
-        
-        elif CLS[0] == "B1":
-            if (
-                Start[0] >= 0.15
-                and InsideSurvival[0] >= 0.55
-                and DoubleAttackScore < 0.08
-            ):
-                FirstScore[0] *= 1.05
 
         # ===============================
         # ST遅い艇の頭抑制（追加）
