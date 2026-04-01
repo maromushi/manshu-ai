@@ -2295,34 +2295,30 @@ if st.button("計算"):
     
     for (a,b,c,p) in Final:
     
-        head_p = P1[a-1]
-    
-        sorted_p1 = sorted(P1, reverse=True)
-
-        rank = sorted(set(P1), reverse=True).index(head_p)
+        # 上位だけ抜く
+        sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
         
-        # マーク決定
-        if rank == 0:
-            mark = "◎"
-        elif rank <= 2:
-            mark = "○"
-        elif rank <= 4:
-            mark = "▲"
-        else:
-            mark = "△"
-    
-        if DoubleAttackScore > 0.08:
-            if a >= 3 and mark in ["▲","△"]:
-                mark = "▲"
-    
-        if (
-            a == 1
-            and InsideSurvival[0] >= 0.60
-            and DoubleAttackScore < 0.06
-        ):
-            mark = "◎"
-    
-        marked.append((mark,a,b,c,p))
+        top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
+        
+        marked = []
+        
+        for (a,b,c,p) in Final:
+        
+            if (a,b,c) in top_set:
+        
+                rank = sorted_final.index((a,b,c,p))
+        
+                if rank == 0:
+                    mark = "◎"
+                elif rank <= 2:
+                    mark = "○"
+                else:
+                    mark = "▲"
+        
+            else:
+                mark = "△"
+        
+            marked.append((mark,a,b,c,p))
         
     # ===============================
     # 表示
