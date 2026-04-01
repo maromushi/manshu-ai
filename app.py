@@ -2134,7 +2134,7 @@ if st.button("計算"):
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
 
-        return results, ChaosScore
+        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival
 
     # =====================================
     # 進入パターン
@@ -2147,10 +2147,13 @@ if st.button("計算"):
     if len(order_ex)!=6:
         order_ex=[0,1,2,3,4,5]
 
-    res_waku, chaos1 = run_ai(order_waku)
-    res_ex, chaos2 = run_ai(order_ex)
+    res_waku, chaos1, P1_waku, DAS1, IS1 = run_ai(order_waku)
+    res_ex, chaos2, P1_ex, DAS2, IS2 = run_ai(order_ex)
 
     ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
+    P1 = P1_ex
+    DoubleAttackScore = DAS2
+    InsideSurvival = IS2
     # =====================================
     # 合成
     # =====================================
@@ -2278,48 +2281,42 @@ if st.button("計算"):
     
     st.text_area("コピペ用", copy_text, height=200)
     
-        # ===============================
-        # ★ マーク付け（役割ベース）
-        # ===============================
-        
-        marked = []
-        
-        for (a,b,c,p) in Final:
-        
-            # 頭評価（P1ベース）
-            head_p = P1[a-1]   # ←舟番なので-1
-        
-            # デフォ
-            mark = ""
-        
-            if head_p >= 0.22:
-                mark = "◎"
-        
-            elif head_p >= 0.15:
-                mark = "○"
-        
-            elif head_p >= 0.10:
+    # ===============================
+    # ★ マーク付け
+    # ===============================
+    
+    marked = []
+    
+    for (a,b,c,p) in Final:
+    
+        head_p = P1[a-1]
+    
+        if head_p >= 0.22:
+            mark = "◎"
+        elif head_p >= 0.15:
+            mark = "○"
+        elif head_p >= 0.10:
+            mark = "▲"
+        else:
+            mark = "△"
+    
+        if DoubleAttackScore > 0.08:
+            if a >= 3 and mark in ["▲","△"]:
                 mark = "▲"
-        
-            else:
-                mark = "△"
-        
-            # ===== 展開補正（ここがキモ） =====
-            if DoubleAttackScore > 0.08:
-        
-                # 外の頭は格上げ
-                if a >= 3 and mark in ["▲","△"]:
-                    mark = "▲"
-        
-            # ===== イン安定なら強化 =====
-            if (
-                a == 1
-                and InsideSurvival[0] >= 0.60
-                and DoubleAttackScore < 0.06
-            ):
-                mark = "◎"
-        
-            marked.append((mark,a,b,c,p))
+    
+        if (
+            a == 1
+            and InsideSurvival[0] >= 0.60
+            and DoubleAttackScore < 0.06
+        ):
+            mark = "◎"
+    
+        marked.append((mark,a,b,c,p))
+    
+    
+    for m in marked:
+        mark,a,b,c,p = m
+        st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
         
         # ===============================
         # 表示
@@ -2327,4 +2324,4 @@ if st.button("計算"):
             
         for m in marked:
             mark,a,b,c,p = m
-             st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
+            st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
