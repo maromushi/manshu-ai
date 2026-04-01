@@ -2278,53 +2278,53 @@ if st.button("計算"):
     
     st.text_area("コピペ用", copy_text, height=200)
     
-    # ===============================
-# ★ マーク付け（役割ベース）
-# ===============================
-
-marked = []
-
-for (a,b,c,p) in Final:
-
-    # 頭評価（P1ベース）
-    head_p = P1[a-1]   # ←舟番なので-1
-
-    # デフォ
-    mark = ""
-
-    if head_p >= 0.22:
-        mark = "◎"
-
-    elif head_p >= 0.15:
-        mark = "○"
-
-    elif head_p >= 0.10:
-        mark = "▲"
-
-    else:
-        mark = "△"
-
-    # ===== 展開補正（ここがキモ） =====
-    if DoubleAttackScore > 0.08:
-
-        # 外の頭は格上げ
-        if a >= 3 and mark in ["▲","△"]:
-            mark = "▲"
-
-    # ===== イン安定なら強化 =====
-    if (
-        a == 1
-        and InsideSurvival[0] >= 0.60
-        and DoubleAttackScore < 0.06
-    ):
-        mark = "◎"
-
-    marked.append((mark,a,b,c,p))
-
-    # ===============================
-    # 表示
-    # ===============================
-    
-    for m in marked:
-        mark,a,b,c,p = m
-        st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
+        # ===============================
+        # ★ マーク付け（役割ベース）
+        # ===============================
+        
+        marked = []
+        
+        for (a,b,c,p) in Final:
+        
+            # 頭評価（P1ベース）
+            head_p = P1[a-1]   # ←舟番なので-1
+        
+            # デフォ
+            mark = ""
+        
+            if head_p >= 0.22:
+                mark = "◎"
+        
+            elif head_p >= 0.15:
+                mark = "○"
+        
+            elif head_p >= 0.10:
+                mark = "▲"
+        
+            else:
+                mark = "△"
+        
+            # ===== 展開補正（ここがキモ） =====
+            if DoubleAttackScore > 0.08:
+        
+                # 外の頭は格上げ
+                if a >= 3 and mark in ["▲","△"]:
+                    mark = "▲"
+        
+            # ===== イン安定なら強化 =====
+            if (
+                a == 1
+                and InsideSurvival[0] >= 0.60
+                and DoubleAttackScore < 0.06
+            ):
+                mark = "◎"
+        
+            marked.append((mark,a,b,c,p))
+        
+        # ===============================
+        # 表示
+        # ===============================
+            
+        for m in marked:
+            mark,a,b,c,p = m
+             st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
