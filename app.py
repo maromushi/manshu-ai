@@ -960,16 +960,30 @@ if st.button("計算"):
             if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
                 FirstScore[1] *= 0.90
             
-        # ★ 2頭うっすら拾う（追加）
-        #if Start[1] >= Start[0] - 0.01:
-            #FirstScore[1] *= 1.08
-
-        # ===== 2の頭確定ゾーン =====
-
-        #if CPI[1] > CPI[0] and Start[1] >= Start[0]:
-
-            #FirstScore[1] *= 1.15
-            #FirstScore[0] *= 0.88
+            
+        # ===============================
+        # ★ イン残り補正（A1＋A2対応）
+        # ===============================
+        
+        if CLS[0] == "A1":
+            if Start[0] >= 0.13:
+                FirstScore[0] *= 1.12
+        
+        elif CLS[0] == "A2":
+            if Start[0] >= 0.14 and InsideSurvival[0] >= 0.52:
+                FirstScore[0] *= 1.08
+                
+        # ===============================
+        # ★ イン残り補正（B1）
+        # ===============================
+        
+        elif CLS[0] == "B1":
+            if (
+                Start[0] >= 0.15
+                and InsideSurvival[0] >= 0.55
+                and DoubleAttackScore < 0.08
+            ):
+                FirstScore[0] *= 1.05
 
         # ===============================
         # ST遅い艇の頭抑制（追加）
@@ -1110,6 +1124,8 @@ if st.button("計算"):
             
                 # 逆に外の攻めすぎを抑える
                 FirstScore[4] *= 0.92
+                
+            
 
 
         # ===============================
