@@ -2120,6 +2120,23 @@ if st.button("計算"):
     for i,r in enumerate(Final,1):
 
         st.write(i,r)
+        
+    
+    # ===============================
+    # ★ここに追加（これだけ）
+    # ===============================
+    
+    # 例：2コース凹みっぽい時だけ
+    dent_flag = False
+    
+    # 簡易判定（まずこれでOK）
+    if AvgST[1] > 0.18 or ExST[1] > 0.18:
+        if DoubleAttackScore > 0.06:
+            dent_flag = True
+    
+    # 追加
+    if dent_flag:
+        Final.append((4,6,2,0.001))  # 確率は適当でOK（表示用）
 
     # ===============================
     # ★ コピペ用出目
