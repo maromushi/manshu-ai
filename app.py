@@ -28,6 +28,11 @@ data = st.text_area("抽出データを貼り付け")
         
 mode = st.selectbox("モード", ["auto","ana","safe"])
 
+venue = st.selectbox(
+    "会場",
+    ["浜名湖","蒲郡","常滑","多摩川","びわこ","その他"],
+    index=0
+)
 
 if st.button("計算"):
 
@@ -43,8 +48,6 @@ if st.button("計算"):
         st.write("抽出データの形式が正しくありません")
         st.stop()
         
-    venue = st.selectbox("会場", ["蒲郡","常滑","多摩川","びわこ","その他"])
-
     WinRate=local_vars.get("WinRate",[0]*6)
     PlaceRate=local_vars.get("PlaceRate",[0]*6)
 
