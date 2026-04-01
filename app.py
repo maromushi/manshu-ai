@@ -25,8 +25,6 @@ def normalize(values):
     ]
 
 data = st.text_area("抽出データを貼り付け")
-        
-mode = st.selectbox("モード", ["auto","ana","safe"])
 
 venue = st.selectbox(
     "会場",
@@ -648,16 +646,7 @@ if st.button("計算"):
             race_score += 1
         
         # 判定
-        if race_score >= 2:
-            mode_auto = "ana"
-        else:
-            mode_auto = "safe"
-        
-        # 最終モード決定
-        if mode == "auto":
-            use_mode = mode_auto
-        else:
-            use_mode = mode
+        use_mode = "ana" if race_score >= 2 else "safe"
 
         
         # ===============================
