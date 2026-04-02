@@ -1783,9 +1783,6 @@ if st.button("計算"):
         # ===============================
         # ★ 外の最低保証
         # ===============================
-        for i in range(4,6):
-            if CPI[i] >= 0.46 and DoubleAttackScore > 0.06:
-                ThirdScore[i] *= 1.15
                 
         # ★ 外の単発強者（追加）
         if (
@@ -1794,26 +1791,6 @@ if st.button("計算"):
         ):
             ThirdScore[4] *= 1.15
         
-        # ===============================
-        # ★ 外の勝者だけ残す（5・6）
-        # ===============================
-        outer_max = max(CPI[4], CPI[5])
-        
-        for i in range(4,6):
-        
-            if (
-                CPI[i] >= outer_max - 0.01
-                or (
-                    DoubleAttackScore > 0.07
-                    and Start[i] >= Start[3] - 0.02
-                )
-            ):
-        
-                if DoubleAttackScore > 0.07:
-                    ThirdScore[i] *= (1 + 0.30 * DoubleAttackScore)
-        
-            else:
-                ThirdScore[i] *= 0.88
                 
         # ===============================
         # ★ 外単独強者救済（これが本命）
