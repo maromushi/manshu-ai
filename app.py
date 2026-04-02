@@ -2308,7 +2308,7 @@ if st.button("計算"):
                  mark = "▲"
         
          else:
-              mark = "△"
+             mark = "△"
         
          marked.append((mark,a,b,c,p))
                 
