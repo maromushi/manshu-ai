@@ -1824,6 +1824,17 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
+            # ★ 展開ライン2着（汎用版）
+            if DoubleAttackScore > 0.05:
+            
+                attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
+            
+                target = attack_center + 1
+            
+                if target < 6:
+                    if Start[target] >= Start[attack_center] - 0.03:
+                        SecondAdj[target] *= 1.10
+            
             # ===============================
             # ★ 6の2着侵食ストップ（本命修正）
             # ===============================
