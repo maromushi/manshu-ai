@@ -1514,12 +1514,20 @@ if st.button("計算"):
                     and Start[i] >= Start[3] - 0.02
                 )
             ):
-        
+            
+                # ★ 6だけフィルター
+                if i == 5:
+                    if not (
+                        DoubleAttackScore > 0.07
+                        and Start[i] >= Start[3] - 0.01
+                    ):
+                        continue
+            
                 if DoubleAttackScore > 0.07:
-                    SecondScore[i] *= (1 + 0.25 * DoubleAttackScore)
-        
+                    ThirdScore[i] *= (1 + 0.30 * DoubleAttackScore)
+            
             else:
-                SecondScore[i] *= 0.97
+                ThirdScore[i] *= 0.88
         
         
         # ===============================
