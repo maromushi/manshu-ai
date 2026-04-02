@@ -1496,29 +1496,19 @@ if st.button("計算"):
                 SecondScore[i] *= 1.15
         
         # ===============================
-        # ★ 強制外シナリオ（ここ！！）
-        # ===============================
-        #if DoubleAttackScore > 0.07:
-        
-            #for i in range(4,6):
-                #SecondScore[i] *= 1.25
-        
-        #for i in range(6):
-        
-            # 外のポテンシャル艇を救う
-            #if i >= 4:
-                #if Foot[i] >= 0.50 or CPI[i] >= 0.48:
-                    #SecondScore[i] *= 1.20
-                    
-        
-        # ===============================
         # ★ 外の勝者だけ残す（5・6共通）
         # ===============================
         outer_max = max(CPI[4], CPI[5])
         
         for i in range(4,6):
         
-            if CPI[i] >= outer_max - 0.03:
+            if (
+                CPI[i] >= outer_max - 0.01
+                or (
+                    DoubleAttackScore > 0.07
+                    and Start[i] >= Start[3] - 0.02
+                )
+            ):
         
                 if DoubleAttackScore > 0.07:
                     SecondScore[i] *= (1 + 0.25 * DoubleAttackScore)
@@ -1569,8 +1559,10 @@ if st.button("計算"):
         # ★ 2着強化
         # ===============================
         
-        if FiveFlowFlag:
-            SecondScore[4] *= 1.20
+        if FiveFlowFlag and DoubleAttackScore > 0.08:
+            SecondScore[4] *= 1.15
+        else:
+            SecondScore[4] *= 0.90
         
 
         # ===============================
@@ -1724,17 +1716,15 @@ if st.button("計算"):
         # ===============================
         # ★ 強制外シナリオ（ここ！！）
         # ===============================
-        if DoubleAttackScore > 0.07:
-        
-            for i in range(4,6):
-                ThirdScore[i] *= 1.30
+        if DoubleAttackScore > 0.07 and Start[i] >= Start[3] - 0.02:
+            ThirdScore[i] *= 1.30  
         
         
         # ===============================
         # ★ 外の最低保証
         # ===============================
         for i in range(4,6):
-            if CPI[i] >= 0.46:
+            if CPI[i] >= 0.46 and DoubleAttackScore > 0.06:
                 ThirdScore[i] *= 1.15
                 
         # ★ 外の単発強者（追加）
@@ -1751,7 +1741,13 @@ if st.button("計算"):
         
         for i in range(4,6):
         
-            if CPI[i] >= outer_max - 0.03:
+            if (
+                CPI[i] >= outer_max - 0.01
+                or (
+                    DoubleAttackScore > 0.07
+                    and Start[i] >= Start[3] - 0.02
+                )
+            ):
         
                 if DoubleAttackScore > 0.07:
                     ThirdScore[i] *= (1 + 0.30 * DoubleAttackScore)
