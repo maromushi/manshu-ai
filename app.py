@@ -2201,7 +2201,7 @@ if st.button("計算"):
                     ):
                         continue
                     
-                    results.append((boats[a],boats[b],boats[c],p))
+                results.append((boats[a],boats[b],boats[c],p))
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log
     # =====================================
