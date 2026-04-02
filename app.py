@@ -1500,35 +1500,6 @@ if st.button("計算"):
             ):
                 SecondScore[i] *= 1.15
         
-        # ===============================
-        # ★ 外の勝者だけ残す（5・6共通）
-        # ===============================
-        outer_max = max(CPI[4], CPI[5])
-        
-        for i in range(4,6):
-        
-            if (
-                CPI[i] >= outer_max - 0.01
-                or (
-                    DoubleAttackScore > 0.07
-                    and Start[i] >= Start[3] - 0.02
-                )
-            ):
-            
-                # ★ 6だけフィルター
-                if i == 5:
-                    if not (
-                        DoubleAttackScore > 0.07
-                        and Start[i] >= Start[3] - 0.01
-                    ):
-                        continue
-            
-                if DoubleAttackScore > 0.07:
-                    ThirdScore[i] *= (1 + 0.30 * DoubleAttackScore)
-            
-            else:
-                ThirdScore[i] *= 0.88
-        
         
         # ===============================
         # ★ 展開6（性能じゃない6を拾う）
@@ -1666,6 +1637,37 @@ if st.button("計算"):
         0.10*InsideSurvival[i]
         for i in range(6)
         ]
+
+        # ===============================
+        # ★ 外の勝者だけ残す（5・6共通）
+        # ===============================
+        outer_max = max(CPI[4], CPI[5])
+        
+        for i in range(4,6):
+        
+            if (
+                CPI[i] >= outer_max - 0.01
+                or (
+                    DoubleAttackScore > 0.07
+                    and Start[i] >= Start[3] - 0.02
+                )
+            ):
+            
+                # ★ 6だけフィルター
+                if i == 5:
+                    if not (
+                        DoubleAttackScore > 0.07
+                        and Start[i] >= Start[3] - 0.01
+                    ):
+                        continue
+            
+                if DoubleAttackScore > 0.07:
+                    ThirdScore[i] *= (1 + 0.30 * DoubleAttackScore)
+            
+            else:
+                ThirdScore[i] *= 0.88
+        
+        
     
         # ===============================
         # ★ インの2着・3着粘り復活
