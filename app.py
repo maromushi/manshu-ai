@@ -1553,21 +1553,18 @@ if st.button("計算"):
         
         FiveFlowFlag = (
             FlowOuter
-            and (
-                Foot[4] >= 0.48
-                or CPI[4] >= 0.46
-            )
-            and Start[4] >= Start[2] - 0.03
-        )
+            and DoubleAttackScore > 0.07   # ←追加（これが本質）
+            and Foot[4] >= 0.50            # ←少し上げる
+            and CPI[4] >= 0.48             # ←ANDにする
+            and Start[4] >= Start[2] - 0.02
         
         SixFlowFlag = (
             FlowOuter
-            and (
-                Foot[5] >= 0.50
-                or CPI[5] >= 0.48
-            )
-            and Start[5] >= Start[3] - 0.03
-        )    
+            and DoubleAttackScore > 0.07
+            and Foot[5] >= 0.52
+            and CPI[5] >= 0.50
+            and Start[5] >= Start[3] - 0.02
+)    
         
         # ===============================
         # ★ 2着強化
