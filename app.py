@@ -1484,6 +1484,7 @@ if st.button("計算"):
         0.20*Engine[i]+
         0.10*Velocity[i]+
         0.10*LaneBonus[i]
+        + 0.05*Start[i]
         for i in range(6)
         ]
         
