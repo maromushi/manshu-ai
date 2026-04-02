@@ -2200,6 +2200,13 @@ if st.button("計算"):
                         or Active[c] == 0
                     ):
                         continue
+                        
+                    if (
+                        boats[a] <= 0
+                        or boats[b] <= 0
+                        or boats[c] <= 0
+                    ):
+                        continue
                     
                 results.append((boats[a],boats[b],boats[c],p))
 
@@ -2324,23 +2331,6 @@ if st.button("計算"):
             unique[key] = p
     
     Final = [(k[0],k[1],k[2],v) for k,v in unique.items()]
-
-    # ===============================
-    # ★ここに追加（これだけ）
-    # ===============================
-    
-    # 例：2コース凹みっぽい時だけ
-    dent_flag = False
-    
-    # 簡易判定（まずこれでOK）
-    if AvgST[1] > 0.18 or ExST[1] > 0.18:
-        if DoubleAttackScore > 0.06:
-            dent_flag = True
-    
-    # 追加
-    if dent_flag:
-        Final.append((4,6,2,0.001))  # 確率は適当でOK（表示用）
-
                     
     # ===============================
     # ★ マーク付け（完成形）
