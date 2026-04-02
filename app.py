@@ -1833,7 +1833,7 @@ if st.button("計算"):
             
                 if target < 6:
                     if Start[target] >= Start[attack_center] - 0.03:
-                        SecondAdj[target] *= 1.10
+                        SecondAdj[target] *= 1.15
             
             # ===============================
             # ★ 6の2着侵食ストップ（本命修正）
