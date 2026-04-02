@@ -1826,8 +1826,18 @@ if st.button("計算"):
             
             # ★ 外の過剰3着抑制（汎用）
             if i >= 4:
-                if DoubleAttackScore < 0.08:
-                    ThirdAdj[i] *= 0.92
+                if DoubleAttackScore > 0.05:
+
+                    attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
+                
+                    # ★ ここが本質（追加）
+                    if attack_center == 2 or attack_center == 3:
+                
+                        target = attack_center + 1
+                
+                        if target < 6:
+                            if Start[target] >= Start[attack_center] - 0.03:
+                                SecondAdj[target] *= 1.18
             
             # ★ 展開ライン2着（汎用版）
             if DoubleAttackScore > 0.05:
