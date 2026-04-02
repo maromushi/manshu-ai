@@ -2304,7 +2304,7 @@ if st.button("計算"):
              elif DoubleAttackScore > 0.06 and a >= 3:
                   mark = "▲"
         
-              else:
+             else:
                  mark = "▲"
         
          else:
