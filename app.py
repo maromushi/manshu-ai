@@ -236,7 +236,7 @@ if st.button("計算"):
     
     # 足りなければ埋める
     while len(ExEntry) < 6:
-        ExEntry.append(ExEntry[-
+        ExEntry.append(ExEntry[-1])
 
     ExhibitionF=[0,0,0,0,0,0]
 
