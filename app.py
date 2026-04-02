@@ -2278,21 +2278,21 @@ if st.button("計算"):
     # ===============================
     
     sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
-    
+
     top_p = sorted_final[0][3]
     top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
+    
+    top_head = P1.index(max(P1))
     
     marked = []
     
     for (a,b,c,p) in Final:
     
-        head_p = P1[a-1]
-    
         if (a,b,c) in top_set:
     
-            if a-1 == P1.index(max(P1)) and p >= top_p * 0.9:
+            if a-1 == top_head and p >= top_p * 0.9:
                 mark = "◎"
-
+    
             elif DoubleAttackScore > 0.06 and a >= 3:
                 mark = "▲"
     
@@ -2300,37 +2300,12 @@ if st.button("計算"):
                 mark = "○"
     
             else:
-                mark = "▲"
+                mark = "△"
     
         else:
-            mark = "△"
+            mark = ""   # ←これが重要（無印）
     
         marked.append((mark,a,b,c,p))
-    
-    
-    # ===============================
-    # △フィルター（外）
-    # ===============================
-    
-    filtered_marked = []
-
-    delta_count = 0
-    
-    for mark,a,b,c,p in marked:
-    
-        if mark == "△":
-    
-            if p < 0.02 or P1[a-1] < 0.15:
-                continue
-    
-            delta_count += 1
-    
-            if delta_count > 3:   # ←ここ重要（最大3点まで）
-                continue
-    
-        filtered_marked.append((mark,a,b,c,p))
-    
-    marked = filtered_marked
     
     # ===============================
     # 表示
