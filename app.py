@@ -1687,7 +1687,7 @@ if st.button("計算"):
         # ★ 外の勝者だけ残す（5・6共通）
         # ===============================
         outer_max = max(CPI[4], CPI[5])
-        
+
         for i in range(4,6):
         
             if (
@@ -1697,18 +1697,17 @@ if st.button("計算"):
                     and Start[i] >= Start[3] - 0.02
                 )
             ):
-            
-                # ★ 6だけフィルター
+        
                 if i == 5:
                     if not (
                         DoubleAttackScore > 0.07
                         and Start[i] >= Start[3] - 0.01
                     ):
                         continue
-            
+        
                 if DoubleAttackScore > 0.07:
                     ThirdScore[i] *= (1 + 0.30 * DoubleAttackScore)
-            
+        
             else:
                 ThirdScore[i] *= 0.88
         
@@ -1823,6 +1822,12 @@ if st.button("計算"):
         
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
+            
+            # ★ 外の最低限の残り保証
+            for i in range(6):
+                if i >= 4:
+                    if Foot[i] >= 0.50 or CPI[i] >= 0.48:
+                        ThirdAdj[i] *= 1.10
             
             # ★ 外の過剰3着抑制（汎用）
             if i >= 4:
