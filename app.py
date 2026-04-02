@@ -2307,7 +2307,10 @@ if st.button("計算"):
             
     for m in marked:
         mark,a,b,c,p = m
-        st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
+        if mark != "":
+        st.write(f"{a}-{b}-{c} ({round(p,4)}) {mark}")
+    else:
+        st.write(f"{a}-{b}-{c} ({round(p,4)})")
 
     # ===============================
     # ★ コピペ用出目
