@@ -1824,6 +1824,11 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
+            # ★ 外の過剰3着抑制（汎用）
+            if i >= 4:
+                if DoubleAttackScore < 0.08:
+                    ThirdAdj[i] *= 0.92
+            
             # ★ 展開ライン2着（汎用版）
             if DoubleAttackScore > 0.05:
             
