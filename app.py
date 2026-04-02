@@ -2317,8 +2317,8 @@ if st.button("計算"):
     # ===============================
     
     copy_text = "\n".join([
-        f"{a}-{b}-{c} ({round(p,4)})"
-        for (_,a,b,c,p) in marked
+        f"{a}-{b}-{c} ({round(p,4)}) {mark}" if mark != "" else f"{a}-{b}-{c} ({round(p,4)})"
+        for (mark,a,b,c,p) in marked
     ])
     
     st.text_area("コピペ用", copy_text, height=200)
