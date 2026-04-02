@@ -1669,6 +1669,14 @@ if st.button("計算"):
         0.10*InsideSurvival[i]
         for i in range(6)
         ]
+        
+        # ★ 攻め役の失敗残り（超重要）
+        if i in [2,3]:  # 3号艇・4号艇
+        
+            if DoubleAttackScore > 0.05:
+        
+                # 頭取れなくても残る
+                ThirdScore[i] *= 1.12
 
         # ===============================
         # ★ 外の勝者だけ残す（5・6共通）
