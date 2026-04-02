@@ -1668,6 +1668,13 @@ if st.button("計算"):
         for i in range(6)
         ]
         
+        for i in range(6):
+
+        # ★ 3号艇の自然残り（本命修正）
+        if i == 2:
+            if CPI[i] >= 0.45:
+                ThirdScore[i] *= 1.18
+        
         # ★ 攻め役の失敗残り（超重要）
         for i in range(6):
 
