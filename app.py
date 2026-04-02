@@ -2255,10 +2255,7 @@ if st.button("計算"):
             unique[key] = p
     
     Final = [(k[0],k[1],k[2],v) for k,v in unique.items()]
-                    
-    st.write([round(r[3],4) for r in results[:10]])
-        
-    
+
     # ===============================
     # ★ここに追加（これだけ）
     # ===============================
@@ -2275,6 +2272,66 @@ if st.button("計算"):
     if dent_flag:
         Final.append((4,6,2,0.001))  # 確率は適当でOK（表示用）
 
+                    
+    # ===============================
+    # ★ マーク付け（修正版）
+    # ===============================
+    
+    sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
+    
+    top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
+    
+    marked = []
+    
+    for (a,b,c,p) in Final:
+    
+        sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
+
+        top_p = sorted_final[0][3]
+        
+        top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
+        
+        head_p = P1[a-1]
+        
+        if (a,b,c) in top_set:
+        
+             if a-1 == P1.index(max(P1)) and p >= top_p * 0.9:
+                 mark = "◎"
+        
+             elif p >= top_p * 0.75:
+                mark = "○"
+        
+             elif DoubleAttackScore > 0.06 and a >= 3:
+                  mark = "▲"
+        
+              else:
+                 mark = "▲"
+        
+         else:
+              mark = "△"
+        
+         marked.append((mark,a,b,c,p))
+                
+        # △の中でも弱いの消す
+        filtered_marked = []
+        
+        for mark,a,b,c,p in marked:
+        
+            if mark == "△" and (p < 0.025 or P1[a-1] < 0.12):
+                continue
+        
+            filtered_marked.append((mark,a,b,c,p))
+        
+        marked = filtered_marked
+    
+    # ===============================
+    # 表示
+    # ===============================
+            
+    for m in marked:
+        mark,a,b,c,p = m
+        st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
+
     # ===============================
     # ★ コピペ用出目
     # ===============================
@@ -2286,60 +2343,10 @@ if st.button("計算"):
     
     st.text_area("コピペ用", copy_text, height=200)
     
-    # ===============================
-    # ★ マーク付け
-    # ===============================
-    
-    marked = []
-    
-    for (a,b,c,p) in Final:
-    
-        # 上位だけ抜く
-        sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
-        
-        top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
-        
-        marked = []
-        
-        for (a,b,c,p) in Final:
-        
-            if (a,b,c) in top_set:
-        
-                rank = sorted_final.index((a,b,c,p))
-        
-                if rank == 0:
-                    mark = "◎"
-                elif rank <= 2:
-                    mark = "○"
-                else:
-                    mark = "▲"
-        
-            else:
-                mark = "△"
-        
-            marked.append((mark,a,b,c,p))
-            
-    # △の中でも弱いの消す
-    filtered_marked = []
-    
-    for mark,a,b,c,p in marked:
-    
-        if mark == "△" and (p < 0.025 or P1[a-1] < 0.12):
-            continue
-    
-        filtered_marked.append((mark,a,b,c,p))
-    
-    marked = filtered_marked
-    
     st.write("▼デバッグ")
     
     for name, val in debug_log:
-        st.write(name, val)
-        
-    # ===============================
-    # 表示
-    # ===============================
-            
-    for m in marked:
-        mark,a,b,c,p = m
-        st.write(f"{mark} {a}-{b}-{c} ({round(p,4)})")
+        st.write(name, val)    
+          
+
+  
