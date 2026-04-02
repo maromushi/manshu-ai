@@ -2274,10 +2274,11 @@ if st.button("計算"):
 
                     
     # ===============================
-    # ★ マーク付け（修正版）
+    # ★ マーク付け（完成形）
     # ===============================
     
     sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
+    
     top_p = sorted_final[0][3]
     top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
     
@@ -2285,12 +2286,11 @@ if st.button("計算"):
     
     for (a,b,c,p) in Final:
     
-        
         head_p = P1[a-1]
-
+    
         if (a,b,c) in top_set:
     
-            if a-1 == top_head and p >= top_p * 0.9:
+            if a-1 == P1.index(max(P1)) and p >= top_p * 0.9:
                 mark = "◎"
     
             elif p >= top_p * 0.75:
@@ -2306,17 +2306,21 @@ if st.button("計算"):
             mark = "△"
     
         marked.append((mark,a,b,c,p))
-                
-    # △の中でも弱いの消す
+    
+    
+    # ===============================
+    # △フィルター（外）
+    # ===============================
+    
     filtered_marked = []
-        
+    
     for mark,a,b,c,p in marked:
-        
+    
         if mark == "△" and (p < 0.025 or P1[a-1] < 0.12):
             continue
-        
+    
         filtered_marked.append((mark,a,b,c,p))
-        
+    
     marked = filtered_marked
     
     # ===============================
