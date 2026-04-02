@@ -2033,7 +2033,8 @@ if st.button("計算"):
                             SecondAdj[i] *= 0.90
                             
                     # ===== 外の残り再設計 =====
-                    if i >= 4:
+                    # 外の残り再設計
+                    if i == 4:
                     
                         if (
                             Start[i] >= Start[2] - 0.03
@@ -2043,7 +2044,17 @@ if st.button("計算"):
                             )
                         ):
                             SecondAdj[i] *= 1.12
-                            ThirdAdj[i] *= 1.08
+                            ThirdAdj[i] *= 1.06
+
+                    # ★ 6だけは条件付きにする
+                    if i == 5:
+                    
+                        if not (
+                            DoubleAttackScore > 0.08
+                            and Start[5] >= Start[3] - 0.02
+                        ):
+                            SecondAdj[5] *= 0.85
+                            ThirdAdj[5] *= 0.85
             
                 # ===============================
                 # 内残り（条件付きに変更）
