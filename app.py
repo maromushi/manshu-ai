@@ -1933,12 +1933,12 @@ if st.button("計算"):
             # ===============================
             for i in range(6):
 
-            if (
-                i == 4
-                and DoubleAttackScore > 0.05
-                and Start[4] >= Start[2] - 0.03
-            ):
-                SecondAdj[4] *= 1.25
+                if (
+                    i == 4
+                    and DoubleAttackScore > 0.05
+                    and Start[4] >= Start[2] - 0.03
+                ):
+                    SecondAdj[4] *= 1.25
                 
             if i >= 4:
                 if Foot[i] >= 0.50 or CPI[i] >= 0.48:
