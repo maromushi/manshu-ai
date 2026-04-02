@@ -1525,10 +1525,8 @@ if st.button("計算"):
             if (
                 CLS[i] in ["A1","A2"]
                 and Start[i] >= Start[3] - 0.02
-                and (
-                    Foot[i] >= 0.48
-                    or CPI[i] >= 0.46
-                )
+                and Foot[i] >= 0.48
+                and CPI[i] >= 0.46
             ):
                 SecondScore[i] *= 1.15
         
@@ -1837,7 +1835,7 @@ if st.button("計算"):
         # ★ 3着強化
         # ===============================
         
-        if FiveFlowFlag:
+        if FiveFlowFlag and DoubleAttackScore > 0.06:
             ThirdScore[4] *= 1.15
         
         if SixFlowFlag:
