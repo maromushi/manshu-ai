@@ -2292,12 +2292,12 @@ if st.button("計算"):
     
             if a-1 == P1.index(max(P1)) and p >= top_p * 0.9:
                 mark = "◎"
+
+            elif DoubleAttackScore > 0.06 and a >= 3:
+                mark = "▲"
     
             elif p >= top_p * 0.75:
                 mark = "○"
-    
-            elif DoubleAttackScore > 0.06 and a >= 3:
-                mark = "▲"
     
             else:
                 mark = "▲"
@@ -2313,11 +2313,20 @@ if st.button("計算"):
     # ===============================
     
     filtered_marked = []
+
+    delta_count = 0
     
     for mark,a,b,c,p in marked:
     
-        if mark == "△" and (p < 0.025 or P1[a-1] < 0.12):
-            continue
+        if mark == "△":
+    
+            if p < 0.02 or P1[a-1] < 0.15:
+                continue
+    
+            delta_count += 1
+    
+            if delta_count > 3:   # ←ここ重要（最大3点まで）
+                continue
     
         filtered_marked.append((mark,a,b,c,p))
     
@@ -2336,8 +2345,8 @@ if st.button("計算"):
     # ===============================
     
     copy_text = "\n".join([
-        f"{r[0]}-{r[1]}-{r[2]} ({round(r[3],4)})"
-        for r in Final
+        f"{a}-{b}-{c} ({round(p,4)})"
+        for (_,a,b,c,p) in marked
     ])
     
     st.text_area("コピペ用", copy_text, height=200)
