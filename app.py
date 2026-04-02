@@ -2279,25 +2279,22 @@ if st.button("計算"):
     
     sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
 
-    top_p = sorted_final[0][3]
-    top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
-    
     top_head = P1.index(max(P1))
     
     marked = []
     
-    for (a,b,c,p) in Final:
-
+    for i, (a,b,c,p) in enumerate(sorted_final):
+    
         head = a-1
     
-        if head == top_head and InsideSurvival[0] >= 0.60:
+        if i == 0:
             mark = "◎"
     
-        elif DoubleAttackScore > 0.08 and head >= 2:
-            mark = "▲"
-    
-        elif P1[head] >= 0.18:
+        elif i <= 2:
             mark = "○"
+    
+        elif DoubleAttackScore > 0.06 and head >= 2 and i <= 5:
+            mark = "▲"
     
         else:
             mark = ""
