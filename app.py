@@ -162,8 +162,12 @@ if st.button("計算"):
     Active = [1]*6
 
     for i in range(6):
-        if WinRate[i]==0 and PlaceRate[i]==0:
-            Active[i]=0
+        if (
+            WinRate[i]==0
+            and PlaceRate[i]==0
+            and Motor2[i]==0
+        ):
+            Active[i]=00
 
     # ② そのあと補正
     avg_win = sum([WinRate[i] for i in range(6) if Active[i]==1])/max(1,sum(Active))
@@ -2160,6 +2164,9 @@ if st.button("計算"):
                     P_third = third_probs[idx_c]
 
                     p = P_first * P_second * P_third
+                    
+                    if Active[a]==0 or Active[b]==0 or Active[c]==0:
+                        continue
                     
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
