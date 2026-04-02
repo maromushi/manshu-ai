@@ -2280,24 +2280,24 @@ if st.button("計算"):
     sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
 
     top_head = P1.index(max(P1))
-
+    
     marked = []
     
-    for (a,b,c,p) in Final:
+    for i, (a,b,c,p) in enumerate(sorted_final):
     
         head = a-1
     
-        # ◎：頭最強
-        if head == top_head:
+        # ◎は1点固定
+        if i == 0:
             mark = "◎"
     
-        # ▲：攻め展開の頭
-        elif DoubleAttackScore > 0.06 and head >= 2:
-            mark = "▲"
-    
-        # ○：それ以外の有力頭
-        elif P1[head] >= 0.18:
+        # ○は上位3点
+        elif i <= 2:
             mark = "○"
+    
+        # ▲は攻め条件＋上位6まで
+        elif i <= 5 and DoubleAttackScore > 0.06 and head >= 2:
+            mark = "▲"
     
         else:
             mark = ""
