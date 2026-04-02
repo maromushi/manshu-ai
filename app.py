@@ -836,7 +836,7 @@ if st.button("計算"):
             Turn[2] > 0.55
             and Turn[3] > 0.55
             and abs(Turn[2] - Turn[3]) < 0.04
-            and DoubleAttackScore > 0.06
+            and DoubleAttackScore > 0.08
         ):
             # 共倒れ
             FirstScore[2] *= 0.90
