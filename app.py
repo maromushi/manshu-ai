@@ -2165,7 +2165,11 @@ if st.button("計算"):
 
                     p = P_first * P_second * P_third
                     
-                    if Active[a]==0 or Active[b]==0 or Active[c]==0:
+                    if (
+                        boats[a] <= 0
+                        or boats[b] <= 0
+                        or boats[c] <= 0
+                    ):
                         continue
                     
                     if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
