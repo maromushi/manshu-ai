@@ -1490,7 +1490,12 @@ if st.button("計算"):
         for i in range(6)
         ]
         
-        
+        if (
+            SecondScore[i] >= top_second * 0.97
+            and FirstScore[i] < max(FirstScore) * 0.85
+            and DoubleAttackScore < 0.10
+        ):
+            SecondAdj[i] *= 0.93
         
         # ===============================
         # ★ 階級補正（最重要）
@@ -1828,11 +1833,24 @@ if st.button("計算"):
                 SecondAdj[4] *= 0.92
                 ThirdAdj[4] *= 1.05
             
-            # ★ 外の最低限の残り保証
-            for i in range(6):
-                if i >= 4:
-                    if Foot[i] >= 0.50 or CPI[i] >= 0.48:
-                        ThirdAdj[i] *= 1.10
+            # ===============================
+            # ★ 外の3着処理（整理版）
+            # ===============================
+            for i in range(4,6):
+            
+                # ① 素で強い外
+                if (
+                    Foot[i] >= 0.50
+                    and CPI[i] >= 0.48
+                ):
+                    ThirdAdj[i] *= 1.08
+            
+                # ② 展開で流れ込む外
+                elif (
+                    DoubleAttackScore > 0.08
+                    and Start[i] >= Start[3] - 0.02
+                ):
+                    ThirdAdj[i] *= 1.05
             
             # ★ 外の過剰3着抑制（汎用）
             if i >= 4:
