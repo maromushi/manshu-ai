@@ -1769,15 +1769,6 @@ if st.button("計算"):
         ):
             SecondScore[1] *= 1.12
             ThirdScore[1] *= 1.08
-
-        
-        # ===============================
-        # ★ 強制外シナリオ（ここ！！）
-        # ===============================
-        for i in range(4,6):
-
-            if DoubleAttackScore > 0.07 and Start[i] >= Start[3] - 0.02:
-                ThirdScore[i] *= 1.15
         
         
         # ===============================
