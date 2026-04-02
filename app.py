@@ -221,22 +221,22 @@ if st.button("計算"):
     ExEntry=fix_exentry(ExEntry)
     
     # ★ 欠場艇を進入から除外（ここ追加）
-new_entry = []
-
-for e in ExEntry:
-    idx = e - 1  # 1→0, 2→1...
-    if idx >= 0 and idx < 6 and Active[idx] == 1:
-        new_entry.append(e)
-
-    # もし全部消えたり不足した場合の保険
-    if len(new_entry) >= 3:
-        ExEntry = new_entry
-    else:
-        ExEntry = [i+1 for i in range(6) if Active[i] == 1]
+    new_entry = []
     
-    # 足りなければ埋める（絶対6個にする）
-    while len(ExEntry) < 6:
-        ExEntry.append(ExEntry[-1])
+    for e in ExEntry:
+        idx = e - 1  # 1→0, 2→1...
+        if idx >= 0 and idx < 6 and Active[idx] == 1:
+            new_entry.append(e)
+    
+        # もし全部消えたり不足した場合の保険
+        if len(new_entry) >= 3:
+            ExEntry = new_entry
+        else:
+            ExEntry = [i+1 for i in range(6) if Active[i] == 1]
+        
+        # 足りなければ埋める（絶対6個にする）
+        while len(ExEntry) < 6:
+            ExEntry.append(ExEntry[-1])
 
     ExhibitionF=[0,0,0,0,0,0]
 
