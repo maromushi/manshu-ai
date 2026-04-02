@@ -711,6 +711,11 @@ if st.button("計算"):
         0.15*LaneWin[i]
         for i in range(6)
         ]
+
+        if Fcount[i] == 1:
+            FirstScore[i] *= 0.95
+        elif Fcount[i] >= 2:
+            FirstScore[i] *= 0.90
         
         # ===============================
         # ★ 主役取りこぼし（最重要）
