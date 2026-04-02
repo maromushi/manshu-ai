@@ -168,6 +168,16 @@ if st.button("計算"):
             and Motor2[i]==0
         ):
             Active[i]=00
+            
+    # ★ 欠場艇の完全除外フラグ（追加）
+    for i in range(6):
+        if (
+            WinRate[i] == 0
+            and PlaceRate[i] == 0
+            and Motor2[i] == 0
+            and Boat2[i] == 0
+        ):
+            Active[i] = 0
 
     # ② そのあと補正
     avg_win = sum([WinRate[i] for i in range(6) if Active[i]==1])/max(1,sum(Active))
@@ -209,6 +219,24 @@ if st.button("計算"):
     Fcount=to_int_list(fix_length(Fcount))
 
     ExEntry=fix_exentry(ExEntry)
+    
+    # ★ 欠場艇を進入から除外（ここ追加）
+new_entry = []
+
+for e in ExEntry:
+    idx = e - 1  # 1→0, 2→1...
+    if idx >= 0 and idx < 6 and Active[idx] == 1:
+        new_entry.append(e)
+
+    # もし全部消えたり不足した場合の保険
+    if len(new_entry) >= 3:
+        ExEntry = new_entry
+    else:
+        ExEntry = [i+1 for i in range(6) if Active[i] == 1]
+    
+    # 足りなければ埋める（絶対6個にする）
+    while len(ExEntry) < 6:
+        ExEntry.append(ExEntry[-1])
 
     ExhibitionF=[0,0,0,0,0,0]
 
@@ -2165,14 +2193,14 @@ if st.button("計算"):
 
                     p = P_first * P_second * P_third
                     
+                    # ★ 最終フィルター（絶対防御）
                     if (
-                        boats[a] <= 0
-                        or boats[b] <= 0
-                        or boats[c] <= 0
+                        Active[a] == 0
+                        or Active[b] == 0
+                        or Active[c] == 0
                     ):
                         continue
                     
-                    if boats[a] != -1 and boats[b] != -1 and boats[c] != -1:
                         results.append((boats[a],boats[b],boats[c],p))
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log
