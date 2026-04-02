@@ -1047,7 +1047,7 @@ if st.button("計算"):
 
         # 6頭の最終ブレーキ
         if Start[5] < Start[0] - 0.01:
-            FirstScore[5] *= 0.70
+            FirstScore[5] *= 0.75
         
         elif Start[5] <= Start[1] or Start[5] <= Start[0]:
             FirstScore[5] *= 0.80
