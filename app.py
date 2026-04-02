@@ -245,6 +245,8 @@ if st.button("計算"):
     # =====================================
 
     def run_ai(order):
+        
+        results = []
 
         FC=[Fcount[i] for i in order]
         
