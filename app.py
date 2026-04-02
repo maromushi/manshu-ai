@@ -2278,51 +2278,46 @@ if st.button("計算"):
     # ===============================
     
     sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
-    
+    top_p = sorted_final[0][3]
     top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
     
     marked = []
     
     for (a,b,c,p) in Final:
     
-        sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
-
-        top_p = sorted_final[0][3]
-        
-        top_set = set([tuple(x[:3]) for x in sorted_final[:5]])
         
         head_p = P1[a-1]
-        
+
         if (a,b,c) in top_set:
-        
-             if a-1 == P1.index(max(P1)) and p >= top_p * 0.9:
-                 mark = "◎"
-        
-             elif p >= top_p * 0.75:
+    
+            if a-1 == top_head and p >= top_p * 0.9:
+                mark = "◎"
+    
+            elif p >= top_p * 0.75:
                 mark = "○"
-        
-             elif DoubleAttackScore > 0.06 and a >= 3:
-                  mark = "▲"
-        
-             else:
-                 mark = "▲"
-        
-         else:
-             mark = "△"
-        
-         marked.append((mark,a,b,c,p))
+    
+            elif DoubleAttackScore > 0.06 and a >= 3:
+                mark = "▲"
+    
+            else:
+                mark = "▲"
+    
+        else:
+            mark = "△"
+    
+        marked.append((mark,a,b,c,p))
                 
-        # △の中でも弱いの消す
-        filtered_marked = []
+    # △の中でも弱いの消す
+    filtered_marked = []
         
-        for mark,a,b,c,p in marked:
+    for mark,a,b,c,p in marked:
         
-            if mark == "△" and (p < 0.025 or P1[a-1] < 0.12):
-                continue
+        if mark == "△" and (p < 0.025 or P1[a-1] < 0.12):
+            continue
         
-            filtered_marked.append((mark,a,b,c,p))
+        filtered_marked.append((mark,a,b,c,p))
         
-        marked = filtered_marked
+    marked = filtered_marked
     
     # ===============================
     # 表示
