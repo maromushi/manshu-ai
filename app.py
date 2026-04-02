@@ -1557,6 +1557,7 @@ if st.button("計算"):
             and Foot[4] >= 0.50            # ←少し上げる
             and CPI[4] >= 0.48             # ←ANDにする
             and Start[4] >= Start[2] - 0.02
+        )
         
         SixFlowFlag = (
             FlowOuter
@@ -1564,7 +1565,7 @@ if st.button("計算"):
             and Foot[5] >= 0.52
             and CPI[5] >= 0.50
             and Start[5] >= Start[3] - 0.02
-)    
+        )    
         
         # ===============================
         # ★ 2着強化
