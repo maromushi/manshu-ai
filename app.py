@@ -1823,13 +1823,6 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
-            if (
-                SecondScore[i] >= top_second * 0.97
-                and FirstScore[i] < max(FirstScore) * 0.85
-                and DoubleAttackScore < 0.10
-            ):
-                SecondAdj[i] *= 0.93
-            
             # ★ 5は基本3着寄りにする（着順補正）
             if DoubleAttackScore < 0.10:
                 SecondAdj[4] *= 0.92
