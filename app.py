@@ -2287,23 +2287,20 @@ if st.button("計算"):
     marked = []
     
     for (a,b,c,p) in Final:
+
+        head = a-1
     
-        if (a,b,c) in top_set:
+        if head == top_head and InsideSurvival[0] >= 0.60:
+            mark = "◎"
     
-            if a-1 == top_head and p >= top_p * 0.9:
-                mark = "◎"
+        elif DoubleAttackScore > 0.08 and head >= 2:
+            mark = "▲"
     
-            elif DoubleAttackScore > 0.06 and a >= 3:
-                mark = "▲"
-    
-            elif p >= top_p * 0.75:
-                mark = "○"
-    
-            else:
-                mark = "△"
+        elif P1[head] >= 0.18:
+            mark = "○"
     
         else:
-            mark = ""   # ←これが重要（無印）
+            mark = ""
     
         marked.append((mark,a,b,c,p))
     
