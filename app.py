@@ -763,6 +763,14 @@ if st.button("計算"):
             if Foot[i] < 0.40:
                 FirstScore[i] *= 0.75
 
+            # ★ ここに追加
+            if i == 5:
+                if Start[5] < Start[3] - 0.02:
+                    FirstScore[5] *= 0.55
+        
+                if AvgST[5] > 0.20:
+                    FirstScore[5] *= 0.75
+
         # ===============================
         # ★ 攻め不発（最重要）
         # ===============================
@@ -1020,13 +1028,6 @@ if st.button("計算"):
                 # ===== 6コース =====
                 if i == 5:
                     
-                # ★ 追加（ここに入れる）
-                    if Start[5] < Start[3] - 0.02:
-                        FirstScore[5] *= 0.55
-
-                    if AvgST[5] > 0.20:
-                        FirstScore[5] *= 0.75
-            
                     if Strong6:
                         FirstScore[5] *= 1.18
             
