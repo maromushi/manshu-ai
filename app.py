@@ -1671,12 +1671,11 @@ if st.button("計算"):
         ]
         
         # ★ 攻め役の失敗残り（超重要）
-        if i in [2,3]:  # 3号艇・4号艇
-        
-            if DoubleAttackScore > 0.05:
-        
-                # 頭取れなくても残る
-                ThirdScore[i] *= 1.12
+        for i in range(6):
+
+            if i in [2,3]:
+                if DoubleAttackScore > 0.05:
+                    ThirdScore[i] *= 1.12
 
         # ===============================
         # ★ 外の勝者だけ残す（5・6共通）
@@ -1771,8 +1770,10 @@ if st.button("計算"):
         # ===============================
         # ★ 強制外シナリオ（ここ！！）
         # ===============================
-        if DoubleAttackScore > 0.07 and Start[i] >= Start[3] - 0.02:
-            ThirdScore[i] *= 1.30  
+        for i in range(4,6):
+
+            if DoubleAttackScore > 0.07 and Start[i] >= Start[3] - 0.02:
+                ThirdScore[i] *= 1.15
         
         
         # ===============================
@@ -1930,6 +1931,8 @@ if st.button("計算"):
             # ===============================
             # ★ 5を2着に引き上げる（核心）
             # ===============================
+            for i in range(6):
+
             if (
                 i == 4
                 and DoubleAttackScore > 0.05
