@@ -1773,18 +1773,6 @@ if st.button("計算"):
             elif CLS[i] == "B2":
                 SecondAdj[i] *= 0.95
         
-        
-        # ===============================
-        # ★ 展開6（性能じゃない6を拾う）
-        # ===============================
-        if (
-            DoubleAttackScore > 0.10
-            and Start[5] >= Start[3] - 0.01
-            and CLS[5] in ["A1","A2"]
-            and Foot[5] >= 0.50
-        ):
-            SecondAdj[5] *= 1.12
-        
         # ===============================
         # ★ 外残りフラグ（5・6用）
         # ===============================
@@ -2123,101 +2111,38 @@ if st.button("計算"):
             # ===============================
             # ★ 外の暴走防止（最重要）
             # ===============================
-            for i in range(6):
-            
-                if i >= 4:
-            
-                    valid_power = (Foot[i] >= 0.50 or CPI[i] >= 0.48)
-                    valid_start = Start[i] >= Start[3] - 0.02
-                    valid_flow  = (
-                        DoubleAttackScore > 0.10
-                        and Start[i] >= Start[3] - 0.03
-                    )
-            
-                    if not ((valid_power and valid_start) or valid_flow):
-                        SecondAdj[i] *= 0.85
-                        ThirdAdj[i] *= 0.85
-                
-            
-            
-            # ===============================
-            # ★ 6の2着制御（最終版）
-            # ===============================
-            
-            valid_six_second = (
-                DoubleAttackScore > 0.08
-                and Start[5] >= Start[3] - 0.02
-                and Foot[5] >= 0.50
-            )
-            
-            if valid_six_second:
-            
-                # 攻め展開なら普通に来る
-                SecondAdj[5] *= 1.05
-            
-            else:
-            
-                # 弱いときだけ抑える
-                if DoubleAttackScore > 0.10:
-                    SecondAdj[5] *= 0.92   # ←ここ重要（殺さない）
-                else:
-                    SecondAdj[5] *= 0.80
-            
-            # ===============================
-            # ★ 6の2着・3着まとめて制御
-            # ===============================
-            
-            # --- 2着用 ---
-            strong_flow6 = (
-                DoubleAttackScore > 0.10
-                and Start[5] >= Start[3] - 0.02
-            )
-            
-            light_flow6 = (
-                DoubleAttackScore > 0.06
-                and Start[5] >= Start[2] - 0.03
-            )
-            
-            six_power = (
-                Foot[5] >= 0.50
-                or CPI[5] >= 0.48
-            )
-            
-            if not ((strong_flow6 or light_flow6) and six_power):
-                SecondAdj[5] *= 0.85
-            
-            
-            # --- 3着用 ---
-            flow6 = (
-                DoubleAttackScore > 0.08
-                and Start[5] >= Start[3] - 0.02
-            )
-            
-            six_ok = (
-                Foot[5] >= 0.48
-                or CPI[5] >= 0.48
-            )
-            
-            if not (flow6 and six_ok):
-                ThirdAdj[5] *= 0.85
-            
-            # ★ 外強い艇の3着底上げ（正しい形）
             for i in range(4,6):
-                if (
-                    DoubleAttackScore > 0.07
-                    and Foot[i] >= 0.50
-                    and CPI[i] >= 0.48
-                ):
-                    ThirdAdj[i] *= 1.05
-                        
+
+                valid = (
+                    (Foot[i] >= 0.50 or CPI[i] >= 0.48)
+                    and Start[i] >= Start[3] - 0.02
+                )
+            
+                if strong_attack:
+                    if valid:
+                        SecondAdj[i] *= 1.08
+                    else:
+                        SecondAdj[i] *= 0.85
+            
+                elif mid_attack:
+                    if valid:
+                        SecondAdj[i] *= 1.00
+                    else:
+                        SecondAdj[i] *= 0.88
+            
+                else:
+                    SecondAdj[i] *= 0.90
+        
                         
                         
             # ===============================
             # ★ 攻め共倒れ検知（汎用・最終版）
             # ===============================
             
-            main = attackers[0]
-            sub  = attackers[1]
+            if len(attackers) >= 2:
+
+                main = attackers[0]
+                sub  = attackers[1]
             
             if (
                 DoubleAttackScore > 0.08
@@ -2553,6 +2478,27 @@ if st.button("計算"):
             ):
                 SecondAdj[0] *= 1.10
                 ThirdAdj[0] *= 1.05
+                
+            # ===============================
+            # ★ 6の最終制御（統一版）
+            # ===============================
+            
+            six_flow = (
+                DoubleAttackScore > 0.08
+                and Start[5] >= Start[3] - 0.02
+            )
+            
+            six_power = (
+                Foot[5] >= 0.50
+                or CPI[5] >= 0.48
+            )
+            
+            if six_flow and six_power:
+                SecondAdj[5] *= 1.08
+                ThirdAdj[5] *= 1.12
+            else:
+                SecondAdj[5] *= 0.82
+                ThirdAdj[5] *= 0.85
                     
 
             second_scores = [
