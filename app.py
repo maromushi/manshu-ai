@@ -1311,7 +1311,7 @@ if st.button("計算"):
         # ★ 攻め展開のイン殺し（最重要）
         # ===============================
         if DoubleAttackScore > 0.04:
-            FirstScore[0] *= 0.85
+            FirstScore[0] *= 0.92
         
         
         # ===============================
@@ -1576,7 +1576,7 @@ if st.button("計算"):
         if DoubleAttackScore > 0.06:
         
             # 1を崩す
-            FirstScore[0] *= 0.75
+            FirstScore[0] *= 0.85
         
             # 外にチャンス
             for i in range(2,6):
