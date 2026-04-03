@@ -1994,11 +1994,45 @@ if st.button("計算"):
                     if j == attack_center + 1:
                         ThirdAdj[j] *= 1.20
                         
+            # ===============================
+            # ★ 攻め共倒れ検知（汎用・最終版）
+            # ===============================
+            attackers = sorted(range(6), key=lambda x: AttackIndex[x], reverse=True)
+            
+            main = attackers[0]
+            sub  = attackers[1]
+            
+            if (
+                DoubleAttackScore > 0.08
+                and AttackIndex[main] > 0.45
+                and AttackIndex[sub] > 0.45
+            ):
+            
+                # 攻め役を少し削る
+                SecondAdj[main] *= 0.92
+                SecondAdj[sub]  *= 0.92
+            
+                ThirdAdj[main] *= 0.95
+                ThirdAdj[sub]  *= 0.95
+            
+                # その他を底上げ（差し・待ち）
+                for i in range(6):
+                    if i not in [main, sub]:
+                        ThirdAdj[i] *= 1.10
+            
+                # 攻めが近いときはさらに崩れやすい
+                if abs(main - sub) <= 2:
+                    for i in range(6):
+                        if i not in [main, sub]:
+                            ThirdAdj[i] *= 1.05
+                        
             # ★ ズレ決着の許容（万舟用）
             if DoubleAttackScore > 0.06:
                 for i in range(6):
                     if i >= 2:
                         ThirdAdj[i] *= 1.05
+                        
+            
             
             # ===============================
             # ★ 弱頭でも残り計算させる（最重要）
