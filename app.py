@@ -1631,8 +1631,8 @@ if st.button("計算"):
                 target = atk + 1
         
                 if target < 6:
-                    SecondScore[target] *= 1.10
-                    ThirdScore[target] *= 1.20
+                    SecondAdj[target] *= 1.10
+                    ThirdAdj[target] *= 1.20
         
         for i in range(4,6):
 
