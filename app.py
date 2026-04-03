@@ -1855,6 +1855,17 @@ if st.button("計算"):
                     SecondAdj[0] *= 1.10
                     ThirdAdj[0] *= 1.05
                     
+                # ===============================
+                # ★ イン中間残り（精度用）
+                # ===============================
+                if (
+                    FirstScore[0] < max(FirstScore) * 0.95   # 頭は弱い
+                    and FirstScore[0] > max(FirstScore) * 0.75  # でも弱すぎない
+                    and InsideSurvival[0] >= 0.50
+                ):
+                    SecondAdj[0] *= 1.12
+                    ThirdAdj[0] *= 1.08
+                    
             # ===============================
             # ★ 外の暴走防止（最重要）
             # ===============================
@@ -1975,6 +1986,12 @@ if st.button("計算"):
             
                     if j == attack_center + 1:
                         ThirdAdj[j] *= 1.20
+                        
+            # ★ ズレ決着の許容（万舟用）
+            if DoubleAttackScore > 0.06:
+                for i in range(6):
+                    if i >= 2:
+                        ThirdAdj[i] *= 1.05
             
             # ===============================
             # ★ 弱頭でも残り計算させる（最重要）
