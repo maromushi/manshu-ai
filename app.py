@@ -2142,6 +2142,14 @@ if st.button("計算"):
                         
                 if not collapse:
                     continue
+
+                if attacker >= 2 and DoubleAttackScore > 0.05:
+            
+                    # スタート負けてたらもっと飛ぶ
+                    if Start[0] < Start[attacker] - 0.02:
+                        FirstScore[0] *= 0.65
+                    else:
+                        FirstScore[0] *= 0.75
             
                 # ===============================
                 # ★ 差し込み勝ち（ここに入れる）
