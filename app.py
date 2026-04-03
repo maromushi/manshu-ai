@@ -1789,7 +1789,7 @@ if st.button("計算"):
                 and Start[i] >= Start[3] - 0.02
                 and Foot[i] >= 0.50
             ):
-                Secondadj[i] *= 1.10
+                SecondAdj[i] *= 1.10
         
         # ===============================
         # ★ 階級補正（最重要）
@@ -1797,13 +1797,13 @@ if st.button("計算"):
         for i in range(6):
         
             if CLS[i] == "A1":
-                Secondadj[i] *= 1.05
+                SecondAdj[i] *= 1.05
         
             elif CLS[i] == "A2":
-                Secondadj[i] *= 1.03
+                SecondAdj[i] *= 1.03
         
             elif CLS[i] == "B2":
-                Secondadj[i] *= 0.95
+                SecondAdj[i] *= 0.95
                 
 
         
@@ -1814,8 +1814,8 @@ if st.button("計算"):
             DoubleAttackScore > 0.04
             and DoubleAttackScore < 0.09
         ):
-            Secondadj[1] *= 1.08
-            Secondadj[3] *= 1.05
+            SecondAdj[1] *= 1.08
+            SecondAdj[3] *= 1.05
         
         
         # ===============================
@@ -1827,7 +1827,7 @@ if st.button("計算"):
             and CLS[5] in ["A1","A2"]
             and Foot[5] >= 0.50
         ):
-            Secondadj[5] *= 1.12
+            SecondAdj[5] *= 1.12
         
         # ===============================
         # ★ 外残りフラグ（5・6用）
@@ -1859,9 +1859,9 @@ if st.button("計算"):
         # ===============================
         
         if FiveFlowFlag and DoubleAttackScore > 0.08:
-            Secondadj[4] *= 1.15
+            SecondAdj[4] *= 1.15
         else:
-            Secondadj[4] *= 0.90
+            SecondAdj[4] *= 0.90
         
 
         # ===============================
@@ -1869,7 +1869,7 @@ if st.button("計算"):
         # ===============================
         
         if NoAttackFlag == 1:
-            Secondadj[5] *= 0.85
+            SecondAdj[5] *= 0.85
 
 
         # ===== 2の差し残り強化 =====
@@ -1878,7 +1878,7 @@ if st.button("計算"):
             CPI[1] >= CPI[0] - 0.05
             and Fcount[1] == 0   # ←これ追加
         ):
-            Secondadj[1] *= 1.10
+            SecondAdj[1] *= 1.10
             
         # ===============================
         # ★ F持ち最終補正（完全版）
@@ -1913,7 +1913,7 @@ if st.button("計算"):
                 if i in [1,2]:
                     factor *= 0.97
             
-                Secondadj[i] *= factor
+                SecondAdj[i] *= factor
 
 
         # ===== 6の2着残り強化 =====
@@ -1931,17 +1931,17 @@ if st.button("計算"):
             SixSecondFlag = 1
 
             # 1〜3を少し削る（前残り崩れ）
-            Secondadj[0] *= 0.92
-            Secondadj[1] *= 0.95
-            Secondadj[2] *= 0.97
+            SecondAdj[0] *= 0.92
+            SecondAdj[1] *= 0.95
+            SecondAdj[2] *= 0.97
 
         else:
 
             # 弱い6はしっかり消す
             if Foot[5] < 0.45:
-                Secondadj[5] *= 0.90
+                SecondAdj[5] *= 0.90
             else:
-                Secondadj[5] *= 1.00
+                SecondAdj[5] *= 1.00
                 
 
         ThirdScore=[
@@ -1962,26 +1962,26 @@ if st.button("計算"):
                 Start[i] < min(Start) + 0.01
                 and CPI[i] >= 0.42
             ):
-                Thirdadj[i] *= 1.15
+                ThirdAdj[i] *= 1.15
         
         for i in range(4,6):
         
             if Foot[i] >= 0.48:
-                Thirdadj[i] *= 1.05
+                ThirdAdj[i] *= 1.05
         
         for i in range(6):
 
         # ★ 3号艇の自然残り（本命修正）
             if i == 2:
                 if CPI[i] >= 0.45:
-                    Thirdadj[i] *= 1.18
+                    ThirdAdj[i] *= 1.18
         
         # ★ 攻め役の失敗残り（超重要）
         for i in range(6):
 
             if i in [2,3]:
                 if DoubleAttackScore > 0.05:
-                    Thirdadj[i] *= 1.12
+                    ThirdAdj[i] *= 1.12
     
         # ===============================
         # ★ インの2着・3着粘り復活
@@ -1991,8 +1991,8 @@ if st.button("計算"):
             CLS[0] in ["A1","A2"]
             and Start[0] >= 0.13
         ):
-            Secondadj[0] *= 1.12
-            Thirdadj[0] *= 1.08
+            SecondAdj[0] *= 1.12
+            ThirdAdj[0] *= 1.08
         
         # ===============================
         # ★ 展開艇の3着流入（最重要）
@@ -2003,7 +2003,7 @@ if st.button("計算"):
                 ExST[i] <= 0.05
                 and DoubleAttackScore > 0.04
             ):
-                Thirdadj[i] *= 1.20
+                ThirdAdj[i] *= 1.20
         
         # ===============================
         # ★ 3と4が完全に競ってる時だけ
@@ -2013,7 +2013,7 @@ if st.button("計算"):
             and DoubleAttackScore < 0.09
             and abs(CPI[2] - CPI[3]) < 0.03
         ):
-            Thirdadj[2] *= 0.95
+            ThirdAdj[2] *= 0.95
         
         # ===============================
         # ★ 1の過剰残り抑制（ここ）
@@ -2022,7 +2022,7 @@ if st.button("計算"):
             DoubleAttackScore > 0.08
             and Start[0] < Start[2] - 0.02
         ):
-            Thirdadj[0] *= 0.90
+            ThirdAdj[0] *= 0.90
         
         # ===============================
         # ★ 2の残り復活（ここに入れる）
@@ -2031,8 +2031,8 @@ if st.button("計算"):
             Start[1] >= Start[0] - 0.02
             and CPI[1] >= 0.45
         ):
-            Secondadj[1] *= 1.12
-            Thirdadj[1] *= 1.08
+            SecondAdj[1] *= 1.12
+            ThirdAdj[1] *= 1.08
         
                 
         # ===============================
@@ -2043,22 +2043,22 @@ if st.button("計算"):
             and Start[5] >= Start[3] - 0.02
             and CLS[5] in ["A1","A2"]
         ):
-            Thirdadj[5] *= 1.25
+            ThirdAdj[5] *= 1.25
         
         # ===============================
         # ★ 3着強化
         # ===============================
         
         if FiveFlowFlag and DoubleAttackScore > 0.06:
-            Thirdadj[4] *= 1.15
+            ThirdAdj[4] *= 1.15
         
         if SixFlowFlag:
-            Thirdadj[5] *= 1.20
+            ThirdAdj[5] *= 1.20
 
         # ===== 3号艇の自然流入 =====
 
         if 0.43 <= CPI[2] <= 0.62:
-            Thirdadj[2] *= 1.12
+            ThirdAdj[2] *= 1.12
             
         # ===============================
         # ★ 非頭艇の残り補正（最重要）
