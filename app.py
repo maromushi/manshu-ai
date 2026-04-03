@@ -2642,8 +2642,10 @@ if st.button("計算"):
         for (mark,a,b,c,p) in marked
     ])
     
-    st.write("▼ 買い目")
-    st.write(result_text)
+    st.markdown("### ▼ 買い目")
+
+    for line in result_text.split("\n"):
+        st.write(line)
         
     # ===============================
     # ★ 最終出力
