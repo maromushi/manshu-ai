@@ -2441,9 +2441,6 @@ if st.button("計算"):
 
     res_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
     res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex) 
-    
-    st.write("DAS_waku", DAS1)
-    st.write("DAS_ex", DAS2)
 
     ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
     P1 = P1_ex
@@ -2526,9 +2523,7 @@ if st.button("計算"):
     Final = []
     
     target = 0.78 + 0.12 * ChaosScore
-    
-    # ★ 追加（超重要）
-    max_bets = int(8 + 8 * ChaosScore)   # 8〜16点に制御
+    max_bets = int(12 + 10 * ChaosScore)
     
     for r in results:
     
@@ -2584,57 +2579,57 @@ if st.button("計算"):
     
         marked.append((mark,a,b,c,p))
     
-        # ===============================
-        # ★ 出目＋デバッグ（完全コピペ）
-        # ===============================
+    # ===============================
+    # ★ 出目＋デバッグ（完全コピペ）
+    # ===============================
         
-        # 出目テキスト
-        result_text = "\n".join([
-            f"{a}-{b}-{c} ({round(p,4)}) {mark}" if mark != "" else f"{a}-{b}-{c} ({round(p,4)})"
-            for (mark,a,b,c,p) in marked
-        ])
+    # 出目テキスト
+    result_text = "\n".join([
+        f"{a}-{b}-{c} ({round(p,4)}) {mark}" if mark != "" else f"{a}-{b}-{c} ({round(p,4)})"
+        for (mark,a,b,c,p) in marked
+    ])
         
-        # デバッグテキスト
-        debug_text = []
+    # デバッグテキスト
+    debug_text = []
         
-        debug_text.append("===== DEBUG =====")
+    debug_text.append("===== DEBUG =====")
         
-        debug_text.append(f"DAS_waku: {round(DAS1,4)}")
-        debug_text.append(f"DAS_ex: {round(DAS2,4)}")
-        debug_text.append(f"ChaosScore: {round(ChaosScore,4)}")
+    debug_text.append(f"DAS_waku: {round(DAS1,4)}")
+    debug_text.append(f"DAS_ex: {round(DAS2,4)}")
+    debug_text.append(f"ChaosScore: {round(ChaosScore,4)}")
         
-        debug_text.append("")
-        debug_text.append("P1:")
-        for i,p in enumerate(P1):
-            debug_text.append(f"{i+1}: {round(p,4)}")
+    debug_text.append("")
+    debug_text.append("P1:")
+    for i,p in enumerate(P1):
+        debug_text.append(f"{i+1}: {round(p,4)}")
         
-        debug_text.append("")
-        debug_text.append("P1順位:")
-        debug_text.append(str(sorted(range(6), key=lambda i: P1[i], reverse=True)))
+    debug_text.append("")
+    debug_text.append("P1順位:")
+    debug_text.append(str(sorted(range(6), key=lambda i: P1[i], reverse=True)))
         
-        debug_text.append("")
-        debug_text.append("---- run_ai debug ----")
-        for name, val in debug_log:
-            debug_text.append(f"{name}: {val}")
+    debug_text.append("")
+    debug_text.append("---- run_ai debug ----")
+    for name, val in debug_log:
+        debug_text.append(f"{name}: {val}")
         
-        debug_output = "\n".join(debug_text)
+    debug_output = "\n".join(debug_text)
         
-        # 合体
-        full_output = result_text + "\n\n" + debug_output
+     #合体
+    full_output = result_text + "\n\n" + debug_output
         
-        # ===============================
-        # ★ 出目だけ先に表示
-        # ===============================
+    # ===============================
+    # ★ 出目だけ先に表示
+    # ===============================
         
-        st.text_area("出目（コピペ用）", result_text, height=200)
+    st.text_area("出目（コピペ用）", result_text, height=200)
         
-        # ===============================
-        # ★ デバッグは下
-        # ===============================
+    # ===============================
+    # ★ デバッグは下
+    # ===============================
         
-        st.text_area("DEBUG（コピペ用）", debug_output, height=300)
+    st.text_area("DEBUG（コピペ用）", debug_output, height=300)
         
-        # コピーしやすい表示
-        st.code(result_text + "\n\n" + debug_output)
+    # コピーしやすい表示
+    st.code(result_text + "\n\n" + debug_output)
 
   
