@@ -1092,6 +1092,17 @@ if st.button("計算"):
                         FirstScore[4] *= 1.02
                     else:
                         FirstScore[4] *= 0.80
+                        
+        # ===============================
+        # ★ 強い外の頭許可（修正版）
+        # ===============================
+        for i in range(4,6):
+        
+            if (
+                CPI[i] >= max(CPI[0:4]) - 0.02
+                and Start[i] >= Start[1] - 0.02
+            ):
+                FirstScore[i] *= 1.20
         
         # ★ 強い外の頭解放（重要）
         if (
