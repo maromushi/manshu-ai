@@ -1792,7 +1792,15 @@ if st.button("計算"):
             
             else:
                 SecondAdj[i] *= 0.90
+                
         
+        # ★ 攻め成立時の前削り（汎用）
+
+        if DoubleAttackScore > 0.06:
+        
+            for i in range(0,2):  # 1・2コース
+                if Start[i] < Start[2] - 0.02:
+                    SecondAdj[i] *= 0.88
         
         
         # ===============================
