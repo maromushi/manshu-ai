@@ -896,7 +896,7 @@ if st.button("計算"):
             and Start[0] >= 0.13
             and InsideSurvival[0] >= 0.55
         ):
-            FirstScore[0] *= 1.25
+            FirstScore[0] *= 1.12
             
         # ←ここに入れる👇
         
@@ -927,8 +927,12 @@ if st.button("計算"):
         # ===============================
         # ★ イン残り補正（追加）
         # ===============================
-        if Skill[0] >= 0.45 and Start[0] >= 0.13:
-            FirstScore[0] *= 1.10
+        if (
+            Skill[0] >= 0.50
+            and Start[0] >= 0.14
+            and DoubleAttackScore < 0.06   # ←追加
+        ):
+            FirstScore[0] *= 1.08
         
         if Start[0] >= 0.14:
             FirstScore[0] *= 1.05
@@ -1276,6 +1280,25 @@ if st.button("計算"):
             and NoAttackFlag == 0
         ):
             FirstScore[0] *= 1.12
+            
+        # ===============================
+        # ★ 攻め展開のイン殺し（最重要）
+        # ===============================
+        if DoubleAttackScore > 0.06:
+            FirstScore[0] *= 0.82
+        
+        
+        # ===============================
+        # ★ 攻め成立時の主役スライド（3を押す）
+        # ===============================
+        if DoubleAttackScore > 0.06:
+        
+            # 3が攻め役 or 差し役として成立してる時だけ
+            if (
+                AttackIndex[2] >= AttackIndex[1] - 0.02
+                and Foot[2] >= 0.48
+            ):
+                FirstScore[2] *= 1.12
 
         # ===============================
         # ATTACK BOOST
