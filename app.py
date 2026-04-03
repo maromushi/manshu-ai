@@ -1790,31 +1790,47 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
-            # ===============================
-            # ★ 壁検出（汎用）
-            # ===============================
-            wall = None
-            
-            for i in range(1,4):  # 2〜4コース
-                if AvgST[i] <= 0.20:
-                    wall = i
-                    break
-            
-            # ===============================
-            # ★ 壁崩壊（汎用）
-            # ===============================
             for i in range(1,4):
+
+                st_gap = Start[i] - Start[i-1]
             
-                if AvgST[i] > 0.24:  # 壁として機能しない
-                    
-                    # 壁崩壊
-                    SecondAdj[i] *= 0.60
-                    ThirdAdj[i] *= 0.70
+                # ★ ノイズ除去（追加）
+                if abs(st_gap) < 0.015:
+                    continue
             
-                    # 外へ流す
-                    if i+1 < 6:
-                        SecondAdj[i+1] *= 1.10
-                        ThirdAdj[i+1] *= 1.10
+                collapse = False
+                level = 0
+            
+                if st_gap < -0.05 and DoubleAttackScore > 0.06:
+                    collapse = True
+                    level = 2
+            
+                elif st_gap < -0.03:
+                    collapse = True
+                    level = 1
+            
+                if not collapse:
+                    continue
+            
+                if level == 2:
+                    cut2 = 0.60
+                    cut3 = 0.70
+                    boost = 1.15
+                else:
+                    cut2 = 0.80
+                    cut3 = 0.85
+                    boost = 1.08
+            
+                SecondAdj[i] *= cut2
+                ThirdAdj[i]  *= cut3
+            
+                for j in range(i+1,6):
+                    SecondAdj[j] *= boost
+                    ThirdAdj[j]  *= (boost - 0.03)
+            
+                for j in range(0,i):
+                    SecondAdj[j] *= 0.96
+                    ThirdAdj[j]  *= 0.98
             
             # ===============================
             # ★ イン耐久スコア（追加）
