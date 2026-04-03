@@ -872,6 +872,19 @@ if st.button("計算"):
         
                 if AvgST[5] > 0.20:
                     FirstScore[5] *= 0.75
+        
+        # ===============================
+        # ★ 6の頭制限（これ追加）
+        # ===============================
+        for i in range(6):
+            if i == 5:
+                if not (
+                    DoubleAttackScore > 0.10
+                    and Start[5] >= Start[3]
+                    and CPI[5] >= 0.55
+                ):
+                    FirstScore[5] *= 0.65
+                    
 
         # ===============================
         # ★ 攻め不発（最重要）
@@ -1242,19 +1255,17 @@ if st.button("計算"):
         # ★ 強い外の頭許可（修正版）
         # ===============================
         for i in range(4,6):
-        
+
             if (
                 CPI[i] >= max(CPI[0:4]) - 0.02
                 and Start[i] >= Start[1] - 0.02
             ):
-                FirstScore[i] *= 1.20
-        
-        # ★ 強い外の頭解放（重要）
-            if (
-                i >= 4
-                and CPI[i] >= max(CPI[0:4]) - 0.02
-            ):
                 FirstScore[i] *= 1.15
+        
+            elif (
+                CPI[i] >= max(CPI[0:4]) - 0.02
+            ):
+                FirstScore[i] *= 1.08
 
         # 6頭の最終ブレーキ
         if Start[5] < Start[0] - 0.01:
@@ -1326,18 +1337,7 @@ if st.button("計算"):
             else:
                 FirstScore[5] *= 0.80
                 
-            # ===============================
-            # ★ 6の頭制限（これ追加）
-            # ===============================
-            for i in range(6):
-                if i == 5:
-                    if not (
-                        DoubleAttackScore > 0.10
-                        and Start[5] >= Start[3]
-                        and CPI[5] >= 0.55
-                    ):
-                        FirstScore[5] *= 0.70
-                    
+        
             # ===============================
             # ★ 2号艇の主役補正（追加）
             # ===============================
@@ -2704,7 +2704,7 @@ if st.button("計算"):
     # ===============================
     
     # ① シャープ化
-    power = 1.55 + 0.45 * ChaosScore
+    power = 1.45 + 0.35 * ChaosScore
     
     results = [
         (a,b,c, p**power)
@@ -2755,8 +2755,8 @@ if st.button("計算"):
     Coverage = 0
     Final = []
     
-    target = 0.78 + 0.12 * ChaosScore
-    max_bets = int(12 + 10 * ChaosScore)
+    target = 0.72 + 0.10 * ChaosScore
+    max_bets = int(10 + 16 * ChaosScore)
     
     for r in results:
     
