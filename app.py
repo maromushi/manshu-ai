@@ -2090,7 +2090,7 @@ if st.button("計算"):
             # ★ 壁崩壊（最終完成版）
             # ===============================
             for i in range(1,4):
-               collapse = False 
+                collapse = False 
                 st_gap = Start[i] - Start[i-1]
             
                 # ノイズ除去
