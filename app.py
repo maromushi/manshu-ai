@@ -1250,11 +1250,11 @@ if st.button("計算"):
                 FirstScore[i] *= 1.20
         
         # ★ 強い外の頭解放（重要）
-        if (
-            i >= 4
-            and CPI[i] >= max(CPI[0:4]) - 0.02
-        ):
-            FirstScore[i] *= 1.15
+            if (
+                i >= 4
+                and CPI[i] >= max(CPI[0:4]) - 0.02
+            ):
+                FirstScore[i] *= 1.15
 
         # 6頭の最終ブレーキ
         if Start[5] < Start[0] - 0.01:
@@ -1329,13 +1329,14 @@ if st.button("計算"):
             # ===============================
             # ★ 6の頭制限（これ追加）
             # ===============================
-            if i == 5:
-                if not (
-                    DoubleAttackScore > 0.10
-                    and Start[5] >= Start[3]
-                    and CPI[5] >= 0.55
-                ):
-                    FirstScore[5] *= 0.70
+            for i in range(6):
+                if i == 5:
+                    if not (
+                        DoubleAttackScore > 0.10
+                        and Start[5] >= Start[3]
+                        and CPI[5] >= 0.55
+                    ):
+                        FirstScore[5] *= 0.70
                     
             # ===============================
             # ★ 2号艇の主役補正（追加）
