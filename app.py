@@ -34,14 +34,21 @@ if "venue" not in st.session_state:
 
 st.markdown("### 会場選択")
 
-col = st.columns(7)
-
 labels = ["浜名湖","桐生","住之江","丸亀","多摩川","びわこ","常滑"]
 
-for i, name in enumerate(labels):
-    with col[i]:
-        if st.button(name, use_container_width=True):
-            st.session_state.venue = name
+# 1段目（4つ）
+cols1 = st.columns(4)
+for i in range(4):
+    with cols1[i]:
+        if st.button(labels[i], use_container_width=True):
+            st.session_state.venue = labels[i]
+
+# 2段目（残り3つ）
+cols2 = st.columns(3)
+for i in range(3):
+    with cols2[i]:
+        if st.button(labels[i+4], use_container_width=True):
+            st.session_state.venue = labels[i+4]
 
 venue = st.session_state.venue
 
