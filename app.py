@@ -1599,8 +1599,11 @@ if st.button("計算"):
         top = max(P1)
 
         for i in range(6):
-            if P1[i] == top:        
-                P1[i] *= 1.05
+            if P1[i] == top:
+                if ChaosScore < 0.45:
+                    P1[i] *= 1.07   # 固いときだけ強化
+                else:
+                    P1[i] *= 1.05   # 荒れはそのまま
 
         # ===== 正規化 =====
 
@@ -2550,7 +2553,7 @@ if st.button("計算"):
     # ===============================
     
     # ① シャープ化
-    power = 1.30 + 0.30 * ChaosScore
+    power = 1.55 + 0.45 * ChaosScore
     
     results = [
         (a,b,c, p**power)
