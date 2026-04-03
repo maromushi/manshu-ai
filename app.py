@@ -606,6 +606,17 @@ if st.button("計算"):
         +
         0.5 * (TwoLaneAttackScore * ThreeLaneAttackScore)
         )
+        
+        # ===============================
+        # ★ 疑似攻め判定（ここに入れる）
+        # ===============================
+        PseudoAttack = max([
+            max(0, Start[2] - Start[1]),
+            max(0, Start[3] - Start[2]),
+            max(0, Start[4] - Start[3])
+        ])
+        
+        DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.6)
 
         # ===============================
         # 攻め主体判定（改良版）
