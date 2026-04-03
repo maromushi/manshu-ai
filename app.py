@@ -746,10 +746,11 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        if Fcount[i] == 1:
-            FirstScore[i] *= 0.95
-        elif Fcount[i] >= 2:
-            FirstScore[i] *= 0.90
+        for i in range(6):
+            if Fcount[i] == 1:
+                FirstScore[i] *= 0.95
+            elif Fcount[i] >= 2:
+                FirstScore[i] *= 0.90
         
         # ===============================
         # ★ 主役取りこぼし（最重要）
@@ -1490,12 +1491,14 @@ if st.button("計算"):
         for i in range(6)
         ]
         
-        if (
-            SecondScore[i] >= top_second * 0.97
-            and FirstScore[i] < max(FirstScore) * 0.85
-            and DoubleAttackScore < 0.10
-        ):
-            SecondAdj[i] *= 0.93
+        for i in range(4,6):
+
+            if (
+                DoubleAttackScore > 0.08
+                and Start[i] >= Start[3] - 0.02
+                and Foot[i] >= 0.50
+            ):
+                SecondScore[i] *= 1.10
         
         # ===============================
         # ★ 階級補正（最重要）
@@ -1522,21 +1525,6 @@ if st.button("計算"):
         ):
             SecondScore[1] *= 1.08
             SecondScore[3] *= 1.05
-        
-        
-        # ===============================
-        # ★ 外の“展開じゃない強さ”を拾う（これ）
-        # ===============================
-        for i in range(4,6):
-        
-            # 展開なくても強い外を拾う
-            if (
-                CLS[i] in ["A1","A2"]
-                and Start[i] >= Start[3] - 0.02
-                and Foot[i] >= 0.48
-                and CPI[i] >= 0.46
-            ):
-                SecondScore[i] *= 1.15
         
         
         # ===============================
@@ -1674,6 +1662,11 @@ if st.button("計算"):
         for i in range(6)
         ]
         
+        for i in range(4,6):
+        
+            if Foot[i] >= 0.48:
+                ThirdScore[i] *= 1.05
+        
         for i in range(6):
 
         # ★ 3号艇の自然残り（本命修正）
@@ -1777,18 +1770,6 @@ if st.button("計算"):
             ThirdScore[1] *= 1.08
         
                 
-        # ===============================
-        # ★ 外単独強者救済（これが本命）
-        # ===============================
-        for i in range(4,6):
-        
-            if (
-                Start[i] >= Start[3] - 0.02
-                and Foot[i] >= 0.48
-            ):
-                SecondScore[i] *= 1.10
-        
-        
         # ===============================
         # ★ 展開6（性能じゃない6）
         # ===============================
