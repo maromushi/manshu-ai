@@ -484,6 +484,18 @@ if st.button("計算"):
         0.10*Engine[i]
         for i in range(6)
         ]
+        
+        # ===============================
+        # ★ 攻め候補（複数化）
+        # ===============================
+        attackers = []
+        
+        for i in range(2,6):
+            if (
+                AttackIndex[i] >= max(AttackIndex[2:6]) - 0.03
+                and Start[i] >= Start[i-1] - 0.03
+            ):
+                attackers.append(i)
 
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
@@ -1299,6 +1311,22 @@ if st.button("計算"):
                 and Foot[2] >= 0.48
             ):
                 FirstScore[2] *= 1.12
+                
+        # ===============================
+        # ★ イン流れ（複数攻め版）
+        # ===============================
+        if DoubleAttackScore > 0.07:
+        
+            for atk in attackers:
+        
+                st_gap = Start[atk] - Start[0]
+        
+                if (
+                    -0.01 <= st_gap <= 0.03
+                    and Turn[0] < Turn[atk]
+                ):
+                    FirstScore[0] *= 0.60
+                    break
 
         # ===============================
         # ATTACK BOOST
@@ -1532,6 +1560,19 @@ if st.button("計算"):
         + 0.05*Start[i]
         for i in range(6)
         ]
+        
+        # ===============================
+        # ★ 展開拾い（複数攻め）
+        # ===============================
+        if DoubleAttackScore > 0.07:
+        
+            for atk in attackers:
+        
+                target = atk + 1
+        
+                if target < 6:
+                    SecondScore[target] *= 1.10
+                    ThirdScore[target] *= 1.20
         
         for i in range(4,6):
 
@@ -1814,16 +1855,6 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
-            # ===============================
-            # ★ イン耐久スコア（追加）
-            # ===============================
-            attack_center = max(range(1,6), key=lambda x: AttackIndex[x])
-            
-            InsideResist = (
-                InsideSurvival[0]
-                - 0.6 * DoubleAttackScore
-                - 0.6 * max(0, Start[attack_center] - Start[0])
-            )
             
             # ===============================
             # ★ まくり時の1残り分岐（追加）
@@ -1897,21 +1928,6 @@ if st.button("計算"):
                         ThirdAdj[i] *= 0.85
                 
             
-            # ★ 展開ライン2着（汎用版）
-            if DoubleAttackScore > 0.05:
-
-                attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
-            
-                for i in range(attack_center+1,6):
-            
-                    if (
-                        Start[i] >= Start[attack_center] - 0.03
-                        and (
-                            Foot[i] >= 0.48
-                            or CPI[i] >= 0.46
-                        )
-                    ):
-                        SecondAdj[i] *= 1.05
             
             # ===============================
             # ★ 6の2着侵食ストップ（本命修正）
@@ -1976,23 +1992,6 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.05
                         
                         
-            # ===============================
-            # ★ 展開ライン連動（最重要）
-            # ===============================
-            if (
-                DoubleAttackScore > 0.06
-                and NoAttackFlag == 0
-            ):
-            
-                attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
-            
-                for j in range(6):
-            
-                    if j > attack_center:
-                        ThirdAdj[j] *= 1.15
-            
-                    if j == attack_center + 1:
-                        ThirdAdj[j] *= 1.20
                         
             # ===============================
             # ★ 攻め共倒れ検知（汎用・最終版）
