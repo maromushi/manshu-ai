@@ -1974,7 +1974,7 @@ if st.button("計算"):
         # ★ 3号艇の自然残り（本命修正）
             if i == 2:
                 if CPI[i] >= 0.45:
-                    Thirdadji] *= 1.18
+                    Thirdadj[i] *= 1.18
         
         # ★ 攻め役の失敗残り（超重要）
         for i in range(6):
