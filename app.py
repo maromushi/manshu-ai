@@ -1125,11 +1125,7 @@ if st.button("計算"):
             if DoubleAttackScore > 0.05:
                 FirstScore[2] *= 1.08
                 FirstScore[3] *= 1.10
-        
-            # 外の残り増やす
-            if DoubleAttackScore > 0.07:
-                SecondScore[4] *= 1.08
-                ThirdScore[4] *= 1.10
+ 
         
         
         # ■ 住之江（センター主役）
@@ -1146,11 +1142,7 @@ if st.button("計算"):
             if DoubleAttackScore > 0.04:
                 FirstScore[2] *= 1.10
                 FirstScore[3] *= 1.12
-        
-            # 外の流入強化
-            if DoubleAttackScore > 0.07:
-                SecondScore[4] *= 1.10
-                ThirdScore[5] *= 1.12
+  
         
         
         # ■ 丸亀（ヒモ荒れ）
@@ -1162,13 +1154,6 @@ if st.button("計算"):
             if 0.04 < DoubleAttackScore < 0.10:
                 FirstScore[2] *= 1.05
                 FirstScore[3] *= 1.06
-        
-            # 外の2・3着強化
-            if DoubleAttackScore > 0.05:
-                SecondScore[4] *= 1.10
-                SecondScore[5] *= 1.08
-                ThirdScore[4] *= 1.12
-                ThirdScore[5] *= 1.12
         
         
         # ■ 蒲郡（浜名湖ほぼ互換）
@@ -1759,6 +1744,30 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        
+        # ===============================
+        # ★ 会場補正（2着）
+        # ===============================
+        if venue == "多摩川":
+            SecondAdj[0] *= 1.05   # イン少し残る
+            SecondAdj[4] *= 1.10   # 5コース流れ
+        
+        if venue == "びわこ":
+            SecondAdj[0] *= 1.08
+            SecondAdj[1] *= 1.05
+        
+        if venue == "常滑":
+            SecondAdj[2] *= 1.08
+            SecondAdj[3] *= 1.10
+        
+        if venue == "桐生":
+            SecondAdj[0] *= 1.06
+            SecondAdj[1] *= 1.05
+        
+        if venue == "住之江":
+            if DoubleAttackScore > 0.07:
+                SecondAdj[3] *= 1.10
+                SecondAdj[4] *= 1.08
                 
         # ===============================
         # ★ 展開拾い（複数攻め）
