@@ -1662,8 +1662,9 @@ if st.button("計算"):
                 Start[i] >= max(Start[1:4]) - 0.01
                 and DoubleAttackScore > 0.05
             ):
-                SecondAdj[i] *= 1.10
-                ThirdAdj[i] *= 1.15
+                # ★ 上げるんじゃなくて下げを無効化
+                SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.05)
+                ThirdAdj[i]  = max(ThirdAdj[i], 1.05)
         
         # ===============================
         # ★ 攻めゾーン分割（最重要）
