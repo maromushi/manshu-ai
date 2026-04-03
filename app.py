@@ -2752,6 +2752,7 @@ if st.button("計算"):
     )
     
     st.text_area("コピー用", full_output, height=400)
+    st.code(full_output, language="text")
     
         
         
