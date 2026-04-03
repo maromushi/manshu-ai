@@ -2205,13 +2205,13 @@ if st.button("計算"):
     
             for i in range(6):
 
-            # ★ 2号艇の遅れ残り（最小補正）
-            if (
-                i == 1
-                and Start[1] == min(Start)
-                and CPI[1] >= 0.42
-            ):
-                ThirdAdj[1] *= 1.08
+                # ★ 2号艇の遅れ残り（最小補正）
+                if (
+                    i == 1
+                    and Start[1] == min(Start)
+                    and CPI[1] >= 0.42
+                ):
+                    ThirdAdj[1] *= 1.08
 
                 dist = i - a
             
