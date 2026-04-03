@@ -1857,10 +1857,19 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.05
             
             # ★ 外の過剰3着抑制（汎用）
-            if i >= 4:
+            for i in range(4,6):
+            
                 if DoubleAttackScore > 0.05:
-
+            
                     attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
+            
+                    if attack_center == 2 or attack_center == 3:
+            
+                        target = attack_center + 1
+            
+                        if target < 6:
+                            if Start[target] >= Start[attack_center] - 0.03:
+                                SecondAdj[target] *= 1.18
                 
                     # ★ ここが本質（追加）
                     if attack_center == 2 or attack_center == 3:
@@ -1935,15 +1944,11 @@ if st.button("計算"):
             if not (flow6 and six_ok):
                 ThirdAdj[5] *= 0.85
             
-            # ===============================
-            # ★ 5を2着に引き上げる（核心）
-            # ===============================
-            for i in range(6):
-
-                
-                if i >= 4:
-                    if Foot[i] >= 0.50 and CPI[i] >= 0.48:
-                        ThirdAdj[i] *= 1.10
+            # ★ 外強い艇の3着底上げ（正しい形）
+            for i in range(4,6):
+            
+                if Foot[i] >= 0.50 and CPI[i] >= 0.48:
+                    ThirdAdj[i] *= 1.10
             
             # ===============================
             # ★ 3着候補の繰り上げ（最重要）
