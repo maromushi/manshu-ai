@@ -1836,40 +1836,6 @@ if st.button("計算"):
             if DoubleAttackScore < 0.10:
                 SecondAdj[4] *= 0.92
                 ThirdAdj[4] *= 1.05
-            
-            # ===============================
-            # ★ 外の3着処理（整理版）
-            # ===============================
-            for i in range(4,6):
-            
-                # ① 素で強い外
-                if (
-                    Foot[i] >= 0.50
-                    and CPI[i] >= 0.48
-                ):
-                    ThirdAdj[i] *= 1.08
-            
-                # ② 展開で流れ込む外
-                elif (
-                    DoubleAttackScore > 0.08
-                    and Start[i] >= Start[3] - 0.02
-                ):
-                    ThirdAdj[i] *= 1.05
-            
-            # ★ 外の過剰3着抑制（汎用）
-            for i in range(4,6):
-            
-                if DoubleAttackScore > 0.05:
-            
-                    attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
-            
-                    if attack_center == 2 or attack_center == 3:
-            
-                        target = attack_center + 1
-            
-                        if target < 6:
-                            if Start[target] >= Start[attack_center] - 0.03:
-                                SecondAdj[target] *= 1.18
                 
             
             # ★ 展開ライン2着（汎用版）
