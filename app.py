@@ -1851,39 +1851,20 @@ if st.button("計算"):
                 continue
         
             P_first = P1[a]
+            
+            attack_center = max(range(1,6), key=lambda x: AttackIndex[x])
+
+            InsideResist = (
+                InsideSurvival[0]
+                - 0.6 * DoubleAttackScore
+                - 0.6 * max(0, Start[attack_center] - Start[0])
+            )
         
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
             
-            # ===============================
-            # ★ 1の2着・3着残り補正（改良版）
-            # ===============================
-            weak_head = FirstScore[0] < max(FirstScore) * 0.92
             
-            has_resist = InsideResist >= 0.48
-            
-            weak_sashi = (
-                Start[1] < Start[0] - 0.02
-                or Turn[1] < Turn[2]
-            )
-            
-            if weak_head and has_resist:
-            
-                if weak_sashi:
-                    SecondAdj[0] *= 1.15
-                    ThirdAdj[0] *= 1.10
-            
-                else:
-                    SecondAdj[0] *= 1.08
-                    ThirdAdj[0] *= 1.05
-                        
-            if (
-                0.85 <= FirstScore[0] / max(FirstScore) <= 0.98
-                and InsideResist >= 0.45
-            ):
-                SecondAdj[0] *= 1.10
-                ThirdAdj[0] *= 1.05
                     
             # ===============================
             # ★ イン中間残り（精度用）
@@ -2148,9 +2129,8 @@ if st.button("計算"):
                     for j in range(0,i):
                         SecondAdj[j] *= 0.98
                         ThirdAdj[j]  *= 0.99
-                        
-                if not collapse:
-                    continue
+            
+                attacker = i
 
                 if attacker >= 2 and DoubleAttackScore > 0.05:
             
@@ -2281,12 +2261,40 @@ if st.button("計算"):
             # ===============================
             
                 
-                
             if (
                 a == 3
                 and Strong6
             ):
                 SecondAdj[5] *= 1.10
+                
+            # ===============================
+            # ★ 1の2着・3着残り補正（改良版）
+            # ===============================
+            weak_head = FirstScore[0] < max(FirstScore) * 0.92
+            
+            has_resist = InsideResist >= 0.48
+            
+            weak_sashi = (
+                Start[1] < Start[0] - 0.02
+                or Turn[1] < Turn[2]
+            )
+            
+            if weak_head and has_resist:
+            
+                if weak_sashi:
+                    SecondAdj[0] *= 1.15
+                    ThirdAdj[0] *= 1.10
+            
+                else:
+                    SecondAdj[0] *= 1.08
+                    ThirdAdj[0] *= 1.05
+                        
+            if (
+                0.85 <= FirstScore[0] / max(FirstScore) <= 0.98
+                and InsideResist >= 0.45
+            ):
+                SecondAdj[0] *= 1.10
+                ThirdAdj[0] *= 1.05
                     
 
             second_scores = [
