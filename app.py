@@ -1856,34 +1856,34 @@ if st.button("計算"):
             ThirdAdj = ThirdScore.copy()
             
             
-                # ===============================
-                # ★ 1の2着・3着残り補正（改良版）
-                # ===============================
-                weak_head = FirstScore[0] < max(FirstScore) * 0.92
+            # ===============================
+            # ★ 1の2着・3着残り補正（改良版）
+            # ===============================
+            weak_head = FirstScore[0] < max(FirstScore) * 0.92
             
-                has_resist = InsideResist >= 0.48
+            has_resist = InsideResist >= 0.48
             
-                weak_sashi = (
-                    Start[1] < Start[0] - 0.02
-                    or Turn[1] < Turn[2]
-                )
+            weak_sashi = (
+                Start[1] < Start[0] - 0.02
+                or Turn[1] < Turn[2]
+            )
             
-                if weak_head and has_resist:
+            if weak_head and has_resist:
             
-                    if weak_sashi:
-                        SecondAdj[0] *= 1.15
-                        ThirdAdj[0] *= 1.10
+                if weak_sashi:
+                    SecondAdj[0] *= 1.15
+                    ThirdAdj[0] *= 1.10
             
-                    else:
-                        SecondAdj[0] *= 1.08
-                        ThirdAdj[0] *= 1.05
-                        
-                if (
-                    0.85 <= FirstScore[0] / max(FirstScore) <= 0.98
-                    and InsideResist >= 0.45
-                ):
-                    SecondAdj[0] *= 1.10
+                else:
+                    SecondAdj[0] *= 1.08
                     ThirdAdj[0] *= 1.05
+                        
+            if (
+                0.85 <= FirstScore[0] / max(FirstScore) <= 0.98
+                and InsideResist >= 0.45
+            ):
+                SecondAdj[0] *= 1.10
+                ThirdAdj[0] *= 1.05
                     
                 # ===============================
                 # ★ イン中間残り（精度用）
