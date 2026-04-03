@@ -26,11 +26,35 @@ def normalize(values):
 
 data = st.text_area("抽出データを貼り付け")
 
-venue = st.selectbox(
-    "会場",
-    ["浜名湖","蒲郡","常滑","多摩川","びわこ","その他"],
-    index=0
-)
+# ===============================
+# ★ 会場ボタン（ここに入れる）
+# ===============================
+if "venue" not in st.session_state:
+    st.session_state.venue = "浜名湖"
+
+st.markdown("### 会場選択")
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    if st.button("浜名湖"):
+        st.session_state.venue = "浜名湖"
+
+with col2:
+    if st.button("桐生"):
+        st.session_state.venue = "桐生"
+
+with col3:
+    if st.button("住之江"):
+        st.session_state.venue = "住之江"
+
+with col4:
+    if st.button("丸亀"):
+        st.session_state.venue = "丸亀"
+
+venue = st.session_state.venue
+
+st.write(f"選択中：{venue}")
 
 if st.button("計算"):
 
@@ -1060,10 +1084,89 @@ if st.button("計算"):
         if venue == "多摩川":
             DynamicInsideFactor *= 1.08
             FirstScore[0] *= 1.10
+            
+            # 外の暴走だけ軽く抑える
+            if DoubleAttackScore < 0.05:
+                FirstScore[4] *= 0.95
+                FirstScore[5] *= 0.92
         
         if venue == "びわこ":
             if StartSpread > 0.10:
                 chaos_weight *= 0.9
+                
+            # でも完全イン信頼ではない
+            if DoubleAttackScore > 0.06:
+                FirstScore[2] *= 1.04
+                FirstScore[3] *= 1.05
+                
+        # ===============================
+        # ★ 会場差分補正（最終）
+        # ===============================
+        
+        # ■ 桐生（軽水面・まくり強）
+        if venue == "桐生":
+        
+            # イン弱め
+            if InsideSurvival[0] < 0.65:
+                FirstScore[0] *= 0.93
+        
+            # 3・4攻め強化
+            if DoubleAttackScore > 0.05:
+                FirstScore[2] *= 1.08
+                FirstScore[3] *= 1.10
+        
+            # 外の残り増やす
+            if DoubleAttackScore > 0.07:
+                SecondScore[4] *= 1.08
+                ThirdScore[4] *= 1.10
+        
+        
+        # ■ 住之江（センター主役）
+        elif venue == "住之江":
+        
+            # インさらに弱い
+            if InsideSurvival[0] < 0.70:
+                FirstScore[0] *= 0.90
+        
+            # 2を削る（最重要）
+            FirstScore[1] *= 0.90
+        
+            # 3・4主役化
+            if DoubleAttackScore > 0.04:
+                FirstScore[2] *= 1.10
+                FirstScore[3] *= 1.12
+        
+            # 外の流入強化
+            if DoubleAttackScore > 0.07:
+                SecondScore[4] *= 1.10
+                ThirdScore[5] *= 1.12
+        
+        
+        # ■ 丸亀（ヒモ荒れ）
+        elif venue == "丸亀":
+        
+            # 頭はそのまま（触らない）
+        
+            # 中間展開を広げる
+            if 0.04 < DoubleAttackScore < 0.10:
+                FirstScore[2] *= 1.05
+                FirstScore[3] *= 1.06
+        
+            # 外の2・3着強化
+            if DoubleAttackScore > 0.05:
+                SecondScore[4] *= 1.10
+                SecondScore[5] *= 1.08
+                ThirdScore[4] *= 1.12
+                ThirdScore[5] *= 1.12
+        
+        
+        # ■ 蒲郡（浜名湖ほぼ互換）
+        elif venue == "蒲郡":
+        
+            # ほぼそのまま＋微調整だけ
+            if DoubleAttackScore > 0.06:
+                FirstScore[2] *= 1.03
+                FirstScore[3] *= 1.04
         
         
         # ===============================
