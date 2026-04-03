@@ -2104,7 +2104,7 @@ if st.button("計算"):
                     collapse = True
                     level = 2
             
-                elif st_gap < -0.03:
+                elif st_gap < -0.02:
                     collapse = True
                     level = 1
             
