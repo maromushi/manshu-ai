@@ -2536,10 +2536,11 @@ if st.button("計算"):
 
     for a,b,c,p in Final:
         key = (a,b,c)
-        if key not in unique or unique[key] < p:
-            unique[key] = p
+        unique[key] = unique.get(key, 0) + p   # ←これに変更
     
     Final = [(k[0],k[1],k[2],v) for k,v in unique.items()]
+    
+    Final.sort(key=lambda x: x[3], reverse=True)
                     
     # ===============================
     # ★ マーク付け（完成形）
@@ -2610,10 +2611,19 @@ if st.button("計算"):
         # 合体
         full_output = result_text + "\n\n" + debug_output
         
-        # 表示
-        st.text_area("出目＋DEBUG（コピペ用）", full_output, height=400)
+        # ===============================
+        # ★ 出目だけ先に表示
+        # ===============================
         
-        # 強制コード表示（コピーしやすい）
-        st.code(full_output)
+        st.text_area("出目（コピペ用）", result_text, height=200)
+        
+        # ===============================
+        # ★ デバッグは下
+        # ===============================
+        
+        st.text_area("DEBUG（コピペ用）", debug_output, height=300)
+        
+        # コピーしやすい表示
+        st.code(result_text + "\n\n" + debug_output)
 
   
