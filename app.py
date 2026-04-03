@@ -2160,7 +2160,15 @@ if st.button("計算"):
             
                 if len(candidates) > 0:
             
-                    best = max(candidates, key=lambda x: Turn[x] + Foot[x])
+                    best = max(
+                        candidates,
+                        key=lambda x: (
+                            0.40 * Turn[x]
+                            + 0.30 * Start[x]
+                            + 0.20 * max(0, Start[x] - Start[attacker])
+                            + 0.10 * Foot[x]
+                        )
+                    )
             
                     SecondAdj[best] *= 1.18
                     ThirdAdj[best]  *= 1.12
