@@ -1863,6 +1863,49 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
+            # ===============================
+            # ★ 攻め成立判定
+            # ===============================
+            attack_success = False
+            
+            for atk in attackers:
+                if atk == a:
+                    if Start[atk] >= Start[atk-1] - 0.01:
+                        if Turn[atk] >= Turn[atk-1]:
+                            attack_success = True
+            
+            # ===============================
+            # ★ 攻め連動
+            # ===============================
+            if attack_success:
+            
+                # 前は流れる
+                for i in range(a):
+                    SecondAdj[i] *= 0.80
+                    ThirdAdj[i] *= 0.75
+            
+                # 攻め艇は少し残る
+                SecondAdj[a] *= 1.05
+            
+                # 後ろが展開拾う
+                for i in range(a+1,6):
+                    SecondAdj[i] *= 1.12
+                    ThirdAdj[i] *= 1.15
+            
+            # ===============================
+            # ★ 1だけ飛ぶパターン
+            # ===============================
+            if attack_success:
+                if (
+                    Start[0] >= Start[a] - 0.01
+                    and Turn[0] < Turn[a]
+                ):
+                    SecondAdj[0] *= 0.65
+                    ThirdAdj[0] *= 0.60
+            
+                    SecondAdj[1] *= 1.15
+                    ThirdAdj[1] *= 1.08
+            
             
             
                     
