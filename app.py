@@ -872,18 +872,6 @@ if st.button("計算"):
         
                 if AvgST[5] > 0.20:
                     FirstScore[5] *= 0.75
-        
-        # ===============================
-        # ★ 6の頭制限（これ追加）
-        # ===============================
-        for i in range(6):
-            if i == 5:
-                if not (
-                    DoubleAttackScore > 0.10
-                    and Start[5] >= Start[3]
-                    and CPI[5] >= 0.55
-                ):
-                    FirstScore[5] *= 0.65
                     
 
         # ===============================
@@ -1223,23 +1211,6 @@ if st.button("計算"):
                 if outer_a1 >= 2:
                     continue  # ←外A1強い時は絶対殺さない
         
-                # ===== 6コース =====
-                if i == 5:
-                    
-                    if Strong6:
-                        FirstScore[5] *= 1.18
-            
-                    elif SemiStrong6:
-                        FirstScore[5] *= 1.08
-                        
-                    elif Normal6:
-                        FirstScore[5] *= 0.95
-            
-                    else:
-                        if Start[5] < Start[0]:
-                            FirstScore[5] *= 0.70
-                        else:
-                            FirstScore[5] *= 0.85
             
                 # ===== 5コース =====
                 elif i == 4:
@@ -1399,19 +1370,7 @@ if st.button("計算"):
             else:
                 FirstScore[0] *= 1.05
             
-        # ===============================
-        # ★ 2の過剰頭抑制（最重要）
-        # ===============================
-        if FirstScore[1] >= max(FirstScore)*0.95:
-        
-            # 攻め展開なら2は頭じゃない
-            if DoubleAttackScore > 0.06:
-                FirstScore[1] *= 0.88
-        
-            # 4が強い時も頭じゃない
-            if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
-                FirstScore[1] *= 0.90
-                
+
         # ===============================
         # ★ 中間展開のイン復活（最重要）
         # ===============================
@@ -1421,15 +1380,6 @@ if st.button("計算"):
             and NoAttackFlag == 0
         ):
             FirstScore[0] *= 1.12
-            
-        # ===============================
-        # ★ 攻め展開のイン殺し（最重要）
-        # ===============================
-        if (
-            DoubleAttackScore > 0.04
-            and InsideSurvival[0] < 0.60
-        ):
-            FirstScore[0] *= 0.92
         
         
         # ===============================
@@ -1669,12 +1619,6 @@ if st.button("計算"):
                 break
                 
         # ===============================
-        # ★ 展開時イン殺し（強化版）
-        # ===============================
-        if DoubleAttackScore > 0.04:
-            FirstScore[0] *= 0.80
-                
-        # ===============================
         # ★ 展開主役スライド（汎用）
         # ===============================
         for i in range(2,6):
@@ -1795,19 +1739,9 @@ if st.button("計算"):
                 if Start[i] >= Start[3] - 0.02:
                     SecondAdj[i] *= 1.10
         
-        # ===============================
-        # ★ 攻め成立イン残り（追加）
-        # ===============================
-        if (
-            DoubleAttackScore > 0.06
-            and InsideSurvival[0] >= 0.45
-            and P1[0] < 0.25   # ←これ必須
-            and Start[0] >= Start[2] - 0.04
-        ):
-            SecondAdj[0] *= 1.15
         
         # ===============================
-        # ★ 中間展開イン残り（最重要）
+        # ★ イン残り
         # ===============================
         if (
             0.07 < DoubleAttackScore <= 0.13
@@ -1815,18 +1749,9 @@ if st.button("計算"):
             and Start[0] >= Start[2] - 0.04
             and P1[0] < 0.25
         ):
-            SecondAdj[0] *= 1.22
-            ThirdAdj[0] *= 1.08
-        
-        # ===============================
-        # ★ 半崩壊イン残り（最重要）
-        # ===============================
-        if (
-            0.06 < DoubleAttackScore < 0.16   # ←ここが本質
-            and InsideSurvival[0] >= 0.45
-            and Start[0] >= Start[2] - 0.04
-        ):
-            SecondAdj[0] *= 1.15
+            SecondAdj[0] *= 1.18
+            ThirdAdj[0] *= 1.05
+            
             
         # ===============================
         # ★ イン3着保険
@@ -2331,7 +2256,6 @@ if st.button("計算"):
             # ===============================
             # ★ 攻め共倒れ検知（汎用・最終版）
             # ===============================
-            attackers = sorted(range(6), key=lambda x: AttackIndex[x], reverse=True)
             
             main = attackers[0]
             sub  = attackers[1]
