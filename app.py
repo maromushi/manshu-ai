@@ -1805,6 +1805,17 @@ if st.button("計算"):
         for i in range(6)
         ]
         
+        # ===============================
+        # ★ ST遅れでも3着残り（ここ）
+        # ===============================
+        for i in range(6):
+        
+            if (
+                Start[i] < min(Start) + 0.01
+                and CPI[i] >= 0.42
+            ):
+                ThirdScore[i] *= 1.15
+        
         for i in range(4,6):
         
             if Foot[i] >= 0.48:
