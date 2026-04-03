@@ -1668,6 +1668,56 @@ if st.button("計算"):
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
         
+        # ★ 攻め時のイン2着分岐（完成版）
+
+        if DoubleAttackScore > 0.05:
+        
+            st_loss = Start[0] < Start[2]
+            weak_inside = InsideSurvival[0] < 0.55
+        
+            if DoubleAttackScore > 0.10:
+                if st_loss:
+                    SecondAdj[0] *= 0.78
+                else:
+                    SecondAdj[0] *= 0.85
+        
+            elif DoubleAttackScore > 0.07:
+                if st_loss and weak_inside:
+                    SecondAdj[0] *= 0.82
+                elif st_loss:
+                    SecondAdj[0] *= 0.88
+                else:
+                    SecondAdj[0] *= 0.92
+        
+            else:
+                if st_loss:
+                    SecondAdj[0] *= 0.92
+                    
+        # ★ 攻め時のイン3着分岐（完成版）
+
+        if DoubleAttackScore > 0.05:
+        
+            st_loss = Start[0] < Start[2]
+            weak_inside = InsideSurvival[0] < 0.55
+        
+            if DoubleAttackScore > 0.10:
+                if st_loss:
+                    ThirdAdj[0] *= 0.85
+                else:
+                    ThirdAdj[0] *= 0.90
+        
+            elif DoubleAttackScore > 0.07:
+                if st_loss and weak_inside:
+                    ThirdAdj[0] *= 0.88
+                elif st_loss:
+                    ThirdAdj[0] *= 0.92
+                else:
+                    ThirdAdj[0] *= 0.95
+        
+            else:
+                if st_loss:
+                    ThirdAdj[0] *= 0.95
+        
         # ===============================
         # ★ スタート主導の外流入（追加）
         # ===============================
