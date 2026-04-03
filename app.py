@@ -2749,7 +2749,7 @@ if st.button("計算"):
         + check_output   # ←これ追加（ここだけ）
         + "\n\n"
         + debug_output
-)
+    )
     
     
         
