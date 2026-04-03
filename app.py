@@ -1958,8 +1958,21 @@ if st.button("計算"):
                         (Turn[i] >= Turn[a] - 0.04 and Foot[i] >= 0.48)
                         or (Foot[i] >= Foot[a] - 0.04 and Turn[i] >= 0.48)
                     ):
-                        SecondAdj[i] *= 1.12
+                        SecondAdj[i] *= 1.10
                         ThirdAdj[i] *= 1.18
+                        
+            # ===============================
+            # ★ 展開3着強化（汎用版）
+            # ===============================
+            if attack_success and DoubleAttackScore > 0.05:
+            
+                for i in range(2,5):
+            
+                    if (
+                        Turn[i] >= 0.48
+                        and Start[i] >= Start[a] - 0.04
+                    ):
+                        ThirdAdj[i] *= 1.08
             
             # ===============================
             # ★ 攻め連動
