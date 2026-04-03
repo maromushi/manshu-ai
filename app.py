@@ -1826,18 +1826,7 @@ if st.button("計算"):
             and InsideSurvival[0] >= 0.45
             and Start[0] >= Start[2] - 0.04
         ):
-            SecondAdj[0] *= 1.25
-        
-        # ===============================
-        # ★ イン2着復活（今回の本命修正）
-        # ===============================
-        # ★ 中間展開イン残り（最重要）
-        if (
-            MidAttack
-            and InsideSurvival[0] >= 0.48
-            and Start[0] >= Start[2] - 0.04
-        ):
-            SecondAdj[0] *= 1.22
+            SecondAdj[0] *= 1.15
             
         # ===============================
         # ★ イン3着保険
@@ -1885,14 +1874,6 @@ if st.button("計算"):
                     SecondAdj[target] *= 1.10
                     ThirdAdj[target] *= 1.20
         
-        for i in range(4,6):
-
-            if (
-                DoubleAttackScore > 0.08
-                and Start[i] >= Start[3] - 0.02
-                and Foot[i] >= 0.50
-            ):
-                SecondAdj[i] *= 1.10
         
         # ===============================
         # ★ 階級補正（最重要）
@@ -1907,18 +1888,6 @@ if st.button("計算"):
         
             elif CLS[i] == "B2":
                 SecondAdj[i] *= 0.95
-                
-
-        
-        # ===============================
-        # ★ 中途半端展開（イン残り＋外1枚）
-        # ===============================
-        if (
-            DoubleAttackScore > 0.04
-            and DoubleAttackScore < 0.09
-        ):
-            SecondAdj[1] *= 1.08
-            SecondAdj[3] *= 1.05
         
         
         # ===============================
@@ -1956,27 +1925,6 @@ if st.button("計算"):
             and CPI[5] >= 0.50
             and Start[5] >= Start[3] - 0.02
         )    
-        
-        # ===============================
-        # ★ 2着強化
-        # ===============================
-        
-        # ★ 2着強化（修正版）
-        if FiveFlowFlag:
-        
-            if DoubleAttackScore > 0.13:
-                # 攻め成立 → OK
-                if Start[4] > Start[3]:
-                    SecondAdj[4] *= 1.12
-                else:
-                    SecondAdj[4] *= 0.90
-        
-            elif MidAttack:
-                # ★今回ゾーン（ここが本質）
-                SecondAdj[4] *= 0.95
-        
-            else:
-                SecondAdj[4] *= 0.90
         
 
         # ===============================
