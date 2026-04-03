@@ -1847,6 +1847,13 @@ if st.button("計算"):
                     else:
                         SecondAdj[0] *= 1.08
                         ThirdAdj[0] *= 1.05
+                        
+                if (
+                    0.85 <= FirstScore[0] / max(FirstScore) <= 0.98
+                    and InsideResist >= 0.45
+                ):
+                    SecondAdj[0] *= 1.10
+                    ThirdAdj[0] *= 1.05
                     
             # ===============================
             # ★ 外の暴走防止（最重要）
