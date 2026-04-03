@@ -1330,6 +1330,8 @@ if st.button("計算"):
                 ):
                     FirstScore[0] *= 0.60
                     break
+                    
+        
 
         # ===============================
         # ATTACK BOOST
@@ -1525,6 +1527,19 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
+
+        # ===============================
+        # ★ 攻め成立時の頭崩し（ここに入れる）
+        # ===============================
+        if DoubleAttackScore > 0.06:
+        
+            # 1を崩す
+            FirstScore[0] *= 0.75
+        
+            # 外にチャンス
+            for i in range(2,6):
+                if Start[i] >= Start[1] - 0.03:
+                    FirstScore[i] *= 1.10
 
         TotalFirst = sum([FirstScore[i] for i in range(6) if Active[i]==1])
 
