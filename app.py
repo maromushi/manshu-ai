@@ -1658,6 +1658,31 @@ if st.button("計算"):
         ThirdAdj = [1.0]*6
         
         # ===============================
+        # ★ 外の暴走防止（最重要）
+        # ===============================
+        for i in range(4,6):
+
+            valid = (
+                (Foot[i] >= 0.50 or CPI[i] >= 0.48)
+                and Start[i] >= Start[3] - 0.02
+            )
+            
+            if strong_attack:
+                if valid:
+                    SecondAdj[i] *= 1.08
+                else:
+                    SecondAdj[i] *= 0.85
+            
+            elif mid_attack:
+                if valid:
+                    SecondAdj[i] *= 1.00
+                else:
+                    SecondAdj[i] *= 0.88
+            
+            else:
+                SecondAdj[i] *= 0.90
+        
+        # ===============================
         # ★ 攻めゾーン分割（最重要）
         # ===============================
         
@@ -2108,30 +2133,7 @@ if st.button("計算"):
                 SecondAdj[0] *= 1.12
                 ThirdAdj[0] *= 1.08
                     
-            # ===============================
-            # ★ 外の暴走防止（最重要）
-            # ===============================
-            for i in range(4,6):
-
-                valid = (
-                    (Foot[i] >= 0.50 or CPI[i] >= 0.48)
-                    and Start[i] >= Start[3] - 0.02
-                )
             
-                if strong_attack:
-                    if valid:
-                        SecondAdj[i] *= 1.08
-                    else:
-                        SecondAdj[i] *= 0.85
-            
-                elif mid_attack:
-                    if valid:
-                        SecondAdj[i] *= 1.00
-                    else:
-                        SecondAdj[i] *= 0.88
-            
-                else:
-                    SecondAdj[i] *= 0.90
         
                         
                         
@@ -2144,11 +2146,11 @@ if st.button("計算"):
                 main = attackers[0]
                 sub  = attackers[1]
             
-            if (
-                DoubleAttackScore > 0.08
-                and AttackIndex[main] > 0.45
-                and AttackIndex[sub] > 0.45
-            ):
+                if (
+                    DoubleAttackScore > 0.08
+                    and AttackIndex[main] > 0.45
+                    and AttackIndex[sub] > 0.45
+                ):
             
                 # 攻め役を少し削る
                 SecondAdj[main] *= 0.92
