@@ -492,7 +492,7 @@ if st.button("計算"):
         
         for i in range(2,6):
             if (
-                Start[i] >= Start[i-1] - 0.04
+                Start[i] >= Start[i-1] - 0.06
                 and (
                     AttackIndex[i] >= max(AttackIndex[2:6]) - 0.05
                     or Turn[i] >= max(Turn[2:6]) - 0.03
@@ -1538,6 +1538,31 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
+        
+        # ===============================
+        # ★ 壁崩壊イン殺し（汎用版）
+        # ===============================
+        for i in range(1,4):
+            if (
+                Start[i] < Start[i-1] - 0.05
+                and DoubleAttackScore > 0.04   # ←これ追加
+            ):
+                FirstScore[0] *= 0.70
+                break
+                
+        # ===============================
+        # ★ 展開主役スライド（汎用）
+        # ===============================
+        for i in range(2,6):
+        
+            if (
+                Start[i] >= Start[i-1] - 0.03
+                and (
+                    AttackIndex[i] >= max(AttackIndex[2:6]) - 0.03
+                    or Turn[i] >= max(Turn[2:6]) - 0.03
+                )
+            ):
+                FirstScore[i] *= 1.15
 
         # ===============================
         # ★ 攻め成立時の頭崩し（ここに入れる）
