@@ -1755,13 +1755,24 @@ if st.button("計算"):
         ThirdAdj = [1.0]*6
         
         # ===============================
+        # ★ 攻め成立イン残り（追加）
+        # ===============================
+        if (
+            DoubleAttackScore > 0.06
+            and InsideSurvival[0] >= 0.45
+            and P1[0] < 0.25   # ←これ必須
+            and Start[0] >= Start[2] - 0.04
+        ):
+            SecondAdj[0] *= 1.15
+        
+        # ===============================
         # ★ 中間展開イン残り（最重要）
         # ===============================
         if (
             0.07 < DoubleAttackScore <= 0.13
             and InsideSurvival[0] >= 0.48
             and Start[0] >= Start[2] - 0.04
-            and 0.10 < P1[0] < 0.25
+            and P1[0] < 0.25
         ):
             SecondAdj[0] *= 1.22
             ThirdAdj[0] *= 1.08
@@ -1917,7 +1928,7 @@ if st.button("計算"):
                 if Start[4] > Start[3]:
                     SecondAdj[4] *= 1.12
                 else:
-                    SecondAdj[4] *= 0.95
+                    SecondAdj[4] *= 0.90
         
             elif MidAttack:
                 # ★今回ゾーン（ここが本質）
