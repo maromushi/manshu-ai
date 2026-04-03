@@ -1202,48 +1202,7 @@ if st.button("計算"):
         for i in range(6):
             if Start[i] < AvgStart - 0.04:
                 FirstScore[i] *= 0.82
-
-        # 外の1着抑制（重要）
-        for i in range(6):
-
-            if i >= 4:
-                
-                if outer_a1 >= 2:
-                    continue  # ←外A1強い時は絶対殺さない
-        
-            
-                # ===== 5コース =====
-                elif i == 4:
-            
-                    if CLS[4] == "A1":
-                        FirstScore[4] *= 1.08
-                    elif CLS[4] == "A2":
-                        FirstScore[4] *= 1.02
-                    else:
-                        FirstScore[4] *= 0.80
                         
-        # ===============================
-        # ★ 強い外の頭許可（修正版）
-        # ===============================
-        for i in range(4,6):
-
-            if (
-                CPI[i] >= max(CPI[0:4]) - 0.02
-                and Start[i] >= Start[1] - 0.02
-            ):
-                FirstScore[i] *= 1.15
-        
-            elif (
-                CPI[i] >= max(CPI[0:4]) - 0.02
-            ):
-                FirstScore[i] *= 1.08
-
-        # 6頭の最終ブレーキ
-        if Start[5] < Start[0] - 0.01:
-            FirstScore[5] *= 0.75
-        
-        elif Start[5] <= Start[1] or Start[5] <= Start[0]:
-            FirstScore[5] *= 0.80
             
         # ===============================
         # ★ 6の展開連動ブースト（ここ）
@@ -1269,7 +1228,7 @@ if st.button("計算"):
                 # ===============================
                 if i >= 4:
                     if AttackIndex[i] < max(AttackIndex):
-                        FirstScore[i] *= 0.70
+                        FirstScore[i] *= 0.85
                         
 
         # ===== 6頭処理 =====
