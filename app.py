@@ -1810,6 +1810,31 @@ if st.button("計算"):
             ThirdAdj = ThirdScore.copy()
             
             # ===============================
+            # ★ イン耐久スコア（追加）
+            # ===============================
+            attack_center = max(range(1,6), key=lambda x: AttackIndex[x])
+            
+            InsideResist = (
+                InsideSurvival[0]
+                - 0.6 * DoubleAttackScore
+                - 0.6 * max(0, Start[attack_center] - Start[0])
+            )
+
+            
+            # ===============================
+            # ★ まくり時の1残り分岐（追加）
+            # ===============================
+            if attack_center >= 2 and DoubleAttackScore > 0.05:  # 攻めが内〜中
+            
+                if InsideResist < 0.45:
+                    SecondAdj[0] *= 0.80
+                    ThirdAdj[0] *= 0.75
+            
+                elif InsideResist >= 0.55:
+                    SecondAdj[0] *= 1.08
+                    ThirdAdj[0] *= 1.05
+            
+            # ===============================
             # ★ 外の暴走防止（最重要）
             # ===============================
             for i in range(6):
