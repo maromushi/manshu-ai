@@ -542,7 +542,8 @@ if st.button("計算"):
                 + 0.25 * Start[x]      # ←追加（超重要）
                 + 0.20 * Turn[x]
                 + 0.15 * Foot[x]
-                + 0.05 * Engine[x]
+                + 0.05 * Engine[x] 
+                + 0.05 * max(0, Start[x] - Start[x-1])
             ),
             reverse=True
         )
