@@ -1621,6 +1621,9 @@ if st.button("計算"):
         for i in range(6)
         ]
         
+        SecondAdj = SecondScore.copy()
+        ThirdAdj = [1.0]*6
+                
         # ===============================
         # ★ 展開拾い（複数攻め）
         # ===============================
@@ -1931,8 +1934,7 @@ if st.button("計算"):
                 - 0.6 * max(0, Start[attack_center] - Start[0])
             )
         
-            SecondAdj = SecondScore.copy()
-            ThirdAdj = ThirdScore.copy()
+            ThirdScoreBase = ThirdScore.copy()
             
             # ===============================
             # ★ 攻め成立判定
