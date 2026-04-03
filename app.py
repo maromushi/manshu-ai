@@ -2641,9 +2641,12 @@ if st.button("計算"):
         f"{a}-{b}-{c} ({round(p,4)}) {mark}" if mark != "" else f"{a}-{b}-{c} ({round(p,4)})"
         for (mark,a,b,c,p) in marked
     ])
+    
+    st.write("▼ 買い目")
+    st.write(result_text)
         
     # ===============================
-    # ★ 最終出力（これだけ残す）
+    # ★ 最終出力
     # ===============================
     
     full_output = (
@@ -2654,10 +2657,11 @@ if st.button("計算"):
         + debug_output
     )
     
+    st.write("▼ フルログ（コピペ用）")
     st.code(full_output)
+    
+    
         
         
-    # コピーしやすい表示
-    st.code(result_text + "\n\n" + debug_output)
 
   
