@@ -1698,36 +1698,6 @@ if st.button("計算"):
             if i in [2,3]:
                 if DoubleAttackScore > 0.05:
                     ThirdScore[i] *= 1.12
-
-        # ===============================
-        # ★ 外の勝者だけ残す（5・6共通）
-        # ===============================
-        outer_max = max(CPI[4], CPI[5])
-
-        for i in range(4,6):
-        
-            if (
-                CPI[i] >= outer_max - 0.01
-                or (
-                    DoubleAttackScore > 0.07
-                    and Start[i] >= Start[3] - 0.02
-                )
-            ):
-        
-                if i == 5:
-                    if not (
-                        DoubleAttackScore > 0.07
-                        and Start[i] >= Start[3] - 0.01
-                    ):
-                        continue
-        
-                if DoubleAttackScore > 0.07:
-                    ThirdScore[i] *= (1 + 0.30 * DoubleAttackScore)
-        
-            else:
-                ThirdScore[i] *= 0.88
-        
-        
     
         # ===============================
         # ★ インの2着・3着粘り復活
@@ -1901,11 +1871,6 @@ if st.button("計算"):
                     if not ((valid_power and valid_start) or valid_flow):
                         SecondAdj[i] *= 0.85
                         ThirdAdj[i] *= 0.85
-                        
-            # 中途半端展開は外削る
-            if DoubleAttackScore < 0.06:
-                SecondAdj[4] *= 0.92
-                SecondAdj[5] *= 0.85
                 
             
             # ★ 展開ライン2着（汎用版）
@@ -1937,7 +1902,7 @@ if st.button("計算"):
             
             # それ以外は2着をしっかり削る
             if not valid_six_second:
-                SecondAdj[5] *= 0.65   # ←ここがキモ（強め）
+                SecondAdj[5] *= 0.80   # ←ここがキモ（強め）
             
             # ===============================
             # ★ 6の2着・3着まとめて制御
