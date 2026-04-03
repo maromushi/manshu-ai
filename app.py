@@ -1793,6 +1793,14 @@ if st.button("計算"):
             else:
                 SecondAdj[i] *= 0.90
                 
+        if (
+            DoubleAttackScore > 0.10
+            and Start[5] == max(Start)
+            and CPI[5] > 0.20
+        ):
+            SecondAdj[5] *= 1.10
+                
+                
         
         # ★ 攻め成立時の前削り（汎用）
 
