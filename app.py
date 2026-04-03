@@ -492,8 +492,11 @@ if st.button("計算"):
         
         for i in range(2,6):
             if (
-                AttackIndex[i] >= max(AttackIndex[2:6]) - 0.03
-                and Start[i] >= Start[i-1] - 0.03
+                Start[i] >= Start[i-1] - 0.04
+                and (
+                    AttackIndex[i] >= max(AttackIndex[2:6]) - 0.05
+                    or Turn[i] >= max(Turn[2:6]) - 0.03
+                )
             ):
                 attackers.append(i)
 
@@ -1870,9 +1873,11 @@ if st.button("計算"):
             
             for atk in attackers:
                 if atk == a:
-                    if Start[atk] >= Start[atk-1] - 0.01:
-                        if Turn[atk] >= Turn[atk-1]:
-                            attack_success = True
+                    if (
+                        Start[atk] >= Start[atk-1] - 0.03
+                        or Turn[atk] >= Turn[atk-1]
+                    ):
+                        attack_success = True
             
             # ===============================
             # ★ 攻め連動
