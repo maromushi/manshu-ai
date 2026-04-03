@@ -1759,12 +1759,13 @@ if st.button("計算"):
         # ===============================
         # ★ イン2着復活（今回の本命修正）
         # ===============================
+        # ★ 中間展開イン残り（汎用版）
         if (
-            DoubleAttackScore > 0.08
-            and InsideSurvival[0] >= 0.50
-            and Start[0] >= Start[2] - 0.03
+            0.06 < DoubleAttackScore < 0.14
+            and InsideSurvival[0] >= 0.48
+            and Start[0] >= Start[2] - 0.04
         ):
-            SecondAdj[0] *= 1.20
+            SecondAdj[0] *= 1.18
             
         # ===============================
         # ★ イン3着保険
@@ -1888,8 +1889,15 @@ if st.button("計算"):
         # ★ 2着強化
         # ===============================
         
+        # ★ 2着強化（修正版）
         if FiveFlowFlag and DoubleAttackScore > 0.08:
-            SecondAdj[4] *= 1.15
+        
+            # ★ 壁判定を追加（これ）
+            if Start[4] > Start[3] + 0.01:
+                SecondAdj[4] *= 1.05
+            else:
+                SecondAdj[4] *= 0.95
+        
         else:
             SecondAdj[4] *= 0.90
         
