@@ -1874,14 +1874,19 @@ if st.button("計算"):
             
             # ★ 展開ライン2着（汎用版）
             if DoubleAttackScore > 0.05:
-            
+
                 attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
             
-                target = attack_center + 1
+                for i in range(attack_center+1,6):
             
-                if target < 6:
-                    if Start[target] >= Start[attack_center] - 0.03:
-                        SecondAdj[target] *= 1.15
+                    if (
+                        Start[i] >= Start[attack_center] - 0.03
+                        and (
+                            Foot[i] >= 0.48
+                            or CPI[i] >= 0.46
+                        )
+                    ):
+                        SecondAdj[i] *= 1.05
             
             # ===============================
             # ★ 6の2着侵食ストップ（本命修正）
