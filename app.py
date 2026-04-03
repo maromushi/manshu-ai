@@ -1757,15 +1757,6 @@ if st.button("計算"):
         mid_attack  = 0.09 < DoubleAttackScore <= 0.13
         strong_attack = DoubleAttackScore > 0.13
         
-        # ★ 強攻め時の6の2着昇格（これが決定打）
-
-        if DoubleAttackScore > 0.11:
-        
-            if (
-                Start[5] >= Start[3] - 0.02
-                and Foot[5] >= 0.45
-            ):
-                SecondAdj[5] *= 1.18
         
         # ===============================
         # ★ 外の暴走防止（最重要）
