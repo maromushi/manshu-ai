@@ -2582,12 +2582,34 @@ if st.button("計算"):
     # ===============================
     # ★ 出目＋デバッグ（完全コピペ）
     # ===============================
+    
+    # ===============================
+    # ★ 入力データまとめ（追加）
+    # ===============================
+    
+    input_text = []
+    input_text.append("===== INPUT =====")
+    
+    input_text.append(f"WinRate={WinRate}")
+    input_text.append(f"PlaceRate={PlaceRate}")
+    input_text.append(f"AvgST={AvgST}")
+    input_text.append(f"Motor2={Motor2}")
+    input_text.append(f"Boat2={Boat2}")
+    
+    input_text.append(f"ExTime={ExTime}")
+    input_text.append(f"ExST={ExST}")
+    
+    input_text.append(f"TurnTime={TurnTime}")
+    input_text.append(f"LapTime={LapTime}")
+    input_text.append(f"StraightTime={StraightTime}")
+    
+    input_text.append(f"Class={Class}")
+    input_text.append(f"Fcount={Fcount}")
+    input_text.append(f"ExEntry={ExEntry}")
+    
+    input_text_output = "\n".join(input_text)
         
-    # 出目テキスト
-    result_text = "\n".join([
-        f"{a}-{b}-{c} ({round(p,4)}) {mark}" if mark != "" else f"{a}-{b}-{c} ({round(p,4)})"
-        for (mark,a,b,c,p) in marked
-    ])
+
         
     # デバッグテキスト
     debug_text = []
@@ -2613,6 +2635,12 @@ if st.button("計算"):
         debug_text.append(f"{name}: {val}")
         
     debug_output = "\n".join(debug_text)
+    
+        # 出目テキスト
+    result_text = "\n".join([
+        f"{a}-{b}-{c} ({round(p,4)}) {mark}" if mark != "" else f"{a}-{b}-{c} ({round(p,4)})"
+        for (mark,a,b,c,p) in marked
+    ])
         
      #合体
     full_output = result_text + "\n\n" + debug_output
