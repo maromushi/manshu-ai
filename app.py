@@ -1717,6 +1717,23 @@ if st.button("計算"):
             else:
                 if st_loss:
                     ThirdAdj[0] *= 0.95
+                    
+        # ★ 展開6の2着強制浮上（ここが本命）
+
+        if DoubleAttackScore > 0.06:
+        
+            if (
+                Start[5] == max(Start)   # 最速スタート
+                and Start[5] >= Start[3] - 0.02
+            ):
+                SecondAdj[5] *= 1.25
+                
+        # ★ 展開6の3着流入
+        
+        if DoubleAttackScore > 0.06:
+        
+            if Start[5] == max(Start):
+                ThirdAdj[5] *= 1.20
         
         # ===============================
         # ★ スタート主導の外流入（追加）
