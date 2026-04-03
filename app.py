@@ -41,7 +41,7 @@ labels = ["浜名湖","桐生","住之江","丸亀","多摩川","びわこ","常
 for i, name in enumerate(labels):
     with col[i]:
         if st.button(name, use_container_width=True):
-            st.session_state.venue = name常滑"
+            st.session_state.venue = name
 
 venue = st.session_state.venue
 
