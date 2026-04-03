@@ -1122,7 +1122,6 @@ if st.button("計算"):
             if DoubleAttackScore > 0.05:
                 FirstScore[2] *= 1.08
                 FirstScore[3] *= 1.10
- 
         
         
         # ■ 住之江（センター主役）
@@ -1606,9 +1605,21 @@ if st.button("計算"):
         if TotalFirst <= 0:
             TotalFirst = 1e-6
             
-        # ★ 攻め展開時はイン補正弱める（ここ）
-        if DoubleAttackScore > 0.05:
+        # ★ 攻め強度でイン補正分岐（これに置き換え）
+
+        if DoubleAttackScore > 0.10:
+            FirstScore[0] *= 0.85
+        
+        elif DoubleAttackScore > 0.07:
+            FirstScore[0] *= 0.88
+        
+        elif DoubleAttackScore > 0.05:
             FirstScore[0] *= 0.92
+        
+        # ★ スタート負けイン追加（ここも続けて入れる）
+        if DoubleAttackScore > 0.05:
+            if Start[0] < max(Start[1:4]):
+                FirstScore[0] *= 0.92
                 
         P1 = [
         (FirstScore[i]/TotalFirst) if Active[i]==1 else 0
