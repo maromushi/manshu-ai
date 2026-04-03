@@ -1605,7 +1605,11 @@ if st.button("計算"):
 
         if TotalFirst <= 0:
             TotalFirst = 1e-6
-        
+            
+        # ★ 攻め展開時はイン補正弱める（ここ）
+        if DoubleAttackScore > 0.05:
+            FirstScore[0] *= 0.92
+                
         P1 = [
         (FirstScore[i]/TotalFirst) if Active[i]==1 else 0
         for i in range(6)
