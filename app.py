@@ -2087,49 +2087,57 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.00
                     
             # ===============================
-            # ★ 壁崩壊（ここに入れる）
+            # ★ 壁崩壊（最終完成版）
             # ===============================
             for i in range(1,4):
-
+            
                 st_gap = Start[i] - Start[i-1]
             
-                # ノイズ除去（緩める）
+                # ノイズ除去
                 if abs(st_gap) < 0.01:
                     continue
             
-                collapse = False
-                level = 0
-            
+                # ===============================
+                # ■ 強崩壊（レース壊す）
+                # ===============================
                 if st_gap < -0.04 and DoubleAttackScore > 0.06:
-                    collapse = True
-                    level = 2
             
-                elif st_gap < -0.02:
-                    collapse = True
-                    level = 1
+                    # 頭も崩す（最重要）
+                    FirstScore[i] *= 0.70
             
-                if not collapse:
+                    # 本体削る
+                    SecondAdj[i] *= 0.55
+                    ThirdAdj[i]  *= 0.60
+            
+                    # 外に強く流す
+                    for j in range(i+1,6):
+                        SecondAdj[j] *= 1.25
+                        ThirdAdj[j]  *= 1.20
+            
+                    # 内も少し崩す
+                    for j in range(0,i):
+                        SecondAdj[j] *= 0.95
+                        ThirdAdj[j]  *= 0.97
+            
                     continue
             
-                if level == 2:
-                    cut2 = 0.60
-                    cut3 = 0.70
-                    boost = 1.15
-                else:
-                    cut2 = 0.80
-                    cut3 = 0.85
-                    boost = 1.08
+                # ===============================
+                # ■ 弱崩壊（ズレるだけ）
+                # ===============================
+                elif st_gap < -0.02:
             
-                SecondAdj[i] *= cut2
-                ThirdAdj[i]  *= cut3
+                    SecondAdj[i] *= 0.80
+                    ThirdAdj[i]  *= 0.85
             
-                for j in range(i+1,6):
-                    SecondAdj[j] *= boost
-                    ThirdAdj[j]  *= (boost - 0.03)
+                    for j in range(i+1,6):
+                        SecondAdj[j] *= 1.08
+                        ThirdAdj[j]  *= 1.05
             
-                for j in range(0,i):
-                    SecondAdj[j] *= 0.96
-                    ThirdAdj[j]  *= 0.98
+                    for j in range(0,i):
+                        SecondAdj[j] *= 0.98
+                        ThirdAdj[j]  *= 0.99
+                        
+                        
 
                 if i >= 4:
 
