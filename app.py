@@ -1310,7 +1310,10 @@ if st.button("計算"):
         # ===============================
         # ★ 攻め展開のイン殺し（最重要）
         # ===============================
-        if DoubleAttackScore > 0.04:
+        if (
+            DoubleAttackScore > 0.04
+            and InsideSurvival[0] < 0.60
+        ):
             FirstScore[0] *= 0.92
         
         
@@ -1573,9 +1576,10 @@ if st.button("計算"):
         # ===============================
         # ★ 攻め成立時の頭崩し（ここに入れる）
         # ===============================
-        if DoubleAttackScore > 0.06:
-        
-            # 1を崩す
+        if (
+            DoubleAttackScore > 0.06
+            and InsideSurvival[0] < 0.60
+        ):
             FirstScore[0] *= 0.85
         
             # 外にチャンス
