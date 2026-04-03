@@ -2642,18 +2642,20 @@ if st.button("計算"):
         for (mark,a,b,c,p) in marked
     ])
         
-     #合体
-    full_output = result_text + "\n\n" + debug_output
+    # ===============================
+    # ★ 最終出力（これだけ残す）
+    # ===============================
+    
+    full_output = (
+        input_text_output
+        + "\n\n"
+        + result_text
+        + "\n\n"
+        + debug_output
+    )
+    
+    st.code(full_output)
         
-    # ===============================
-    # ★ 出目だけ先に表示
-    # ===============================
-        
-    st.text_area("出目（コピペ用）", result_text, height=200)
-        
-    # ===============================
-    # ★ デバッグは下
-    # ===============================
         
     # コピーしやすい表示
     st.code(result_text + "\n\n" + debug_output)
