@@ -2100,7 +2100,10 @@ if st.button("計算"):
                 # ===============================
                 # ■ 強崩壊（レース壊す）
                 # ===============================
-                if st_gap < -0.04 and DoubleAttackScore > 0.06:
+                if (
+                    (st_gap < -0.04 and DoubleAttackScore > 0.06)
+                    or (st_gap < -0.03 and Start[i] < Start[i-1] - 0.02)
+                ):   
             
                     # 頭も崩す（最重要）
                     FirstScore[i] *= 0.70
