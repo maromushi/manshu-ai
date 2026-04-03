@@ -2046,14 +2046,14 @@ if st.button("計算"):
                             
                     # ===== 外の残り再設計 =====
                     if i == 4:
-                    if (
-                        DoubleAttackScore > 0.07
-                        and Start[i] >= Start[2] - 0.02
-                        and Foot[i] >= 0.50
-                        and CPI[i] >= 0.48
-                    ):
-                        SecondAdj[i] *= 1.08
-                        ThirdAdj[i] *= 1.04
+                        if (
+                            DoubleAttackScore > 0.07
+                            and Start[i] >= Start[2] - 0.02
+                            and Foot[i] >= 0.50
+                            and CPI[i] >= 0.48
+                        ):
+                            SecondAdj[i] *= 1.08
+                            ThirdAdj[i] *= 1.04
 
                     # ★ 6だけは条件付きにする
                     if i == 5:
