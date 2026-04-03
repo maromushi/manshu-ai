@@ -1791,6 +1791,32 @@ if st.button("計算"):
             ThirdAdj = ThirdScore.copy()
             
             # ===============================
+            # ★ 壁検出（汎用）
+            # ===============================
+            wall = None
+            
+            for i in range(1,4):  # 2〜4コース
+                if AvgST[i] <= 0.20:
+                    wall = i
+                    break
+            
+            # ===============================
+            # ★ 壁崩壊（汎用）
+            # ===============================
+            for i in range(1,4):
+            
+                if AvgST[i] > 0.24:  # 壁として機能しない
+                    
+                    # 壁崩壊
+                    SecondAdj[i] *= 0.60
+                    ThirdAdj[i] *= 0.70
+            
+                    # 外へ流す
+                    if i+1 < 6:
+                        SecondAdj[i+1] *= 1.10
+                        ThirdAdj[i+1] *= 1.10
+            
+            # ===============================
             # ★ イン耐久スコア（追加）
             # ===============================
             attack_center = max(range(1,6), key=lambda x: AttackIndex[x])
