@@ -1828,6 +1828,29 @@ if st.button("計算"):
             SecondAdj = SecondScore.copy()
             ThirdAdj = ThirdScore.copy()
             
+            # ===============================
+            # ★ 外の暴走防止（最重要）
+            # ===============================
+            for i in range(6):
+            
+                if i >= 4:
+            
+                    valid_power = (Foot[i] >= 0.50 or CPI[i] >= 0.48)
+                    valid_start = Start[i] >= Start[3] - 0.02
+                    valid_flow  = (
+                        DoubleAttackScore > 0.10
+                        and Start[i] >= Start[3] - 0.03
+                    )
+            
+                    if not ((valid_power and valid_start) or valid_flow):
+                        SecondAdj[i] *= 0.85
+                        ThirdAdj[i] *= 0.85
+                        
+            # 中途半端展開は外削る
+            if DoubleAttackScore < 0.06:
+                SecondAdj[4] *= 0.92
+                SecondAdj[5] *= 0.85
+            
             # ★ 5は基本3着寄りにする（着順補正）
             if DoubleAttackScore < 0.10:
                 SecondAdj[4] *= 0.92
