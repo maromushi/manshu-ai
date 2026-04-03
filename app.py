@@ -2179,19 +2179,27 @@ if st.button("計算"):
             
             
             # ===============================
-            # ★ 6の2着侵食ストップ（本命修正）
+            # ★ 6の2着制御（最終版）
             # ===============================
             
-            # 6が「展開で2着に来れる状態」か？
             valid_six_second = (
                 DoubleAttackScore > 0.08
                 and Start[5] >= Start[3] - 0.02
                 and Foot[5] >= 0.50
             )
             
-            # それ以外は2着をしっかり削る
-            if not valid_six_second:
-                SecondAdj[5] *= 0.80   # ←ここがキモ（強め）
+            if valid_six_second:
+            
+                # 攻め展開なら普通に来る
+                SecondAdj[5] *= 1.05
+            
+            else:
+            
+                # 弱いときだけ抑える
+                if DoubleAttackScore > 0.10:
+                    SecondAdj[5] *= 0.92   # ←ここ重要（殺さない）
+                else:
+                    SecondAdj[5] *= 0.80
             
             # ===============================
             # ★ 6の2着・3着まとめて制御
