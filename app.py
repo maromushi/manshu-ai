@@ -2726,30 +2726,30 @@ if st.button("計算"):
     for line in result_text.split("\n"):
         st.write(line)
         
-    # ===============================
-    # ★ 進入チェック（コピー専用）
-    # ===============================
-    real_lane_map = {i: order_ex.index(i) for i in order_ex}
-    
-    check_text = []
-    check_text.append("===== CHECK =====")
-    check_text.append(f"order: {order_ex}")
-    check_text.append(f"real_lane: {real_lane_map}")
-    
-    check_output = "\n".join(check_text)
-    
-    # ===============================
-    # ★ 最終出力
-    # ===============================
-    full_output = (
-        input_text_output
-        + "\n\n"
-        + result_text
-        + "\n\n"
-        + check_output   # ←これ追加（ここだけ）
-        + "\n\n"
-        + debug_output
-    )
+        # ===============================
+        # ★ 進入チェック（コピー専用）
+        # ===============================
+        real_lane_map = {i: order_ex.index(i) for i in order_ex}
+        
+        check_text = []
+        check_text.append("===== CHECK =====")
+        check_text.append(f"order: {order_ex}")
+        check_text.append(f"real_lane: {real_lane_map}")
+        
+        check_output = "\n".join(check_text)
+        
+        # ===============================
+        # ★ 最終出力
+        # ===============================
+        full_output = (
+            input_text_output
+            + "\n\n"
+            + result_text
+            + "\n\n"
+            + check_output   # ←これ追加（ここだけ）
+            + "\n\n"
+            + debug_output
+        )
     
     
         
