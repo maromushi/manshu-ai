@@ -36,19 +36,15 @@ st.markdown("### 会場選択")
 
 labels = ["浜名湖","桐生","住之江","丸亀","多摩川","びわこ","常滑"]
 
-# 1段目（4つ）
-cols1 = st.columns(4)
-for i in range(4):
-    with cols1[i]:
-        if st.button(labels[i], use_container_width=True):
-            st.session_state.venue = labels[i]
+# 2列
+for i in range(0, len(labels), 2):
+    cols = st.columns(2)
 
-# 2段目（残り3つ）
-cols2 = st.columns(3)
-for i in range(3):
-    with cols2[i]:
-        if st.button(labels[i+4], use_container_width=True):
-            st.session_state.venue = labels[i+4]
+    for j in range(2):
+        if i + j < len(labels):
+            with cols[j]:
+                if st.button(labels[i + j], use_container_width=True):
+                    st.session_state.venue = labels[i + j]
 
 venue = st.session_state.venue
 
