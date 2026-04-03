@@ -2155,11 +2155,17 @@ if st.button("計算"):
             # ★ 攻め連動
             # ===============================
             if attack_success:
-            
-                # 前は流れる
+
                 for i in range(a):
+            
+                    # ★ インだけは例外（これが本質）
+                    if i == 0 and (
+                        0.06 < DoubleAttackScore < 0.16
+                        and InsideSurvival[0] >= 0.45
+                    ):
+                        continue
+            
                     SecondAdj[i] *= 0.80
-                    ThirdAdj[i] *= 0.75
             
                 # 攻め艇は少し残る
                 SecondAdj[a] *= 1.05
