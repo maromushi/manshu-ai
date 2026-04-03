@@ -1831,11 +1831,6 @@ if st.button("計算"):
             if DoubleAttackScore < 0.06:
                 SecondAdj[4] *= 0.92
                 SecondAdj[5] *= 0.85
-            
-            # ★ 5は基本3着寄りにする（着順補正）
-            if DoubleAttackScore < 0.10:
-                SecondAdj[4] *= 0.92
-                ThirdAdj[4] *= 1.05
                 
             
             # ★ 展開ライン2着（汎用版）
@@ -1909,10 +1904,13 @@ if st.button("計算"):
             
             # ★ 外強い艇の3着底上げ（正しい形）
             for i in range(4,6):
-            
-                if Foot[i] >= 0.50 and CPI[i] >= 0.48:
-                    ThirdAdj[i] *= 1.10
-            
+                if (
+                    DoubleAttackScore > 0.07
+                    and Foot[i] >= 0.50
+                    and CPI[i] >= 0.48
+                ):
+                    ThirdAdj[i] *= 1.05
+                        
                         
             # ===============================
             # ★ 展開ライン連動（最重要）
