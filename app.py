@@ -1668,6 +1668,16 @@ if st.button("計算"):
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
         
+        # ★ 攻め時の2残り復活（汎用版）
+
+        if DoubleAttackScore > 0.06:
+        
+            st_good = Start[1] >= max(Start[0], Start[2]) - 0.01
+            perf_ok = CPI[1] >= (sum(CPI)/6) - 0.05
+        
+            if st_good and perf_ok:
+                SecondAdj[1] *= 1.12
+        
         # ★ 攻め時のイン2着分岐（完成版）
 
         if DoubleAttackScore > 0.05:
