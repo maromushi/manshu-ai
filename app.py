@@ -2151,23 +2151,23 @@ if st.button("計算"):
                     and AttackIndex[sub] > 0.45
                 ):
             
-                # 攻め役を少し削る
-                SecondAdj[main] *= 0.92
-                SecondAdj[sub]  *= 0.92
-            
-                ThirdAdj[main] *= 0.95
-                ThirdAdj[sub]  *= 0.95
-            
-                # その他を底上げ（差し・待ち）
-                for i in range(6):
-                    if i not in [main, sub]:
-                        ThirdAdj[i] *= 1.10
-            
-                # 攻めが近いときはさらに崩れやすい
-                if abs(main - sub) <= 2:
+                    # 攻め役を少し削る
+                    SecondAdj[main] *= 0.92
+                    SecondAdj[sub]  *= 0.92
+                
+                    ThirdAdj[main] *= 0.95
+                    ThirdAdj[sub]  *= 0.95
+                
+                    # その他を底上げ（差し・待ち）
                     for i in range(6):
                         if i not in [main, sub]:
-                            ThirdAdj[i] *= 1.05
+                            ThirdAdj[i] *= 1.10
+                
+                    # 攻めが近いときはさらに崩れやすい
+                    if abs(main - sub) <= 2:
+                        for i in range(6):
+                            if i not in [main, sub]:
+                                ThirdAdj[i] *= 1.05
                         
             # ★ ズレ決着の許容（万舟用）
             if DoubleAttackScore > 0.06:
