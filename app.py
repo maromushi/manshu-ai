@@ -2627,8 +2627,6 @@ if st.button("計算"):
     # ★ デバッグは下
     # ===============================
         
-    st.text_area("DEBUG（コピペ用）", debug_output, height=300)
-        
     # コピーしやすい表示
     st.code(result_text + "\n\n" + debug_output)
 
