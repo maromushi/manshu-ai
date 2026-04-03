@@ -2090,17 +2090,17 @@ if st.button("計算"):
             # ★ 壁崩壊（ここに入れる）
             # ===============================
             for i in range(1,4):
+
+                st_gap = Start[i] - Start[i-1]
             
-                st_gap = RawST[i] - RawST[i-1]
-            
-                # ノイズ除去
-                if abs(st_gap) < 0.015:
+                # ノイズ除去（緩める）
+                if abs(st_gap) < 0.01:
                     continue
             
                 collapse = False
                 level = 0
             
-                if st_gap < -0.05 and DoubleAttackScore > 0.06:
+                if st_gap < -0.04 and DoubleAttackScore > 0.06:
                     collapse = True
                     level = 2
             
@@ -2120,16 +2120,13 @@ if st.button("計算"):
                     cut3 = 0.85
                     boost = 1.08
             
-                # 崩壊艇削る
                 SecondAdj[i] *= cut2
                 ThirdAdj[i]  *= cut3
             
-                # 外に流す
                 for j in range(i+1,6):
                     SecondAdj[j] *= boost
                     ThirdAdj[j]  *= (boost - 0.03)
             
-                # 内も少し崩す
                 for j in range(0,i):
                     SecondAdj[j] *= 0.96
                     ThirdAdj[j]  *= 0.98
