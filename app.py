@@ -1755,6 +1755,47 @@ if st.button("計算"):
         ThirdAdj = [1.0]*6
         
         # ===============================
+        # ★ 攻めゾーン分割（最重要）
+        # ===============================
+        
+        weak_attack = 0.06 < DoubleAttackScore <= 0.09
+        mid_attack  = 0.09 < DoubleAttackScore <= 0.13
+        strong_attack = DoubleAttackScore > 0.13
+        
+        # ===============================
+        # ★ 内の処理
+        # ===============================
+        
+        if weak_attack:
+            if InsideSurvival[0] >= 0.45 and Start[0] >= Start[2] - 0.04:
+                SecondAdj[0] *= 1.20
+                ThirdAdj[0] *= 1.10
+        
+        elif mid_attack:
+            if InsideSurvival[0] >= 0.45 and P1[0] < 0.25:
+                SecondAdj[0] *= 1.12
+                ThirdAdj[0] *= 1.05
+        
+        elif strong_attack:
+            SecondAdj[0] *= 0.90
+        
+        # ===============================
+        # ★ 外の処理（これに統一）
+        # ===============================
+        
+        for i in range(4,6):
+        
+            if weak_attack:
+                SecondAdj[i] *= 0.92
+        
+            elif mid_attack:
+                SecondAdj[i] *= 0.95
+        
+            elif strong_attack:
+                if Start[i] >= Start[3] - 0.02:
+                    SecondAdj[i] *= 1.10
+        
+        # ===============================
         # ★ 攻め成立イン残り（追加）
         # ===============================
         if (
