@@ -1748,7 +1748,7 @@ if st.button("計算"):
         # ===============================
         for i in range(6):
             if i == 4 and CPI[4] >= 0.42:
-                ThirdScore[4] *= 1.05
+                ThirdScore[4] *= 1.02 # 1.05→1.02
         
         # ===============================
         # ★ 1の過剰残り抑制（ここ）
@@ -1871,14 +1871,6 @@ if st.button("計算"):
                             if Start[target] >= Start[attack_center] - 0.03:
                                 SecondAdj[target] *= 1.18
                 
-                    # ★ ここが本質（追加）
-                    if attack_center == 2 or attack_center == 3:
-                
-                        target = attack_center + 1
-                
-                        if target < 6:
-                            if Start[target] >= Start[attack_center] - 0.03:
-                                SecondAdj[target] *= 1.18
             
             # ★ 展開ライン2着（汎用版）
             if DoubleAttackScore > 0.05:
@@ -1949,22 +1941,6 @@ if st.button("計算"):
             
                 if Foot[i] >= 0.50 and CPI[i] >= 0.48:
                     ThirdAdj[i] *= 1.10
-            
-            # ===============================
-            # ★ 3着候補の繰り上げ（最重要）
-            # ===============================
-        
-            # ★ここに入れる
-            for i in range(6):
-        
-                if i != a:
-
-                    # ★ 外の序列補正（最重要）
-                    if i > a:
-                    
-                        if Start[i] >= Start[a] - 0.02:
-                    
-                            attack_center = max(range(2,6), key=lambda x: AttackIndex[x])
             
                         
             # ===============================
