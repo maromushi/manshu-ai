@@ -534,6 +534,18 @@ if st.button("計算"):
                 )
             ):
                 attackers.append(i)
+                
+        attackers = sorted(
+            attackers,
+            key=lambda x: (
+                0.35 * AttackIndex[x]
+                + 0.25 * Start[x]      # ←追加（超重要）
+                + 0.20 * Turn[x]
+                + 0.15 * Foot[x]
+                + 0.05 * Engine[x]
+            ),
+            reverse=True
+        )
 
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
@@ -1658,6 +1670,14 @@ if st.button("計算"):
         ThirdAdj = [1.0]*6
         
         # ===============================
+        # ★ 攻めゾーン分割（最重要）
+        # ===============================
+        
+        weak_attack = 0.06 < DoubleAttackScore <= 0.09
+        mid_attack  = 0.09 < DoubleAttackScore <= 0.13
+        strong_attack = DoubleAttackScore > 0.13
+        
+        # ===============================
         # ★ 外の暴走防止（最重要）
         # ===============================
         for i in range(4,6):
@@ -1682,13 +1702,7 @@ if st.button("計算"):
             else:
                 SecondAdj[i] *= 0.90
         
-        # ===============================
-        # ★ 攻めゾーン分割（最重要）
-        # ===============================
         
-        weak_attack = 0.06 < DoubleAttackScore <= 0.09
-        mid_attack  = 0.09 < DoubleAttackScore <= 0.13
-        strong_attack = DoubleAttackScore > 0.13
         
         # ===============================
         # ★ 内の処理
@@ -1706,22 +1720,6 @@ if st.button("計算"):
         
         elif strong_attack:
             SecondAdj[0] *= 0.90
-        
-        # ===============================
-        # ★ 外の処理（これに統一）
-        # ===============================
-        
-        for i in range(4,6):
-        
-            if weak_attack:
-                SecondAdj[i] *= 0.92
-        
-            elif mid_attack:
-                SecondAdj[i] *= 0.95
-        
-            elif strong_attack:
-                if Start[i] >= Start[3] - 0.02:
-                    SecondAdj[i] *= 1.10
         
         
         # ===============================
