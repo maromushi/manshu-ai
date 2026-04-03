@@ -1856,19 +1856,6 @@ if st.button("計算"):
             ThirdAdj = ThirdScore.copy()
             
             
-            # ===============================
-            # ★ まくり時の1残り分岐（追加）
-            # ===============================
-            if attack_center >= 2 and DoubleAttackScore > 0.05:
-            
-                if InsideResist < 0.45:
-                    SecondAdj[0] *= 0.80
-                    ThirdAdj[0] *= 0.75
-            
-                elif InsideResist >= 0.55:
-                    SecondAdj[0] *= 1.08
-                    ThirdAdj[0] *= 1.05
-            
                 # ===============================
                 # ★ 1の2着・3着残り補正（改良版）
                 # ===============================
