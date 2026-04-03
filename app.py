@@ -27,15 +27,14 @@ def normalize(values):
 data = st.text_area("抽出データを貼り付け")
 
 # ===============================
-# ★ 会場ボタン（ここに入れる）
+# ★ 会場ボタン（横並び完全版）
 # ===============================
 if "venue" not in st.session_state:
     st.session_state.venue = "浜名湖"
 
 st.markdown("### 会場選択")
 
-col1, col2, col3, col4 = st.columns(4)
-
+col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 with col1:
     if st.button("浜名湖"):
         st.session_state.venue = "浜名湖"
@@ -51,6 +50,18 @@ with col3:
 with col4:
     if st.button("丸亀"):
         st.session_state.venue = "丸亀"
+
+with col5:
+    if st.button("多摩川"):
+        st.session_state.venue = "多摩川"
+
+with col6:
+    if st.button("びわこ"):
+        st.session_state.venue = "びわこ"
+        
+with col7:
+    if st.button("常滑"):
+        st.session_state.venue = "常滑"
 
 venue = st.session_state.venue
 
@@ -1167,6 +1178,21 @@ if st.button("計算"):
             if DoubleAttackScore > 0.06:
                 FirstScore[2] *= 1.03
                 FirstScore[3] *= 1.04
+                
+        #常滑
+        elif venue == "常滑":
+
+            # 2を弱める（最重要）
+            FirstScore[1] *= 0.92
+        
+            # 3を少し上げる
+            if DoubleAttackScore > 0.04:
+                FirstScore[2] *= 1.05
+        
+            # 外は抑制
+            if DoubleAttackScore < 0.06:
+                FirstScore[4] *= 0.90
+                FirstScore[5] *= 0.85
         
         
         # ===============================
