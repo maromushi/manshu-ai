@@ -2140,6 +2140,31 @@ if st.button("計算"):
                         SecondAdj[j] *= 0.98
                         ThirdAdj[j]  *= 0.99
                         
+                if not collapse:
+                    continue
+            
+                # ===============================
+                # ★ 差し込み勝ち（ここに入れる）
+                # ===============================
+                attacker = i
+            
+                candidates = []
+            
+                for j in range(attacker):
+            
+                    if (
+                        Start[j] >= Start[attacker] - 0.03
+                        and Turn[j] >= 0.50
+                    ):
+                        candidates.append(j)
+            
+                if len(candidates) > 0:
+            
+                    best = max(candidates, key=lambda x: Turn[x] + Foot[x])
+            
+                    SecondAdj[best] *= 1.18
+                    ThirdAdj[best]  *= 1.12
+                        
                         
 
                 if i >= 4:
