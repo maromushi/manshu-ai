@@ -185,7 +185,7 @@ if st.button("計算"):
             and PlaceRate[i]==0
             and Motor2[i]==0
         ):
-            Active[i]=00
+            Active[i]=0
             
     # ★ 欠場艇の完全除外フラグ（追加）
     for i in range(6):
@@ -1589,8 +1589,9 @@ if st.button("計算"):
             LaneCPI.append(value)
             
         # ★ デバッグここ
-        debug_log = []
+        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
 
+        debug_log = []
         debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
@@ -1834,6 +1835,7 @@ if st.button("計算"):
             and CPI[5] > 0.45   # ←ここ上げろ
             and Foot[5] > 0.48  # ←これ追加
         ):
+            SecondAdj[5] *= 1.15
                 
                 
         
