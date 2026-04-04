@@ -648,6 +648,35 @@ if st.button("計算"):
         ])
         
         DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.6)
+        
+        # ===============================
+        # ★ 攻めタイプ判定（追加）
+        # ===============================
+        
+        main_atk = None
+        if len(attackers) > 0:
+            main_atk = attackers[0]
+        
+        AttackType = "sashi"
+        
+        if main_atk is not None:
+        
+            # 基本は3基準（2コース起点）
+            if main_atk >= 2:
+        
+                st_diff = Start[main_atk] - Start[main_atk-1]
+        
+                if st_diff > 0.04:
+                    AttackType = "makuri"
+        
+                elif st_diff > 0.01:
+                    AttackType = "makuri_sashi"
+        
+                else:
+                    AttackType = "sashi"
+        
+            else:
+                AttackType = "sashi"
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -1590,6 +1619,44 @@ if st.button("計算"):
             LaneCPI.append(value)
             
         # ===============================
+        # ★ 共倒れ（完全版・これ1つだけ）
+        # ===============================
+        
+        # ■① 攻め同士の共倒れ
+        if len(attackers) >= 2:
+        
+            a = attackers[0]
+            b = attackers[1]
+        
+            if (
+                abs(Turn[a] - Turn[b]) < 0.04
+                and abs(AttackIndex[a] - AttackIndex[b]) < 0.05
+            ):
+                das = DoubleAttackScore
+        
+                tomo_boost = 1.08 - 0.04 * min(1.0, das / 0.12)
+        
+                FS_mult[a] *= tomo_boost
+                FS_mult[b] *= tomo_boost
+        
+        
+        # ■② イン巻き込み共倒れ（1回だけ）
+        if DoubleAttackScore > 0.05:
+        
+            for atk in attackers:
+        
+                if atk >= 2:
+        
+                    st_gap = Start[atk] - Start[0]
+        
+                    if (
+                        -0.01 <= st_gap <= 0.03
+                        and Turn[atk] > Turn[0]
+                    ):
+                        FS_mult[0] *= 0.85
+                        FS_mult[atk] *= 0.92
+                        break   # ←これ重要（1回で止める）
+        # ===============================
         # ★ 展開主役スライド（汎用）
         # ===============================
         for i in range(2,6):
@@ -1683,66 +1750,49 @@ if st.button("計算"):
         st_loss = Start[0] < Start[2]
         weak_inside = InsideSurvival[0] < 0.55
         
-        if DoubleAttackScore > 0.10:
-            if st_loss:
-                SecondAdj[0] *= 0.78
-            else:
-                SecondAdj[0] *= 0.85
+        # ===============================
+        # ★ 攻めタイプ別イン残り（最重要）
+        # ===============================
         
-        elif DoubleAttackScore > 0.07:
-            if st_loss and weak_inside:
-                SecondAdj[0] *= 0.82
-            elif st_loss:
-                SecondAdj[0] *= 0.88
-            else:
-                SecondAdj[0] *= 0.92
+        if DoubleAttackScore > 0.05:
+        
+            if AttackType == "makuri":
+                SecondAdj[0] *= 0.80
+        
+            elif AttackType == "makuri_sashi":
+                SecondAdj[0] *= 0.95
+        
+            elif AttackType == "sashi":
+                SecondAdj[0] *= 1.12
         
         elif DoubleAttackScore > 0.05:
             if st_loss:
                 SecondAdj[0] *= 0.92
-                    
-        # ★ 攻め時のイン3着分岐（完成版）
-
+                
         if DoubleAttackScore > 0.05:
-        
-            st_loss = Start[0] < Start[2]
-            weak_inside = InsideSurvival[0] < 0.55
-        
-            if DoubleAttackScore > 0.10:
-                if st_loss:
-                    ThirdAdj[0] *= 0.85
-                else:
-                    ThirdAdj[0] *= 0.90
-        
-            elif DoubleAttackScore > 0.07:
-                if st_loss and weak_inside:
-                    ThirdAdj[0] *= 0.88
-                elif st_loss:
-                    ThirdAdj[0] *= 0.92
-                else:
-                    ThirdAdj[0] *= 0.95
-        
-            else:
-                if st_loss:
-                    ThirdAdj[0] *= 0.95
+    
+        if AttackType == "makuri":
+            ThirdAdj[0] *= 0.90
+    
+        elif AttackType == "makuri_sashi":
+            ThirdAdj[0] *= 1.00
+    
+        elif AttackType == "sashi":
+            ThirdAdj[0] *= 1.10
                     
                     
-        # ★ 展開6の2着強制浮上（ここが本命）
+         DoubleAttackScore > 0.06:
 
-        if DoubleAttackScore > 0.06:
-        
             if (
-                Start[5] == max(Start)   # 最速スタート
+                Start[5] == max(Start)
                 and Start[5] >= Start[3] - 0.02
             ):
-                SecondAdj[5] *= 1.25
-                
-        # ★ 展開6の3着流入
+                SecondAdj[5] *= 1.15   # ←少し下げる
         
         if DoubleAttackScore > 0.06:
         
             if Start[5] == max(Start):
-                ThirdAdj[5] *= 1.20
+                ThirdAdj[5] *= 1.10   # ←少し下げる
         
         # ===============================
         # ★ スタート主導の外流入（追加）
@@ -1937,14 +1987,34 @@ if st.button("計算"):
         if NoAttackFlag == 1:
             SecondAdj[5] *= 0.85
 
+        # ===============================
+        # ★ 2コース展開分岐（最重要）
+        # ===============================
+        
+        if DoubleAttackScore > 0.05:
+        
+            # ■まくり → 2は巻き込まれる
+            if AttackType == "makuri":
+                SecondAdj[1] *= 0.85
+        
+            # ■まくり差し → 2は残るか微妙
+            elif AttackType == "makuri_sashi":
+                SecondAdj[1] *= 0.98
+        
+            # ■差し → 2は主役
+            elif AttackType == "sashi":
+                SecondAdj[1] *= 1.15
+                
+        if DoubleAttackScore > 0.05:
 
-        # ===== 2の差し残り強化 =====
-
-        if (
-            CPI[1] >= CPI[0] - 0.05
-            and Fcount[1] == 0   # ←これ追加
-        ):
-            SecondAdj[1] *= 1.10
+            if AttackType == "makuri":
+                ThirdAdj[1] *= 0.90
+            
+            elif AttackType == "makuri_sashi":
+                ThirdAdj[1] *= 1.00
+            
+            elif AttackType == "sashi":
+                ThirdAdj[1] *= 1.10
             
         # ===============================
         # ★ F持ち最終補正（完全版）
