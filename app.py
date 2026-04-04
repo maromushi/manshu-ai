@@ -961,14 +961,6 @@ if st.button("計算"):
         ):
             FS_mult[0] *= 1.12
             
-        # ←ここに入れる👇
-        
-        # ★ 差し役なのにスタート遅い → 消す
-        if Start[1] < Start[0] - 0.02:
-            FS_mult[1] *= 0.85
-            
-        if Start[1] > Start[0] + 0.03:
-            FS_mult[1] *= 0.90
             
         # ===============================
         # ★ 攻め条件（←ここ！！！）
@@ -986,19 +978,6 @@ if st.button("計算"):
             and ExST[2] <= 0.05
         ):
             FS_mult[2] *= 1.15
-        
-        # ===============================
-        # ★ イン残り補正（追加）
-        # ===============================
-        if (
-            Skill[0] >= 0.50
-            and Start[0] >= 0.14
-            and DoubleAttackScore < 0.06   # ←追加
-        ):
-            FS_mult[0] *= 1.08
-        
-        if Start[0] >= 0.14:
-            FS_mult[0] *= 1.05
             
         # ===============================
         # ★ 3のまくり差し強化（超重要）
@@ -1011,11 +990,6 @@ if st.button("計算"):
         ):
             FS_mult[2] *= 1.20
             
-        # ===============================
-        # ★ 2のエンジン過信抑制（追加）
-        # ===============================
-        if Engine[1] > 0.60 and Turn[1] < Turn[2]:
-            FS_mult[1] *= 0.88
         
         # ===============================
         # ★ 外A1複数 → 軸分散モード
@@ -1033,9 +1007,6 @@ if st.button("計算"):
                 if CLS[i] == "A1":
                     FS_mult[i] *= 1.15   # 外の頭を引き上げ
         
-            # イン少し弱める
-            FS_mult[0] *= 0.90
-            FS_mult[1] *= 0.95
 
         # ===== イン最低保証 =====
         # イン最低保証（独立させる）
@@ -1091,24 +1062,6 @@ if st.button("計算"):
         elif DoubleAttackScore > 0.05:
         
             FS_mult[1] *= 0.97
-                
-            
-        # ===============================
-        # ★ 2の頭精査（これが正解）
-        # ===============================
-        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
-        
-        if FS_tmp[1] >= max(FS_tmp)*0.95:
-        
-            if DoubleAttackScore > 0.06:
-        
-                if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
-                    FS_mult[1] *= 0.82   # 両方 → 強く削る
-                else:
-                    FS_mult[1] *= 0.88
-        
-            elif Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
-                FS_mult[1] *= 0.90
             
             
         # ===============================
@@ -1306,36 +1259,6 @@ if st.button("計算"):
         
             else:
                 FS_mult[5] *= 0.80
-                
-        
-            # ===============================
-            # ★ 2号艇の主役補正（追加）
-            # ===============================
-            
-            if (
-                Turn[1] == min(Turn)   # 最速ターン
-                and LapTime[1] == min(LapTime)  # 周回も最速
-            ):
-                # 2が一番強い場合
-                FS_mult[1] *= 1.12
-            
-                # 逆に外の攻めすぎを抑える
-                FS_mult[4] *= 0.92
-                
-            
-
-
-        # ===============================
-        # ★ 攻め不発補正
-        # ===============================
-        if NoAttackFlag == 1:
-        
-            # イン残り強化
-            FS_mult[0] *= 1.15
-        
-            # 攻め側弱める
-            FS_mult[2] *= 0.92
-            FS_mult[3] *= 0.92
 
         # ★ 6の最終制御（絶対必要）
 
@@ -1599,18 +1522,6 @@ if st.button("計算"):
 
             LaneCPI.append(value)
             
-        
-        # ===============================
-        # ★ 壁崩壊イン殺し（汎用版）
-        # ===============================
-        for i in range(1,4):
-            if (
-                Start[i] < Start[i-1] - 0.05
-                and DoubleAttackScore > 0.04   # ←これ追加
-            ):
-                FS_mult[0] *= 0.70
-                break
-                
         # ===============================
         # ★ 展開主役スライド（汎用）
         # ===============================
@@ -1624,32 +1535,7 @@ if st.button("計算"):
                 )
             ):
                 FS_mult[i] *= 1.15
-
-        # ===============================
-        # ★ 攻め成立時の頭崩し（ここに入れる）
-        # ===============================
-        if (
-            DoubleAttackScore > 0.06
-            and InsideSurvival[0] < 0.60
-        ):
-            FS_mult[0] *= 0.85
         
-            # 外にチャンス
-            for i in range(2,6):
-                if Start[i] >= Start[1] - 0.03:
-                    FS_mult[i] *= 1.10
-        
-            
-        # ★ 攻め強度でイン補正分岐（これに置き換え）
-
-        if DoubleAttackScore > 0.10:
-            FS_mult[0] *= 0.85
-        
-        elif DoubleAttackScore > 0.07:
-            FS_mult[0] *= 0.88
-        
-        elif DoubleAttackScore > 0.05:
-            FS_mult[0] *= 0.92
         
         # ★ スタート負けイン追加（ここも続けて入れる）
         if DoubleAttackScore > 0.05:
@@ -1657,8 +1543,6 @@ if st.button("計算"):
                 FS_mult[0] *= 0.92
                 
         FS_tmp2 = [FirstScore[i]*FS_mult[i] for i in range(6)]
-                
-        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
 
         
         
