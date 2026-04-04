@@ -1326,7 +1326,9 @@ if st.button("計算"):
             FS_mult[3] *= 0.92
 
         # ★ 6の最終制御（絶対必要）
-        if FinalFirst[5] == max(FinalFirst) and not (Strong6 or Normal6):
+        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
+
+        if FS_tmp[5] == max(FS_tmp) and not (Strong6 or Normal6):
             FS_mult[5] *= 0.92
             
         # ===============================
@@ -1590,7 +1592,7 @@ if st.button("計算"):
         debug_log = []
 
         debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
-        debug_log.append(("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True)))
+        debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
         
