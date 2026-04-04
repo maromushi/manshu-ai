@@ -797,7 +797,6 @@ if st.button("計算"):
         # ===============================
         # ★ FirstScoreフラグ箱
         # ===============================
-        FS_mult = [1.0]*6
 
         FirstScore=[
         0.35*Start[i]+
@@ -833,36 +832,6 @@ if st.button("計算"):
             and DoubleAttackScore < 0.06
         ):
             NoAttackFlag = 1
-        
-        if NoAttackFlag == 1:
-        
-            # イン残りはするが“信頼しすぎない”
-            if InsideSurvival[0] >= 0.60:
-                FS_mult[0] *= 1.10
-            else:
-                FS_mult[0] *= 1.03
-
-            if Skill[0] < 0.50:
-                FS_mult[0] *= 0.92
-
-            # ★ ここ追加（これ）
-            if Skill[0] < 0.55:
-                FS_mult[0] *= 0.95
-        
-            FS_mult[1] *= 0.95
-            FS_mult[2] *= 0.95
-            FS_mult[3] *= 0.95
-        
-            FS_mult[4] *= 0.85
-            FS_mult[5] *= 0.75
-        
-            # 2・3は“攻めない”
-            FS_mult[1] *= 0.95
-            FS_mult[2] *= 0.95
-            FS_mult[3] *= 0.95
-        
-            # 外はさらに弱く
-            FS_mult[4] *= 0.85
         
         # ===============================
         # ① レースタイプ分岐（最重要）
@@ -1352,8 +1321,10 @@ if st.button("計算"):
             else:
                 FS_mult[5] *= 0.80
 
-        # ★ 6の最終制御（絶対必要）
+        # ★ 6の最終制御（絶対必要）     
 
+        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
+        
         if FS_tmp[5] == max(FS_tmp) and not (Strong6 or Normal6):
             FS_mult[5] *= 0.92
             
