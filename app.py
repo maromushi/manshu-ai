@@ -1063,7 +1063,7 @@ if st.button("計算"):
         # ===============================
         # ★ FS_tmp作成（←ここ追加）
         # ===============================
-        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
+    
             
         # ★ 2の頭制限（これが本命）
         # ★ 2の頭制限（分岐版）
@@ -1092,13 +1092,13 @@ if st.button("計算"):
         
             FS_mult[1] *= 0.97
                 
-        # ★ FS_tmp更新（←これも入れる）
-        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
             
         # ===============================
         # ★ 2の頭精査（これが正解）
         # ===============================
-        if FS_tmp2[1] >= max(FS_tmp2)*0.95:
+        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
+        
+        if FS_tmp[1] >= max(FS_tmp)*0.95:
         
             if DoubleAttackScore > 0.06:
         
@@ -1338,7 +1338,6 @@ if st.button("計算"):
             FS_mult[3] *= 0.92
 
         # ★ 6の最終制御（絶対必要）
-        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
 
         if FS_tmp[5] == max(FS_tmp) and not (Strong6 or Normal6):
             FS_mult[5] *= 0.92
