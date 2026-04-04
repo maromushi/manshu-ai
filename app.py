@@ -814,6 +814,100 @@ if st.button("計算"):
                 FS_mult[i] *= 0.95
             elif Fcount[i] >= 2:
                 FS_mult[i] *= 0.90
+                
+        # ===============================
+        # ★ FS_mult統一ブロック（完成形）
+        # ===============================
+        
+        FS_mult = [1.0]*6
+        
+        # ===============================
+        # ① レースタイプ分岐（最重要）
+        # ===============================
+        
+        if DoubleAttackScore > 0.10:
+            race_type = "strong_attack"
+        
+        elif DoubleAttackScore > 0.07:
+            race_type = "mid_attack"
+        
+        elif DoubleAttackScore > 0.05:
+            race_type = "weak_attack"
+        
+        elif NoAttackFlag == 1:
+            race_type = "no_attack"
+        
+        else:
+            race_type = "normal"
+        
+        
+        # ===============================
+        # ② レースタイプごとの処理
+        # ===============================
+        
+        if race_type == "strong_attack":
+        
+            FS_mult[0] *= 0.85
+            FS_mult[1] *= 0.90
+            FS_mult[2] *= 1.10
+            FS_mult[3] *= 1.12
+        
+        elif race_type == "mid_attack":
+        
+            FS_mult[0] *= 0.88
+            FS_mult[1] *= 0.93
+            FS_mult[2] *= 1.05
+            FS_mult[3] *= 1.06
+        
+        elif race_type == "weak_attack":
+        
+            FS_mult[0] *= 0.92
+            FS_mult[1] *= 0.97
+        
+        elif race_type == "no_attack":
+        
+            FS_mult[0] *= 1.08
+            FS_mult[1] *= 0.95
+            FS_mult[2] *= 0.95
+            FS_mult[3] *= 0.95
+        
+        else:  # normal
+        
+            FS_mult[0] *= 1.10
+        
+        
+        # ===============================
+        # ③ 個別性能補正（ここだけ許可）
+        # ===============================
+        
+        # イン強いなら少し上げる
+        if (
+            Skill[0] >= 0.55
+            and Engine[0] >= 0.50
+        ):
+            FS_mult[0] *= 1.05
+        
+        # 3が攻め役なら強化
+        if (
+            AttackIndex[2] >= AttackIndex[1]
+            and DoubleAttackScore > 0.05
+        ):
+            FS_mult[2] *= 1.08
+        
+        # 4が明確に強いなら
+        if (
+            Turn[3] >= Turn[1]
+            and Foot[3] >= Foot[1]
+            and DoubleAttackScore > 0.06
+        ):
+            FS_mult[3] *= 1.08
+        
+        
+        # ===============================
+        # ④ 最終スコア
+        # ===============================
+        
+        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
         # ===============================
         # ★ 主役取りこぼし（最重要）
