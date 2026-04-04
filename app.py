@@ -2685,7 +2685,9 @@ if st.button("計算"):
         import traceback
         st.write("ERROR:", e)
         st.code(traceback.format_exc())
-        st.stop()os2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex) 
+        st.stop()
+
+        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex) 
 
     ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
     P1 = P1_ex
