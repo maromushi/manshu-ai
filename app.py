@@ -677,6 +677,25 @@ if st.button("計算"):
         
             else:
                 AttackType = "sashi"
+                
+        # ===============================
+        # ★ 攻め失敗補正（調整版）
+        # ===============================
+        
+        if AttackFail == 1:
+        
+            fail_strength = min(1.0, DoubleAttackScore / 0.10)
+        
+            # ■イン復活（強すぎ防止）
+            SecondAdj[0] *= (1.08 + 0.04 * (1 - fail_strength))
+            ThirdAdj[0] *= (1.05 + 0.03 * (1 - fail_strength))
+        
+            # ■2の復活（軽め）
+            SecondAdj[1] *= (1.04 + 0.03 * (1 - fail_strength))
+        
+            # ■攻め役は軽く削るだけ
+            for atk in attackers:
+                SecondAdj[atk] *= 0.93
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -1625,8 +1644,14 @@ if st.button("計算"):
         # ■① 攻め同士の共倒れ
         if len(attackers) >= 2:
         
-            a = attackers[0]
-            b = attackers[1]
+            atk_sorted = sorted(
+                attackers,
+                key=lambda x: AttackIndex[x],
+                reverse=True
+            )
+            
+            a = atk_sorted[0]
+            b = atk_sorted[1]
         
             if (
                 abs(Turn[a] - Turn[b]) < 0.04
@@ -1653,8 +1678,8 @@ if st.button("計算"):
                         -0.01 <= st_gap <= 0.03
                         and Turn[atk] > Turn[0]
                     ):
-                        FS_mult[0] *= 0.85
-                        FS_mult[atk] *= 0.92
+                        FS_mult[0] *= 0.88
+                        FS_mult[atk] *= 0.94
                         break   # ←これ重要（1回で止める）
         # ===============================
         # ★ 展開主役スライド（汎用）
@@ -2677,6 +2702,23 @@ if st.button("計算"):
             else:
                 SecondAdj[5] *= 0.82
                 ThirdAdj[5] *= 0.85
+                
+            # ===============================
+            # ★ 攻め失敗補正
+            # ===============================
+            
+            if AttackFail == 1:
+            
+                # イン復活
+                SecondAdj[0] *= 1.15
+                ThirdAdj[0] *= 1.10
+            
+                # 2も復活
+                SecondAdj[1] *= 1.08
+            
+                # 攻め役は削る
+                for atk in attackers:
+                    SecondAdj[atk] *= 0.90
                     
 
             second_scores = [
