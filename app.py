@@ -1068,19 +1068,29 @@ if st.button("計算"):
         # ★ 2の頭制限（これが本命）
         # ★ 2の頭制限（分岐版）
         if DoubleAttackScore > 0.10:
-            FS_mult[1] *= 0.88   # 強攻め → 2ほぼ消し
+
+            FS_mult[1] *= 0.88
         
-        elif DoubleAttackScore > 0.07:
-            FS_mult[1] *= 0.93   # 中攻め → 2かなり弱め
-        
-        elif DoubleAttackScore > 0.05:
-            FS_mult[1] *= 0.97   # 弱攻め → 軽く抑制
-            
-        if DoubleAttackScore > 0.07:
+            # ★ここに入れる
             if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
-                FS_mult[1] *= 0.90   # 4が強い時はさらに殺す
+                FS_mult[1] *= 0.90
             else:
                 FS_mult[1] *= 0.95
+        
+        
+        elif DoubleAttackScore > 0.07:
+        
+            FS_mult[1] *= 0.93
+        
+            if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
+                FS_mult[1] *= 0.90
+            else:
+                FS_mult[1] *= 0.95
+        
+        
+        elif DoubleAttackScore > 0.05:
+        
+            FS_mult[1] *= 0.97
                 
         # ★ FS_tmp更新（←これも入れる）
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
@@ -1090,12 +1100,14 @@ if st.button("計算"):
         # ===============================
         if FS_tmp2[1] >= max(FS_tmp2)*0.95:
         
-            # 攻め展開なら2は頭じゃない
             if DoubleAttackScore > 0.06:
-                FS_mult[1] *= 0.88
         
-            # 4が強いなら2は頭じゃない
-            if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
+                if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
+                    FS_mult[1] *= 0.82   # 両方 → 強く削る
+                else:
+                    FS_mult[1] *= 0.88
+        
+            elif Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
                 FS_mult[1] *= 0.90
             
             
@@ -1345,16 +1357,16 @@ if st.button("計算"):
         # ===============================
         
         if NoAttackFlag == 0:
-
-            if DoubleAttackScore > 0.09:
+        
+            if DoubleAttackScore > 0.10:
                 FS_mult[2] *= 1.10
                 FS_mult[3] *= 1.12
                 FS_mult[0] *= 0.92
         
-            elif DoubleAttackScore > 0.04:
+            elif DoubleAttackScore > 0.07:
                 FS_mult[2] *= 1.05
                 FS_mult[3] *= 1.06
-                FS_mult[0] *= 0.98   # ←ここが本質
+                FS_mult[0] *= 0.98
         
             else:
                 FS_mult[0] *= 1.05
@@ -1722,28 +1734,26 @@ if st.button("計算"):
         
         # ★ 攻め時のイン2着分岐（完成版）
 
-        if DoubleAttackScore > 0.05:
+        st_loss = Start[0] < Start[2]
+        weak_inside = InsideSurvival[0] < 0.55
         
-            st_loss = Start[0] < Start[2]
-            weak_inside = InsideSurvival[0] < 0.55
-        
-            if DoubleAttackScore > 0.10:
-                if st_loss:
-                    SecondAdj[0] *= 0.78
-                else:
-                    SecondAdj[0] *= 0.85
-        
-            elif DoubleAttackScore > 0.07:
-                if st_loss and weak_inside:
-                    SecondAdj[0] *= 0.82
-                elif st_loss:
-                    SecondAdj[0] *= 0.88
-                else:
-                    SecondAdj[0] *= 0.92
-        
+        if DoubleAttackScore > 0.10:
+            if st_loss:
+                SecondAdj[0] *= 0.78
             else:
-                if st_loss:
-                    SecondAdj[0] *= 0.92
+                SecondAdj[0] *= 0.85
+        
+        elif DoubleAttackScore > 0.07:
+            if st_loss and weak_inside:
+                SecondAdj[0] *= 0.82
+            elif st_loss:
+                SecondAdj[0] *= 0.88
+            else:
+                SecondAdj[0] *= 0.92
+        
+        elif DoubleAttackScore > 0.05:
+            if st_loss:
+                SecondAdj[0] *= 0.92
                     
         # ★ 攻め時のイン3着分岐（完成版）
 
