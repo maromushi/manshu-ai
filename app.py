@@ -1088,7 +1088,7 @@ if st.button("計算"):
         # ===============================
         # ★ 2の頭精査（これが正解）
         # ===============================
-        if FS_tmp[1] >= max(FS_tmp)*0.95:
+        if FS_tmp2[1] >= max(FS_tmp2)*0.95:
         
             # 攻め展開なら2は頭じゃない
             if DoubleAttackScore > 0.06:
@@ -1588,14 +1588,6 @@ if st.button("計算"):
 
             LaneCPI.append(value)
             
-        # ★ デバッグここ
-        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
-
-        debug_log = []
-        debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
-        debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
-        debug_log.append(("CPI", [round(x,3) for x in CPI]))
-        debug_log.append(("Start", [round(x,3) for x in Start]))
         
         # ===============================
         # ★ 壁崩壊イン殺し（汎用版）
@@ -1653,8 +1645,22 @@ if st.button("計算"):
             if Start[0] < max(Start[1:4]):
                 FS_mult[0] *= 0.92
                 
+        FS_tmp2 = [FirstScore[i]*FS_mult[i] for i in range(6)]
+                
         FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
 
+        
+        
+        #デバック
+        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
+
+        debug_log = []
+        debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
+        debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
+        debug_log.append(("CPI", [round(x,3) for x in CPI]))
+        debug_log.append(("Start", [round(x,3) for x in Start]))
+        
+        
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
         
         P1 = [
@@ -1916,13 +1922,16 @@ if st.button("計算"):
         # ★ 展開拾い（複数攻め）
         # ===============================
         if DoubleAttackScore > 0.08:   # ←これ追加
-            main_atk = attackers[0]
+            if len(attackers) > 0:
+                main_atk = attackers[0]
+            else:
+                main_atk = None
         
-            target = main_atk + 1
-        
-            if target < 6:
-                SecondAdj[target] *= 1.10
-                ThirdAdj[target] *= 1.15
+            if main_atk is not None:
+                target = main_atk + 1
+                if target < 6:
+                    SecondAdj[target] *= 1.10
+                    ThirdAdj[target] *= 1.15
         
         
         # ===============================
