@@ -1060,6 +1060,11 @@ if st.button("計算"):
             FS_mult[1] *= 1.01
             FS_mult[0] *= 0.99
             
+        # ===============================
+        # ★ FS_tmp作成（←ここ追加）
+        # ===============================
+        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
+            
         # ★ 2の頭制限（これが本命）
         # ★ 2の頭制限（分岐版）
         if DoubleAttackScore > 0.10:
@@ -1076,6 +1081,9 @@ if st.button("計算"):
                 FS_mult[1] *= 0.90   # 4が強い時はさらに殺す
             else:
                 FS_mult[1] *= 0.95
+                
+        # ★ FS_tmp更新（←これも入れる）
+        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
             
         # ===============================
         # ★ 2の頭精査（これが正解）
@@ -1318,7 +1326,7 @@ if st.button("計算"):
             FS_mult[3] *= 0.92
 
         # ★ 6の最終制御（絶対必要）
-        if FirstScore[5] == max(FirstScore) and not (Strong6 or Normal6):
+        if FinalFirst[5] == max(FinalFirst) and not (Strong6 or Normal6):
             FS_mult[5] *= 0.92
             
         # ===============================
@@ -1581,7 +1589,7 @@ if st.button("計算"):
         # ★ デバッグここ
         debug_log = []
 
-        debug_log.append(("FirstScore", [round(x,3) for x in FirstScore]))
+        debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
         debug_log.append(("順位", sorted(range(6), key=lambda i: FirstScore[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
@@ -1642,14 +1650,13 @@ if st.button("計算"):
             if Start[0] < max(Start[1:4]):
                 FS_mult[0] *= 0.92
                 
-        TotalFirst = sum([FirstScore[i] for i in range(6) if Active[i]==1])
+        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
 
-        if TotalFirst <= 0:
-            TotalFirst = 1e-6
-                
+        TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
+        
         P1 = [
-        (FirstScore[i]/TotalFirst) if Active[i]==1 else 0
-        for i in range(6)
+            (FinalFirst[i]/TotalFirst) if Active[i]==1 else 0
+            for i in range(6)
         ]
 
         # ===============================
@@ -2256,7 +2263,7 @@ if st.button("計算"):
             # ★ イン中間残り（精度用）
             # ===============================
             if (
-                FirstScore[0] < max(FirstScore) * 0.95   # 頭は弱い
+                FinalFirst[0] < max(FinalFirst) * 0.95   # 頭は弱い
                 and FirstScore[0] > max(FirstScore) * 0.75  # でも弱すぎない
                 and InsideSurvival[0] >= 0.50
             ):
