@@ -1038,19 +1038,34 @@ if st.button("計算"):
 
         # ===== 2差し直撃補正（最重要） =====
 
-        #if CPI[1] >= CPI[0] - 0.03 and Start[1] <= Start[0] + 0.02:
-
-            #FirstScore[1] *= 1.12
-            #FirstScore[0] *= 0.92
-
-        elif CPI[1] >= CPI[0] - 0.06 and Start[1] <= Start[0] + 0.05:
-
-            FirstScore[1] *= 1.03
-            FirstScore[0] *= 0.95
+        # ②（メイン差し）
+        elif (
+            CPI[1] >= CPI[0] - 0.06
+            and Start[1] <= Start[0] + 0.05
+            and DoubleAttackScore < 0.07
+        ):
+            FirstScore[1] *= 1.02
+            FirstScore[0] *= 0.97
+        
+        # ③（弱い差し拾い）
+        elif (
+            CPI[1] >= CPI[0] - 0.10
+            and Start[1] <= Start[0] + 0.07
+            and DoubleAttackScore < 0.06
+        ):
+            FirstScore[1] *= 1.01
+            FirstScore[0] *= 0.99
             
         # ★ 2の頭制限（これが本命）
-        if DoubleAttackScore > 0.06:
-            FirstScore[1] *= 0.96
+        # ★ 2の頭制限（分岐版）
+        if DoubleAttackScore > 0.10:
+            FirstScore[1] *= 0.88   # 強攻め → 2ほぼ消し
+        
+        elif DoubleAttackScore > 0.07:
+            FirstScore[1] *= 0.93   # 中攻め → 2かなり弱め
+        
+        elif DoubleAttackScore > 0.05:
+            FirstScore[1] *= 0.97   # 弱攻め → 軽く抑制
             
         # ===============================
         # ★ 2の頭精査（これが正解）
