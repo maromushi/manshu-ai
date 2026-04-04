@@ -1817,9 +1817,9 @@ if st.button("計算"):
         if (
             DoubleAttackScore > 0.10
             and Start[5] == max(Start)
-            and CPI[5] > 0.20
+            and CPI[5] > 0.45   # ←ここ上げろ
+            and Foot[5] > 0.48  # ←これ追加
         ):
-            SecondAdj[5] *= 1.10
                 
                 
         
@@ -1899,15 +1899,14 @@ if st.button("計算"):
         # ===============================
         # ★ 展開拾い（複数攻め）
         # ===============================
-        if DoubleAttackScore > 0.07:
+        if DoubleAttackScore > 0.08:   # ←これ追加
+            main_atk = attackers[0]
         
-            for atk in attackers:
+            target = main_atk + 1
         
-                target = atk + 1
-        
-                if target < 6:
-                    SecondAdj[target] *= 1.10
-                    ThirdAdj[target] *= 1.20
+            if target < 6:
+                SecondAdj[target] *= 1.10
+                ThirdAdj[target] *= 1.15
         
         
         # ===============================
