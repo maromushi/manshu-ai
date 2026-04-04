@@ -1033,13 +1033,12 @@ if st.button("計算"):
             FirstScore[1] *= 0.95
 
         # ===== イン最低保証 =====
+        # イン最低保証（独立させる）
         if Skill[0] >= 0.55 and Engine[0] >= 0.50:
             FirstScore[0] *= 1.08
-
-        # ===== 2差し直撃補正（最重要） =====
-
+        
         # ②（メイン差し）
-        elif (
+        if (
             CPI[1] >= CPI[0] - 0.06
             and Start[1] <= Start[0] + 0.05
             and DoubleAttackScore < 0.07
@@ -1047,7 +1046,7 @@ if st.button("計算"):
             FirstScore[1] *= 1.02
             FirstScore[0] *= 0.97
         
-        # ③（弱い差し拾い）
+        # ③（弱い差し）
         elif (
             CPI[1] >= CPI[0] - 0.10
             and Start[1] <= Start[0] + 0.07
@@ -1620,11 +1619,7 @@ if st.button("計算"):
             for i in range(2,6):
                 if Start[i] >= Start[1] - 0.03:
                     FirstScore[i] *= 1.10
-
-        TotalFirst = sum([FirstScore[i] for i in range(6) if Active[i]==1])
-
-        if TotalFirst <= 0:
-            TotalFirst = 1e-6
+        
             
         # ★ 攻め強度でイン補正分岐（これに置き換え）
 
@@ -1641,6 +1636,11 @@ if st.button("計算"):
         if DoubleAttackScore > 0.05:
             if Start[0] < max(Start[1:4]):
                 FirstScore[0] *= 0.92
+                
+        TotalFirst = sum([FirstScore[i] for i in range(6) if Active[i]==1])
+
+        if TotalFirst <= 0:
+            TotalFirst = 1e-6
                 
         P1 = [
         (FirstScore[i]/TotalFirst) if Active[i]==1 else 0
