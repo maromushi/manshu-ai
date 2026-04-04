@@ -1321,7 +1321,11 @@ if st.button("計算"):
             else:
                 FS_mult[5] *= 0.80
 
-        # ★ 6の最終制御（絶対必要）     
+        # ★ 6の最終制御（絶対必要）  
+        if len(FirstScore) != 6 or len(FS_mult) != 6:
+            st.write("長さエラー", len(FirstScore), len(FS_mult))
+            st.stop()
+           
 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
@@ -1604,10 +1608,6 @@ if st.button("計算"):
         if DoubleAttackScore > 0.05:
             if Start[0] < max(Start[1:4]):
                 FS_mult[0] *= 0.92
-                
-        FS_tmp2 = [FirstScore[i]*FS_mult[i] for i in range(6)]
-
-        
         
         #デバック
         FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
@@ -2677,8 +2677,15 @@ if st.button("計算"):
     if len(order_ex)!=6:
         order_ex=[0,1,2,3,4,5]
 
-    res_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
-    res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex) 
+    try:
+        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
+        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex)
+    
+    except Exception as e:
+        import traceback
+        st.write("ERROR:", e)
+        st.code(traceback.format_exc())
+        st.stop()os2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex) 
 
     ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
     P1 = P1_ex
