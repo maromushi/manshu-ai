@@ -1067,6 +1067,12 @@ if st.button("計算"):
         elif DoubleAttackScore > 0.05:
             FirstScore[1] *= 0.97   # 弱攻め → 軽く抑制
             
+        if DoubleAttackScore > 0.07:
+            if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
+                FirstScore[1] *= 0.90   # 4が強い時はさらに殺す
+            else:
+                FirstScore[1] *= 0.95
+            
         # ===============================
         # ★ 2の頭精査（これが正解）
         # ===============================
