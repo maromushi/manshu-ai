@@ -1085,6 +1085,11 @@ if st.button("計算"):
             and DoubleAttackScore > 0.06
         ):
             FS_mult[3] *= 1.08
+            
+        # 4・5コースの“強い時だけ”頭許可
+        for i in range(6):
+            if i >= 4 and CPI[i] >= 0.50:
+                FS_mult[i] *= 1.10
         
         # ===============================
         # ★ 主役取りこぼし（最重要）
@@ -1963,7 +1968,8 @@ if st.button("計算"):
             if AttackFailA == 0:
         
                 for i in range(a+1, 6):
-                    SecondAdj[i] *= 1.10
+                    if CPI[i] >= 0.50:
+                        SecondAdj[i] *= 1.10
         
         
         # Bの後ろ
