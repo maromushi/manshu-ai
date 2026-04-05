@@ -2394,8 +2394,8 @@ if st.button("計算"):
                 ):
             
                     # 攻め役を少し削る
-                    SecondAdj[main] *= 0.92
-                    SecondAdj[sub]  *= 0.92
+                    SecondAdj[main] *= 0.96
+                    SecondAdj[sub]  *= 0.96
                 
                     ThirdAdj[main] *= 0.95
                     ThirdAdj[sub]  *= 0.95
@@ -2743,22 +2743,6 @@ if st.button("計算"):
                 SecondAdj[5] *= 0.82
                 ThirdAdj[5] *= 0.85
                 
-            # ===============================
-            # ★ 攻め失敗補正
-            # ===============================
-            
-            if AttackFail == 1:
-            
-                # イン復活
-                SecondAdj[0] *= 1.15
-                ThirdAdj[0] *= 1.10
-            
-                # 2も復活
-                SecondAdj[1] *= 1.08
-            
-                # 攻め役は削る
-                for atk in attackers:
-                    SecondAdj[atk] *= 0.90
                     
 
             second_scores = [
