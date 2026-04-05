@@ -650,6 +650,17 @@ if st.button("計算"):
         DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.6)
         
         # ===============================
+        # ★ 攻め不発（最重要）
+        # ===============================
+        NoAttackFlag = 0
+
+        if (
+            StartSpread < 0.08
+            and DoubleAttackScore < 0.06
+        ):
+            NoAttackFlag = 1
+        
+        # ===============================
         # ★ 攻めタイプ判定（追加）
         # ===============================
         
@@ -952,16 +963,7 @@ if st.button("計算"):
                     FS_mult[0] *= 0.82
                     break
         
-        # ===============================
-        # ★ 攻め不発（最重要）
-        # ===============================
-        NoAttackFlag = 0
-
-        if (
-            StartSpread < 0.08
-            and DoubleAttackScore < 0.06
-        ):
-            NoAttackFlag = 1
+        
         
         # ===============================
         # ① レースタイプ分岐（最重要）
@@ -1721,12 +1723,6 @@ if st.button("計算"):
             LaneCPI.append(value)
         
         
-        
-        # ★ スタート負けイン追加（ここも続けて入れる）
-        if DoubleAttackScore > 0.05:
-            if Start[0] < max(Start[1:4]):
-                FS_mult[0] *= 0.92
-        
         #デバック
         FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
 
@@ -2350,8 +2346,14 @@ if st.button("計算"):
         # ===============================
         # ★ 非頭艇の残り補正（最重要）
         # ===============================
+        
+        BaseSecond = SecondAdj.copy()
+        BaseThird  = ThirdAdj.copy()
             
         for a in range(6):
+            
+            SecondAdj = BaseSecond.copy()
+            ThirdAdj  = BaseThird.copy()
 
             if Active[a] == 0:
                 continue
