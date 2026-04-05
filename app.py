@@ -678,6 +678,16 @@ if st.button("計算"):
             else:
                 AttackType = "sashi"
                 
+        # ★ 攻め失敗フラグ
+        AttackFail = 0
+        
+        if DoubleAttackScore > 0.05:
+            if len(attackers) > 0:
+                atk = attackers[0]
+        
+                if Start[atk] < Start[atk-1] - 0.03:
+                    AttackFail = 1
+                
         # ===============================
         # ★ 攻め失敗補正（調整版）
         # ===============================
@@ -1798,13 +1808,14 @@ if st.button("計算"):
                 ThirdAdj[0] *= 1.10
                     
                     
-         DoubleAttackScore > 0.06:
-
+         # ★ 展開6の2着
+        if DoubleAttackScore > 0.06:
+        
             if (
                 Start[5] == max(Start)
                 and Start[5] >= Start[3] - 0.02
             ):
-                SecondAdj[5] *= 1.15   # ←少し下げる
+                SecondAdj[5] *= 1.15
         
         if DoubleAttackScore > 0.06:
         
