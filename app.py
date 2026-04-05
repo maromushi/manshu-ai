@@ -944,6 +944,9 @@ if st.button("計算"):
         else:  # normal
         
             FS_mult[0] *= 1.10
+            
+        if AttackFail == 1:
+            FS_mult[0] *= 1.08
         
         
         # ===============================
