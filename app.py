@@ -934,7 +934,23 @@ if st.button("計算"):
                 tomo_boost = 1.06 - 0.03 * min(1.0, das / 0.12)
         
                 FS_mult[a] *= tomo_boost
-                FS_mult[b] *= tomo_boost  
+                FS_mult[b] *= tomo_boost
+                
+        # ===============================
+        # ★ イン流れ（複数攻め版）
+        # ===============================
+        if DoubleAttackScore > 0.05:
+        
+            for atk in attackers:
+        
+                st_gap = Start[atk] - Start[0]
+        
+                if (
+                    -0.01 <= st_gap <= 0.03
+                    and Turn[0] < Turn[atk]
+                ):
+                    FS_mult[0] *= 0.75
+                    break
         
         # ===============================
         # ★ 攻め不発（最重要）
@@ -1021,20 +1037,7 @@ if st.button("計算"):
             b = attackers[1]
             if AttackFailB == 1:
                 FS_mult[b] *= 0.93
-            
-        
-        # ★ 攻め成功でもイン残る（修正版）
-
-        if DoubleAttackScore > 0.08 and len(attackers) > 0:
-        
-            best_atk = max(attackers, key=lambda x: AttackIndex[x])
-        
-            if (
-                Start[0] >= Start[best_atk] - 0.02
-                and InsideSurvival[0] >= 0.50
-            ):
-                FS_mult[0] *= 1.06
-        
+                
         # ===============================
         # ③ 個別性能補正（ここだけ許可）
         # ===============================
@@ -1060,6 +1063,21 @@ if st.button("計算"):
             and DoubleAttackScore > 0.06
         ):
             FS_mult[3] *= 1.08
+        
+            
+        
+        # ★ 攻め成功でもイン残る（修正版）
+
+        if DoubleAttackScore > 0.08 and len(attackers) > 0:
+        
+            best_atk = max(attackers, key=lambda x: AttackIndex[x])
+        
+            if (
+                Start[0] >= Start[best_atk] - 0.02
+                and InsideSurvival[0] >= 0.50
+            ):
+                FS_mult[0] *= 1.06
+        
         
         
         # ===============================
@@ -1515,21 +1533,7 @@ if st.button("計算"):
             ):
                 FS_mult[2] *= 1.06
                 
-        # ===============================
-        # ★ イン流れ（複数攻め版）
-        # ===============================
-        if DoubleAttackScore > 0.05:
         
-            for atk in attackers:
-        
-                st_gap = Start[atk] - Start[0]
-        
-                if (
-                    -0.01 <= st_gap <= 0.03
-                    and Turn[0] < Turn[atk]
-                ):
-                    FS_mult[0] *= 0.75
-                    break
                     
         
 
