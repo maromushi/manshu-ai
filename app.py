@@ -1535,11 +1535,12 @@ if st.button("計算"):
                 
         # ★ FS_mult暴走防止（必須）
         for i in range(6):
-            FS_mult[i] = max(0.65, min(1.35, FS_mult[i]))
-
-        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
-                    
+            FS_mult[i] = max(0.65, min(1.35, FS_mult[i]))              
         
+        # ===============================
+        # ★ FS_mult① 確定（ここで一旦固定）
+        # ===============================
+        FS_mult_base = FS_mult.copy()
 
         # ===============================
         # ATTACK BOOST
@@ -1730,7 +1731,7 @@ if st.button("計算"):
         
         
         #デバック
-        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
+        FinalFirst = [FirstScore[i]*FS_mult_base[i] for i in range(6)]
 
         debug_log = []
         debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
@@ -2592,7 +2593,7 @@ if st.button("計算"):
                 ):   
             
                     # 頭も崩す（最重要）
-                    FS_mult[i] *= 0.70
+                    FS_mult_base[i] *= 0.70
             
                     # 本体削る
                     SecondAdj[i] *= 0.55
@@ -2632,9 +2633,9 @@ if st.button("計算"):
             
                     # スタート負けてたらもっと飛ぶ
                     if Start[0] < Start[attacker] - 0.02:
-                        FS_mult[0] *= 0.65
+                        FS_mult_base[0] *= 0.65
                     else:
-                        FS_mult[0] *= 0.75
+                        FS_mult_base[0] *= 0.75
             
                 # ===============================
                 # ★ 差し込み勝ち（ここに入れる）
