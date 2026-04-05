@@ -2977,6 +2977,26 @@ if st.button("計算"):
         TopGap = results[0][3] - results[1][3]
     else:
         TopGap = 0
+        
+    # ===============================
+    # ★ レース難易度判定
+    # ===============================
+    
+    top_p1 = max(P1)
+    top_gap = TopGap
+    
+    if top_p1 >= 0.38 and top_gap >= 0.08 and ChaosScore < 0.55:
+        RaceLevel = "solid"
+    
+    elif top_p1 >= 0.25 and ChaosScore < 0.70:
+        RaceLevel = "middle"
+    
+    else:
+        RaceLevel = "chaos"
+    
+    # 攻め強すぎは強制的に荒れ
+    if DoubleAttackScore > 0.12:
+        RaceLevel = "chaos"
 
 
     # =====================================
@@ -3107,6 +3127,8 @@ if st.button("計算"):
     ])
     
     st.markdown("### ▼ 買い目")
+    
+    st.write(f"レース判定：{RaceLevel}")
 
     for line in result_text.split("\n"):
         st.write(line)
