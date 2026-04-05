@@ -942,7 +942,7 @@ if st.button("計算"):
             ):
                 das = DoubleAttackScore
         
-                tomo_boost = 1.04 - 0.05 * min(1.0, das / 0.12)
+                tomo_boost = 1.06 - 0.04 * min(1.0, das / 0.12)
         
                 FS_mult[a] *= tomo_boost
                 FS_mult[b] *= tomo_boost
@@ -960,7 +960,7 @@ if st.button("計算"):
                     -0.01 <= st_gap <= 0.03
                     and Turn[0] < Turn[atk]
                 ):
-                    FS_mult[0] *= 0.82
+                    FS_mult[0] *= 0.86
                     break
         
         
@@ -969,7 +969,10 @@ if st.button("計算"):
         # ① レースタイプ分岐（最重要）
         # ===============================
         
-        if DoubleAttackScore > 0.10:
+        if NoAttackFlag == 1:
+            race_type = "no_attack"
+        
+        elif DoubleAttackScore > 0.10:
             race_type = "strong_attack"
         
         elif DoubleAttackScore > 0.07:
@@ -977,9 +980,6 @@ if st.button("計算"):
         
         elif DoubleAttackScore > 0.05:
             race_type = "weak_attack"
-        
-        elif NoAttackFlag == 1:
-            race_type = "no_attack"
         
         else:
             race_type = "normal"
