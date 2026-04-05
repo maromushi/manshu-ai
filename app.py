@@ -1330,7 +1330,7 @@ if st.button("計算"):
             for i in range(6):
                 Turn[i] *= 0.95
                 AttackIndex[i] *= 0.93
-                Start[i] *= 1.03
+            
                     
         # ===============================
         # ★ 会場差分補正（最終）
