@@ -931,7 +931,7 @@ if st.button("計算"):
             ):
                 das = DoubleAttackScore
         
-                tomo_boost = 1.06 - 0.03 * min(1.0, das / 0.12)
+                tomo_boost = 1.04 - 0.05 * min(1.0, das / 0.12)
         
                 FS_mult[a] *= tomo_boost
                 FS_mult[b] *= tomo_boost
@@ -949,7 +949,7 @@ if st.button("計算"):
                     -0.01 <= st_gap <= 0.03
                     and Turn[0] < Turn[atk]
                 ):
-                    FS_mult[0] *= 0.75
+                    FS_mult[0] *= 0.82
                     break
         
         # ===============================
@@ -1017,6 +1017,18 @@ if st.button("計算"):
         
             FS_mult[0] *= 1.10
             
+        # ★ 攻め成功でもイン残る（修正版）
+
+        if DoubleAttackScore > 0.08 and len(attackers) > 0:
+        
+            best_atk = max(attackers, key=lambda x: AttackIndex[x])
+        
+            if (
+                Start[0] >= Start[best_atk] - 0.02
+                and InsideSurvival[0] >= 0.50
+            ):
+                FS_mult[0] *= 1.06
+            
         # ===============================
         # ★ 攻め失敗イン復活（A/B分離）
         # ===============================
@@ -1063,22 +1075,6 @@ if st.button("計算"):
             and DoubleAttackScore > 0.06
         ):
             FS_mult[3] *= 1.08
-        
-            
-        
-        # ★ 攻め成功でもイン残る（修正版）
-
-        if DoubleAttackScore > 0.08 and len(attackers) > 0:
-        
-            best_atk = max(attackers, key=lambda x: AttackIndex[x])
-        
-            if (
-                Start[0] >= Start[best_atk] - 0.02
-                and InsideSurvival[0] >= 0.50
-            ):
-                FS_mult[0] *= 1.06
-        
-        
         
         # ===============================
         # ★ 主役取りこぼし（最重要）
