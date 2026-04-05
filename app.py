@@ -679,7 +679,7 @@ if st.button("計算"):
                 AttackType = "sashi"
                 
         # ===============================
-        # ★ 攻め失敗判定（汎用版）
+        # ★ 攻め失敗判定（最終版）
         # ===============================
         AttackFail = 0
         AttackSoftFail = 0
@@ -695,55 +695,13 @@ if st.button("計算"):
                 0.3 * (0.10 - DoubleAttackScore)
             )
         
-            if fail_score > 0.06:
+            if st_diff < -0.03 or fail_score > 0.06:
                 AttackFail = 1
         
             elif fail_score > 0.02:
                 AttackSoftFail = 1
-                    
-        # ===============================
-        # ★ 攻め失敗判定（2段階）
-        # ===============================
-        
-        AttackFail = 0
-        AttackSoftFail = 0
-        
-        if DoubleAttackScore > 0.05 and len(attackers) > 0:
-        
-            atk = attackers[0]
-        
-            st_diff = Start[atk] - Start[atk-1]
-        
-            # 完全失敗
-            if st_diff < -0.03:
-                AttackFail = 1
-        
-            # ズレ（←今回の本質）
-            st_diff = Start[atk] - Start[atk-1]
-
-            fail_score = (
-                0.7 * (-st_diff) +
-                0.3 * (0.10 - DoubleAttackScore)
-            )
                 
-        # ===============================
-        # ★ 攻め失敗補正（調整版）
-        # ===============================
         
-        if AttackFail == 1:
-        
-            fail_strength = min(1.0, DoubleAttackScore / 0.10)
-        
-            # ■イン復活（強すぎ防止）
-            SecondAdj[0] *= (1.08 + 0.04 * (1 - fail_strength))
-            ThirdAdj[0] *= (1.05 + 0.03 * (1 - fail_strength))
-        
-            # ■2の復活（軽め）
-            SecondAdj[1] *= (1.04 + 0.03 * (1 - fail_strength))
-        
-            # ■攻め役は軽く削るだけ
-            for atk in attackers:
-                SecondAdj[atk] *= 0.93
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -1829,6 +1787,25 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        
+        # ===============================
+        # ★ 攻め失敗補正（調整版）
+        # ===============================
+        
+        if AttackFail == 1:
+        
+            fail_strength = min(1.0, DoubleAttackScore / 0.10)
+        
+            # ■イン復活（強すぎ防止）
+            SecondAdj[0] *= (1.08 + 0.04 * (1 - fail_strength))
+            ThirdAdj[0] *= (1.05 + 0.03 * (1 - fail_strength))
+        
+            # ■2の復活（軽め）
+            SecondAdj[1] *= (1.04 + 0.03 * (1 - fail_strength))
+        
+            # ■攻め役は軽く削るだけ
+            for atk in attackers:
+                SecondAdj[atk] *= 0.93
         
         # ★ 攻め時の2残り復活（汎用版）
 
