@@ -34,7 +34,7 @@ if "venue" not in st.session_state:
 
 st.markdown("### 会場選択")
 
-labels = ["浜名湖","桐生","住之江","丸亀","多摩川","びわこ","常滑"]
+labels = ["浜名湖","桐生","住之江","丸亀","多摩川","びわこ","常滑","三国"]
 
 # 2列
 for i in range(0, len(labels), 2):
@@ -1326,6 +1326,12 @@ if st.button("計算"):
                 FS_mult[2] *= 1.04
                 FS_mult[3] *= 1.05
                 
+        if venue == "三国":
+            for i in range(6):
+                Turn[i] *= 0.95
+                AttackIndex[i] *= 0.93
+                Start[i] *= 1.03
+                    
         # ===============================
         # ★ 会場差分補正（最終）
         # ===============================
@@ -1393,6 +1399,25 @@ if st.button("計算"):
             if DoubleAttackScore < 0.06:
                 FS_mult[4] *= 0.90
                 FS_mult[5] *= 0.85
+                
+        # 三国
+                
+        if venue == "三国":
+
+            for i in range(6):
+        
+                # スタート主導で残る
+                if Start[i] >= max(Start) - 0.02:
+                    SecondAdj[i] *= 1.10
+                    ThirdAdj[i]  *= 1.12
+        
+                # 中央ゾーンはズレ拾い
+                if 2 <= i <= 4 and CPI[i] >= 0.45:
+                    ThirdAdj[i] *= 1.08
+        
+                # イン過信崩す
+                if i == 0 and DoubleAttackScore > 0.05:
+                    SecondAdj[0] *= 0.92
         
         
         # ===============================
