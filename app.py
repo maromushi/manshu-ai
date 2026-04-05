@@ -2593,12 +2593,12 @@ if st.button("計算"):
                 ):   
                 
                     # 頭も崩す → 2着3着へ移動
-                    SecondAdj[i] *= 0.50
-                    ThirdAdj[i]  *= 0.55
+                    SecondAdj[i] *= 0.75
+                    ThirdAdj[i]  *= 0.80
                 
                     # 本体削る
-                    SecondAdj[i] *= 0.55
-                    ThirdAdj[i]  *= 0.60
+                    SecondAdj[i] *= 0.70
+                    ThirdAdj[i]  *= 0.75
                 
                     # 外に強く流す
                     for j in range(i+1,6):
@@ -2628,9 +2628,9 @@ if st.button("計算"):
                         SecondAdj[j] *= 0.98
                         ThirdAdj[j]  *= 0.99
             
-                attacker = i
+                attacker = i if st_gap < -0.02 else None
 
-                if attacker >= 2 and DoubleAttackScore > 0.05:
+                if attacker is not None and attacker >= 2 and DoubleAttackScore > 0.05:
                 
                     if Start[0] < Start[attacker] - 0.02:
                         SecondAdj[0] *= 0.65
@@ -2641,7 +2641,7 @@ if st.button("計算"):
                 # ===============================
                 # ★ 差し込み勝ち（ここに入れる）
                 # ===============================
-                attacker = i
+                attacker = i if st_gap < -0.02 else None
             
                 candidates = []
             
