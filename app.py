@@ -1399,25 +1399,6 @@ if st.button("計算"):
             if DoubleAttackScore < 0.06:
                 FS_mult[4] *= 0.90
                 FS_mult[5] *= 0.85
-                
-        # 三国
-                
-        if venue == "三国":
-
-            for i in range(6):
-        
-                # スタート主導で残る
-                if Start[i] >= max(Start) - 0.02:
-                    SecondAdj[i] *= 1.10
-                    ThirdAdj[i]  *= 1.12
-        
-                # 中央ゾーンはズレ拾い
-                if 2 <= i <= 4 and CPI[i] >= 0.45:
-                    ThirdAdj[i] *= 1.08
-        
-                # イン過信崩す
-                if i == 0 and DoubleAttackScore > 0.05:
-                    SecondAdj[0] *= 0.92
         
         
         # ===============================
@@ -1821,6 +1802,23 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        
+        # ===============================
+        # ★ 会場補正2
+        # ===============================
+        if venue == "三国":
+        
+            for i in range(6):
+        
+                if Start[i] >= max(Start) - 0.02:
+                    SecondAdj[i] *= 1.10
+                    ThirdAdj[i]  *= 1.12
+        
+                if 2 <= i <= 4 and CPI[i] >= 0.45:
+                    ThirdAdj[i] *= 1.08
+        
+                if i == 0 and DoubleAttackScore > 0.05:
+                    SecondAdj[0] *= 0.92
         
         # ===============================
         # ★ 攻め失敗補正（調整版）
