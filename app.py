@@ -703,7 +703,7 @@ if st.button("計算"):
         
             a = main_attackers[0]
         
-            if a >= 1 and Start[a] < Start[a-1] - 0.03:
+            if a >= 1 and Start[a] < Start[a-1] - 0.025:
                 AttackFailA = 1
         
         
@@ -946,7 +946,7 @@ if st.button("計算"):
             ):
                 das = DoubleAttackScore
         
-                tomo_boost = 1.06 - 0.04 * min(1.0, das / 0.12)
+                tomo_boost = 1.02 + 0.06 * min(1.0, das / 0.12)
         
                 FS_mult[a] *= tomo_boost
                 FS_mult[b] *= tomo_boost
@@ -1025,7 +1025,11 @@ if st.button("計算"):
             
         # ★ 攻め成功でもイン残る（修正版）
 
-        if DoubleAttackScore > 0.08 and len(main_attackers) > 0:
+        if (
+            DoubleAttackScore > 0.08
+            and len(main_attackers) > 0
+            and AttackFailA == 0   # ←追加
+        ):
         
             best_atk = max(main_attackers, key=lambda x: AttackIndex[x])
         
