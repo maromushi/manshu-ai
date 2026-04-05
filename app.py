@@ -1781,6 +1781,7 @@ if st.button("計算"):
         
         if DoubleAttackScore > 0.05:
         
+            # ■2着（Second）
             if AttackType == "makuri":
                 SecondAdj[0] *= 0.80
         
@@ -1790,20 +1791,15 @@ if st.button("計算"):
             elif AttackType == "sashi":
                 SecondAdj[0] *= 1.12
         
-        elif DoubleAttackScore > 0.05:
-            if st_loss:
-                SecondAdj[0] *= 0.92
-                
-        if DoubleAttackScore > 0.05:
-    
-        if AttackType == "makuri":
-            ThirdAdj[0] *= 0.90
-    
-        elif AttackType == "makuri_sashi":
-            ThirdAdj[0] *= 1.00
-    
-        elif AttackType == "sashi":
-            ThirdAdj[0] *= 1.10
+            # ■3着（Third）
+            if AttackType == "makuri":
+                ThirdAdj[0] *= 0.90
+        
+            elif AttackType == "makuri_sashi":
+                ThirdAdj[0] *= 1.00
+        
+            elif AttackType == "sashi":
+                ThirdAdj[0] *= 1.10
                     
                     
          DoubleAttackScore > 0.06:
