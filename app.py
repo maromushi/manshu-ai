@@ -2584,33 +2584,33 @@ if st.button("計算"):
                 if abs(st_gap) < 0.01:
                     continue
             
-    # ===============================
-    # ■ 強崩壊（レース壊す）
-    # ===============================
-    if (
-        (st_gap < -0.04 and DoubleAttackScore > 0.06)
-        or (st_gap < -0.03 and Start[i] < Start[i-1] - 0.02)
-    ):   
-    
-        # 頭も崩す → 2着3着へ移動
-        SecondAdj[i] *= 0.50
-        ThirdAdj[i]  *= 0.55
-    
-        # 本体削る
-        SecondAdj[i] *= 0.55
-        ThirdAdj[i]  *= 0.60
-    
-        # 外に強く流す
-        for j in range(i+1,6):
-            SecondAdj[j] *= 1.25
-            ThirdAdj[j]  *= 1.20
-    
-        # 内も少し崩す
-        for j in range(0,i):
-            SecondAdj[j] *= 0.95
-            ThirdAdj[j]  *= 0.97
-    
-        continue
+                # ===============================
+                # ■ 強崩壊（レース壊す）
+                # ===============================
+                if (
+                    (st_gap < -0.04 and DoubleAttackScore > 0.06)
+                    or (st_gap < -0.03 and Start[i] < Start[i-1] - 0.02)
+                ):   
+                
+                    # 頭も崩す → 2着3着へ移動
+                    SecondAdj[i] *= 0.50
+                    ThirdAdj[i]  *= 0.55
+                
+                    # 本体削る
+                    SecondAdj[i] *= 0.55
+                    ThirdAdj[i]  *= 0.60
+                
+                    # 外に強く流す
+                    for j in range(i+1,6):
+                        SecondAdj[j] *= 1.25
+                        ThirdAdj[j]  *= 1.20
+                
+                    # 内も少し崩す
+                    for j in range(0,i):
+                        SecondAdj[j] *= 0.95
+                        ThirdAdj[j]  *= 0.97
+                
+                    continue
             
                 # ===============================
                 # ■ 弱崩壊（ズレるだけ）
