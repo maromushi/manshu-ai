@@ -687,6 +687,27 @@ if st.button("計算"):
         
                 if Start[atk] < Start[atk-1] - 0.03:
                     AttackFail = 1
+                    
+        # ===============================
+        # ★ 攻め失敗判定（2段階）
+        # ===============================
+        
+        AttackFail = 0
+        AttackSoftFail = 0
+        
+        if DoubleAttackScore > 0.05 and len(attackers) > 0:
+        
+            atk = attackers[0]
+        
+            st_diff = Start[atk] - Start[atk-1]
+        
+            # 完全失敗
+            if st_diff < -0.03:
+                AttackFail = 1
+        
+            # ズレ（←今回の本質）
+            elif st_diff < -0.01:
+                AttackSoftFail = 1
                 
         # ===============================
         # ★ 攻め失敗補正（調整版）
@@ -945,8 +966,14 @@ if st.button("計算"):
         
             FS_mult[0] *= 1.10
             
+        # ===============================
+        # ★ 攻め失敗イン復活（修正版）
+        # ===============================
         if AttackFail == 1:
-            FS_mult[0] *= 1.08
+            FS_mult[0] *= 1.10
+        
+        elif AttackSoftFail == 1:
+            FS_mult[0] *= 1.05
         
         
         # ===============================
@@ -1722,6 +1749,8 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
+        debug_log.append(("AttackFail", AttackFail))
+        debug_log.append(("AttackSoftFail", AttackSoftFail))
         
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
