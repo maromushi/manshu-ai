@@ -679,27 +679,29 @@ if st.button("計算"):
                 AttackType = "sashi"
                 
         # ===============================
-        # ★ 攻め失敗判定（最終版）
+        # ★ 攻め失敗（A/B分離）
         # ===============================
-        AttackFail = 0
-        AttackSoftFail = 0
         
-        if DoubleAttackScore > 0.05 and len(attackers) > 0:
+        AttackFailA = 0
+        AttackFailB = 0
         
-            atk = attackers[0]
+        # ■A（メイン攻め）
+        if len(attackers) >= 1:
         
-            st_diff = Start[atk] - Start[atk-1]
+            a = attackers[0]
         
-            fail_score = (
-                0.7 * (-st_diff) +
-                0.3 * (0.10 - DoubleAttackScore)
-            )
+            if a >= 1 and Start[a] < Start[a-1] - 0.03:
+                AttackFailA = 1
         
-            if st_diff < -0.03 or fail_score > 0.06:
-                AttackFail = 1
         
-            elif fail_score > 0.02:
-                AttackSoftFail = 1
+        # ■B（サブ攻め）
+        if len(attackers) >= 2:
+        
+            b = attackers[1]
+        
+            if b >= 1 and Start[b] < Start[b-1] - 0.03:
+                AttackFailB = 1
+        
                 
         
 
@@ -874,20 +876,54 @@ if st.button("計算"):
         # ★ FS_mult統一ブロック（完成形）
         # ===============================
         # ===============================
-        # ★ 共倒れ（完全版・これ1つだけ）
+        # ★ 共倒れ（A/B分離版）
         # ===============================
         
-        # ■① 攻め同士の共倒れ
+        if len(attackers) >= 1:
+        
+            # ===============================
+            # ■① 1 vs 攻めA
+            # ===============================
+            a = attackers[0]
+        
+            if a >= 2:
+        
+                st_gap = Start[a] - Start[0]
+        
+                if (
+                    -0.01 <= st_gap <= 0.03
+                    and Turn[a] > Turn[0]
+                ):
+                    FS_mult[0] *= 0.88
+                    FS_mult[a] *= 0.94
+        
+        
+        # ===============================
+        # ■② 1 vs 攻めB（2番手）
+        # ===============================
         if len(attackers) >= 2:
         
-            atk_sorted = sorted(
-                attackers,
-                key=lambda x: AttackIndex[x],
-                reverse=True
-            )
-            
-            a = atk_sorted[0]
-            b = atk_sorted[1]
+            b = attackers[1]
+        
+            if b >= 2:
+        
+                st_gap = Start[b] - Start[0]
+        
+                if (
+                    -0.01 <= st_gap <= 0.03
+                    and Turn[b] > Turn[0]
+                ):
+                    FS_mult[0] *= 0.92
+                    FS_mult[b] *= 0.96
+        
+        
+        # ===============================
+        # ■③ 攻めA vs 攻めB
+        # ===============================
+        if len(attackers) >= 2:
+        
+            a = attackers[0]
+            b = attackers[1]
         
             if (
                 abs(Turn[a] - Turn[b]) < 0.04
@@ -895,29 +931,10 @@ if st.button("計算"):
             ):
                 das = DoubleAttackScore
         
-                tomo_boost = 1.08 - 0.04 * min(1.0, das / 0.12)
+                tomo_boost = 1.06 - 0.03 * min(1.0, das / 0.12)
         
                 FS_mult[a] *= tomo_boost
-                FS_mult[b] *= tomo_boost
-        
-        
-        # ■② イン巻き込み共倒れ（1回だけ）
-        if DoubleAttackScore > 0.05:
-        
-            for atk in attackers:
-        
-                if atk >= 2:
-        
-                    st_gap = Start[atk] - Start[0]
-        
-                    if (
-                        -0.01 <= st_gap <= 0.03
-                        and Turn[atk] > Turn[0]
-                    ):
-                        FS_mult[0] *= 0.88
-                        FS_mult[atk] *= 0.94
-                        break   # ←これ重要（1回で止める）
-        
+                FS_mult[b] *= tomo_boost  
         
         # ===============================
         # ★ 攻め不発（最重要）
@@ -985,25 +1002,38 @@ if st.button("計算"):
             FS_mult[0] *= 1.10
             
         # ===============================
-        # ★ 攻め失敗イン復活（修正版）
+        # ★ 攻め失敗イン復活（A/B分離）
         # ===============================
-        if AttackFail == 1:
+        
+        if AttackFailA == 1:
             FS_mult[0] *= 1.10
         
-        elif AttackSoftFail == 1:
-            FS_mult[0] *= 1.06
+        elif AttackFailB == 1:
+            FS_mult[0] *= 1.05
+            
+        # 攻め側の失敗反映
+        if len(attackers) >= 1:
+            a = attackers[0]
+            if AttackFailA == 1:
+                FS_mult[a] *= 0.90
+        
+        if len(attackers) >= 2:
+            b = attackers[1]
+            if AttackFailB == 1:
+                FS_mult[b] *= 0.93
             
         
-        # ★ 攻め成功でもイン残る
+        # ★ 攻め成功でもイン残る（修正版）
+
         if DoubleAttackScore > 0.08 and len(attackers) > 0:
         
-            atk = attackers[0]
+            best_atk = max(attackers, key=lambda x: AttackIndex[x])
         
             if (
-                Start[0] >= Start[atk] - 0.02
+                Start[0] >= Start[best_atk] - 0.02
                 and InsideSurvival[0] >= 0.50
             ):
-                FS_mult[0] *= 1.08
+                FS_mult[0] *= 1.06
         
         # ===============================
         # ③ 個別性能補正（ここだけ許可）
@@ -1111,22 +1141,6 @@ if st.button("計算"):
         if NoAttackFlag == 1 and Start[0] < max(Start[1:4]):
             FS_mult[0] *= 0.90
 
-        # ===============================
-        # ★ 攻め競合（共倒れ）
-        # ===============================
-        if (
-            Turn[2] > 0.55
-            and Turn[3] > 0.55
-            and abs(Turn[2] - Turn[3]) < 0.04
-            and DoubleAttackScore > 0.08
-        ):
-            # 共倒れ
-            FS_mult[2] *= 0.90
-            FS_mult[3] *= 0.85
-        
-            # 外浮上（重要）
-            for i in range(4,6):
-                FS_mult[i] *= 1.05
         
         # ===============================
         # ★ イン安定補正（これが本命）
@@ -1705,21 +1719,7 @@ if st.button("計算"):
                     value *= (1+0.06*DoubleAttackScore)
 
             LaneCPI.append(value)
-            
         
-        # ===============================
-        # ★ 展開主役スライド（汎用）
-        # ===============================
-        for i in range(2,6):
-        
-            if (
-                Start[i] >= Start[i-1] - 0.03
-                and (
-                    AttackIndex[i] >= max(AttackIndex[2:6]) - 0.03
-                    or Turn[i] >= max(Turn[2:6]) - 0.03
-                )
-            ):
-                FS_mult[i] *= 1.15
         
         
         # ★ スタート負けイン追加（ここも続けて入れる）
@@ -1916,13 +1916,141 @@ if st.button("計算"):
                 
                 
         
-        # ★ 攻め成立時の前削り（汎用）
-
-        if DoubleAttackScore > 0.06:
+        # ===============================
+        # ★ 攻め成功 前削り（A/B分離）
+        # ===============================
         
-            for i in range(0,2):  # 1・2コース
-                if Start[i] < Start[2] - 0.02:
-                    SecondAdj[i] *= 0.88
+        # ■A（メイン攻め）
+        if len(attackers) >= 1:
+        
+            a = attackers[0]
+        
+            if AttackFailA == 0:  # 成功時のみ
+        
+                for i in range(a):
+                    if i == 0 and InsideSurvival[0] >= 0.50:
+                        continue  # インは例外（重要）
+        
+                    SecondAdj[i] *= 0.85
+        
+        
+        # ■B（サブ攻め）
+        if len(attackers) >= 2:
+        
+            b = attackers[1]
+        
+            if AttackFailB == 0:
+        
+                for i in range(b):
+                    if i == 0 and InsideSurvival[0] >= 0.50:
+                        continue
+        
+                    SecondAdj[i] *= 0.90
+                    
+        # ===============================
+        # ★ 攻め後ろ流入（A/B分離）
+        # ===============================
+        
+        # Aの後ろ
+        if len(attackers) >= 1:
+        
+            a = attackers[0]
+        
+            if AttackFailA == 0:
+        
+                for i in range(a+1, 6):
+                    SecondAdj[i] *= 1.10
+        
+        
+        # Bの後ろ
+        if len(attackers) >= 2:
+        
+            b = attackers[1]
+        
+            if AttackFailB == 0:
+        
+                for i in range(b+1, 6):
+                    SecondAdj[i] *= 1.05
+                    
+        # ===============================
+        # ★ 攻め後ろ流入（A/B分離）
+        # ===============================
+        
+        # Aの後ろ
+        if len(attackers) >= 1:
+        
+            a = attackers[0]
+        
+            if AttackFailA == 0:
+        
+                for i in range(a+1, 6):
+                    SecondAdj[i] *= 1.10
+        
+        
+        # Bの後ろ
+        if len(attackers) >= 2:
+        
+            b = attackers[1]
+        
+            if AttackFailB == 0:
+        
+                for i in range(b+1, 6):
+                    SecondAdj[i] *= 1.05
+        
+        
+        # ===============================
+        # 👇ここに追加（ThirdAdj）
+        # ===============================
+        
+        # ===============================
+        # ★ 攻め後ろ流入（3着 A/B分離）
+        # ===============================
+        
+        # A
+        if len(attackers) >= 1:
+        
+            a = attackers[0]
+        
+            if AttackFailA == 0:
+        
+                for i in range(a+1, 6):
+                    ThirdAdj[i] *= 1.12
+        
+        
+        # B
+        if len(attackers) >= 2:
+        
+            b = attackers[1]
+        
+            if AttackFailB == 0:
+        
+                for i in range(b+1, 6):
+                    ThirdAdj[i] *= 1.08
+                    
+        # ===============================
+        # ★ 前崩れ（3着 A/B分離）
+        # ===============================
+        
+        # A
+        if len(attackers) >= 1:
+        
+            a = attackers[0]
+        
+            if AttackFailA == 0:
+        
+                for i in range(a):
+                    ThirdAdj[i] *= 0.85
+        
+        
+        # B
+        if len(attackers) >= 2:
+        
+            b = attackers[1]
+        
+            if AttackFailB == 0:
+        
+                for i in range(b):
+                    ThirdAdj[i] *= 0.90
         
         
         # ===============================
@@ -2177,12 +2305,6 @@ if st.button("計算"):
                 if CPI[i] >= 0.45:
                     ThirdAdj[i] *= 1.18
         
-        # ★ 攻め役の失敗残り（超重要）
-        for i in range(6):
-
-            if i in [2,3]:
-                if DoubleAttackScore > 0.05:
-                    ThirdAdj[i] *= 1.12
     
         # ===============================
         # ★ インの2着・3着粘り復活
@@ -2195,16 +2317,6 @@ if st.button("計算"):
             SecondAdj[0] *= 1.12
             ThirdAdj[0] *= 1.08
         
-        # ===============================
-        # ★ 展開艇の3着流入（最重要）
-        # ===============================
-        for i in range(6):
-        
-            if (
-                ExST[i] <= 0.05
-                and DoubleAttackScore > 0.04
-            ):
-                ThirdAdj[i] *= 1.20
         
         # ===============================
         # ★ 3と4が完全に競ってる時だけ
@@ -2443,29 +2555,6 @@ if st.button("計算"):
             
                 # 攻め役だけ少し削る（軽く）
                 SecondAdj[3] *= 0.95        
-
-            # ===============================
-            # ★ 共倒れ時の着順補正
-            # ===============================
-            if (
-                Turn[2] > 0.55
-                and Turn[3] > 0.55
-                and abs(Turn[2] - Turn[3]) < 0.04
-            ):
-            
-                # 3・4の残りを削る
-                SecondAdj[2] *= 0.90
-                SecondAdj[3] *= 0.90
-            
-                ThirdAdj[2] *= 0.90
-                ThirdAdj[3] *= 0.90
-            
-                # 外と内に流す
-                SecondAdj[5] *= 1.02
-                ThirdAdj[5] *= 1.05
-            
-                SecondAdj[0] *= 1.05
-                ThirdAdj[0] *= 1.05
 
             
             # ===============================
