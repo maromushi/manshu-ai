@@ -1776,28 +1776,24 @@ if st.button("計算"):
         weak_inside = InsideSurvival[0] < 0.55
         
         # ===============================
-        # ★ 攻めタイプ別イン残り（最重要）
+        # ★ 攻めタイプ別イン残り（修正版）
         # ===============================
         
         if DoubleAttackScore > 0.05:
         
-            # ■2着（Second）
+            # --- Second（2着）---
             if AttackType == "makuri":
                 SecondAdj[0] *= 0.80
-        
             elif AttackType == "makuri_sashi":
                 SecondAdj[0] *= 0.95
-        
             elif AttackType == "sashi":
                 SecondAdj[0] *= 1.12
         
-            # ■3着（Third）
+            # --- Third（3着）---
             if AttackType == "makuri":
                 ThirdAdj[0] *= 0.90
-        
             elif AttackType == "makuri_sashi":
                 ThirdAdj[0] *= 1.00
-        
             elif AttackType == "sashi":
                 ThirdAdj[0] *= 1.10
                     
