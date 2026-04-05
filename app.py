@@ -2021,9 +2021,9 @@ if st.button("計算"):
         
         
         # B
-        if len(attackers) >= 2:
+        if len(main_attackers) >= 2:
         
-            b = attackers[1]
+            b = main_attackers[1]
         
             if AttackFailB == 0:
         
