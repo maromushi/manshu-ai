@@ -530,6 +530,8 @@ if st.button("計算"):
             ),
             reverse=True
         )
+        
+        main_attackers = attackers[:2]
 
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
@@ -647,7 +649,7 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.6)
+        DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.45)
         
         # ===============================
         # ★ 攻め不発（最重要）
@@ -665,8 +667,8 @@ if st.button("計算"):
         # ===============================
         
         main_atk = None
-        if len(attackers) > 0:
-            main_atk = attackers[0]
+        if len(main_attackers) > 0:
+            main_atk = main_attackers[0]
         
         AttackType = "sashi"
         
@@ -697,18 +699,18 @@ if st.button("計算"):
         AttackFailB = 0
         
         # ■A（メイン攻め）
-        if len(attackers) >= 1:
+        if len(main_attackers) >= 1:
         
-            a = attackers[0]
+            a = main_attackers[0]
         
             if a >= 1 and Start[a] < Start[a-1] - 0.03:
                 AttackFailA = 1
         
         
         # ■B（サブ攻め）
-        if len(attackers) >= 2:
+        if len(main_attackers) >= 2:
         
-            b = attackers[1]
+            b = main_attackers[1]
         
             if b >= 1 and Start[b] < Start[b-1] - 0.03:
                 AttackFailB = 1
@@ -895,26 +897,28 @@ if st.button("計算"):
             # ===============================
             # ■① 1 vs 攻めA
             # ===============================
-            a = attackers[0]
-        
-            if a >= 2:
-        
-                st_gap = Start[a] - Start[0]
-        
-                if (
-                    -0.01 <= st_gap <= 0.03
-                    and Turn[a] > Turn[0]
-                ):
-                    FS_mult[0] *= 0.88
-                    FS_mult[a] *= 0.94
+            if len(main_attackers) >= 1:
+
+                a = main_attackers[0]
+            
+                if a >= 2:
+            
+                    st_gap = Start[a] - Start[0]
+            
+                    if (
+                        -0.01 <= st_gap <= 0.03
+                        and Turn[a] > Turn[0]
+                    ):
+                        FS_mult[0] *= 0.88
+                        FS_mult[a] *= 0.94
         
         
         # ===============================
         # ■② 1 vs 攻めB（2番手）
         # ===============================
-        if len(attackers) >= 2:
-        
-            b = attackers[1]
+        if len(main_attackers) >= 2:
+
+            b = main_attackers[1]
         
             if b >= 2:
         
@@ -931,10 +935,10 @@ if st.button("計算"):
         # ===============================
         # ■③ 攻めA vs 攻めB
         # ===============================
-        if len(attackers) >= 2:
-        
-            a = attackers[0]
-            b = attackers[1]
+        if len(main_attackers) >= 2:
+
+            a = main_attackers[0]
+            b = main_attackers[1]
         
             if (
                 abs(Turn[a] - Turn[b]) < 0.04
@@ -1040,15 +1044,15 @@ if st.button("計算"):
         
         if AttackFailB == 1:
             FS_mult[0] *= 1.05
-            
+        
         # 攻め側の失敗反映
-        if len(attackers) >= 1:
-            a = attackers[0]
+        if len(main_attackers) >= 1:
+            a = main_attackers[0]
             if AttackFailA == 1:
                 FS_mult[a] *= 0.90
         
-        if len(attackers) >= 2:
-            b = attackers[1]
+        if len(main_attackers) >= 2:
+            b = main_attackers[1]
             if AttackFailB == 1:
                 FS_mult[b] *= 0.93
                 
@@ -1472,6 +1476,10 @@ if st.button("計算"):
         if len(FirstScore) != 6 or len(FS_mult) != 6:
             st.write("長さエラー", len(FirstScore), len(FS_mult))
             st.stop()
+            
+        # ★ FS_mult暴走防止（必須）
+        for i in range(6):
+            FS_mult[i] = max(0.65, min(1.35, FS_mult[i]))
            
 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
@@ -1917,9 +1925,9 @@ if st.button("計算"):
         # ===============================
         
         # ■A（メイン攻め）
-        if len(attackers) >= 1:
+        if len(main_attackers) >= 1:
         
-            a = attackers[0]
+            a = main_attackers[0]
         
             if AttackFailA == 0:  # 成功時のみ
         
@@ -1931,9 +1939,9 @@ if st.button("計算"):
         
         
         # ■B（サブ攻め）
-        if len(attackers) >= 2:
+        if len(main_attackers) >= 2:
         
-            b = attackers[1]
+            b = main_attackers[1]
         
             if AttackFailB == 0:
         
@@ -1948,9 +1956,9 @@ if st.button("計算"):
         # ===============================
         
         # Aの後ろ
-        if len(attackers) >= 1:
+        if len(main_attackers) >= 1:
         
-            a = attackers[0]
+            a = main_attackers[0]
         
             if AttackFailA == 0:
         
@@ -1959,9 +1967,9 @@ if st.button("計算"):
         
         
         # Bの後ろ
-        if len(attackers) >= 2:
+        if len(main_attackers) >= 2:
         
-            b = attackers[1]
+            b = main_attackers[1]
         
             if AttackFailB == 0:
         
@@ -1977,9 +1985,9 @@ if st.button("計算"):
         # ===============================
         
         # A
-        if len(attackers) >= 1:
+        if len(main_attackers) >= 1:
         
-            a = attackers[0]
+            a = main_attackers[0]
         
             if AttackFailA == 0:
         
@@ -1988,9 +1996,9 @@ if st.button("計算"):
         
         
         # B
-        if len(attackers) >= 2:
+        if len(main_attackers) >= 2:
         
-            b = attackers[1]
+            b = main_attackers[1]
         
             if AttackFailB == 0:
         
