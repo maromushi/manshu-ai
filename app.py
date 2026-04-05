@@ -873,7 +873,50 @@ if st.button("計算"):
         # ===============================
         # ★ FS_mult統一ブロック（完成形）
         # ===============================
+        # ===============================
+        # ★ 共倒れ（完全版・これ1つだけ）
+        # ===============================
         
+        # ■① 攻め同士の共倒れ
+        if len(attackers) >= 2:
+        
+            atk_sorted = sorted(
+                attackers,
+                key=lambda x: AttackIndex[x],
+                reverse=True
+            )
+            
+            a = atk_sorted[0]
+            b = atk_sorted[1]
+        
+            if (
+                abs(Turn[a] - Turn[b]) < 0.04
+                and abs(AttackIndex[a] - AttackIndex[b]) < 0.05
+            ):
+                das = DoubleAttackScore
+        
+                tomo_boost = 1.08 - 0.04 * min(1.0, das / 0.12)
+        
+                FS_mult[a] *= tomo_boost
+                FS_mult[b] *= tomo_boost
+        
+        
+        # ■② イン巻き込み共倒れ（1回だけ）
+        if DoubleAttackScore > 0.05:
+        
+            for atk in attackers:
+        
+                if atk >= 2:
+        
+                    st_gap = Start[atk] - Start[0]
+        
+                    if (
+                        -0.01 <= st_gap <= 0.03
+                        and Turn[atk] > Turn[0]
+                    ):
+                        FS_mult[0] *= 0.88
+                        FS_mult[atk] *= 0.94
+                        break   # ←これ重要（1回で止める）
         
         
         # ===============================
@@ -1456,7 +1499,7 @@ if st.button("計算"):
                 AttackIndex[2] >= AttackIndex[1] - 0.02
                 and Foot[2] >= 0.48
             ):
-                FS_mult[2] *= 1.12
+                FS_mult[2] *= 1.06
                 
         # ===============================
         # ★ イン流れ（複数攻め版）
@@ -1471,7 +1514,7 @@ if st.button("計算"):
                     -0.01 <= st_gap <= 0.03
                     and Turn[0] < Turn[atk]
                 ):
-                    FS_mult[0] *= 0.60
+                    FS_mult[0] *= 0.75
                     break
                     
         
@@ -1663,50 +1706,7 @@ if st.button("計算"):
 
             LaneCPI.append(value)
             
-        # ===============================
-        # ★ 共倒れ（完全版・これ1つだけ）
-        # ===============================
         
-        # ■① 攻め同士の共倒れ
-        if len(attackers) >= 2:
-        
-            atk_sorted = sorted(
-                attackers,
-                key=lambda x: AttackIndex[x],
-                reverse=True
-            )
-            
-            a = atk_sorted[0]
-            b = atk_sorted[1]
-        
-            if (
-                abs(Turn[a] - Turn[b]) < 0.04
-                and abs(AttackIndex[a] - AttackIndex[b]) < 0.05
-            ):
-                das = DoubleAttackScore
-        
-                tomo_boost = 1.08 - 0.04 * min(1.0, das / 0.12)
-        
-                FS_mult[a] *= tomo_boost
-                FS_mult[b] *= tomo_boost
-        
-        
-        # ■② イン巻き込み共倒れ（1回だけ）
-        if DoubleAttackScore > 0.05:
-        
-            for atk in attackers:
-        
-                if atk >= 2:
-        
-                    st_gap = Start[atk] - Start[0]
-        
-                    if (
-                        -0.01 <= st_gap <= 0.03
-                        and Turn[atk] > Turn[0]
-                    ):
-                        FS_mult[0] *= 0.88
-                        FS_mult[atk] *= 0.94
-                        break   # ←これ重要（1回で止める）
         # ===============================
         # ★ 展開主役スライド（汎用）
         # ===============================
