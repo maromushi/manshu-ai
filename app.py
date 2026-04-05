@@ -2383,7 +2383,7 @@ if st.button("計算"):
             # ===============================
             attack_success = False
             
-            for atk in attackers:
+            for atk in main_attackers:
                 if atk == a:
                     if (
                         Start[atk] >= Start[atk-1] - 0.03
@@ -2478,10 +2478,9 @@ if st.button("計算"):
             # ★ 攻め共倒れ検知（汎用・最終版）
             # ===============================
             
-            if len(attackers) >= 2:
-
-                main = attackers[0]
-                sub  = attackers[1]
+            if len(main_attackers) >= 2:
+                main = main_attackers[0]
+                sub  = main_attackers[1]
             
                 if (
                     DoubleAttackScore > 0.08
