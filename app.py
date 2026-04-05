@@ -2995,7 +2995,7 @@ if st.button("計算"):
         RaceLevel = "chaos"
     
     # 攻め強すぎは強制的に荒れ
-    if DoubleAttackScore > 0.12:
+    if DoubleAttackScore > 0.12 and top_p1 < 0.30:
         RaceLevel = "chaos"
 
 
