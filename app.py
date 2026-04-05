@@ -892,7 +892,7 @@ if st.button("計算"):
         # ★ 共倒れ（A/B分離版）
         # ===============================
         
-        if len(attackers) >= 1:
+        if len(main_attackers) >= 1:
         
             # ===============================
             # ■① 1 vs 攻めA
@@ -2010,9 +2010,9 @@ if st.button("計算"):
         # ===============================
         
         # A
-        if len(attackers) >= 1:
-        
-            a = attackers[0]
+        if len(main_attackers) >= 1:
+
+            a = main_attackers[0]
         
             if AttackFailA == 0:
         
