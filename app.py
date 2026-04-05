@@ -1481,12 +1481,7 @@ if st.button("計算"):
             st.write("長さエラー", len(FirstScore), len(FS_mult))
             st.stop()
             
-        # ★ FS_mult暴走防止（必須）
-        for i in range(6):
-            FS_mult[i] = max(0.65, min(1.35, FS_mult[i]))
-           
 
-        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
         if FS_tmp[5] == max(FS_tmp) and not (Strong6 or Normal6):
             FS_mult[5] *= 0.92
@@ -1543,7 +1538,11 @@ if st.button("計算"):
             ):
                 FS_mult[2] *= 1.06
                 
-        
+        # ★ FS_mult暴走防止（必須）
+        for i in range(6):
+            FS_mult[i] = max(0.65, min(1.35, FS_mult[i]))
+
+        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
                     
         
 
