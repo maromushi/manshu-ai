@@ -1541,6 +1541,8 @@ if st.button("計算"):
         # ★ FS_mult① 確定（ここで一旦固定）
         # ===============================
         FS_mult_base = FS_mult.copy()
+        
+        FinalFirst = [FirstScore[i]*FS_mult_base[i] for i in range(6)]
 
         # ===============================
         # ATTACK BOOST
