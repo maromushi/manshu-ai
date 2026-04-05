@@ -1025,9 +1025,9 @@ if st.button("計算"):
             
         # ★ 攻め成功でもイン残る（修正版）
 
-        if DoubleAttackScore > 0.08 and len(attackers) > 0:
+        if DoubleAttackScore > 0.08 and len(main_attackers) > 0:
         
-            best_atk = max(attackers, key=lambda x: AttackIndex[x])
+            best_atk = max(main_attackers, key=lambda x: AttackIndex[x])
         
             if (
                 Start[0] >= Start[best_atk] - 0.02
