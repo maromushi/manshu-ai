@@ -678,15 +678,28 @@ if st.button("計算"):
             else:
                 AttackType = "sashi"
                 
-        # ★ 攻め失敗フラグ
+        # ===============================
+        # ★ 攻め失敗判定（汎用版）
+        # ===============================
         AttackFail = 0
+        AttackSoftFail = 0
         
-        if DoubleAttackScore > 0.05:
-            if len(attackers) > 0:
-                atk = attackers[0]
+        if DoubleAttackScore > 0.05 and len(attackers) > 0:
         
-                if Start[atk] < Start[atk-1] - 0.03:
-                    AttackFail = 1
+            atk = attackers[0]
+        
+            st_diff = Start[atk] - Start[atk-1]
+        
+            fail_score = (
+                0.7 * (-st_diff) +
+                0.3 * (0.10 - DoubleAttackScore)
+            )
+        
+            if fail_score > 0.06:
+                AttackFail = 1
+        
+            elif fail_score > 0.02:
+                AttackSoftFail = 1
                     
         # ===============================
         # ★ 攻め失敗判定（2段階）
@@ -706,8 +719,12 @@ if st.button("計算"):
                 AttackFail = 1
         
             # ズレ（←今回の本質）
-            elif st_diff < -0.01:
-                AttackSoftFail = 1
+            st_diff = Start[atk] - Start[atk-1]
+
+            fail_score = (
+                0.7 * (-st_diff) +
+                0.3 * (0.10 - DoubleAttackScore)
+            )
                 
         # ===============================
         # ★ 攻め失敗補正（調整版）
@@ -973,8 +990,19 @@ if st.button("計算"):
             FS_mult[0] *= 1.10
         
         elif AttackSoftFail == 1:
-            FS_mult[0] *= 1.05
+            FS_mult[0] *= 1.06
+            
         
+        # ★ 攻め成功でもイン残る
+        if DoubleAttackScore > 0.08 and len(attackers) > 0:
+        
+            atk = attackers[0]
+        
+            if (
+                Start[0] >= Start[atk] - 0.02
+                and InsideSurvival[0] >= 0.50
+            ):
+                FS_mult[0] *= 1.08
         
         # ===============================
         # ③ 個別性能補正（ここだけ許可）
