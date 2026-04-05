@@ -2099,8 +2099,8 @@ if st.button("計算"):
         # ★ 展開拾い（複数攻め）
         # ===============================
         if DoubleAttackScore > 0.08:   # ←これ追加
-            if len(attackers) > 0:
-                main_atk = attackers[0]
+            if len(main_attackers) > 0:
+                main_atk = main_attackers[0]
             else:
                 main_atk = None
         
