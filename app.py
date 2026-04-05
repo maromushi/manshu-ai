@@ -1008,7 +1008,7 @@ if st.button("計算"):
         if AttackFailA == 1:
             FS_mult[0] *= 1.10
         
-        elif AttackFailB == 1:
+        if AttackFailB == 1:
             FS_mult[0] *= 1.05
             
         # 攻め側の失敗反映
@@ -1735,8 +1735,8 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
-        debug_log.append(("AttackFail", AttackFail))
-        debug_log.append(("AttackSoftFail", AttackSoftFail))
+        debug_log.append(("AttackFailA", AttackFailA))
+        debug_log.append(("AttackFailB", AttackFailB))
         
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
@@ -1792,7 +1792,7 @@ if st.button("計算"):
         # ★ 攻め失敗補正（調整版）
         # ===============================
         
-        if AttackFail == 1:
+        if AttackFailA == 1:
         
             fail_strength = min(1.0, DoubleAttackScore / 0.10)
         
@@ -1972,32 +1972,6 @@ if st.button("計算"):
                 for i in range(b+1, 6):
                     SecondAdj[i] *= 1.05
                     
-        # ===============================
-        # ★ 攻め後ろ流入（A/B分離）
-        # ===============================
-        
-        # Aの後ろ
-        if len(attackers) >= 1:
-        
-            a = attackers[0]
-        
-            if AttackFailA == 0:
-        
-                for i in range(a+1, 6):
-                    SecondAdj[i] *= 1.10
-        
-        
-        # Bの後ろ
-        if len(attackers) >= 2:
-        
-            b = attackers[1]
-        
-            if AttackFailB == 0:
-        
-                for i in range(b+1, 6):
-                    SecondAdj[i] *= 1.05
-        
-        
         # ===============================
         # 👇ここに追加（ThirdAdj）
         # ===============================
