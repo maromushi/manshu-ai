@@ -2662,7 +2662,7 @@ if st.button("計算"):
                         key=lambda x: (
                             0.40 * Turn[x]
                             + 0.30 * Start[x]
-                            + 0.20 * max(0, Start[x] - Start[attacker])
+                            + 0.20 * max(0, Start[x] - Start[i])
                             + 0.10 * Foot[x]
                         )
                     )
