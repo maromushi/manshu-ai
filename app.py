@@ -1549,6 +1549,32 @@ if st.button("計算"):
             FS_mult[i] = max(0.65, min(1.35, FS_mult[i]))              
         
         # ===============================
+        # ★ 2コース頭制御（汎用版）
+        # ===============================
+        if i == 1:
+        
+            sashi_ok = (
+                Start[1] >= Start[0] - 0.02
+                and Turn[1] >= Turn[0] - 0.02
+            )
+        
+            inside_strong = (
+                InsideSurvival[0] >= 0.55
+            )
+        
+            # 差し成立してない → 頭削る
+            if not sashi_ok:
+                FS_mult[1] *= 0.85
+        
+            # インが強い → さらに削る
+            if inside_strong:
+                FS_mult[1] *= 0.90
+        
+            # 攻め中途半端 → 頭じゃなくなる
+            if DoubleAttackScore < 0.08:
+                FS_mult[1] *= 0.92
+        
+        # ===============================
         # ★ FS_mult① 確定（ここで一旦固定）
         # ===============================
         FS_mult_base = FS_mult.copy()
