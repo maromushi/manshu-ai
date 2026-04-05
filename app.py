@@ -2628,11 +2628,11 @@ if st.button("計算"):
                         SecondAdj[j] *= 0.98
                         ThirdAdj[j]  *= 0.99
             
-                attacker = i if st_gap < -0.02 else None
+                is_attacker = (st_gap < -0.02)
 
-                if attacker is not None and attacker >= 2 and DoubleAttackScore > 0.05:
+                if is_attacker and i >= 2 and DoubleAttackScore > 0.05:
                 
-                    if Start[0] < Start[attacker] - 0.02:
+                    if Start[0] < Start[i] - 0.02:
                         SecondAdj[0] *= 0.65
                         ThirdAdj[0]  *= 0.60
                     else:
@@ -2641,17 +2641,19 @@ if st.button("計算"):
                 # ===============================
                 # ★ 差し込み勝ち（ここに入れる）
                 # ===============================
-                attacker = i if st_gap < -0.02 else None
-            
+                is_attacker = (st_gap < -0.02)
+
                 candidates = []
-            
-                for j in range(attacker):
-            
-                    if (
-                        Start[j] >= Start[attacker] - 0.03
-                        and Turn[j] >= 0.50
-                    ):
-                        candidates.append(j)
+                
+                if is_attacker:
+                
+                    for j in range(i):
+                
+                        if (
+                            Start[j] >= Start[i] - 0.03
+                            and Turn[j] >= 0.50
+                        ):
+                            candidates.append(j)
             
                 if len(candidates) > 0:
             
