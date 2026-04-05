@@ -1481,11 +1481,6 @@ if st.button("計算"):
             st.write("長さエラー", len(FirstScore), len(FS_mult))
             st.stop()
             
-
-        
-        if FS_tmp[5] == max(FS_tmp) and not (Strong6 or Normal6):
-            FS_mult[5] *= 0.92
-            
         # ===============================
         # ★ 弱インなら強制攻め
         # =============================
