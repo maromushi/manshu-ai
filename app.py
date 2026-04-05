@@ -956,7 +956,7 @@ if st.button("計算"):
         # ===============================
         if DoubleAttackScore > 0.05:
         
-            for atk in attackers:
+            for atk in main_attackers:
         
                 st_gap = Start[atk] - Start[0]
         
@@ -1808,7 +1808,7 @@ if st.button("計算"):
             SecondAdj[1] *= (1.04 + 0.03 * (1 - fail_strength))
         
             # ■攻め役は軽く削るだけ
-            for atk in attackers:
+            for atk in main_attackers:
                 SecondAdj[atk] *= 0.93
         
         # ★ 攻め時の2残り復活（汎用版）
