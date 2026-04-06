@@ -1653,31 +1653,31 @@ if st.button("計算"):
         ):
             FS_mult[5] *= 0.40
                 
-            # ===============================
-            # ★ 2コース頭制御（汎用版）
-            # ===============================
-            if i == 1:
+        # ===============================
+        # ★ 2コース頭制御（汎用版）
+        # ===============================
+        if i == 1:
             
-                sashi_ok = (
-                    Start[1] >= Start[0] - 0.02
-                    and Turn[1] >= Turn[0] - 0.02
-                )
+            sashi_ok = (
+                Start[1] >= Start[0] - 0.02
+                and Turn[1] >= Turn[0] - 0.02
+            )
             
-                inside_strong = (
-                    InsideSurvival[0] >= 0.55
-                )
+            inside_strong = (
+                InsideSurvival[0] >= 0.55
+            )
             
-                # 差し成立してない → 頭削る
-                if not sashi_ok:
-                    FS_mult[1] *= 0.85
+            # 差し成立してない → 頭削る
+            if not sashi_ok:
+                FS_mult[1] *= 0.85
             
-                # インが強い → さらに削る
-                if inside_strong:
-                    FS_mult[1] *= 0.90
+            # インが強い → さらに削る
+            if inside_strong:
+                FS_mult[1] *= 0.90
             
-                # 攻め中途半端 → 頭じゃなくなる
-                if DoubleAttackScore < 0.08:
-                    FS_mult[1] *= 0.92
+            # 攻め中途半端 → 頭じゃなくなる
+            if DoubleAttackScore < 0.08:
+                FS_mult[1] *= 0.92
                     
                 
         
