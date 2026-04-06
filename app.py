@@ -2432,17 +2432,31 @@ if st.button("計算"):
                 
         # ★ 中途半端ゾーンは6強めに殺す
         if DoubleAttackScore < 0.12:
-            SecondAdj[5] *= 0.35
-            ThirdAdj[5] *= 0.70
+        
+            strong6 = (
+                CPI[5] >= 0.50
+                and Foot[5] >= 0.50
+                and Start[5] >= Start[3] - 0.02
+            )
+        
+            if not strong6:
+                SecondAdj[5] *= 0.50
+                ThirdAdj[5] *= 0.60
         
         elif DoubleAttackScore <= 0.06:
             SecondAdj[5] *= 0.65
             
         # ★ 無風時は外基本消す
         if NoAttackFlag == 1:
-            for i in range(4,6):
-                SecondAdj[i] *= 0.60
-                ThirdAdj[i] *= 0.80
+
+            strong_outer = (
+                CPI[4] >= 0.50 or CPI[5] >= 0.50
+            )
+        
+            if not strong_outer:
+                for i in range(4,6):
+                    SecondAdj[i] *= 0.65
+                    ThirdAdj[i] *= 0.75
                 
 
         ThirdScore=[
