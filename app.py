@@ -2396,7 +2396,7 @@ if st.button("計算"):
                 
         # ★ 中途半端ゾーンは6強めに殺す
         if 0.06 < DoubleAttackScore < 0.12:
-            SecondAdj[5] *= 0.55
+            SecondAdj[5] *= 0.45
         
         elif DoubleAttackScore <= 0.06:
             SecondAdj[5] *= 0.65
