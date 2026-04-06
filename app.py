@@ -1885,13 +1885,6 @@ if st.button("計算"):
         for i in range(6)
         ]
         
-        # ===============================
-        # ★ 攻め状態分類（追加）
-        # ===============================
-        
-        MidAttack = (
-            0.07 < DoubleAttackScore <= 0.13
-        )
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
@@ -1998,14 +1991,6 @@ if st.button("計算"):
                 # ★ 上げるんじゃなくて下げを無効化
                 SecondAdj[i] = max(SecondAdj[i], 1.05)
                 ThirdAdj[i]  = max(ThirdAdj[i], 1.05)
-        
-        # ===============================
-        # ★ 攻めゾーン分割（最重要）
-        # ===============================
-        
-        weak_attack = 0.06 < DoubleAttackScore <= 0.09
-        mid_attack  = 0.09 < DoubleAttackScore <= 0.13
-        strong_attack = DoubleAttackScore > 0.13
         
         
         # ===============================
@@ -2373,7 +2358,7 @@ if st.button("計算"):
             CPI[5] >= 0.50
             and Foot[5] >= 0.55
             and (
-                if (MidAttack or StrongAttack)
+                (MidAttack or StrongAttack)
                 or OuterClusterFlag == 1
             )
         ):
