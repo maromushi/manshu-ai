@@ -1548,31 +1548,31 @@ if st.button("計算"):
         for i in range(6):
             FS_mult[i] = max(0.65, min(1.35, FS_mult[i]))              
         
-        # ===============================
-        # ★ 2コース頭制御（汎用版）
-        # ===============================
-        if i == 1:
-        
-            sashi_ok = (
-                Start[1] >= Start[0] - 0.02
-                and Turn[1] >= Turn[0] - 0.02
-            )
-        
-            inside_strong = (
-                InsideSurvival[0] >= 0.55
-            )
-        
-            # 差し成立してない → 頭削る
-            if not sashi_ok:
-                FS_mult[1] *= 0.85
-        
-            # インが強い → さらに削る
-            if inside_strong:
-                FS_mult[1] *= 0.90
-        
-            # 攻め中途半端 → 頭じゃなくなる
-            if DoubleAttackScore < 0.08:
-                FS_mult[1] *= 0.92
+            # ===============================
+            # ★ 2コース頭制御（汎用版）
+            # ===============================
+            if i == 1:
+            
+                sashi_ok = (
+                    Start[1] >= Start[0] - 0.02
+                    and Turn[1] >= Turn[0] - 0.02
+                )
+            
+                inside_strong = (
+                    InsideSurvival[0] >= 0.55
+                )
+            
+                # 差し成立してない → 頭削る
+                if not sashi_ok:
+                    FS_mult[1] *= 0.85
+            
+                # インが強い → さらに削る
+                if inside_strong:
+                    FS_mult[1] *= 0.90
+            
+                # 攻め中途半端 → 頭じゃなくなる
+                if DoubleAttackScore < 0.08:
+                    FS_mult[1] *= 0.92
         
         # ===============================
         # ★ FS_mult① 確定（ここで一旦固定）
@@ -1927,7 +1927,7 @@ if st.button("計算"):
                 and DoubleAttackScore > 0.05
             ):
                 # ★ 上げるんじゃなくて下げを無効化
-                SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.05)
+                SecondAdj[i] = max(SecondAdj[i], 1.05)
                 ThirdAdj[i]  = max(ThirdAdj[i], 1.05)
         
         # ===============================
@@ -2369,25 +2369,25 @@ if st.button("計算"):
         
         for i in range(6):
 
-        # ===============================
-        # ★ 3の自然残り（完成版）
-        # ===============================
-        if (
-            i == 2
-            and (
-                # ■ 強い3（従来）
-                CPI[i] >= 0.45
-        
-                # ■ 弱いけど残る3（今回の本質）
-                or (
-                    0.06 <= DoubleAttackScore <= 0.12
-                    and (max(Start) - min(Start)) < 0.08
-                    and CPI[i] >= 0.25
-                    and Start[i] >= Start[3] - 0.10
+            # ===============================
+            # ★ 3の自然残り（完成版）
+            # ===============================
+            if (
+                i == 2
+                and (
+                    # ■ 強い3（従来）
+                    CPI[i] >= 0.45
+            
+                    # ■ 弱いけど残る3（今回の本質）
+                    or (
+                        0.06 <= DoubleAttackScore <= 0.12
+                        and (max(Start) - min(Start)) < 0.08
+                        and CPI[i] >= 0.25
+                        and Start[i] >= Start[3] - 0.10
+                    )
                 )
-            )
-        ):
-            ThirdAdj[i] *= 1.18
+            ):
+                ThirdAdj[i] *= 1.18
       
         
     
