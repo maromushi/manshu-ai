@@ -999,10 +999,10 @@ if st.button("計算"):
         if NoAttackFlag == 1:
             race_type = "no_attack"
         
-        elif DoubleAttackScore > 0.10:
+        elif DoubleAttackScore > 0.13:
             race_type = "strong_attack"
         
-        elif DoubleAttackScore > 0.07:
+        elif DoubleAttackScore > 0.09:
             race_type = "mid_attack"
         
         elif DoubleAttackScore > 0.05:
