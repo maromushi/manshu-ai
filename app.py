@@ -1970,7 +1970,7 @@ if st.button("計算"):
         
             if (
                 Start[i] >= max(Start[1:4]) - 0.01
-                and DoubleAttackScore > 0.05
+                and DoubleAttackScore > 0.08
             ):
                 # ★ 上げるんじゃなくて下げを無効化
                 SecondAdj[i] = max(SecondAdj[i], 1.05)
@@ -2499,8 +2499,9 @@ if st.button("計算"):
         # ===============================
         # ★ 展開6（性能じゃない6）
         # ===============================
+        # スタート主導外流入
         if (
-            DoubleAttackScore > 0.08
+            DoubleAttackScore > 0.12   # ←ここ変更
             and Start[5] >= Start[3] - 0.02
             and CLS[5] in ["A1","A2"]
         ):
@@ -2981,7 +2982,7 @@ if st.button("計算"):
                 or CPI[5] >= 0.48
             )
             
-            if six_flow and six_power:
+            if six_flow and six_power and DoubleAttackScore > 0.10:
                 SecondAdj[5] *= 1.08
                 ThirdAdj[5] *= 1.12
             else:
