@@ -666,6 +666,13 @@ if st.button("計算"):
         ):
             NoAttackFlag = 1
             
+        # ★ 疑似無風もNoAttack扱いにする
+        if (
+            0.06 <= DoubleAttackScore <= 0.12
+            and (max(Start) - min(Start)) < 0.08
+        ):
+            NoAttackFlag = 1
+            
         # ===============================
         # ★ 疑似攻め判定（ここに入れる）
         # ===============================
@@ -1545,12 +1552,12 @@ if st.button("計算"):
         
         if NoAttackFlag == 0:
         
-            if DoubleAttackScore > 0.10 and NoAttackFlag == 0:
+            if DoubleAttackScore > 0.12 and NoAttackFlag == 0:
                 FS_mult[2] *= 1.10
                 FS_mult[3] *= 1.12
                 FS_mult[0] *= 0.92
         
-            elif DoubleAttackScore > 0.07 and NoAttackFlag == 0:
+            elif DoubleAttackScore > 0.09 and NoAttackFlag == 0:
                 FS_mult[2] *= 1.05
                 FS_mult[3] *= 1.06
                 FS_mult[0] *= 0.98
