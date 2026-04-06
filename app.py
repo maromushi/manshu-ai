@@ -2939,12 +2939,13 @@ if st.button("計算"):
             # ★ 6の最終固定（必ず一番最後）
             if not (
                 (MidAttack or StrongAttack)
+                and NoAttackFlag == 0
                 and Start[5] >= Start[3] - 0.02
                 and (CPI[5] >= 0.50 or Foot[5] >= 0.52)
             ):
-                SecondAdj[5] = 0.55
-                
-            debug_log.append(("SecondAdj", [round(x,3) for x in SecondAdj]))
+                pass
+            else:
+                SecondAdj[5] = max(SecondAdj[5], 0.55)
                 
                   
 
