@@ -641,6 +641,24 @@ if st.button("計算"):
         )
         
         # ===============================
+        # ★ 攻め成立スコア（汎用）
+        # ===============================
+        
+        AttackSuccessScore = max([
+            (Start[i] - Start[i-1]) * 0.6
+            + (Turn[i] - Turn[i-1]) * 0.4
+            for i in range(2,6)
+        ])
+        
+        # ===============================
+        # ★ 攻め成立フィルター（本体）
+        # ===============================
+        
+        if DoubleAttackScore > 0.09:
+            if AttackSuccessScore < 0.02:
+                DoubleAttackScore *= 0.6   # ←これが核
+        
+        # ===============================
         # ★ 攻め強度フラグ（統一）
         # ===============================
         StrongAttack = DoubleAttackScore > 0.13
