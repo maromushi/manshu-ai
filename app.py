@@ -658,11 +658,15 @@ if st.button("計算"):
         if (
             StartSpread < 0.08
             and max(AttackIndex[2:6]) < 0.55
+            and (
+                DoubleAttackScore < 0.08
+                or (
+                    DoubleAttackScore < 0.12
+                    and (max(Start) - min(Start)) < 0.07
+                )
+            )
         ):
-            NoAttackFlag = 1 if (
-                (max(Start) - min(Start)) < 0.08
-                and DoubleAttackScore < 0.08   # ←緩める
-            ) else 0
+            NoAttackFlag = 1
             
         # ===============================
         # ★ 疑似攻め判定（ここに入れる）
