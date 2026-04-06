@@ -654,27 +654,17 @@ if st.button("計算"):
         # ★ 攻め不発（最重要）
         # ===============================
         NoAttackFlag = 0
-        
+
         weak_attack_env = (
-            DoubleAttackScore < 0.11   # ←追加（超重要）
+            DoubleAttackScore < 0.11
         )
-
-
+        
         if (
             StartSpread < 0.08
-            and max(AttackIndex[2:6]) < 0.55
+            and weak_attack_env
+            and max(AttackIndex[2:6]) < 0.60   # ←ここ緩和
         ):
-            if (
-                (max(Start) - min(Start)) < 0.08
-                and (
-                    DoubleAttackScore < 0.08
-                    or (
-                        DoubleAttackScore < 0.12
-                        and (max(Start) - min(Start)) < 0.07
-                    )
-                )
-            ):
-                NoAttackFlag = 1
+            NoAttackFlag = 1
             
         # ===============================
         # ★ 疑似攻め判定（ここに入れる）
@@ -1961,18 +1951,17 @@ if st.button("計算"):
                 ThirdAdj[0] *= 1.10
                     
                     
-         # ★ 展開6の2着
-        if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
+         # ★ 展開6の2着（修正版）
+        if DoubleAttackScore > 0.08 and NoAttackFlag == 0:
             if (
                 Start[5] >= Start[3] - 0.01
                 and (Foot[5] >= 0.50 or Turn[5] >= 0.50)
             ):
                 SecondAdj[5] *= 1.15
         
-        if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
-        
+        if DoubleAttackScore > 0.08 and NoAttackFlag == 0:
             if Start[5] == max(Start):
-                ThirdAdj[5] *= 1.10   # ←少し下げる
+                ThirdAdj[5] *= 1.10 
         
         # ===============================
         # ★ スタート主導の外流入（追加）
