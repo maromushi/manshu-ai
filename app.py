@@ -2434,18 +2434,20 @@ if st.button("計算"):
                 SecondAdj[i] *= 1.05
                 ThirdAdj[i]  *= 1.08
                 
-        # ★ 中途半端ゾーンは6強めに殺す
+        # ★ 中途半端ゾーンの6完全制御（差し替え）
         if DoubleAttackScore < 0.12:
-
-            strong6 = (
-                CPI[5] >= 0.52
-                and Foot[5] >= 0.52
-                and Start[5] >= Start[3] - 0.01
+        
+            # ■ 展開で来る6だけ残す
+            valid6 = (
+                (MidAttack or StrongAttack)
+                and NoAttackFlag == 0
+                and Start[5] >= Start[3] - 0.02
+                and (CPI[5] >= 0.52 or Foot[5] >= 0.52)
             )
         
-            if not strong6:
-                SecondAdj[5] *= 0.45
-                ThirdAdj[5] *= 0.55
+            if not valid6:
+                SecondAdj[5] *= 0.25
+                ThirdAdj[5] *= 0.35
         
         elif DoubleAttackScore <= 0.06:
             SecondAdj[5] *= 0.65
@@ -2961,7 +2963,7 @@ if st.button("計算"):
                         ThirdAdj[i] *= 1.00   # 基本はあまり削らない
 
                 # 展開ある時だけ6を少し戻す
-                if i == 5 and (MidAttack or StrongAttack):
+                if i == 5 and StrongAttack:
                     ThirdAdj[i] *= 1.10
 
                 # 弱すぎる艇だけ削る
