@@ -2009,7 +2009,7 @@ if st.button("計算"):
             
             elif MidAttack:
                 if valid:
-                    SecondAdj[i] *= 1.00
+                    SecondAdj[i] *= 0.95
                 else:
                     SecondAdj[i] *= 0.88
             
@@ -2393,6 +2393,10 @@ if st.button("計算"):
             elif strong_outer and flow_race:
                 SecondAdj[i] *= 1.05
                 ThirdAdj[i]  *= 1.08
+                
+        # ★ 無風〜中途半端は6殺す（ここに追加）
+        if DoubleAttackScore < 0.12:
+            SecondAdj[5] *= 0.75
                 
 
         ThirdScore=[
@@ -2937,14 +2941,13 @@ if st.button("計算"):
       
                 
             # ★ 6の最終固定（必ず一番最後）
-            if not (
-                (MidAttack or StrongAttack)
+            # 修正
+            if (
+                StrongAttack   # ←MidAttack消せ
                 and NoAttackFlag == 0
                 and Start[5] >= Start[3] - 0.02
-                and (CPI[5] >= 0.50 or Foot[5] >= 0.52)
+                and (CPI[5] >= 0.52 or Foot[5] >= 0.55)
             ):
-                pass
-            else:
                 SecondAdj[5] = max(SecondAdj[5], 0.55)
                 
                   
