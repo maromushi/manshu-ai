@@ -2305,6 +2305,42 @@ if st.button("計算"):
             else:
                 SecondAdj[5] *= 1.00
                 
+        # ===============================
+        # ★ 外の選別ロジック（完成版）
+        # ===============================
+        for i in range(4,6):
+        
+            strong_outer = (
+                CPI[i] >= 0.50
+                or (Foot[i] >= 0.52 and Turn[i] >= 0.50)
+            )
+        
+            good_start = (
+                Start[i] >= Start[3] - 0.02
+            )
+        
+            flow_race = (
+                DoubleAttackScore > 0.08
+            )
+        
+            # ■来る理由がない外は消す
+            if not strong_outer and not good_start:
+                SecondAdj[i] *= 0.75
+                ThirdAdj[i]  *= 0.80
+        
+            # ■スタートだけの外（よくある事故原因）
+            elif good_start and not strong_outer:
+                SecondAdj[i] *= 0.85
+        
+            # ■展開あるけど弱い外（軽く削る）
+            elif flow_race and not strong_outer:
+                SecondAdj[i] *= 0.90
+        
+            # ■ちゃんと強い外（ここは残す）
+            elif strong_outer and flow_race:
+                SecondAdj[i] *= 1.05
+                ThirdAdj[i]  *= 1.08
+                
 
         ThirdScore=[
         0.28*Velocity[i]+
