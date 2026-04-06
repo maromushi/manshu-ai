@@ -1304,7 +1304,7 @@ if st.button("計算"):
             
         # ★ 2の頭制限（これが本命）
         # ★ 2の頭制限（分岐版）
-        if DoubleAttackScore > 0.10:
+        DoubleAttackScore > 0.13 and NoAttackFlag == 0
 
             FS_mult[1] *= 0.88
         
@@ -1473,7 +1473,7 @@ if st.button("計算"):
         # ★ 6の展開連動ブースト（ここ）
         # ===============================
         if (
-            DoubleAttackScore > 0.10
+            DoubleAttackScore > 0.13 and NoAttackFlag == 0
             and Start[5] >= Start[3] - 0.005
             and CLS[5] == "A1"
         ):
@@ -2034,10 +2034,11 @@ if st.button("計算"):
                 
                 
         if (
-            DoubleAttackScore > 0.10
+            DoubleAttackScore > 0.13
+            and NoAttackFlag == 0
             and Start[5] == max(Start)
-            and CPI[5] > 0.45   # ←ここ上げろ
-            and Foot[5] > 0.48  # ←これ追加
+            and CPI[5] > 0.45
+            and Foot[5] > 0.48
         ):
             SecondAdj[5] *= 1.15
             
@@ -2192,7 +2193,7 @@ if st.button("計算"):
         # ★ イン3着保険
         # ===============================
         if (
-            DoubleAttackScore > 0.10
+            DoubleAttackScore > 0.13 and NoAttackFlag == 0
             and Skill[0] >= 0.45
         ):
             ThirdAdj[0] *= 1.10
@@ -2990,7 +2991,12 @@ if st.button("計算"):
                 or CPI[5] >= 0.48
             )
             
-            if six_flow and six_power and DoubleAttackScore > 0.10:
+            if (
+                six_flow
+                and six_power
+                and DoubleAttackScore > 0.13
+                and NoAttackFlag == 0
+            ):
                 SecondAdj[5] *= 1.08
                 ThirdAdj[5] *= 1.12
             else:
