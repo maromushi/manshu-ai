@@ -1304,7 +1304,7 @@ if st.button("計算"):
             
         # ★ 2の頭制限（これが本命）
         # ★ 2の頭制限（分岐版）
-        if DoubleAttackScore > 0.13 and NoAttackFlag == 0
+        if DoubleAttackScore > 0.13 and NoAttackFlag == 0:
 
             FS_mult[1] *= 0.88
         
