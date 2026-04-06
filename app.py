@@ -1601,7 +1601,7 @@ if st.button("計算"):
             CLS[5] in ["A1","A2"]
             or (CPI[5] >= 0.50 and Foot[5] >= 0.52)
         ):
-            FS_mult[5] *= 0.65
+            FS_mult[5] *= 0.40
                 
             # ===============================
             # ★ 2コース頭制御（汎用版）
@@ -1970,13 +1970,7 @@ if st.button("計算"):
                 ThirdAdj[0] *= 1.10
                     
                     
-         # ★ 展開6の2着（修正版）
-        if DoubleAttackScore > 0.08 and NoAttackFlag == 0:
-            if (
-                Start[5] >= Start[3] - 0.01
-                and (Foot[5] >= 0.50 or Turn[5] >= 0.50)
-            ):
-                SecondAdj[5] *= 1.15
+         # ★ 展開6の2着（修正版）さ
         
         if DoubleAttackScore > 0.08 and NoAttackFlag == 0:
             if Start[5] == max(Start):
@@ -2387,6 +2381,15 @@ if st.button("計算"):
                 SecondAdj[5] *= 0.90
             else:
                 SecondAdj[5] *= 1.00
+                
+        # ===============================
+        # ★ 弱い6は2着完全制御（最終）
+        # ===============================
+        if not (
+            CLS[5] in ["A1","A2"]
+            or (CPI[5] >= 0.50 and Foot[5] >= 0.52)
+        ):
+            SecondAdj[5] *= 0.55
                 
         # ===============================
         # ★ 外の選別ロジック（完成版）
