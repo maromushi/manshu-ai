@@ -656,7 +656,7 @@ if st.button("計算"):
         NoAttackFlag = 0
 
         weak_attack_env = (
-            DoubleAttackScore < 0.11
+            DoubleAttackScore < 0.12
         )
         
         if (
