@@ -2079,7 +2079,7 @@ if st.button("計算"):
         
             if AttackFailA == 0:
         
-                for i in range(a+1, 6):
+                for i in range(a+1,5):
                     if CPI[i] >= 0.50:
                         SecondAdj[i] *= 1.10
         
@@ -2396,7 +2396,7 @@ if st.button("計算"):
                 
         # ★ 中途半端ゾーンは6強めに殺す
         if 0.06 < DoubleAttackScore < 0.12:
-            SecondAdj[5] *= 0.65
+            SecondAdj[5] *= 0.55
         
         elif DoubleAttackScore <= 0.06:
             SecondAdj[5] *= 0.75
@@ -2552,7 +2552,7 @@ if st.button("計算"):
             # ===============================
             if attack_success and StrongAttack:
             
-                for i in range(a+1,6):
+                for i in range(a+1,5):
             
                     if (
                         (Turn[i] >= Turn[a] - 0.04 and Foot[i] >= 0.48)
@@ -2594,7 +2594,7 @@ if st.button("計算"):
                 SecondAdj[a] *= 1.05
             
                 # 後ろが展開拾う
-                for i in range(a+1,6):
+                for i in range(a+1,5):
                     SecondAdj[i] *= 1.12
                     ThirdAdj[i] *= 1.15
             
