@@ -1011,7 +1011,7 @@ if st.button("計算"):
             race_type = "StrongAttack"
         
         elif DoubleAttackScore > 0.09:
-            race_type = "mid_attack"
+            race_type = "MidAttack"
         
         elif (WeakAttack or MidAttack or StrongAttack):
             race_type = "WeakAttack"
@@ -1037,7 +1037,7 @@ if st.button("計算"):
             FS_mult[2] *= 1.10
             FS_mult[3] *= 1.12
         
-        elif race_type == "mid_attack":
+        elif race_type == "MidAttack":
         
             FS_mult[0] *= 0.88
             FS_mult[1] *= 0.93
@@ -2009,7 +2009,7 @@ if st.button("計算"):
                 else:
                     SecondAdj[i] *= 0.85
             
-            elif mid_attack:
+            elif MidAttack:
                 if valid:
                     SecondAdj[i] *= 1.00
                 else:
@@ -2167,7 +2167,7 @@ if st.button("計算"):
                 SecondAdj[0] *= 1.20
                 ThirdAdj[0] *= 1.10
         
-        elif mid_attack:
+        elif MidAttack:
             if InsideSurvival[0] >= 0.45 and P1[0] < 0.25:
                 SecondAdj[0] *= 1.12
                 ThirdAdj[0] *= 1.05
