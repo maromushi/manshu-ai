@@ -641,6 +641,15 @@ if st.button("計算"):
         )
         
         # ===============================
+        # ★ 無風＋攻め不在（最強セット）
+        # ===============================
+        LowStartSpread = (max(Start) - min(Start)) < 0.08
+        NoStrongAttacker = max(AttackIndex[2:6]) < 0.55
+        
+        if LowStartSpread and NoStrongAttacker:
+            DoubleAttackScore *= 0.65
+                
+        # ===============================
         # ★ 疑似攻め判定（ここに入れる）
         # ===============================
         PseudoAttack = max([
@@ -660,8 +669,10 @@ if st.button("計算"):
             StartSpread < 0.08
             and DoubleAttackScore < 0.06
         ):
-            NoAttackFlag = 1
-        
+            NoAttackFlag = 1 if (
+                (max(Start) - min(Start)) < 0.08
+                and DoubleAttackScore < 0.08   # ←緩める
+            ) else 0
         # ===============================
         # ★ 攻めタイプ判定（追加）
         # ===============================
