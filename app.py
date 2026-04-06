@@ -2344,7 +2344,7 @@ if st.button("計算"):
             CPI[5] >= 0.50
             and Foot[5] >= 0.55
             and (
-                (MidAttack or StrongAttack)
+                StrongAttack
                 or OuterClusterFlag == 1
             )
         ):
@@ -2394,8 +2394,11 @@ if st.button("計算"):
                 SecondAdj[i] *= 1.05
                 ThirdAdj[i]  *= 1.08
                 
-        # ★ 無風〜中途半端は6殺す（ここに追加）
-        if DoubleAttackScore < 0.12:
+        # ★ 中途半端ゾーンは6強めに殺す
+        if 0.06 < DoubleAttackScore < 0.12:
+            SecondAdj[5] *= 0.65
+        
+        elif DoubleAttackScore <= 0.06:
             SecondAdj[5] *= 0.75
                 
 
@@ -2547,7 +2550,7 @@ if st.button("計算"):
            # ===============================
             # ★ 展開拾い強化（汎用版）
             # ===============================
-            if attack_success:
+            if attack_success and StrongAttack:
             
                 for i in range(a+1,6):
             
@@ -2574,7 +2577,7 @@ if st.button("計算"):
             # ===============================
             # ★ 攻め連動
             # ===============================
-            if attack_success:
+            if attack_success and StrongAttack:
 
                 for i in range(a):
             
@@ -2947,6 +2950,7 @@ if st.button("計算"):
                 and NoAttackFlag == 0
                 and Start[5] >= Start[3] - 0.02
                 and (CPI[5] >= 0.52 or Foot[5] >= 0.55)
+                and DoubleAttackScore > 0.14
             ):
                 SecondAdj[5] = max(SecondAdj[5], 0.55)
                 
