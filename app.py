@@ -2373,6 +2373,22 @@ if st.button("計算"):
             if i == 2:
                 if CPI[i] >= 0.45:
                     ThirdAdj[i] *= 1.18
+                    
+            # ===============================
+            # ★ 何も起きないレース検知
+            # ===============================
+            NoEventRace = (
+                0.06 <= DoubleAttackScore <= 0.12
+                and (max(Start) - min(Start)) < 0.08
+                and max(AttackIndex[2:6]) < 0.55
+                and InsideSurvival[0] >= 0.45
+            )
+        
+            # ===============================
+            # ★ 中間レースの自然3着（追加）
+            # ===============================
+            if i == 2 and NoEventRace:
+                ThirdAdj[i] *= 1.18
         
     
         # ===============================
