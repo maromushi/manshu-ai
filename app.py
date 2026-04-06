@@ -2521,7 +2521,7 @@ if st.button("計算"):
         # ★ 3着強化
         # ===============================
         
-        if FiveFlowFlag and DoubleAttackScore > 0.06:
+        if DoubleAttackScore > 0.08 and NoAttackFlag == 0:
             ThirdAdj[4] *= 1.15
         
         if SixFlowFlag:
