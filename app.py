@@ -641,6 +641,14 @@ if st.button("計算"):
         )
         
         # ===============================
+        # ★ 攻め強度フラグ（統一）
+        # ===============================
+        StrongAttack = DoubleAttackScore > 0.13
+        MidAttack    = 0.09 < DoubleAttackScore <= 0.13
+        WeakAttack   = 0.06 < DoubleAttackScore <= 0.09
+        NoAttackLine = DoubleAttackScore <= 0.06
+        
+        # ===============================
         # ★ 無風判定（絶対必要）
         # ===============================
         LowStartSpread = (max(Start) - min(Start)) < 0.08
