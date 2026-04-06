@@ -654,6 +654,11 @@ if st.button("計算"):
         # ★ 攻め不発（最重要）
         # ===============================
         NoAttackFlag = 0
+        
+        weak_attack_env = (
+            DoubleAttackScore < 0.11   # ←追加（超重要）
+        )
+
 
         if (
             StartSpread < 0.08
