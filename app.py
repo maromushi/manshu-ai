@@ -649,17 +649,6 @@ if st.button("計算"):
         if LowStartSpread and NoStrongAttacker:
             DoubleAttackScore *= 0.65
         
-        # ===============================
-        # ★ 疑似攻め判定（ここに入れる）
-        # ===============================
-        PseudoAttack = max([
-            max(0, Start[2] - Start[1]),
-            max(0, Start[3] - Start[2]),
-            max(0, Start[4] - Start[3])
-        ])
-              
-        if DoubleAttackScore > 0.05 and NoAttackFlag == 0:
-            DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.45)
         
         # ===============================
         # ★ 攻め不発（最重要）
@@ -674,6 +663,19 @@ if st.button("計算"):
                 (max(Start) - min(Start)) < 0.08
                 and DoubleAttackScore < 0.08   # ←緩める
             ) else 0
+            
+        # ===============================
+        # ★ 疑似攻め判定（ここに入れる）
+        # ===============================
+        PseudoAttack = max([
+            max(0, Start[2] - Start[1]),
+            max(0, Start[3] - Start[2]),
+            max(0, Start[4] - Start[3])
+        ])
+              
+        if DoubleAttackScore > 0.05 and NoAttackFlag == 0:
+            DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.45)
+        
         # ===============================
         # ★ 攻めタイプ判定（追加）
         # ===============================
