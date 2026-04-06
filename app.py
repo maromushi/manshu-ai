@@ -1024,6 +1024,14 @@ if st.button("計算"):
             FS_mult[3] *= 0.93
             FS_mult[4] *= 0.90
             FS_mult[5] *= 0.75
+            
+        # ===============================
+        # ★ 統一フラグ（再定義で上書き）
+        # ===============================
+        StrongAttack = (race_type == "strong")
+        MidAttack    = (race_type == "mid")
+        WeakAttack   = (race_type == "weak")
+        NoAttackLine = (race_type == "none")
         
         
         # ===============================
