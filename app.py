@@ -1055,10 +1055,15 @@ if st.button("計算"):
         # ===============================
         # ★ 統一フラグ（再定義で上書き）
         # ===============================
-        StrongAttack = (race_type == "strong")
-        MidAttack    = (race_type == "mid")
-        WeakAttack   = (race_type == "weak")
-        NoAttackLine = (race_type == "none")
+        StrongAttack = (race_type == "StrongAttack")
+        MidAttack    = (race_type == "MidAttack")
+        WeakAttack   = (race_type == "WeakAttack")
+        NoAttackLine = (race_type == "no_attack")
+        
+        if NoAttackFlag == 1:
+            MidAttack = False
+            StrongAttack = False
+            WeakAttack = False
         
         
         # ===============================
