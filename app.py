@@ -1941,10 +1941,9 @@ if st.button("計算"):
                     
          # ★ 展開6の2着
         if DoubleAttackScore > 0.06:
-        
             if (
-                Start[5] == max(Start)
-                and Start[5] >= Start[3] - 0.02
+                Start[5] >= Start[3] - 0.01
+                and (Foot[5] >= 0.50 or Turn[5] >= 0.50)
             ):
                 SecondAdj[5] *= 1.15
         
@@ -2000,6 +1999,21 @@ if st.button("計算"):
             else:
                 SecondAdj[i] *= 0.90
                 
+        # ===============================
+        # ★ 5コースの入口制御（重要）
+        # ===============================
+        if DoubleAttackScore > 0.06:
+        
+            if (
+                Start[4] >= Start[2] - 0.02   # ←位置条件（5は3基準）
+            ):
+                SecondAdj[4] *= 1.08
+        
+            else:
+                SecondAdj[4] *= 0.85
+                
+                
+                
         if (
             DoubleAttackScore > 0.10
             and Start[5] == max(Start)
@@ -2007,6 +2021,8 @@ if st.button("計算"):
             and Foot[5] > 0.48  # ←これ追加
         ):
             SecondAdj[5] *= 1.15
+            
+        
                 
                 
         
