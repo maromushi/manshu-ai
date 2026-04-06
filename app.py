@@ -2944,7 +2944,9 @@ if st.button("計算"):
             ):
                 SecondAdj[5] = 0.55
                 
-                    
+            debug_log.append(("SecondAdj", [round(x,3) for x in SecondAdj]))
+                
+                  
 
             second_scores = [
                 SecondAdj[i] if Active[i]==1 else 0
@@ -3003,9 +3005,6 @@ if st.button("計算"):
                     results.append((boats[a],boats[b],boats[c],p))
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, StrongAttack, MidAttack
-        
-        debug_log.append(("SecondAdj", [round(x,3) for x in SecondAdj]))
-        
     # =====================================
     # 進入パターン
     # =====================================
