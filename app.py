@@ -658,14 +658,18 @@ if st.button("計算"):
         if (
             StartSpread < 0.08
             and max(AttackIndex[2:6]) < 0.55
-            and (
-                DoubleAttackScore < 0.08
-                or (
-                    DoubleAttackScore < 0.12
-                    and (max(Start) - min(Start)) < 0.07
-                )
-            )
         ):
+            NoAttackFlag = 1 if (
+                (max(Start) - min(Start)) < 0.08
+                and (
+                    DoubleAttackScore < 0.08
+                    or (
+                        DoubleAttackScore < 0.12
+                        and (max(Start) - min(Start)) < 0.07
+                    )
+                )
+            ) else 0
+            
             NoAttackFlag = 1
             
         # ===============================
@@ -1539,7 +1543,7 @@ if st.button("計算"):
         
         if NoAttackFlag == 0:
         
-            if DoubleAttackScore > 0.10:
+            if DoubleAttackScore > 0.10 and NoAttackFlag == 0:
                 FS_mult[2] *= 1.10
                 FS_mult[3] *= 1.12
                 FS_mult[0] *= 0.92
