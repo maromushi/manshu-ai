@@ -718,9 +718,8 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
               
-        if (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
-            DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.45)
-        
+        if (MidAttack or StrongAttack) and NoAttackFlag == 0:
+            DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.30)      
         # ===============================
         # ★ 攻めタイプ判定（追加）
         # ===============================
@@ -2432,16 +2431,16 @@ if st.button("計算"):
                 
         # ★ 中途半端ゾーンは6強めに殺す
         if DoubleAttackScore < 0.12:
-        
+
             strong6 = (
-                CPI[5] >= 0.50
-                and Foot[5] >= 0.50
-                and Start[5] >= Start[3] - 0.02
+                CPI[5] >= 0.52
+                and Foot[5] >= 0.52
+                and Start[5] >= Start[3] - 0.01
             )
         
             if not strong6:
-                SecondAdj[5] *= 0.50
-                ThirdAdj[5] *= 0.60
+                SecondAdj[5] *= 0.45
+                ThirdAdj[5] *= 0.55
         
         elif DoubleAttackScore <= 0.06:
             SecondAdj[5] *= 0.65
