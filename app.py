@@ -659,7 +659,7 @@ if st.button("計算"):
             StartSpread < 0.08
             and max(AttackIndex[2:6]) < 0.55
         ):
-            NoAttackFlag = 1 if (
+            if (
                 (max(Start) - min(Start)) < 0.08
                 and (
                     DoubleAttackScore < 0.08
@@ -668,9 +668,8 @@ if st.button("計算"):
                         and (max(Start) - min(Start)) < 0.07
                     )
                 )
-            ) else 0
-            
-            NoAttackFlag = 1
+            ):
+                NoAttackFlag = 1
             
         # ===============================
         # ★ 疑似攻め判定（ここに入れる）
@@ -1009,6 +1008,12 @@ if st.button("計算"):
         
         else:
             race_type = "normal"
+            
+        if NoAttackFlag == 1:
+            FS_mult[2] *= 0.95
+            FS_mult[3] *= 0.93
+            FS_mult[4] *= 0.90
+            FS_mult[5] *= 0.85
         
         
         # ===============================
@@ -1111,6 +1116,7 @@ if st.button("計算"):
         if (
             AttackIndex[2] >= AttackIndex[1]
             and DoubleAttackScore > 0.05
+            and NoAttackFlag == 0
         ):
             FS_mult[2] *= 1.08
         
@@ -1119,6 +1125,7 @@ if st.button("計算"):
             Turn[3] >= Turn[1]
             and Foot[3] >= Foot[1]
             and DoubleAttackScore > 0.06
+            and NoAttackFlag == 0
         ):
             FS_mult[3] *= 1.08
             
@@ -1571,7 +1578,7 @@ if st.button("計算"):
         # ===============================
         # ★ 攻め成立時の主役スライド（3を押す）
         # ===============================
-        if DoubleAttackScore > 0.04:
+        if DoubleAttackScore > 0.04 and NoAttackFlag == 0:
         
             # 3が攻め役 or 差し役として成立してる時だけ
             if (
