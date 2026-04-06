@@ -1502,7 +1502,8 @@ if st.button("計算"):
         StrongSixHead = (
             CPI[5] >= 0.60
             and Start[5] >= Start[3]
-            and DoubleAttackScore > 0.10
+            and DoubleAttackScore > 0.13
+            and NoAttackFlag == 0
         )
         
         if SixHeadFlag == 1 and StrongSixHead:
