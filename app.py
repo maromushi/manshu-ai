@@ -2091,7 +2091,7 @@ if st.button("計算"):
         
             if AttackFailB == 0:
         
-                for i in range(b+1, 6):
+                for i in range(b+1, 5):
                     SecondAdj[i] *= 1.05
                     
         # ===============================
@@ -2120,7 +2120,7 @@ if st.button("計算"):
         
             if AttackFailB == 0:
         
-                for i in range(b+1, 6):
+                for i in range(b+1, 5):
                     ThirdAdj[i] *= 1.08
                     
         # ===============================
@@ -2399,7 +2399,7 @@ if st.button("計算"):
             SecondAdj[5] *= 0.55
         
         elif DoubleAttackScore <= 0.06:
-            SecondAdj[5] *= 0.75
+            SecondAdj[5] *= 0.65
                 
 
         ThirdScore=[
