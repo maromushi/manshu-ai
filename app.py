@@ -1015,7 +1015,7 @@ if st.button("計算"):
             FS_mult[2] *= 0.95
             FS_mult[3] *= 0.93
             FS_mult[4] *= 0.90
-            FS_mult[5] *= 0.85
+            FS_mult[5] *= 0.75
         
         
         # ===============================
@@ -1304,7 +1304,7 @@ if st.button("計算"):
             
         # ★ 2の頭制限（これが本命）
         # ★ 2の頭制限（分岐版）
-        DoubleAttackScore > 0.13 and NoAttackFlag == 0
+        if DoubleAttackScore > 0.13 and NoAttackFlag == 0
 
             FS_mult[1] *= 0.88
         
@@ -2510,9 +2510,13 @@ if st.button("計算"):
         # ===============================
         # スタート主導外流入
         if (
-            DoubleAttackScore > 0.12   # ←ここ変更
+            DoubleAttackScore > 0.13
+            and NoAttackFlag == 0
             and Start[5] >= Start[3] - 0.02
-            and CLS[5] in ["A1","A2"]
+            and (
+                (CLS[5] in ["A1","A2"])   # ←従来
+                or (Foot[5] >= 0.52 and CPI[5] >= 0.50)  # ←代替
+            )
         ):
             ThirdAdj[5] *= 1.25
         
