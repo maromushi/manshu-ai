@@ -1023,6 +1023,20 @@ if st.button("計算"):
         
             FS_mult[0] *= 1.10
             
+        # ===============================
+        # ★ 疑似無風（SemiNoEvent）
+        # ===============================
+        SemiNoEvent = (
+            0.06 <= DoubleAttackScore <= 0.12
+            and (max(Start) - min(Start)) < 0.08
+        )
+        
+        if SemiNoEvent:
+            FS_mult[0] *= 1.08   # イン残る
+            FS_mult[1] *= 1.05   # 2差し残る
+            FS_mult[2] *= 0.98   # 3は頭弱め
+            FS_mult[3] *= 0.95   # 外抑制
+            
         # ★ 攻め成功でもイン残る（修正版）
 
         if (
@@ -1845,6 +1859,16 @@ if st.button("計算"):
         
                 if i == 0 and DoubleAttackScore > 0.05:
                     SecondAdj[0] *= 0.92
+                    
+        # ===============================
+        # ★ 疑似無風（2・3着安定）
+        # ===============================
+        if (
+            0.06 <= DoubleAttackScore <= 0.12
+            and (max(Start) - min(Start)) < 0.08
+        ):
+            SecondAdj[1] *= 1.12
+            ThirdAdj[2]  *= 1.15
         
         # ===============================
         # ★ 攻め失敗補正（調整版）
