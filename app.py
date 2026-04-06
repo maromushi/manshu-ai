@@ -774,7 +774,36 @@ if st.button("計算"):
                 AttackFailB = 1
         
                 
+        # ===============================
+        # ★ 前崩れ＆共倒れ定義（ここに固定）
+        # ===============================
         
+        FrontCollapse = (
+            DoubleAttackScore > 0.12
+            or (
+                Start[0] < max(Start[1:4]) - 0.03
+                and InsideSurvival[0] < 0.55
+            )
+        )
+        
+        TomoCollapse = False
+        
+        if len(main_attackers) >= 2:
+        
+            a = main_attackers[0]
+            b = main_attackers[1]
+        
+            if (
+                abs(AttackIndex[a] - AttackIndex[b]) < 0.05
+                and abs(Turn[a] - Turn[b]) < 0.04
+                and DoubleAttackScore > 0.08
+            ):
+                TomoCollapse = True
+        
+        OuterLock = 1
+        
+        if FrontCollapse or TomoCollapse:
+            OuterLock = 0
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -809,6 +838,8 @@ if st.button("計算"):
             Start[0] < Start[1] - 0.03
             and Attack3 == 1
         ) else 0
+        
+        
         
         # ===============================
         # CHAOS CORE
@@ -1678,6 +1709,22 @@ if st.button("計算"):
             # 攻め中途半端 → 頭じゃなくなる
             if DoubleAttackScore < 0.08:
                 FS_mult[1] *= 0.92
+                
+        # ===============================
+        # ★ 外の頭制御（ここに固定）
+        # ===============================
+        
+        if OuterLock == 1:
+            for i in range(4,6):
+                FS_mult[i] *= 0.55
+        
+        # 共倒れ補正
+        if TomoCollapse:
+            for atk in main_attackers:
+                FS_mult[atk] *= 0.90
+        
+            for i in range(4,6):
+                FS_mult[i] *= 1.10
                     
                 
         
@@ -2463,6 +2510,27 @@ if st.button("計算"):
                 for i in range(4,6):
                     SecondAdj[i] *= 0.65
                     ThirdAdj[i] *= 0.75
+                    
+        # ===============================
+        # ★ 外の封印＆解放（ここ固定）
+        # ===============================
+        
+        if OuterLock == 1:
+        
+            SecondAdj[4] *= 0.65
+            SecondAdj[5] *= 0.50
+        
+            ThirdAdj[4] *= 0.75
+            ThirdAdj[5] *= 0.60
+        
+        # 共倒れ時の外流入
+        if TomoCollapse:
+        
+            SecondAdj[4] *= 1.15
+            SecondAdj[5] *= 1.15
+        
+            ThirdAdj[4] *= 1.20
+            ThirdAdj[5] *= 1.20
                 
 
         ThirdScore=[
