@@ -1847,6 +1847,7 @@ if st.button("計算"):
         debug_log.append(("AttackFailA", AttackFailA))
         debug_log.append(("AttackFailB", AttackFailB))
         debug_log.append(("FinalFirst", [round(x,3) for x in FinalFirst]))
+        debug_log.append(("SecondAdj", [round(x,3) for x in SecondAdj]))
         
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
@@ -1974,12 +1975,7 @@ if st.button("計算"):
             elif AttackType == "sashi":
                 ThirdAdj[0] *= 1.10
                     
-                    
-         # ★ 展開6の2着（修正版）さ
-        
-        if (MidAttack or StrongAttack) and NoAttackFlag == 0:
-            if Start[5] == max(Start):
-                ThirdAdj[5] *= 1.10 
+                
         
         # ===============================
         # ★ スタート主導の外流入（追加）
@@ -2035,14 +2031,7 @@ if st.button("計算"):
                 
                 
                 
-        if (
-            DoubleAttackScore > 0.13
-            and NoAttackFlag == 0
-            and Start[5] == max(Start)
-            and CPI[5] > 0.45
-            and Foot[5] > 0.48
-        ):
-            SecondAdj[5] *= 1.15
+       
             
         
                 
@@ -2280,12 +2269,7 @@ if st.button("計算"):
         )    
         
 
-        # ===============================
-        # ★ 6の過剰2着抑制（追加）
-        # ===============================
-        
-        if NoAttackFlag == 1:
-            SecondAdj[5] *= 0.85
+ 
 
         # ===============================
         # ★ 2コース展開分岐（最重要）
@@ -2371,13 +2355,6 @@ if st.button("計算"):
             SecondAdj[1] *= 0.95
             SecondAdj[2] *= 0.97
 
-        else:
-
-            # 弱い6はしっかり消す
-            if Foot[5] < 0.45:
-                SecondAdj[5] *= 0.90
-            else:
-                SecondAdj[5] *= 1.00
                 
       
                 
@@ -2509,20 +2486,6 @@ if st.button("計算"):
             ThirdAdj[1] *= 1.08
         
                 
-        # ===============================
-        # ★ 展開6（性能じゃない6）
-        # ===============================
-        # スタート主導外流入
-        if (
-            DoubleAttackScore > 0.13
-            and NoAttackFlag == 0
-            and Start[5] >= Start[3] - 0.02
-            and (
-                (CLS[5] in ["A1","A2"])   # ←従来
-                or (Foot[5] >= 0.52 and CPI[5] >= 0.50)  # ←代替
-            )
-        ):
-            ThirdAdj[5] *= 1.25
         
         # ===============================
         # ★ 3着強化
@@ -2531,8 +2494,6 @@ if st.button("計算"):
         if (MidAttack or StrongAttack) and NoAttackFlag == 0:
             ThirdAdj[4] *= 1.15
         
-        if SixFlowFlag:
-            ThirdAdj[5] *= 1.20
 
         # ===== 3号艇の自然流入 =====
 
@@ -2893,15 +2854,7 @@ if st.button("計算"):
                             SecondAdj[i] *= 1.08
                             ThirdAdj[i] *= 1.04
 
-                    # ★ 6だけは条件付きにする
-                    if i == 5:
-                    
-                        if not (
-                            (MidAttack or StrongAttack)
-                            and Start[5] >= Start[3] - 0.02
-                        ):
-                            SecondAdj[5] *= 0.85
-                            ThirdAdj[5] *= 0.85
+          
             
                 # ===============================
                 # 内残り（条件付きに変更）
@@ -2947,16 +2900,7 @@ if st.button("計算"):
                 if Skill[i] < 0.30:
                     ThirdAdj[i] *= 0.90  
                     
-            # ===============================
-            # ★ 4頭時の6流入（ここに入れる）
-            # ===============================
-            
-                
-            if (
-                a == 3
-                and Strong6
-            ):
-                SecondAdj[5] *= 1.10
+        
                 
             # ===============================
             # ★ 1の2着・3着残り補正（改良版）
@@ -2987,57 +2931,18 @@ if st.button("計算"):
                 SecondAdj[0] *= 1.10
                 ThirdAdj[0] *= 1.05
                 
-            # ===============================
-            # ★ 弱い6は2着に来させない（ここに入れる）
-            # ===============================
-            if not (
-                CLS[5] in ["A1","A2"]
-                or (CPI[5] >= 0.50 and Foot[5] >= 0.52)
-            ):
-                SecondAdj[5] *= 0.80
+    
+
                 
-            # ===============================
-            # ★ 6の最終制御（統一版）
-            # ===============================
-            
-            six_flow = (
+      
+                
+            # ★ 6の最終固定（必ず一番最後）
+            if not (
                 (MidAttack or StrongAttack)
                 and Start[5] >= Start[3] - 0.02
-            )
-            
-            six_power = (
-                Foot[5] >= 0.50
-                or CPI[5] >= 0.48
-            )
-            
-            if (
-                six_flow
-                and six_power
-                and DoubleAttackScore > 0.13
-                and NoAttackFlag == 0
+                and (CPI[5] >= 0.50 or Foot[5] >= 0.52)
             ):
-                SecondAdj[5] *= 1.08
-                ThirdAdj[5] *= 1.12
-            else:
-                SecondAdj[5] *= 0.82
-                ThirdAdj[5] *= 0.85
-                
-            # ===============================
-            # ★ 6の2着 最終制御（完全固定）
-            # ===============================
-            weak6 = not (
-                CLS[5] in ["A1","A2"]
-                or (CPI[5] >= 0.52 and Foot[5] >= 0.53)
-            )
-            
-            if weak6:
-            
-                if DoubleAttackScore < 0.10:
-                    SecondAdj[5] = 0.40   # ←乗算じゃなく代入
-                else:
-                    SecondAdj[5] = 0.65
-                
-            
+                SecondAdj[5] = 0.55
                 
                     
 
