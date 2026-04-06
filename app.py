@@ -1730,6 +1730,7 @@ if st.button("計算"):
                 CrashFactor[i]*
                 SashiBoost[i]*
                 AttackBoost[i]
+                * (0.70 + 0.50 * (FinalFirst[i] / max(FinalFirst)))
             )
 
 
@@ -1845,6 +1846,7 @@ if st.button("計算"):
         debug_log.append(("Start", [round(x,3) for x in Start]))
         debug_log.append(("AttackFailA", AttackFailA))
         debug_log.append(("AttackFailB", AttackFailB))
+        debug_log.append(("FinalFirst", [round(x,3) for x in FinalFirst]))
         
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
