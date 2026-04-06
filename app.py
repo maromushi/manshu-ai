@@ -663,13 +663,13 @@ if st.button("計算"):
         # ===============================
         NoAttackFlag = 0
 
-        weak_attack_env = (
+        WeakAttack_env = (
             DoubleAttackScore < 0.12
         )
         
         if (
             StartSpread < 0.08
-            and weak_attack_env
+            and WeakAttack_env
             and max(AttackIndex[2:6]) < 0.60   # ←ここ緩和
         ):
             NoAttackFlag = 1
@@ -1008,13 +1008,13 @@ if st.button("計算"):
             race_type = "no_attack"
         
         elif DoubleAttackScore > 0.13:
-            race_type = "strong_attack"
+            race_type = "StrongAttack"
         
         elif DoubleAttackScore > 0.09:
             race_type = "mid_attack"
         
         elif (WeakAttack or MidAttack or StrongAttack):
-            race_type = "weak_attack"
+            race_type = "WeakAttack"
         
         else:
             race_type = "normal"
@@ -1030,7 +1030,7 @@ if st.button("計算"):
         # ② レースタイプごとの処理
         # ===============================
         
-        if race_type == "strong_attack":
+        if race_type == "StrongAttack":
         
             FS_mult[0] *= 0.85
             FS_mult[1] *= 0.90
@@ -1044,7 +1044,7 @@ if st.button("計算"):
             FS_mult[2] *= 1.05
             FS_mult[3] *= 1.06
         
-        elif race_type == "weak_attack":
+        elif race_type == "WeakAttack":
         
             FS_mult[0] *= 0.92
             FS_mult[1] *= 0.97
@@ -2003,7 +2003,7 @@ if st.button("計算"):
                 and Start[i] >= Start[3] - 0.02
             )
             
-            if strong_attack:
+            if StrongAttack:
                 if valid:
                     SecondAdj[i] *= 1.08
                 else:
@@ -2162,7 +2162,7 @@ if st.button("計算"):
         # ★ 内の処理
         # ===============================
         
-        if weak_attack:
+        if WeakAttack:
             if InsideSurvival[0] >= 0.45 and Start[0] >= Start[2] - 0.04:
                 SecondAdj[0] *= 1.20
                 ThirdAdj[0] *= 1.10
@@ -2172,7 +2172,7 @@ if st.button("計算"):
                 SecondAdj[0] *= 1.12
                 ThirdAdj[0] *= 1.05
         
-        elif strong_attack:
+        elif StrongAttack:
             SecondAdj[0] *= 0.90
         
         
