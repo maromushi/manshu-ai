@@ -1847,7 +1847,7 @@ if st.button("計算"):
         debug_log.append(("AttackFailA", AttackFailA))
         debug_log.append(("AttackFailB", AttackFailB))
         debug_log.append(("FinalFirst", [round(x,3) for x in FinalFirst]))
-        debug_log.append(("SecondAdj", [round(x,3) for x in SecondAdj]))
+        
         
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
@@ -3003,6 +3003,9 @@ if st.button("計算"):
                     results.append((boats[a],boats[b],boats[c],p))
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, StrongAttack, MidAttack
+        
+        debug_log.append(("SecondAdj", [round(x,3) for x in SecondAdj]))
+        
     # =====================================
     # 進入パターン
     # =====================================
