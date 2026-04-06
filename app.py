@@ -699,6 +699,16 @@ if st.button("計算"):
         ):
             NoAttackFlag = 1
             
+        # ★ 中途半端攻めは“無風扱い”
+            
+        if (
+            0.08 <= DoubleAttackScore <= 0.12
+            and (max(Start) - min(Start)) < 0.08
+            and max(AttackIndex[2:6]) < 0.60
+            and AttackSuccessScore < 0.03
+        ):
+            NoAttackFlag = 1
+            
         # ===============================
         # ★ 疑似攻め判定（ここに入れる）
         # ===============================
@@ -2421,11 +2431,18 @@ if st.button("計算"):
                 ThirdAdj[i]  *= 1.08
                 
         # ★ 中途半端ゾーンは6強めに殺す
-        if 0.06 < DoubleAttackScore < 0.12:
-            SecondAdj[5] *= 0.45
+        if DoubleAttackScore < 0.12:
+            SecondAdj[5] *= 0.35
+            ThirdAdj[5] *= 0.70
         
         elif DoubleAttackScore <= 0.06:
             SecondAdj[5] *= 0.65
+            
+        # ★ 無風時は外基本消す
+        if NoAttackFlag == 1:
+            for i in range(4,6):
+                SecondAdj[i] *= 0.60
+                ThirdAdj[i] *= 0.80
                 
 
         ThirdScore=[
