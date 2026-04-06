@@ -690,7 +690,7 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
               
-        if DoubleAttackScore > 0.05 and NoAttackFlag == 0:
+        if (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
             DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.45)
         
         # ===============================
@@ -985,7 +985,7 @@ if st.button("計算"):
         # ===============================
         # ★ イン流れ（複数攻め版）
         # ===============================
-        if DoubleAttackScore > 0.05 and NoAttackFlag == 0:
+        if (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
         
             for atk in main_attackers:
         
@@ -1013,7 +1013,7 @@ if st.button("計算"):
         elif DoubleAttackScore > 0.09:
             race_type = "mid_attack"
         
-        elif DoubleAttackScore > 0.05:
+        elif (WeakAttack or MidAttack or StrongAttack):
             race_type = "weak_attack"
         
         else:
@@ -1077,7 +1077,7 @@ if st.button("計算"):
         # ★ 攻め成功でもイン残る（修正版）
 
         if (
-            DoubleAttackScore > 0.08
+            (MidAttack or StrongAttack)
             and len(main_attackers) > 0
             and AttackFailA == 0   # ←追加
         ):
@@ -1115,26 +1115,28 @@ if st.button("計算"):
         # ③ 個別性能補正（ここだけ許可）
         # ===============================
         
-        # イン強いなら少し上げる
+        # イン強いなら少し上げる（そのまま）
         if (
             Skill[0] >= 0.55
             and Engine[0] >= 0.50
         ):
             FS_mult[0] *= 1.05
         
+        
         # 3が攻め役なら強化
         if (
             AttackIndex[2] >= AttackIndex[1]
-            and DoubleAttackScore > 0.05
+            and (MidAttack or StrongAttack)   # ←ここ変更
             and NoAttackFlag == 0
         ):
             FS_mult[2] *= 1.08
+        
         
         # 4が明確に強いなら
         if (
             Turn[3] >= Turn[1]
             and Foot[3] >= Foot[1]
-            and DoubleAttackScore > 0.06
+            and (MidAttack or StrongAttack)   # ←ここ変更
             and NoAttackFlag == 0
         ):
             FS_mult[3] *= 1.08
@@ -1149,7 +1151,7 @@ if st.button("計算"):
         # ===============================
         if (
             CLS[3] == "A1"
-            and DoubleAttackScore > 0.05
+            and (WeakAttack or MidAttack or StrongAttack)
             and Start[3] <= Start[2] + 0.01
         ):
             FS_mult[3] *= 0.90
@@ -1181,7 +1183,7 @@ if st.button("計算"):
             CLS[5] == "A2"
             and CPI[5] >= 0.55
             and Start[5] >= Start[3] - 0.01
-            and DoubleAttackScore > 0.08
+            and (MidAttack or StrongAttack)
         )
         
         # ===============================
@@ -1242,7 +1244,7 @@ if st.button("計算"):
         if (
             Turn[2] == max(Turn)
             and Foot[2] >= Foot[1]
-            and DoubleAttackScore > 0.06   # ←これ追加
+            and (MidAttack or StrongAttack)   # ←ここだけ変更
         ):
             FS_mult[2] *= 1.25
             
@@ -1260,7 +1262,7 @@ if st.button("計算"):
             Skill[2] >= 0.50
             and Foot[2] >= max(Foot[0], Foot[1])
             and Turn[2] >= max(Turn[0], Turn[1])
-            and DoubleAttackScore > 0.06   # ←これ追加
+            and (MidAttack or StrongAttack)   # ←ここだけ変更
         ):
             FS_mult[2] *= 1.20
             
@@ -1323,7 +1325,7 @@ if st.button("計算"):
                 FS_mult[1] *= 0.95
         
         
-        elif DoubleAttackScore > 0.07 and NoAttackFlag == 0:
+        elif (MidAttack or StrongAttack) and NoAttackFlag == 0:
         
             FS_mult[1] *= 0.93
         
@@ -1333,7 +1335,7 @@ if st.button("計算"):
                 FS_mult[1] *= 0.95
         
         
-        elif DoubleAttackScore > 0.05 and NoAttackFlag == 0:
+        elif (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
         
             FS_mult[1] *= 0.97
             
@@ -1375,7 +1377,7 @@ if st.button("計算"):
                 chaos_weight *= 0.9
                 
             # でも完全イン信頼ではない
-            if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
+            if (MidAttack or StrongAttack) and NoAttackFlag == 0:
                 FS_mult[2] *= 1.04
                 FS_mult[3] *= 1.05
                 
@@ -1397,7 +1399,7 @@ if st.button("計算"):
                 FS_mult[0] *= 0.93
         
             # 3・4攻め強化
-            if DoubleAttackScore > 0.05 and NoAttackFlag == 0:
+            if (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
                 FS_mult[2] *= 1.08
                 FS_mult[3] *= 1.10
         
@@ -1434,7 +1436,7 @@ if st.button("計算"):
         elif venue == "蒲郡":
         
             # ほぼそのまま＋微調整だけ
-            if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
+            if (MidAttack or StrongAttack) and NoAttackFlag == 0:
                 FS_mult[2] *= 1.03
                 FS_mult[3] *= 1.04
                 
@@ -1908,7 +1910,7 @@ if st.button("計算"):
                 if 2 <= i <= 4 and CPI[i] >= 0.45:
                     ThirdAdj[i] *= 1.08
         
-                if i == 0 and DoubleAttackScore > 0.05:
+                if i == 0 and (WeakAttack or MidAttack or StrongAttack):
                     SecondAdj[0] *= 0.92
                     
         # ===============================
@@ -1942,7 +1944,7 @@ if st.button("計算"):
         
         # ★ 攻め時の2残り復活（汎用版）
 
-        if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
+        if (MidAttack or StrongAttack) and NoAttackFlag == 0:
         
             st_good = Start[1] >= max(Start[0], Start[2]) - 0.01
             perf_ok = CPI[1] >= (sum(CPI)/6) - 0.05
@@ -1959,7 +1961,7 @@ if st.button("計算"):
         # ★ 攻めタイプ別イン残り（修正版）
         # ===============================
         
-        if DoubleAttackScore > 0.05 and NoAttackFlag == 0:
+        if (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
         
             # --- Second（2着）---
             if AttackType == "makuri":
@@ -1980,7 +1982,7 @@ if st.button("計算"):
                     
          # ★ 展開6の2着（修正版）さ
         
-        if DoubleAttackScore > 0.08 and NoAttackFlag == 0:
+        if (MidAttack or StrongAttack) and NoAttackFlag == 0:
             if Start[5] == max(Start):
                 ThirdAdj[5] *= 1.10 
         
@@ -1991,7 +1993,7 @@ if st.button("計算"):
         
             if (
                 Start[i] >= max(Start[1:4]) - 0.01
-                and DoubleAttackScore > 0.08
+                and (MidAttack or StrongAttack)
             ):
                 # ★ 上げるんじゃなくて下げを無効化
                 SecondAdj[i] = max(SecondAdj[i], 1.05)
@@ -2034,7 +2036,7 @@ if st.button("計算"):
         # ===============================
         # ★ 5コースの入口制御（重要）
         # ===============================
-        if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
+        if (MidAttack or StrongAttack) and NoAttackFlag == 0:
         
             if (
                 Start[4] >= Start[2] - 0.02   # ←位置条件（5は3基準）
@@ -2231,14 +2233,14 @@ if st.button("計算"):
             SecondAdj[1] *= 1.05
         
         if venue == "住之江":
-            if DoubleAttackScore > 0.07 and NoAttackFlag == 0:
+            if (MidAttack or StrongAttack) and NoAttackFlag == 0:
                 SecondAdj[3] *= 1.10
                 SecondAdj[4] *= 1.08
                 
         # ===============================
         # ★ 展開拾い（複数攻め）
         # ===============================
-        if DoubleAttackScore > 0.08 and NoAttackFlag == 0:   # ←これ追加
+        if (MidAttack or StrongAttack) and NoAttackFlag == 0:   # ←これ追加
             if len(main_attackers) > 0:
                 main_atk = main_attackers[0]
             else:
@@ -2270,13 +2272,13 @@ if st.button("計算"):
         # ===============================
         
         FlowOuter = (
-            DoubleAttackScore > 0.08
+            (MidAttack or StrongAttack)
             or OuterClusterFlag == 1
         )
         
         FiveFlowFlag = (
             FlowOuter
-            and DoubleAttackScore > 0.07   # ←追加（これが本質）
+            and (MidAttack or StrongAttack)   # ←追加（これが本質）
             and Foot[4] >= 0.50            # ←少し上げる
             and CPI[4] >= 0.48             # ←ANDにする
             and Start[4] >= Start[2] - 0.02
@@ -2284,7 +2286,7 @@ if st.button("計算"):
         
         SixFlowFlag = (
             FlowOuter
-            and DoubleAttackScore > 0.07
+            and (MidAttack or StrongAttack)
             and Foot[5] >= 0.52
             and CPI[5] >= 0.50
             and Start[5] >= Start[3] - 0.02
@@ -2302,7 +2304,7 @@ if st.button("計算"):
         # ★ 2コース展開分岐（最重要）
         # ===============================
         
-        if DoubleAttackScore > 0.05 and NoAttackFlag == 0:
+        if (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
         
             # ■まくり → 2は巻き込まれる
             if AttackType == "makuri":
@@ -2316,7 +2318,7 @@ if st.button("計算"):
             elif AttackType == "sashi":
                 SecondAdj[1] *= 1.15
                 
-        if DoubleAttackScore > 0.05 and NoAttackFlag == 0:
+        if (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
 
             if AttackType == "makuri":
                 ThirdAdj[1] *= 0.90
@@ -2371,7 +2373,7 @@ if st.button("計算"):
             CPI[5] >= 0.50
             and Foot[5] >= 0.55
             and (
-                DoubleAttackScore > 0.06
+                if (MidAttack or StrongAttack)
                 or OuterClusterFlag == 1
             )
         ):
@@ -2407,7 +2409,7 @@ if st.button("計算"):
             )
         
             flow_race = (
-                DoubleAttackScore > 0.08
+                (MidAttack or StrongAttack)
             )
         
             # ■来る理由がない外は消す
@@ -2504,7 +2506,7 @@ if st.button("計算"):
         # ★ 1の過剰残り抑制（ここ）
         # ===============================
         if (
-            DoubleAttackScore > 0.08
+            (MidAttack or StrongAttack)
             and Start[0] < Start[2] - 0.02
         ):
             ThirdAdj[0] *= 0.90
@@ -2539,7 +2541,7 @@ if st.button("計算"):
         # ★ 3着強化
         # ===============================
         
-        if DoubleAttackScore > 0.08 and NoAttackFlag == 0:
+        if (MidAttack or StrongAttack) and NoAttackFlag == 0:
             ThirdAdj[4] *= 1.15
         
         if SixFlowFlag:
@@ -2607,7 +2609,7 @@ if st.button("計算"):
             # ===============================
             # ★ 展開3着強化（汎用版）
             # ===============================
-            if attack_success and DoubleAttackScore > 0.05:
+            if attack_success and (WeakAttack or MidAttack or StrongAttack):
             
                 for i in range(2,5):
             
@@ -2682,7 +2684,7 @@ if st.button("計算"):
                 sub  = main_attackers[1]
             
                 if (
-                    DoubleAttackScore > 0.08
+                    (MidAttack or StrongAttack)
                     and AttackIndex[main] > 0.45
                     and AttackIndex[sub] > 0.45
                 ):
@@ -2706,7 +2708,7 @@ if st.button("計算"):
                                 ThirdAdj[i] *= 1.05
                         
             # ★ ズレ決着の許容（万舟用）
-            if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
+            if (MidAttack or StrongAttack) and NoAttackFlag == 0:
                 for i in range(6):
                     if i >= 2:
                         ThirdAdj[i] *= 1.05
@@ -2718,7 +2720,7 @@ if st.button("計算"):
             # ===============================
             if (
                 P1[a] < 0.15
-                and DoubleAttackScore > 0.08
+                and (MidAttack or StrongAttack)
             ):
                 P_first *= 1.10
             
@@ -2788,9 +2790,9 @@ if st.button("計算"):
                 # ■ 強崩壊（レース壊す）
                 # ===============================
                 if (
-                    (st_gap < -0.04 and DoubleAttackScore > 0.06)
+                    (st_gap < -0.04 and (MidAttack or StrongAttack))
                     or (st_gap < -0.03 and Start[i] < Start[i-1] - 0.02)
-                ):   
+                ):
                 
                     # 頭も崩す → 2着3着へ移動
                     SecondAdj[i] *= 0.75
@@ -2830,7 +2832,7 @@ if st.button("計算"):
             
                 is_attacker = (st_gap < -0.02)
 
-                if is_attacker and i >= 2 and DoubleAttackScore > 0.05:
+                if is_attacker and i >= 2 and (WeakAttack or MidAttack or StrongAttack):
                 
                     if Start[0] < Start[i] - 0.02:
                         SecondAdj[0] *= 0.65
@@ -2879,12 +2881,12 @@ if st.button("計算"):
 
                             # ★ 展開6は殺さない
                             if not (
-                                DoubleAttackScore > 0.08
+                                (MidAttack or StrongAttack)
                                 and Start[i] >= Start[3] - 0.02
                             ):
                                 if not (
                                     i == 5
-                                    and DoubleAttackScore > 0.08
+                                    and (MidAttack or StrongAttack)
                                     and Start[i] >= Start[3] - 0.02
                                 ):
                                     if Foot[i] < 0.50:
@@ -2896,7 +2898,7 @@ if st.button("計算"):
                     # ===== 外の残り再設計 =====
                     if i == 4:
                         if (
-                            DoubleAttackScore > 0.07
+                            (MidAttack or StrongAttack)
                             and Start[i] >= Start[2] - 0.02
                             and Foot[i] >= 0.50
                             and CPI[i] >= 0.48
@@ -2908,7 +2910,7 @@ if st.button("計算"):
                     if i == 5:
                     
                         if not (
-                            DoubleAttackScore > 0.08
+                            (MidAttack or StrongAttack)
                             and Start[5] >= Start[3] - 0.02
                         ):
                             SecondAdj[5] *= 0.85
@@ -2931,11 +2933,13 @@ if st.button("計算"):
                 # 基本位置
                 if i == 2:   # 3号艇
                     ThirdAdj[i] *= 1.10
+                
                 elif i == 3: # 4号艇
                     ThirdAdj[i] *= 1.08
+                
                 elif i == 4:
                 
-                    if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
+                    if (MidAttack or StrongAttack) and NoAttackFlag == 0:
                         ThirdAdj[i] *= 1.05
                     else:
                         ThirdAdj[i] *= 0.98
@@ -2949,7 +2953,7 @@ if st.button("計算"):
                         ThirdAdj[i] *= 1.00   # 基本はあまり削らない
 
                 # 展開ある時だけ6を少し戻す
-                if i == 5 and DoubleAttackScore > 0.08:
+                if i == 5 and (MidAttack or StrongAttack):
                     ThirdAdj[i] *= 1.10
 
                 # 弱すぎる艇だけ削る
@@ -3010,7 +3014,7 @@ if st.button("計算"):
             # ===============================
             
             six_flow = (
-                DoubleAttackScore > 0.08
+                (MidAttack or StrongAttack)
                 and Start[5] >= Start[3] - 0.02
             )
             
@@ -3279,7 +3283,7 @@ if st.button("計算"):
             mark = "○"
     
         # ▲は攻め条件＋上位6まで
-        elif i <= 5 and DoubleAttackScore > 0.06 and head >= 2:
+        elif i <= 5 and (MidAttack or StrongAttack) and head >= 2:
             mark = "▲"
     
         else:
