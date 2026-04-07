@@ -1301,13 +1301,7 @@ if st.button("計算"):
             if Foot[i] < 0.40:
                 FS_mult[i] *= 0.75
 
-            # ★ ここに追加
-            if i == 5:
-                if Start[5] < Start[3] - 0.02:
-                    FS_mult[5] *= 0.55
-        
-                if AvgST[5] > 0.20:
-                    FS_mult[5] *= 0.75
+
                     
 
 
@@ -2578,8 +2572,6 @@ if st.button("計算"):
                 SecondAdj[5] *= 0.25
                 ThirdAdj[5] *= 0.35
         
-        elif DoubleAttackScore <= 0.06:
-            SecondAdj[5] *= 0.65
             
         # ★ 無風時は外基本消す
         if NoAttackFlag == 1:
@@ -2594,25 +2586,19 @@ if st.button("計算"):
                     ThirdAdj[i] *= 0.75
                     
         # ===============================
-        # ★ 外の封印＆解放（ここ固定）
+        # ★ 6コース最終制御（完全統一版）
         # ===============================
         
-        if OuterLock == 1:
+        valid6 = (
+            (MidAttack or StrongAttack)
+            and NoAttackFlag == 0
+            and Start[5] >= Start[3] - 0.02
+            and (CPI[5] >= 0.52 or Foot[5] >= 0.52)
+        )
         
-            SecondAdj[4] *= 0.65
-            SecondAdj[5] *= 0.50
-        
-            ThirdAdj[4] *= 0.75
-            ThirdAdj[5] *= 0.60
-        
-        # 共倒れ時の外流入
-        if TomoCollapse:
-        
-            SecondAdj[4] *= 1.15
-            SecondAdj[5] *= 1.15
-        
-            ThirdAdj[4] *= 1.20
-            ThirdAdj[5] *= 1.20
+        if not valid6:
+            SecondAdj[5] = 0.01
+            ThirdAdj[5]  = 0.02
             
         # ===============================
         # ★ 中間レースの5制御（追加）
@@ -2627,18 +2613,6 @@ if st.button("計算"):
             SecondAdj[4] *= 0.75
             ThirdAdj[4] *= 0.85
             
-        # ===============================
-        # ★ 中間展開の6制御（ここ追加）
-        # ===============================
-        
-        if (
-            OuterLock == 0
-            and not TomoCollapse
-            and DoubleAttackScore < 0.12
-        ):
-        
-            SecondAdj[5] *= 0.65
-            ThirdAdj[5] *= 0.80
                 
 
         ThirdScore=[
@@ -3176,22 +3150,6 @@ if st.button("計算"):
             ):
                 SecondAdj[0] *= 1.10
                 ThirdAdj[0] *= 1.05
-                
-    
-            # ===============================
-            # ★ 中途半端ゾーン最終キル（ここに入れる）
-            # ===============================
-            if DoubleAttackScore < 0.12 and NoAttackFlag == 0:
-            
-                valid6 = (
-                    (MidAttack or StrongAttack)
-                    and Start[5] >= Start[3] - 0.02
-                    and (CPI[5] >= 0.52 or Foot[5] >= 0.52)
-                )
-            
-                if not valid6:
-                    SecondAdj[5] *= 0.50
-                    ThirdAdj[5] *= 0.60
                 
       
                 
