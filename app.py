@@ -1748,17 +1748,7 @@ if st.button("計算"):
                 SecondAdj[4] *= 1.08
             else:
                 SecondAdj[4] *= 0.85       
-                    
-                    
-        # ★ 展開6の2着強制浮上（ここが本命）
 
-        if DoubleAttackScore > 0.06:
-        
-            if (
-                Start[5] == max(Start)   # 最速スタート
-                and Start[5] >= Start[3] - 0.02
-            ):
-                SecondAdj[5] *= 1.25
                 
         # ★ 6の流入（条件厳格化）
         if DoubleAttackScore > 0.10:
@@ -1779,10 +1769,11 @@ if st.button("計算"):
         
             if (
                 Start[i] >= max(Start[1:4]) - 0.01
-                and DoubleAttackScore > 0.05
+                and DoubleAttackScore > 0.10
             ):
                 # ★ 上げるんじゃなくて下げを無効化
-                SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.05)
+                # ❌ 削除 or 弱体化
+                SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.01)
                 ThirdAdj[i]  = max(ThirdAdj[i], 1.05)
         
         # ===============================
