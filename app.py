@@ -550,8 +550,7 @@ if st.button("計算"):
                 ):
                     AttackSuccess = 1
                     
-                if AttackSuccess == 0:
-                    DoubleAttackScore *= 0.75
+            
                 
         st.write("attackers:", attackers)
         st.write("AttackSuccess:", AttackSuccess)
@@ -673,6 +672,9 @@ if st.button("計算"):
         ])
         
         DoubleAttackScore += PseudoAttack * 0.03
+        
+        if AttackSuccess == 0:
+            DoubleAttackScore *= 0.75
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -918,9 +920,9 @@ if st.button("計算"):
         
         elif race_type == "no_attack":
         
-            FS_mult[0] *= 1.08
-            FS_mult[1] *= 0.95
-            FS_mult[2] *= 0.95
+            FS_mult[0] *= 1.10
+            FS_mult[1] *= 1.02
+            FS_mult[2] *= 1.00
             FS_mult[3] *= 0.95
         
         else:  # normal
