@@ -549,6 +549,9 @@ if st.button("計算"):
                     and AttackIndex[atk] > AttackIndex[atk-1] + 0.03
                 ):
                     AttackSuccess = 1
+                    
+                if AttackSuccess == 0:
+                    DoubleAttackScore *= 0.75
                 
         st.write("attackers:", attackers)
         st.write("AttackSuccess:", AttackSuccess)
@@ -669,7 +672,7 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        DoubleAttackScore += PseudoAttack * 0.10
+        DoubleAttackScore += PseudoAttack * 0.03
 
         # ===============================
         # 攻め主体判定（改良版）
