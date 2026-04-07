@@ -866,7 +866,11 @@ if st.button("計算"):
         NoAttackFlag = 0
 
         # 無風条件
-        if AttackSuccess == 0 and DoubleAttackScore < 0.06:
+        if (
+            AttackSuccess == 0
+            and len(attackers) == 0
+            and DoubleAttackScore < 0.08
+        ):
             NoAttackFlag = 1
         
     
