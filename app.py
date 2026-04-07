@@ -682,7 +682,7 @@ if st.button("計算"):
         DoubleAttackScore += PseudoAttack * 0.03
         
         if AttackSuccess == 0:
-            DoubleAttackScore *= 0.5
+            DoubleAttackScore *= 0.65
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -881,7 +881,7 @@ if st.button("計算"):
         elif AttackSuccess == 1 and DoubleAttackScore > MID:
             race_type = "mid_attack"
         
-        elif DoubleAttackScore > WEAK and AttackSuccess == 1:
+        elif AttackSuccess == 1 and DoubleAttackScore > WEAK:
             race_type = "weak_attack"
         
         else:
@@ -930,32 +930,6 @@ if st.button("計算"):
             FS_mult[1] *= 1.02
             FS_mult[2] *= 1.00
             FS_mult[3] *= 0.95
-        
-        else:  # normal
-        
-            FS_mult[0] *= 1.10
-            
-        # ===============================
-        # ★ パターン補正（追加）
-        # ===============================
-        
-        if race_type == "no_attack":
-            FS_mult[0] *= 1.10
-            FS_mult[1] *= 1.05
-            for i in range(3,6):
-                FS_mult[i] *= 0.60
-        
-        elif race_type == "mid_attack":
-            FS_mult[0] *= 0.92
-            FS_mult[2] *= 1.10
-            FS_mult[3] *= 1.12
-            FS_mult[4] *= 0.85
-            FS_mult[5] *= 0.75
-        
-        elif race_type == "strong_attack":
-            FS_mult[0] *= 0.85
-            for i in range(2,6):
-                FS_mult[i] *= 1.08
         
         
         # ===============================
