@@ -1058,7 +1058,7 @@ if st.button("計算"):
             FS_mult[2] *= 1.10
             FS_mult[3] *= 1.12
         
-"""
+        """
 
         for i in range(6):
             if Fcount[i] == 1:
@@ -1735,7 +1735,7 @@ if st.button("計算"):
         
         FinalFirst = [FirstScore[i]*FS_mult_base[i] for i in range(6)]
 
-"""
+        """
 
         # ===============================
         # ATTACK BOOST
