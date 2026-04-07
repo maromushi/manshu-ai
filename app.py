@@ -815,28 +815,7 @@ if st.button("計算"):
                 FS_mult[i] *= 0.95
             elif Fcount[i] >= 2:
                 FS_mult[i] *= 0.90
-                
-        # ===============================
-        # ★ シンプルレース制御（追加）
-        # ===============================
-        
-        if DoubleAttackScore < 0.06:
-            # 固いレース（イン残り）
-            FS_mult[0] *= 1.15
-            FS_mult[1] *= 1.05
-        
-            for i in range(3,6):
-                FS_mult[i] *= 0.60
-        
-        elif DoubleAttackScore > 0.10:
-            # 攻めレース（外入る）
-            FS_mult[0] *= 0.90
-            FS_mult[2] *= 1.10
-            FS_mult[3] *= 1.12
             
-        # ★これ追加（超重要）
-            FS_mult[4] *= 0.85
-            FS_mult[5] *= 0.75
                 
         # ===============================
         # ★ FS_mult統一ブロック（完成形）
@@ -1399,26 +1378,6 @@ if st.button("計算"):
             FS_mult[0] *= 0.92
             
         # ===============================
-        # ★ 攻め展開時の外強化
-        # ===============================
-        
-        if NoAttackFlag == 0:
-        
-            if DoubleAttackScore > 0.10:
-                FS_mult[2] *= 1.10
-                FS_mult[3] *= 1.12
-                FS_mult[0] *= 0.92
-        
-            elif DoubleAttackScore > 0.07:
-                FS_mult[2] *= 1.05
-                FS_mult[3] *= 1.06
-                FS_mult[0] *= 0.98
-        
-            else:
-                FS_mult[0] *= 1.05
-            
-
-        # ===============================
         # ★ 中間展開のイン復活（最重要）
         # ===============================
         if (
@@ -1429,33 +1388,8 @@ if st.button("計算"):
             FS_mult[0] *= 1.12
         
         
-        # ===============================
-        # ★ 攻め成立時の主役スライド（3を押す）
-        # ===============================
-        if DoubleAttackScore > 0.04:
-        
-            # 3が攻め役 or 差し役として成立してる時だけ
-            if (
-                AttackIndex[2] >= AttackIndex[1] - 0.02
-                and Foot[2] >= 0.48
-            ):
-                FS_mult[2] *= 1.12
                 
-        # ===============================
-        # ★ イン流れ（複数攻め版）
-        # ===============================
-        if DoubleAttackScore > 0.05:
-        
-            for atk in attackers:
-        
-                st_gap = Start[atk] - Start[0]
-        
-                if (
-                    -0.01 <= st_gap <= 0.03
-                    and Turn[0] < Turn[atk]
-                ):
-                    FS_mult[0] *= 0.60
-                    break
+     
                     
         
 
@@ -1646,20 +1580,7 @@ if st.button("計算"):
 
             LaneCPI.append(value)
             
-        # ===============================
-        # ★ 展開主役スライド（汎用）
-        # ===============================
-        for i in range(2,6):
-        
-            if (
-                Start[i] >= Start[i-1] - 0.03
-                and (
-                    AttackIndex[i] >= max(AttackIndex[2:6]) - 0.03
-                    or Turn[i] >= max(Turn[2:6]) - 0.03
-                )
-            ):
-                FS_mult[i] *= 1.15
-        
+     
         
         # ★ スタート負けイン追加（ここも続けて入れる）
         if DoubleAttackScore > 0.05:
