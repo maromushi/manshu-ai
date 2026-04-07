@@ -857,14 +857,42 @@ if st.button("計算"):
         # ★ レース分類（新）
         # ===============================
         
+        # ===============================
+        # ★ 攻めの質チェック（最重要）
+        # ===============================
+        
+        AttackQuality = max(AttackIndex[2:4])  # 3・4
+        
+        LowAttackPower = (
+            AttackQuality < 0.48
+            or (CPI[2] < 0.35 and CPI[3] < 0.45)
+        )
+        
+        if LowAttackPower:
+            race_pattern = "calm"
+        
         if DoubleAttackScore < 0.06 and StartSpread < 0.08:
             race_pattern = "calm"   # 無風
         
         elif DoubleAttackScore > 0.12 and StartSpread > 0.10:
             race_pattern = "crash"  # 事故・崩壊
+            
+        elif DoubleAttackScore > 0.09:
+            race_pattern = "attack_mid"
         
         else:
             race_pattern = "attack" # 攻め
+            
+        
+        # ★ 展示だけ速い雑魚カット
+        
+        if (
+            ExST[3] <= 0.05
+            and Skill[3] < 0.45
+        ):
+            FS_mult[3] *= 0.85
+            
+        
         
         
         # ===============================
