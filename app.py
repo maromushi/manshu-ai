@@ -1738,6 +1738,17 @@ if st.button("計算"):
                 if st_loss:
                     ThirdAdj[0] *= 0.95
                     
+         # ★ 5の流入（統一）
+        if DoubleAttackScore > 0.10:
+        
+            is_fast = Start[4] >= Start[2] - 0.01
+            has_power = (Foot[4] >= 0.52 and CPI[4] >= 0.50)
+        
+            if is_fast and has_power:
+                SecondAdj[4] *= 1.08
+            else:
+                SecondAdj[4] *= 0.85       
+                    
                     
         # ★ 展開6の2着強制浮上（ここが本命）
 
@@ -1749,12 +1760,17 @@ if st.button("計算"):
             ):
                 SecondAdj[5] *= 1.25
                 
-        # ★ 展開6の3着流入
+        # ★ 6の流入（条件厳格化）
+        if DoubleAttackScore > 0.10:
         
-        if DoubleAttackScore > 0.06:
+            is_fast = Start[5] >= max(Start[2:4]) - 0.01
+            has_power = (Foot[5] >= 0.52 and CPI[5] >= 0.50)
+            good_class = CLS[5] in ["A1","A2"]
         
-            if Start[5] == max(Start):
-                ThirdAdj[5] *= 1.20
+            if is_fast and has_power and good_class:
+                SecondAdj[5] *= 1.12
+            else:
+                SecondAdj[5] *= 0.80
         
         # ===============================
         # ★ スタート主導の外流入（追加）
