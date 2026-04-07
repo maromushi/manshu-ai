@@ -674,6 +674,39 @@ if st.button("計算"):
         
         if LowStartSpread and NoStrongAttacker:
             DoubleAttackScore *= 0.65
+            
+        # ===============================
+        # ★ 内支配判定（汎用版）
+        # ===============================
+        
+        # ■ スタート連動（ズレてないか）
+        StartTight = (
+            (Start[1] >= Start[0] - 0.02)
+            and (Start[2] >= Start[1] - 0.02)
+        )
+        
+        # ■ 内の旋回性能（相対評価）
+        avg_turn = sum(Turn) / 6
+        
+        TurnInnerOK = (
+            Turn[1] >= avg_turn - 0.03
+            and Turn[2] >= avg_turn - 0.03
+        )
+        
+        # ■ 内の総合力（CPI）
+        avg_cpi = sum(CPI) / 6
+        
+        CPIInnerOK = (
+            CPI[1] >= avg_cpi - 0.05
+            and CPI[2] >= avg_cpi - 0.05
+        )
+        
+        # ■ 最終判定
+        InsideDominance = (
+            StartTight
+            and TurnInnerOK
+            and CPIInnerOK
+        )
         
         
         # ===============================
@@ -2012,6 +2045,31 @@ if st.button("計算"):
         ):
             SecondAdj[1] *= 1.12
             ThirdAdj[2]  *= 1.15
+            
+        # ===============================
+        # ★ 無風の質分岐（最重要）
+        # ===============================
+        
+        if NoAttackFlag == 1:
+        
+            if InsideDominance:
+                # ■ 完全イン戦（1-2-3型）
+                SecondAdj[1] *= 1.18
+                ThirdAdj[2]  *= 1.15
+        
+                # 外は抑制（強すぎない）
+                for i in range(3,6):
+                    SecondAdj[i] *= 0.82
+                    ThirdAdj[i]  *= 0.90
+        
+            else:
+                # ■ ズレ型無風（1-4-2残す）
+                SecondAdj[1] *= 1.05
+                SecondAdj[3] *= 1.05
+        
+                # 外は軽く抑制だけ
+                SecondAdj[4] *= 0.88
+                SecondAdj[5] *= 0.80
         
         # ===============================
         # ★ 攻め失敗補正（調整版）
