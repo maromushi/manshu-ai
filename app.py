@@ -508,16 +508,7 @@ if st.button("計算"):
         # ===============================
         attackers = []
         
-        AttackSuccess = 0
-
-        if len(attackers) > 0:
-            atk = attackers[0]
         
-            if (
-                Start[atk] >= Start[atk-1] - 0.02
-                and Turn[atk] >= Turn[atk-1] - 0.02
-            ):
-                AttackSuccess = 1
         
         for i in range(2,6):
             if (
@@ -541,6 +532,17 @@ if st.button("計算"):
             ),
             reverse=True
         )
+        
+        AttackSuccess = 0
+
+        if len(attackers) > 0:
+            atk = attackers[0]
+        
+            if (
+                Start[atk] >= Start[atk-1] - 0.02
+                and Turn[atk] >= Turn[atk-1] - 0.02
+            ):
+                AttackSuccess = 1
 
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
@@ -1895,7 +1897,7 @@ if st.button("計算"):
         # ===============================
         # ★ 展開拾い（複数攻め）
         # ===============================
-        if DoubleAttackScore > 0.08:   # ←これ追加
+        if DoubleAttackScore > 0.08 and NoAttackFlag == 0:   # ←これ追加
             if len(attackers) > 0:
                 main_atk = attackers[0]
             else:
@@ -2195,7 +2197,7 @@ if st.button("計算"):
             # ===============================
             # ★ 展開3着強化（汎用版）
             # ===============================
-            if attack_success and DoubleAttackScore > 0.05:
+            if attack_success and DoubleAttackScore > 0.05 and NoAttackFlag == 0:
             
                 for i in range(2,5):
             
@@ -2295,7 +2297,7 @@ if st.button("計算"):
                                 ThirdAdj[i] *= 1.05
                         
             # ★ ズレ決着の許容（万舟用）
-            if DoubleAttackScore > 0.06:
+            if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
                 for i in range(6):
                     if i >= 2:
                         ThirdAdj[i] *= 1.05
