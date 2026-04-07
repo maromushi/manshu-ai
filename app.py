@@ -1067,9 +1067,19 @@ if st.button("計算"):
             FS_mult[2] *= 0.90
             FS_mult[3] *= 0.85
         
-            # 外浮上（重要）
+            # ===============================
+            # ★ 外の個別評価（修正版）
+            # ===============================
+            
             for i in range(4,6):
-                FS_mult[i] *= 1.05
+            
+                is_fast = Start[i] >= max(Start[2:4]) - 0.01
+                has_power = (Foot[i] >= 0.50 or CPI[i] >= 0.48)
+            
+                if DoubleAttackScore > 0.08 and is_fast and has_power:
+                    SecondAdj[i] *= 1.10
+                else:
+                    SecondAdj[i] *= 0.90
         
         # ===============================
         # ★ イン安定補正（これが本命）
