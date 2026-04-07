@@ -1697,7 +1697,7 @@ if st.button("計算"):
         
         # ★ 攻め時の2残り復活（汎用版）
 
-        if DoubleAttackScore > WEAK:
+        if DoubleAttackScore > WEAK and AttackSuccess == 1:
         
             st_good = Start[1] >= max(Start[0], Start[2]) - 0.01
             perf_ok = CPI[1] >= (sum(CPI)/6) - 0.05
@@ -1730,7 +1730,7 @@ if st.button("計算"):
                     
         # ★ 攻め時のイン3着分岐（完成版）
 
-        if DoubleAttackScore > WEAK:
+        if DoubleAttackScore > WEAK and AttackSuccess == 1:
         
             st_loss = Start[0] < Start[2]
             weak_inside = InsideSurvival[0] < 0.55
