@@ -682,10 +682,7 @@ if st.button("計算"):
         DoubleAttackScore += PseudoAttack * 0.03
         
         if AttackSuccess == 0:
-            DoubleAttackScore *= 0.65
-        
-        if AttackSuccess == 0:
-            DoubleAttackScore *= 0.75
+            DoubleAttackScore *= 0.5
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -866,12 +863,11 @@ if st.button("計算"):
         # ===============================
         NoAttackFlag = 0
 
-        if (
-            StartSpread < 0.09
-            and DoubleAttackScore < 0.08
-        ):
+        # 無風条件
+        if AttackSuccess == 0 and DoubleAttackScore < 0.06:
             NoAttackFlag = 1
         
+    
         # ===============================
         # ① レースタイプ分岐（最重要）
         # ===============================
@@ -1204,7 +1200,7 @@ if st.button("計算"):
                 FS_mult[1] *= 0.95
         
         
-        elif DoubleAttackScore > WEAK:
+        elif DoubleAttackScore > WEAK and AttackSuccess == 1:
         
             FS_mult[1] *= 0.97
             
@@ -1246,7 +1242,7 @@ if st.button("計算"):
                 chaos_weight *= 0.9
                 
             # でも完全イン信頼ではない
-            if DoubleAttackScore > WEAK:
+            if DoubleAttackScore > WEAK and AttackSuccess == 1:
                 FS_mult[2] *= 1.04
                 FS_mult[3] *= 1.05
                 
@@ -1262,7 +1258,7 @@ if st.button("計算"):
                 FS_mult[0] *= 0.93
         
             # 3・4攻め強化
-            if DoubleAttackScore > WEAK:
+            if DoubleAttackScore > WEAK and AttackSuccess == 1:
                 FS_mult[2] *= 1.08
                 FS_mult[3] *= 1.10
         
@@ -1299,7 +1295,7 @@ if st.button("計算"):
         elif venue == "蒲郡":
         
             # ほぼそのまま＋微調整だけ
-            if DoubleAttackScore > WEAK:
+            if DoubleAttackScore > WEAK and AttackSuccess == 1:
                 FS_mult[2] *= 1.03
                 FS_mult[3] *= 1.04
                 
@@ -1631,7 +1627,7 @@ if st.button("計算"):
      
         
         # ★ スタート負けイン追加（ここも続けて入れる）
-        if DoubleAttackScore > WEAK:
+        if DoubleAttackScore > WEAK and AttackSuccess == 1:
             if Start[0] < max(Start[1:4]):
                 FS_mult[0] *= 0.92
         
@@ -1704,7 +1700,7 @@ if st.button("計算"):
         
         # ★ 攻め時の2残り復活（汎用版）
 
-        if DoubleAttackScore > WEAK and NoAttackFlag == 0:
+        if DoubleAttackScore > WEAK:
         
             st_good = Start[1] >= max(Start[0], Start[2]) - 0.01
             perf_ok = CPI[1] >= (sum(CPI)/6) - 0.05
@@ -1731,7 +1727,7 @@ if st.button("計算"):
             else:
                 SecondAdj[0] *= 0.92
         
-        elif DoubleAttackScore > WEAK:
+        elif DoubleAttackScore > WEAK and AttackSuccess == 1:
             if st_loss:
                 SecondAdj[0] *= 0.92
                     
@@ -2156,7 +2152,7 @@ if st.button("計算"):
         # ★ 3着強化
         # ===============================
         
-        if FiveFlowFlag and DoubleAttackScore > WEAK:
+        if FiveFlowFlag and DoubleAttackScore > WEAK and AttackSuccess == 1:
             ThirdAdj[4] *= 1.15
         
         if SixFlowFlag:
@@ -2218,7 +2214,7 @@ if st.button("計算"):
             # ===============================
             # ★ 展開3着強化（汎用版）
             # ===============================
-            if attack_success and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+            if attack_success and DoubleAttackScore > WEAK:
             
                 for i in range(2,5):
             
@@ -2318,7 +2314,7 @@ if st.button("計算"):
                                 ThirdAdj[i] *= 1.05
                         
             # ★ ズレ決着の許容（万舟用）
-            if DoubleAttackScore > WEAK and NoAttackFlag == 0:
+            if DoubleAttackScore > WEAK:
                 for i in range(6):
                     if i >= 2:
                         ThirdAdj[i] *= 1.05
