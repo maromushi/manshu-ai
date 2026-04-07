@@ -555,9 +555,6 @@ if st.button("計算"):
                     AttackSuccess = 1
                     
             
-                
-        st.write("attackers:", attackers)
-        st.write("AttackSuccess:", AttackSuccess)
 
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
@@ -666,9 +663,7 @@ if st.button("計算"):
         +
         0.5 * (TwoLaneAttackScore * ThreeLaneAttackScore)
         )
-        
-        st.write("DAS:", DoubleAttackScore)
-        st.write("WEAK/MID/STRONG:", WEAK, MID, STRONG)
+    
         
         # ===============================
         # ★ 疑似攻め判定（ここに入れる）
@@ -683,6 +678,11 @@ if st.button("計算"):
         
         if AttackSuccess == 0:
             DoubleAttackScore *= 0.65
+            
+        debug_log.append(("attackers", attackers))
+        debug_log.append(("AttackSuccess", AttackSuccess))
+        debug_log.append(("DAS", round(DoubleAttackScore,4)))
+        debug_log.append(("WEAK/MID/STRONG", (WEAK, MID, STRONG)))
 
         # ===============================
         # 攻め主体判定（改良版）
