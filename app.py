@@ -264,6 +264,8 @@ if st.button("計算"):
 
     def run_ai(order):
         
+        debug_log = []
+        
         results = []
 
         FC=[Fcount[i] for i in order]
@@ -1608,7 +1610,7 @@ if st.button("計算"):
         #デバック
         FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
 
-        debug_log = []
+        
         debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
