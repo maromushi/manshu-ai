@@ -1,3 +1,5 @@
+バックアップ
+
 import streamlit as st
 
 st.title("万舟AI")
@@ -833,6 +835,10 @@ if st.button("計算"):
             FS_mult[0] *= 0.90
             FS_mult[2] *= 1.10
             FS_mult[3] *= 1.12
+            
+        # ★これ追加（超重要）
+            FS_mult[4] *= 0.85
+            FS_mult[5] *= 0.75
                 
         # ===============================
         # ★ FS_mult統一ブロック（完成形）
@@ -869,6 +875,19 @@ if st.button("計算"):
         
         else:
             race_type = "normal"
+            
+        # ===============================
+        # ★ レース分類（新）
+        # ===============================
+        
+        if DoubleAttackScore < 0.06 and StartSpread < 0.08:
+            race_pattern = "calm"   # 無風
+        
+        elif DoubleAttackScore > 0.12 and StartSpread > 0.10:
+            race_pattern = "crash"  # 事故・崩壊
+        
+        else:
+            race_pattern = "attack" # 攻め
         
         
         # ===============================
@@ -904,6 +923,28 @@ if st.button("計算"):
         else:  # normal
         
             FS_mult[0] *= 1.10
+            
+        # ===============================
+        # ★ パターン補正（追加）
+        # ===============================
+        
+        if race_pattern == "calm":
+            FS_mult[0] *= 1.15
+            FS_mult[1] *= 1.05
+            for i in range(3,6):
+                FS_mult[i] *= 0.60
+        
+        elif race_pattern == "attack":
+            FS_mult[0] *= 0.92
+            FS_mult[2] *= 1.10
+            FS_mult[3] *= 1.12
+            FS_mult[4] *= 0.85
+            FS_mult[5] *= 0.75
+        
+        elif race_pattern == "crash":
+            FS_mult[0] *= 0.85
+            for i in range(2,6):
+                FS_mult[i] *= 1.08
         
         
         # ===============================
