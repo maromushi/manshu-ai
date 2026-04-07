@@ -1,5 +1,3 @@
-バックアップ
-
 import streamlit as st
 
 st.title("万舟AI")
