@@ -2020,6 +2020,8 @@ if st.button("計算"):
         if (
             CPI[5] >= 0.50
             and Foot[5] >= 0.55
+            and DoubleAttackScore > MID   # ←変更
+            and NoAttackFlag == 0
             and (
                 DoubleAttackScore > WEAK
                 or OuterClusterFlag == 1
@@ -2077,7 +2079,7 @@ if st.button("計算"):
         for i in range(6):
 
             if i in [2,3]:
-                if DoubleAttackScore > WEAK:
+                if DoubleAttackScore > WEAK and NoAttackFlag == 0:
                     ThirdAdj[i] *= 1.12
     
         # ===============================
@@ -2308,7 +2310,7 @@ if st.button("計算"):
                                 ThirdAdj[i] *= 1.05
                         
             # ★ ズレ決着の許容（万舟用）
-            if DoubleAttackScore > WEAK:
+            if DoubleAttackScore > WEAK and NoAttackFlag == 0:
                 for i in range(6):
                     if i >= 2:
                         ThirdAdj[i] *= 1.05
@@ -2557,7 +2559,7 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.08
                 elif i == 4:
                 
-                    if DoubleAttackScore > WEAK:
+                    if DoubleAttackScore > WEAK and NoAttackFlag == 0:
                         ThirdAdj[i] *= 1.05
                     else:
                         ThirdAdj[i] *= 0.98
@@ -2644,8 +2646,8 @@ if st.button("計算"):
             # ===============================
             if race_type == "no_attack":
                 for i in range(3,6):
-                    SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.7)
-                    ThirdAdj[i]  = min(ThirdAdj[i], 0.75)
+                    SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.60)
+                    ThirdAdj[i]  = min(ThirdAdj[i], 0.65)
                     
 
             second_scores = [
