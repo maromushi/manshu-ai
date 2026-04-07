@@ -1452,8 +1452,12 @@ if st.button("計算"):
         AttackBoost2 = 1 + 0.20 * TwoLaneAttackScore
         AttackBoost3 = 1 + 0.30 * ThreeLaneAttackScore
         AttackBoost4 = 1 + 0.25 * FourLaneAttackScore
-        AttackBoost5 = 1 + 0.35 * DoubleAttackScore
-        AttackBoost6 = 1 + 0.25 * DoubleAttackScore
+        if AttackSuccess == 1:
+            AttackBoost5 = 1 + 0.35 * DoubleAttackScore
+            AttackBoost6 = 1 + 0.25 * DoubleAttackScore
+        else:
+            AttackBoost5 = 1.0
+            AttackBoost6 = 1.0
 
         AttackBoost=[
         AttackBoost1,
@@ -1463,6 +1467,10 @@ if st.button("計算"):
         AttackBoost5,
         AttackBoost6
         ]
+        
+        if NoAttackFlag == 1:
+            for i in range(3,6):
+                AttackBoost[i] *= 0.85
 
         if OuterPowerCheck < 0.55:
             AttackBoost[3] *= 0.85
@@ -1595,7 +1603,7 @@ if st.button("計算"):
                     value *= 1.05
             
             # 展開艇補正
-            if ExhibitLeader[i] == 1 and i >= 3:
+            if ExhibitLeader[i] == 1 and i >= 3 and NoAttackFlag == 0:
                 value *= 1.08
 
             # 差し補正
