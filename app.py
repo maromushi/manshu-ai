@@ -1695,14 +1695,6 @@ if st.button("計算"):
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
         
-        # ===============================
-        # ★ 無風は外を殺す（最重要）
-        # ===============================
-        if race_type == "no_attack":
-            for i in range(3,6):
-                SecondAdj[i] *= 0.70
-                ThirdAdj[i] *= 0.75
-        
         # ★ 攻め時の2残り復活（汎用版）
 
         if DoubleAttackScore > WEAK and AttackSuccess == 1:
@@ -2651,6 +2643,11 @@ if st.button("計算"):
             else:
                 SecondAdj[5] *= 0.82
                 ThirdAdj[5] *= 0.85
+                
+            if NoAttackFlag == 1:
+                for i in range(3,6):
+                    SecondAdj[i] *= 0.70
+                    ThirdAdj[i] *= 0.75
                 
             # ===============================
             # ★ 無風ロック（最終ブレーキ）
