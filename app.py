@@ -647,7 +647,7 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.6)
+        DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.4)
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -854,14 +854,10 @@ if st.button("計算"):
             race_type = "normal"
             
         # ===============================
-        # ★ レース分類（新）
+        # ★ レース分類（修正版）
         # ===============================
         
-        # ===============================
-        # ★ 攻めの質チェック（最重要）
-        # ===============================
-        
-        AttackQuality = max(AttackIndex[2:4])  # 3・4
+        AttackQuality = max(AttackIndex[2:4])
         
         LowAttackPower = (
             AttackQuality < 0.48
@@ -871,17 +867,17 @@ if st.button("計算"):
         if LowAttackPower:
             race_pattern = "calm"
         
-        if DoubleAttackScore < 0.06 and StartSpread < 0.08:
-            race_pattern = "calm"   # 無風
+        elif DoubleAttackScore < 0.06 and StartSpread < 0.08:
+            race_pattern = "calm"
         
         elif DoubleAttackScore > 0.12 and StartSpread > 0.10:
-            race_pattern = "crash"  # 事故・崩壊
-            
+            race_pattern = "crash"
+        
         elif DoubleAttackScore > 0.09:
             race_pattern = "attack_mid"
         
         else:
-            race_pattern = "attack" # 攻め
+            race_pattern = "attack"
             
         
         # ★ 展示だけ速い雑魚カット
