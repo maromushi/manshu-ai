@@ -1128,6 +1128,11 @@ if st.button("計算"):
             MidAttack = False
             StrongAttack = False
             WeakAttack = False
+            
+        # ★ 無風は攻めロジック完全停止
+        if NoAttackFlag == 1:
+            DoubleAttackScore = 0.0
+            AttackSuccessScore = 0.0
         
         
         # ===============================
@@ -1155,10 +1160,16 @@ if st.button("計算"):
         
         elif race_type == "no_attack":
         
-            FS_mult[0] *= 1.08
-            FS_mult[1] *= 0.95
-            FS_mult[2] *= 0.95
-            FS_mult[3] *= 0.95
+            FS_mult[0] *= 1.12
+            FS_mult[1] *= 1.02
+        
+            # 中央は少し抑制
+            FS_mult[2] *= 0.92
+            FS_mult[3] *= 0.88
+        
+            # 外は頭禁止（これが本質）
+            FS_mult[4] *= 0.75
+            FS_mult[5] *= 0.60
         
         else:  # normal
         
@@ -1760,6 +1771,10 @@ if st.button("計算"):
             ):
                 TomoCollapse = True
                     
+        # ★ 無風は外の頭完全制御（最終ブレーキ）
+        if NoAttackFlag == 1:
+            for i in range(3,6):
+                FS_mult[i] = min(FS_mult[i], 0.90)
                 
         
         # ===============================
