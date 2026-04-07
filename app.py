@@ -512,7 +512,8 @@ if st.button("計算"):
         
         for i in range(2,6):
             if (
-                Start[i] >= Start[i-1] - 0.06
+                Start[i] > Start[i-1] + 0.02   # ←完全に逆＆厳しく
+                and AttackIndex[i] > AttackIndex[i-1]
                 and (
                     AttackIndex[i] >= max(AttackIndex[2:6]) - 0.05
                     or Turn[i] >= max(Turn[2:6]) - 0.03
