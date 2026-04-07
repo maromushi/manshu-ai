@@ -2070,6 +2070,18 @@ if st.button("計算"):
                 # 外は軽く抑制だけ
                 SecondAdj[4] *= 0.88
                 SecondAdj[5] *= 0.80
+                
+            # ★ 無風ズレ型の6完全カット（汎用）
+            if NoAttackFlag == 1:
+                
+                valid6 = (
+                    CPI[5] >= 0.55
+                    and Start[5] >= Start[3] - 0.01
+                )
+            
+                if not valid6:
+                    SecondAdj[5] = 0.01
+                    ThirdAdj[5]  = 0.02
         
         # ===============================
         # ★ 攻め失敗補正（調整版）
