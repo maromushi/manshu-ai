@@ -508,6 +508,17 @@ if st.button("計算"):
         # ===============================
         attackers = []
         
+        AttackSuccess = 0
+
+        if len(attackers) > 0:
+            atk = attackers[0]
+        
+            if (
+                Start[atk] >= Start[atk-1] - 0.02
+                and Turn[atk] >= Turn[atk-1] - 0.02
+            ):
+                AttackSuccess = 1
+        
         for i in range(2,6):
             if (
                 Start[i] >= Start[i-1] - 0.06
@@ -838,10 +849,9 @@ if st.button("計算"):
         # ① レースタイプ分岐（最重要）
         # ===============================
         
-        # ★ 先に無風判定（これが最重要）
         if (
-            DoubleAttackScore < 0.12
-            and max(Start) - min(Start) < 0.14
+            AttackSuccess == 0
+            and DoubleAttackScore < 0.13
         ):
             race_type = "no_attack"
             NoAttackFlag = 1
