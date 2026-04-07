@@ -647,7 +647,7 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        DoubleAttackScore = max(DoubleAttackScore, PseudoAttack * 0.4)
+        DoubleAttackScore += PseudoAttack * 0.2
 
         # ===============================
         # 攻め主体判定（改良版）
