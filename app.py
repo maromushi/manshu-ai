@@ -853,32 +853,7 @@ if st.button("計算"):
         else:
             race_type = "normal"
             
-        # ===============================
-        # ★ レース分類（修正版）
-        # ===============================
-        
-        AttackQuality = max(AttackIndex[2:4])
-        
-        LowAttackPower = (
-            AttackQuality < 0.48
-            or (CPI[2] < 0.35 and CPI[3] < 0.45)
-        )
-        
-        if LowAttackPower:
-            race_type = "no_attack"
-            NoAttackFlag = 1
-        
-        elif DoubleAttackScore < 0.06 and StartSpread < 0.08:
-            race_pattern = "calm"
-        
-        elif DoubleAttackScore > 0.12 and StartSpread > 0.10:
-            race_pattern = "crash"
-        
-        elif DoubleAttackScore > 0.09:
-            race_pattern = "attack_mid"
-        
-        else:
-            race_pattern = "attack"
+
             
         
         # ★ 展示だけ速い雑魚カット
