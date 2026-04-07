@@ -967,6 +967,7 @@ if st.button("計算"):
         if (
             AttackIndex[2] >= AttackIndex[1]
             and DoubleAttackScore > WEAK
+            and NoAttackFlag == 0
         ):
             FS_mult[2] *= 1.08
         
@@ -1103,17 +1104,19 @@ if st.button("計算"):
         if (
             Turn[2] == max(Turn)
             and Foot[2] >= Foot[1]
-            and DoubleAttackScore > WEAK   # ←これ追加
+            and DoubleAttackScore > WEAK
+            and NoAttackFlag == 0
         ):
             FS_mult[2] *= 1.25
             
         # ★ 3の展示攻め補強（追加）
         if (
-            Start[2] >= Start[1] + 0.02
-            and ExST[2] <= 0.05
+            ExST[2] <= 0.05
+            and Start[2] >= Start[1] + 0.02
+            and NoAttackFlag == 0
         ):
             FS_mult[2] *= 1.15
-            
+                    
         # ===============================
         # ★ 3のまくり差し強化（超重要）
         # ===============================
@@ -2310,10 +2313,10 @@ if st.button("計算"):
                                 ThirdAdj[i] *= 1.05
                         
             # ★ ズレ決着の許容（万舟用）
-            if DoubleAttackScore > WEAK and NoAttackFlag == 0:
-                for i in range(6):
-                    if i >= 2:
-                        ThirdAdj[i] *= 1.05
+            #if DoubleAttackScore > WEAK and NoAttackFlag == 0:
+                #for i in range(6):
+                    #if i >= 2:
+                        #ThirdAdj[i] *= 1.05
                         
             
             
