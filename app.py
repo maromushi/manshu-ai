@@ -865,7 +865,8 @@ if st.button("計算"):
         )
         
         if LowAttackPower:
-            race_pattern = "calm"
+            race_type = "no_attack"
+            NoAttackFlag = 1
         
         elif DoubleAttackScore < 0.06 and StartSpread < 0.08:
             race_pattern = "calm"
@@ -1682,7 +1683,7 @@ if st.button("計算"):
         
         # ★ 攻め時の2残り復活（汎用版）
 
-        if DoubleAttackScore > 0.06:
+        if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
         
             st_good = Start[1] >= max(Start[0], Start[2]) - 0.01
             perf_ok = CPI[1] >= (sum(CPI)/6) - 0.05
@@ -1822,7 +1823,7 @@ if st.button("計算"):
         
         # ★ 攻め成立時の前削り（汎用）
 
-        if DoubleAttackScore > 0.06:
+        if DoubleAttackScore > 0.06 and NoAttackFlag == 0:
         
             for i in range(0,2):  # 1・2コース
                 if Start[i] < Start[2] - 0.02:
