@@ -647,7 +647,7 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        DoubleAttackScore += PseudoAttack * 0.2
+        DoubleAttackScore += PseudoAttack * 0.10
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -829,8 +829,8 @@ if st.button("計算"):
         NoAttackFlag = 0
 
         if (
-            StartSpread < 0.08
-            and DoubleAttackScore < 0.06
+            StartSpread < 0.09
+            and DoubleAttackScore < 0.08
         ):
             NoAttackFlag = 1
         
@@ -930,7 +930,7 @@ if st.button("計算"):
         # ===============================
         
         if race_pattern == "calm":
-            FS_mult[0] *= 1.15
+            FS_mult[0] *= 1.10
             FS_mult[1] *= 1.05
             for i in range(3,6):
                 FS_mult[i] *= 0.60
@@ -1076,8 +1076,8 @@ if st.button("計算"):
                 is_fast = Start[i] >= max(Start[2:4]) - 0.01
                 has_power = (Foot[i] >= 0.50 or CPI[i] >= 0.48)
             
-                if DoubleAttackScore > 0.08 and is_fast and has_power:
-                    SecondAdj[i] *= 1.10
+                if is_fast and has_power:
+                    pass  # 何もしない or 微調整
                 else:
                     SecondAdj[i] *= 0.90
         
@@ -1797,7 +1797,7 @@ if st.button("計算"):
             
             if strong_attack:
                 if valid:
-                    SecondAdj[i] *= 1.08
+                    SecondAdj[i] *= 1.05
                 else:
                     SecondAdj[i] *= 0.85
             
