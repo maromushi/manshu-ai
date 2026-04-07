@@ -930,20 +930,20 @@ if st.button("計算"):
         # ★ パターン補正（追加）
         # ===============================
         
-        if race_pattern == "calm":
+        if race_type == "no_attack":
             FS_mult[0] *= 1.10
             FS_mult[1] *= 1.05
             for i in range(3,6):
                 FS_mult[i] *= 0.60
         
-        elif race_pattern == "attack":
+        elif race_type == "mid_attack":
             FS_mult[0] *= 0.92
             FS_mult[2] *= 1.10
             FS_mult[3] *= 1.12
             FS_mult[4] *= 0.85
             FS_mult[5] *= 0.75
         
-        elif race_pattern == "crash":
+        elif race_type == "strong_attack":
             FS_mult[0] *= 0.85
             for i in range(2,6):
                 FS_mult[i] *= 1.08
