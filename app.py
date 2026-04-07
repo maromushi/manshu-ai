@@ -1719,12 +1719,19 @@ if st.button("計算"):
                 FS_mult[i] *= 0.55
         
         # 共倒れ補正
-        if TomoCollapse:
-            for atk in main_attackers:
-                FS_mult[atk] *= 0.90
+        TomoCollapse = False
+
+        if len(main_attackers) >= 2:
         
-            for i in range(4,6):
-                FS_mult[i] *= 1.10
+            a = main_attackers[0]
+            b = main_attackers[1]
+        
+            if (
+                abs(AttackIndex[a] - AttackIndex[b]) < 0.04   # ←厳しく
+                and abs(Turn[a] - Turn[b]) < 0.035           # ←厳しく
+                and DoubleAttackScore > 0.11                 # ←ここ重要
+            ):
+                TomoCollapse = True
                     
                 
         
@@ -2531,6 +2538,19 @@ if st.button("計算"):
         
             ThirdAdj[4] *= 1.20
             ThirdAdj[5] *= 1.20
+            
+        # ===============================
+        # ★ 中間展開の6制御（ここ追加）
+        # ===============================
+        
+        if (
+            OuterLock == 0
+            and not TomoCollapse
+            and DoubleAttackScore < 0.12
+        ):
+        
+            SecondAdj[5] *= 0.65
+            ThirdAdj[5] *= 0.80
                 
 
         ThirdScore=[
