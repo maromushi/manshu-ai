@@ -866,29 +866,39 @@ if st.button("計算"):
         NoAttackFlag = 0
 
         # 無風条件
+        if AttackSuccess == 0 and DoubleAttackScore < 0.06:
+            NoAttackFlag = 1
+        
+    
+        # ===============================
+        # ① レースタイプ分岐（修正版）
+        # ===============================
+        
+        # ★ 無風判定（最重要）
         if (
             AttackSuccess == 0
             and len(attackers) == 0
             and DoubleAttackScore < 0.08
         ):
             NoAttackFlag = 1
+        else:
+            NoAttackFlag = 0
         
-    
-        # ===============================
-        # ① レースタイプ分岐（最重要）
-        # ===============================
         
+        # ★ レースタイプ決定
         if NoAttackFlag == 1:
             race_type = "no_attack"
         
-        elif AttackSuccess == 1 and DoubleAttackScore > STRONG:
-            race_type = "strong_attack"
+        elif AttackSuccess == 1:
         
-        elif AttackSuccess == 1 and DoubleAttackScore > MID:
-            race_type = "mid_attack"
+            if DoubleAttackScore > STRONG:
+                race_type = "strong_attack"
         
-        elif AttackSuccess == 1 and DoubleAttackScore > WEAK:
-            race_type = "weak_attack"
+            elif DoubleAttackScore > MID:
+                race_type = "mid_attack"
+        
+            else:
+                race_type = "weak_attack"
         
         else:
             race_type = "normal"
@@ -936,6 +946,10 @@ if st.button("計算"):
             FS_mult[1] *= 1.02
             FS_mult[2] *= 1.00
             FS_mult[3] *= 0.95
+            
+            # ★外は明確に殺す（最重要）
+            FS_mult[4] *= 0.80
+            FS_mult[5] *= 0.70
         
         
         # ===============================
