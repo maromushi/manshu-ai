@@ -838,7 +838,15 @@ if st.button("計算"):
         # ① レースタイプ分岐（最重要）
         # ===============================
         
-        if DoubleAttackScore > 0.10:
+        # ★ 先に無風判定（これが最重要）
+        if (
+            DoubleAttackScore < 0.12
+            and max(Start) - min(Start) < 0.14
+        ):
+            race_type = "no_attack"
+            NoAttackFlag = 1
+        
+        elif DoubleAttackScore > 0.10:
             race_type = "strong_attack"
         
         elif DoubleAttackScore > 0.07:
@@ -846,9 +854,6 @@ if st.button("計算"):
         
         elif DoubleAttackScore > 0.05:
             race_type = "weak_attack"
-        
-        elif NoAttackFlag == 1:
-            race_type = "no_attack"
         
         else:
             race_type = "normal"
