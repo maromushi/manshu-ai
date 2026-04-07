@@ -510,7 +510,7 @@ if st.button("計算"):
         
         
         
-        for i in range(2,6):
+        for i in range(2,4):
             if (
                 Start[i] > Start[i-1] + 0.02   # ←完全に逆＆厳しく
                 and AttackIndex[i] > AttackIndex[i-1]
@@ -864,13 +864,13 @@ if st.button("計算"):
             race_type = "no_attack"
             NoAttackFlag = 1
         
-        elif DoubleAttackScore > 0.10:
+        elif AttackSuccess == 1 and DoubleAttackScore > 0.10:
             race_type = "strong_attack"
         
-        elif DoubleAttackScore > 0.07:
+        elif AttackSuccess == 1 and DoubleAttackScore > 0.07:
             race_type = "mid_attack"
         
-        elif DoubleAttackScore > 0.05:
+        elif AttackSuccess == 1 and DoubleAttackScore > 0.05:
             race_type = "weak_attack"
         
         else:
