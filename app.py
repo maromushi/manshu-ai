@@ -2648,7 +2648,11 @@ if st.button("計算"):
                 for i in range(3,6):
                     SecondAdj[i] *= 0.70
                     ThirdAdj[i] *= 0.60
-                
+                    
+            if NoAttackFlag == 1:
+                for i in range(4,6):
+                    FS_mult[i] *= 0.85
+                        
             # ===============================
             # ★ 無風ロック（最終ブレーキ）
             # ===============================
