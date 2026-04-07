@@ -907,6 +907,48 @@ if st.button("計算"):
             chaos_weight = 1.3   # 荒れ
             
         # ===============================
+        # ★ レースタイプ分類（追加）
+        # ===============================
+        
+        def classify_race(DoubleAttackScore, InsideSurvival, StartSpread, main_attackers):
+        
+            if DoubleAttackScore < 0.05:
+                return "solid"
+        
+            if DoubleAttackScore < 0.09:
+                return "semi"
+        
+            if DoubleAttackScore >= 0.09:
+        
+                if len(main_attackers) >= 2:
+        
+                    a = main_attackers[0]
+                    b = main_attackers[1]
+        
+                    if (
+                        abs(AttackIndex[a] - AttackIndex[b]) < 0.05
+                        and abs(Turn[a] - Turn[b]) < 0.04
+                    ):
+                        if InsideSurvival[0] < 0.55:
+                            return "tomo_outer"
+                        else:
+                            return "tomo_inside"
+        
+                return "attack"
+        
+            return "normal"
+        
+        
+        race_type = classify_race(
+            DoubleAttackScore,
+            InsideSurvival,
+            max(Start) - min(Start),
+            main_attackers
+        )
+        
+        st.write("race_type:", race_type)
+            
+        # ===============================
         # AUTO MODE 判定
         # ===============================
         
@@ -1000,6 +1042,23 @@ if st.button("計算"):
         ]
         
         FS_mult = [1.0]*6
+        
+        if race_type == "solid":
+
+            FS_mult[0] *= 1.15
+            FS_mult[1] *= 1.05
+        
+            for i in range(3,6):
+                FS_mult[i] *= 0.6
+        
+        
+        elif race_type == "attack":
+        
+            FS_mult[0] *= 0.90
+            FS_mult[2] *= 1.10
+            FS_mult[3] *= 1.12
+        
+        """
 
         for i in range(6):
             if Fcount[i] == 1:
@@ -1007,115 +1066,7 @@ if st.button("計算"):
             elif Fcount[i] >= 2:
                 FS_mult[i] *= 0.90
                 
-        # ===============================
-        # ★ FS_mult統一ブロック（完成形）
-        # ===============================
-        # ===============================
-        # ★ 共倒れ（A/B分離版）
-        # ===============================
-        
-        if len(main_attackers) >= 1:
-        
-            # ===============================
-            # ■① 1 vs 攻めA
-            # ===============================
-            if len(main_attackers) >= 1:
-
-                a = main_attackers[0]
-            
-                if a >= 2:
-            
-                    st_gap = Start[a] - Start[0]
-            
-                    if (
-                        -0.01 <= st_gap <= 0.03
-                        and Turn[a] > Turn[0]
-                    ):
-                        FS_mult[0] *= 0.88
-                        FS_mult[a] *= 0.94
-        
-        
-        # ===============================
-        # ■② 1 vs 攻めB（2番手）
-        # ===============================
-        if len(main_attackers) >= 2:
-
-            b = main_attackers[1]
-        
-            if b >= 2:
-        
-                st_gap = Start[b] - Start[0]
-        
-                if (
-                    -0.01 <= st_gap <= 0.03
-                    and Turn[b] > Turn[0]
-                ):
-                    FS_mult[0] *= 0.92
-                    FS_mult[b] *= 0.96
-        
-        
-        # ===============================
-        # ■③ 攻めA vs 攻めB
-        # ===============================
-        if len(main_attackers) >= 2:
-
-            a = main_attackers[0]
-            b = main_attackers[1]
-        
-            if (
-                abs(Turn[a] - Turn[b]) < 0.04
-                and abs(AttackIndex[a] - AttackIndex[b]) < 0.05
-            ):
-                das = DoubleAttackScore
-        
-                tomo_boost = 1.02 + 0.06 * min(1.0, das / 0.12)
-        
-                FS_mult[a] *= tomo_boost
-                FS_mult[b] *= tomo_boost
-                
-        # ===============================
-        # ★ イン流れ（複数攻め版）
-        # ===============================
-        if (WeakAttack or MidAttack or StrongAttack) and NoAttackFlag == 0:
-        
-            for atk in main_attackers:
-        
-                st_gap = Start[atk] - Start[0]
-        
-                if (
-                    -0.01 <= st_gap <= 0.03
-                    and Turn[0] < Turn[atk]
-                ):
-                    FS_mult[0] *= 0.86
-                    break
-        
-        
-        
-        # ===============================
-        # ① レースタイプ分岐（最重要）
-        # ===============================
-        
-        if NoAttackFlag == 1:
-            race_type = "no_attack"
-        
-        elif DoubleAttackScore > 0.13:
-            race_type = "StrongAttack"
-        
-        elif DoubleAttackScore > 0.09:
-            race_type = "MidAttack"
-        
-        elif (WeakAttack or MidAttack or StrongAttack):
-            race_type = "WeakAttack"
-        
-        else:
-            race_type = "normal"
-            
-        if NoAttackFlag == 1:
-            FS_mult[2] *= 0.95
-            FS_mult[3] *= 0.93
-            FS_mult[4] *= 0.90
-            FS_mult[5] *= 0.75
-            
+           
         # ===============================
         # ★ 統一フラグ（再定義で上書き）
         # ===============================
@@ -1783,6 +1734,8 @@ if st.button("計算"):
         FS_mult_base = FS_mult.copy()
         
         FinalFirst = [FirstScore[i]*FS_mult_base[i] for i in range(6)]
+
+        """
 
         # ===============================
         # ATTACK BOOST
