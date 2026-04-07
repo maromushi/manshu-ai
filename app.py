@@ -1184,7 +1184,7 @@ if st.button("計算"):
                 FS_mult[1] *= 0.95
         
         
-        elif DoubleAttackScore > 0.07:
+        elif DoubleAttackScore > 0.07 and NoAttackFlag == 0:
         
             FS_mult[1] *= 0.93
         
@@ -1713,7 +1713,7 @@ if st.button("計算"):
             else:
                 SecondAdj[0] *= 0.85
         
-        elif DoubleAttackScore > 0.07:
+        elif DoubleAttackScore > 0.07 and NoAttackFlag == 0:
             if st_loss and weak_inside:
                 SecondAdj[0] *= 0.82
             elif st_loss:
@@ -1738,7 +1738,7 @@ if st.button("計算"):
                 else:
                     ThirdAdj[0] *= 0.90
         
-            elif DoubleAttackScore > 0.07:
+            elif DoubleAttackScore > 0.07 and NoAttackFlag == 0:
                 if st_loss and weak_inside:
                     ThirdAdj[0] *= 0.88
                 elif st_loss:
@@ -2638,6 +2638,15 @@ if st.button("計算"):
             else:
                 SecondAdj[5] *= 0.82
                 ThirdAdj[5] *= 0.85
+                
+            # ===============================
+            # ★ 無風ロック（最終ブレーキ）
+            # ===============================
+            if race_type == "no_attack":
+            
+                for i in range(3,6):
+                    SecondAdj[i] *= 0.55
+                    ThirdAdj[i] *= 0.60
                     
 
             second_scores = [
