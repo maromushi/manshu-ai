@@ -2073,15 +2073,20 @@ if st.button("計算"):
                 
             # ★ 無風ズレ型の6完全カット（汎用）
             if NoAttackFlag == 1:
-                
+            
                 valid6 = (
-                    CPI[5] >= 0.55
-                    and Start[5] >= Start[3] - 0.01
+                    CPI[5] >= 0.58
+                    and Start[5] >= Start[3] - 0.005
                 )
             
                 if not valid6:
                     SecondAdj[5] = 0.01
                     ThirdAdj[5]  = 0.02
+                    
+            if NoAttackFlag == 1:
+
+                if Start[4] < Start[2] - 0.02:
+                    SecondAdj[4] *= 0.82
         
         # ===============================
         # ★ 攻め失敗補正（調整版）
