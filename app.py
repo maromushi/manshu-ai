@@ -2864,7 +2864,7 @@ if st.button("計算"):
             mark = "○"
     
         # ▲は攻め条件＋上位6まで
-        elif i <= 5 and DoubleAttackScore > WEAK and head >= 2:
+        elif i <= 5 and DoubleAttackScore > 0.06 and head >= 2:
             mark = "▲"
     
         else:
