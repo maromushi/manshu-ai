@@ -516,7 +516,7 @@ if st.button("計算"):
         
         for i in range(2,4):
             if (
-                Start[i] > Start[i-1] + 0.02   # ←完全に逆＆厳しく
+                Start[i] > Start[i-1] + 0.015
                 and AttackIndex[i] > AttackIndex[i-1]
                 and (
                     AttackIndex[i] >= max(AttackIndex[2:6]) - 0.05
@@ -680,6 +680,9 @@ if st.button("計算"):
         ])
         
         DoubleAttackScore += PseudoAttack * 0.03
+        
+        if AttackSuccess == 0:
+            DoubleAttackScore *= 0.65
         
         if AttackSuccess == 0:
             DoubleAttackScore *= 0.75
@@ -882,7 +885,7 @@ if st.button("計算"):
         elif AttackSuccess == 1 and DoubleAttackScore > MID:
             race_type = "mid_attack"
         
-        elif DoubleAttackScore > WEAK:
+        elif DoubleAttackScore > WEAK and AttackSuccess == 1:
             race_type = "weak_attack"
         
         else:
