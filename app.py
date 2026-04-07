@@ -537,14 +537,18 @@ if st.button("計算"):
         AttackSuccess = 0
 
         if len(attackers) > 0:
+        
             atk = attackers[0]
         
-            if (
-                Start[atk] > Start[atk-1] + 0.01   # ←厳しく
-                and Turn[atk] > Turn[atk-1] + 0.02
-                and AttackIndex[atk] > AttackIndex[atk-1] + 0.03
-            ):
-                AttackSuccess = 1
+            # ★ 外は攻め成功に含めない（これが本質）
+            if atk <= 3:
+        
+                if (
+                    Start[atk] > Start[atk-1] + 0.01
+                    and Turn[atk] > Turn[atk-1] + 0.02
+                    and AttackIndex[atk] > AttackIndex[atk-1] + 0.03
+                ):
+                    AttackSuccess = 1
                 
         st.write("attackers:", attackers)
         st.write("AttackSuccess:", AttackSuccess)
