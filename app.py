@@ -545,6 +545,9 @@ if st.button("計算"):
                 and AttackIndex[atk] > AttackIndex[atk-1] + 0.03
             ):
                 AttackSuccess = 1
+                
+        st.write("attackers:", attackers)
+        st.write("AttackSuccess:", AttackSuccess)
 
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
