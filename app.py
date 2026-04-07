@@ -3161,7 +3161,20 @@ if st.button("計算"):
                 ThirdAdj[0] *= 1.05
                 
     
-
+            # ===============================
+            # ★ 中途半端ゾーン最終キル（ここに入れる）
+            # ===============================
+            if DoubleAttackScore < 0.12 and NoAttackFlag == 0:
+            
+                valid6 = (
+                    (MidAttack or StrongAttack)
+                    and Start[5] >= Start[3] - 0.02
+                    and (CPI[5] >= 0.52 or Foot[5] >= 0.52)
+                )
+            
+                if not valid6:
+                    SecondAdj[5] *= 0.50
+                    ThirdAdj[5] *= 0.60
                 
       
                 
