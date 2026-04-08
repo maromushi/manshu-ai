@@ -2381,8 +2381,8 @@ if st.button("計算"):
             if NoAttackFlag == 1:
                 
                 # イン残り
-                SecondAdj[0] *= 1.10
-                ThirdAdj[0] *= 1.08
+                SecondAdj[0] *= 1.04
+                ThirdAdj[0] *= 1.03
             
                 # 3の残り（ちゃんと効かせる）
                 SecondAdj[2] *= 1.10
@@ -2394,6 +2394,11 @@ if st.button("計算"):
                 # ★追加（超重要）
                 SecondAdj[4] *= 0.75
                 SecondAdj[5] *= 0.70
+                
+            if NoAttackFlag == 1:
+                for i in range(3,6):
+                    if i >= 3:
+                        SecondAdj[i] *= 0.90
                 
                             
 
