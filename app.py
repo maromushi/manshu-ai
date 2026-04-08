@@ -2243,7 +2243,7 @@ if st.button("計算"):
            # ===============================
             # ★ 展開拾い強化（汎用版）
             # ===============================
-            if attack_success:
+            if attack_success and NoAttackFlag == 0:
                 
                 if NoAttackFlag == 0:
             
@@ -2272,7 +2272,7 @@ if st.button("計算"):
             # ===============================
             # ★ 攻め連動
             # ===============================
-            if attack_success:
+            if attack_success and NoAttackFlag == 0:
 
                 for i in range(a):
             
@@ -2300,7 +2300,7 @@ if st.button("計算"):
             # ===============================
             # ★ 1だけ飛ぶパターン
             # ===============================
-            if attack_success:
+            if attack_success and NoAttackFlag == 0:
                 if (
                     Start[0] >= Start[a] - 0.01
                     and Turn[0] < Turn[a]
