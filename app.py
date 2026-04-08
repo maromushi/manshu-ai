@@ -2154,7 +2154,7 @@ if st.button("計算"):
         # ===============================
         if (
             NoAttackFlag == 0
-            DoubleAttackScore > MID
+            and DoubleAttackScore > MID
             and Start[5] >= Start[3] - 0.02
             and CLS[5] in ["A1","A2"]
         ):
