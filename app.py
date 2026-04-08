@@ -853,16 +853,20 @@ if st.button("計算"):
                 0.20*Turn[i]+
                 0.15*LaneWin[i]
             )
-
-            # ★ 無風：外はそもそも勝負不可
-            if NoAttackFlag == 1 and i >= 3:
-        
-                # 条件突破型だけ通す
+            
+            # ===============================
+            # ★ グレーゾーンだけ外を少し許可
+            # ===============================
+            if (
+                NoAttackFlag == 0
+                and DoubleAttackScore < WEAK
+                and i >= 3
+            ):
                 if Start[i] < max(Start[0:3]) + 0.02:
-                    val *= 0.35   # ←ここが本質
-                    
+                    val *= 0.60
+
             # ★ 無風は外頭禁止（最重要）
-            if NoAttackFlag == 1 and i >= 4:
+            if NoAttackFlag == 1 and i >= 3:
                 val *= 0.20
         
             FirstScore.append(val)
@@ -1438,38 +1442,39 @@ if st.button("計算"):
             and DoubleAttackScore > STRONG
         )
         
-        if SixHeadFlag == 1 and StrongSixHead:
+        if NoAttackFlag == 0:
+            if SixHeadFlag == 1 and StrongSixHead:
         
-            boost = 1.15 + 0.25 * (CPI[5] - 0.50)
-        
-            if Engine[5] >= 0.60:
-                boost += 0.03
-        
-            FS_mult[5] *= boost
-            FS_mult[0] *= 0.85
-            FS_mult[1] *= 0.90
-        
-        else:
-        
-            # ===== 6抑制（強弱分岐） =====
+                boost = 1.15 + 0.25 * (CPI[5] - 0.50)
             
-            if Normal6:
-                FS_mult[5] *= 0.95
-        
-            if CPI[5] < 0.50:
-                FS_mult[5] *= 0.60
-        
-            elif Start[5] < Start[3]:
-                FS_mult[5] *= 0.70
-        
+                if Engine[5] >= 0.60:
+                    boost += 0.03
+            
+                FS_mult[5] *= boost
+                FS_mult[0] *= 0.85
+                FS_mult[1] *= 0.90
+            
             else:
-                FS_mult[5] *= 0.80
-
-        # ★ 6の最終制御（絶対必要）  
-        if len(FirstScore) != 6 or len(FS_mult) != 6:
-            st.write("長さエラー", len(FirstScore), len(FS_mult))
-            st.stop()
             
+                # ===== 6抑制（強弱分岐） =====
+                
+                if Normal6:
+                    FS_mult[5] *= 0.95
+            
+                if CPI[5] < 0.50:
+                    FS_mult[5] *= 0.60
+            
+                elif Start[5] < Start[3]:
+                    FS_mult[5] *= 0.70
+            
+                else:
+                    FS_mult[5] *= 0.80
+    
+            # ★ 6の最終制御（絶対必要）  
+            if len(FirstScore) != 6 or len(FS_mult) != 6:
+                st.write("長さエラー", len(FirstScore), len(FS_mult))
+                st.stop()
+                
         # ===============================
         # ★ ST負け頭禁止（超重要）
         # ===============================
@@ -2639,6 +2644,12 @@ if st.button("計算"):
                         FS_mult[0] *= 0.65
                     else:
                         FS_mult[0] *= 0.75
+                        
+                # ===============================
+                # ★ 6頭最終ロック（ここ追加）
+                # ===============================
+                if NoAttackFlag == 1:
+                    FS_mult[5] *= 0.30
             
                 # ===============================
                 # ★ 差し込み勝ち（ここに入れる）
@@ -2805,12 +2816,14 @@ if st.button("計算"):
                 SecondAdj[5] *= 0.65
                 ThirdAdj[5] *= 0.70
             else:
-                if SixFlowFlag:
-                    SecondAdj[5] *= 1.08
-                    ThirdAdj[5] *= 1.12
-                else:
-                    SecondAdj[5] *= 0.82
-                    ThirdAdj[5] *= 0.85
+                if NoAttackFlag == 0:
+
+                    if SixFlowFlag:
+                        SecondAdj[5] *= 1.08
+                        ThirdAdj[5] *= 1.12
+                
+                    if CPI[5] < 0.50:
+                        SecondAdj[5] *= 0.60
                 
       
                 
