@@ -981,6 +981,7 @@ if st.button("計算"):
             Turn[3] >= Turn[1]
             and Foot[3] >= Foot[1]
             and DoubleAttackScore > WEAK
+            and WEAK and NoAttackFlag == 0
         ):
             FS_mult[3] *= 1.08
         
@@ -991,6 +992,7 @@ if st.button("計算"):
         if (
             CLS[3] == "A1"
             and DoubleAttackScore > WEAK
+            and NoAttackFlag == 0
             and Start[3] <= Start[2] + 0.01
         ):
             FS_mult[3] *= 0.90
@@ -1132,7 +1134,8 @@ if st.button("計算"):
             Skill[2] >= 0.50
             and Foot[2] >= max(Foot[0], Foot[1])
             and Turn[2] >= max(Turn[0], Turn[1])
-            and DoubleAttackScore > WEAK   # ←これ追加
+            and DoubleAttackScore > WEAK
+            and and NoAttackFlag == 0
         ):
             FS_mult[2] *= 1.20
             
@@ -2003,6 +2006,7 @@ if st.button("計算"):
             and Fcount[1] == 0 
             and NoAttackFlag == 0
             and DoubleAttackScore > WEAK
+            and NoAttackFlag == 0
         ):
             SecondAdj[1] *= 1.10
             
@@ -2161,6 +2165,7 @@ if st.button("計算"):
         if (
             NoAttackFlag == 0
             and DoubleAttackScore > WEAK
+            and NoAttackFlag == 0
             and Start[1] >= Start[0] - 0.02
             and CPI[1] >= 0.45
         ):
@@ -2247,7 +2252,7 @@ if st.button("計算"):
             # ===============================
             # ★ 展開3着強化（汎用版）
             # ===============================
-            if attack_success and DoubleAttackScore > WEAK:
+            if attack_success and DoubleAttackScore > WEAK and NoAttackFlag == 0:
             
                 for i in range(2,5):
             
@@ -2462,7 +2467,7 @@ if st.button("計算"):
                 # ■ 強崩壊（レース壊す）
                 # ===============================
                 if (
-                    (st_gap < -0.04 and DoubleAttackScore > WEAK)
+                    (st_gap < -0.04 and DoubleAttackScore > WEAK and NoAttackFlag == 0)
                     or (st_gap < -0.03 and Start[i] < Start[i-1] - 0.02)
                 ):   
             
