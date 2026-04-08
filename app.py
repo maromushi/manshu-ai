@@ -1046,12 +1046,12 @@ if st.button("計算"):
         # ===============================
         # ★ 弱イン分散（最重要）
         # ===============================
-        if NoAttackFlag == 1 and Skill[0] < 0.55:
-        
-            # 1の支配を崩す
+        if (
+            NoAttackFlag == 1
+            and Skill[0] < 0.55
+            and DoubleAttackScore > WEAK   # ←これ追加
+        ):
             FS_mult[0] *= 0.88
-        
-            # 3・4を主役に引き上げる
             FS_mult[2] *= 1.08
             FS_mult[3] *= 1.10
 
