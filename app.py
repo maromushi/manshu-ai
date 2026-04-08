@@ -1477,9 +1477,7 @@ if st.button("計算"):
         AttackBoost6
         ]
         
-        if NoAttackFlag == 1:
-            for i in range(3,6):
-                AttackBoost[i] *= 0.85
+
 
         if OuterPowerCheck < 0.55:
             AttackBoost[3] *= 0.85
@@ -2005,12 +2003,7 @@ if st.button("計算"):
         )    
         
 
-        # ===============================
-        # ★ 6の過剰2着抑制（追加）
-        # ===============================
-        
-        if NoAttackFlag == 1:
-            SecondAdj[5] *= 0.85
+
 
 
         # ===== 2の差し残り強化 =====
@@ -2387,30 +2380,7 @@ if st.button("計算"):
             ):
                 P_first *= 1.10
             
-            # ===============================
-            # ★ 頭弱い艇の残り救済（最重要）
-            # ===============================
-            if NoAttackFlag == 1:
-                
-                # イン残り
-                SecondAdj[0] *= 1.04
-                ThirdAdj[0] *= 1.03
-            
-                # 3の残り（ちゃんと効かせる）
-                SecondAdj[2] *= 1.10
-                ThirdAdj[2] *= 1.10
-            
-                # 攻め役だけ少し削る（軽く）
-                SecondAdj[3] *= 0.95
-                
-                # ★追加（超重要）
-                SecondAdj[4] *= 0.75
-                SecondAdj[5] *= 0.70
-                
-            if NoAttackFlag == 1:
-                for i in range(3,6):
-                    if i >= 3:
-                        SecondAdj[i] *= 0.90
+          
                 
                             
 
@@ -2714,13 +2684,7 @@ if st.button("計算"):
                 SecondAdj[5] *= 0.82
                 ThirdAdj[5] *= 0.85
                 
-            # ===============================
-            # ★ 無風ロック（最終防御）
-            # ===============================
-            if NoAttackFlag == 1:
-                for i in range(3,6):
-                    SecondAdj[i] *= 0.70
-                    ThirdAdj[i]  *= 0.75
+      
                 
                     
 
@@ -2743,12 +2707,7 @@ if st.button("計算"):
 
                 remain2=[i for i in remain1 if i!=b and Active[i]==1]
                 
-                # ===============================
-                # ★ 無風ロック（最終防御）
-                # ===============================
-                if NoAttackFlag == 1:
-                    for i in range(4,6):
-                        ThirdAdj[i] *= 0.60
+          
 
                 third_scores = [
                 ThirdAdj[i] if Active[i]==1 else 0
