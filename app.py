@@ -1367,7 +1367,7 @@ if st.button("計算"):
                 # ===============================
                 #  外の頭条件化（修正）
                 # ===============================
-                if i >= 4:
+                if i >= 4 and NoAttackFlag == 0:
                     if AttackIndex[i] < max(AttackIndex):
                         FS_mult[i] *= 0.85
                         
@@ -1712,7 +1712,12 @@ if st.button("計算"):
             for i in range(6):
                 SecondAdj[i] *= 0.85
                 ThirdAdj[i]  *= 0.90
-        
+                
+            # ★ 外のヒモ完全抑制（これ追加）
+            for i in range(3,6):
+                SecondAdj[i] *= 0.65
+                ThirdAdj[i] *= 0.70
+                    
             # 外はさらに抑える
             for i in range(3,6):
                 SecondAdj[i] *= 0.80
@@ -1722,6 +1727,8 @@ if st.button("計算"):
             for i in range(3,6):
                 SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
                 ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
+                
+            
         
         # ★ 攻め時の2残り復活（汎用版）
 
