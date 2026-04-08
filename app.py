@@ -816,7 +816,11 @@ if st.button("計算"):
 
         # ===== イン過信抑制 =====
 
-        if CPI[1] >= CPI[0] - 0.05 and Start[1] <= Start[0] + 0.04:
+        if (
+            NoAttackFlag == 0
+            and CPI[1] >= CPI[0] - 0.05
+            and Start[1] <= Start[0] + 0.04
+        ):
             DynamicInsideFactor *= 0.88
 
         LaneWin=[
