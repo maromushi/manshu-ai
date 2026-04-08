@@ -1007,10 +1007,6 @@ if st.button("計算"):
             and Engine[0] >= 0.50
         ):
             FS_mult[0] *= 1.05
-            
-        # ★ 無風時：3の頭制御（確実に効かせる）
-        if NoAttackFlag == 1:
-            FS_mult[2] *= 0.85
         
         # 3が攻め役なら強化
         if (
@@ -1254,7 +1250,7 @@ if st.button("計算"):
         
             FS_mult[1] *= 0.96
             
-        if NoAttackFlag == 1:
+        if NoAttackFlag == 1 and Start[1] < Start[0] - 0.02:
             FS_mult[1] *= 0.92
         
         
@@ -1777,13 +1773,9 @@ if st.button("計算"):
             SecondAdj[4] *= 0.55
             ThirdAdj[4]  *= 0.60
             
-            SecondAdj[5] *= 0.40
+            SecondAdj[5] *= 0.55
             ThirdAdj[5]  *= 0.45
                     
-            # 外はさらに抑える
-            for i in range(3,6):
-                SecondAdj[i] *= 0.80
-                ThirdAdj[i]  *= 0.85
         
             # 外の暴走防止
             for i in range(3,6):
