@@ -1722,7 +1722,7 @@ if st.button("計算"):
             st_good = Start[1] >= max(Start[0], Start[2]) - 0.01
             perf_ok = CPI[1] >= (sum(CPI)/6) - 0.05
         
-            if st_good and perf_ok:
+            if st_good and perf_ok and NoAttackFlag == 0:
                 SecondAdj[1] *= 1.12
         
         # ★ 攻め時のイン2着分岐（完成版）
@@ -2302,6 +2302,7 @@ if st.button("計算"):
                 if (
                     Start[0] >= Start[a] - 0.01
                     and Turn[0] < Turn[a]
+                    and NoAttackFlag == 0
                 ):
                     SecondAdj[0] *= 0.65
                     ThirdAdj[0] *= 0.60
@@ -2432,7 +2433,7 @@ if st.button("計算"):
             # ★ 3頭時の2過剰抑制
             # ===============================
             if a == 2:  # 3号艇が1着
-                if Turn[2] > Turn[1]:
+                if Turn[2] > Turn[1] and NoAttackFlag == 0:
                     SecondAdj[1] *= 0.92
             
             # 残り5艇（ここ追加）
@@ -2445,6 +2446,7 @@ if st.button("計算"):
                     i == 1
                     and Start[1] == min(Start)
                     and CPI[1] >= 0.42
+                    and NoAttackFlag == 0
                 ):
                     ThirdAdj[1] *= 1.08
 
