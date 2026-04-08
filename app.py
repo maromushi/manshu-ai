@@ -948,15 +948,8 @@ if st.button("計算"):
         elif race_type == "no_attack":
 
             FS_mult[0] *= 1.12
-            # 無風＋差し弱いときだけ2を削る
-            if (
-                NoAttackFlag == 1
-                and CPI[1] < CPI[0] - 0.03
-                and Start[1] > Start[0]
-            ):
-                FS_mult[1] *= 0.82
-            else:
-                FS_mult[1] *= 0.92
+            if NoAttackFlag == 1:
+                FS_mult[1] *= 0.90
                 
             FS_mult[2] *= 0.95
         
