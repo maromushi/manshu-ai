@@ -961,13 +961,12 @@ if st.button("計算"):
             # ===============================
             # 3コース（条件型）
             # ===============================
-            # STだけで頭はNG
-            if Start[2] >= max(Start) - 0.005:
-                FS_mult[2] *= 0.85
-        
-            # 通常は軽く下げる
-            else:
+            # 3コース（修正版）
+            if CPI[2] < 0.45:
                 FS_mult[2] *= 0.92
+            elif Start[2] >= max(Start) - 0.005:
+                FS_mult[2] *= 0.90   # ←弱める
+            # それ以外は触らない0.92
             
         
             # ===============================
@@ -1469,11 +1468,6 @@ if st.button("計算"):
             # さらに遅い（完全死亡）
             if Start[i] < max(Start) - 0.08:
                 FS_mult[i] *= 0.50
-                
-        # ★ 無風時：3が2を食うのを防ぐ（正しい位置）
-        if NoAttackFlag == 1:
-            if FirstScore[2] > FirstScore[1] * 0.98:
-                FS_mult[2] *= 0.90
                    
 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
