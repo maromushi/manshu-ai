@@ -2655,7 +2655,13 @@ if st.button("計算"):
                 SecondAdj[5] *= 0.82
                 ThirdAdj[5] *= 0.85
                 
-            
+            # ===============================
+            # ★ 無風ロック（最終防御）
+            # ===============================
+            if NoAttackFlag == 1:
+                for i in range(3,6):
+                    SecondAdj[i] *= 0.70
+                    ThirdAdj[i]  *= 0.75
                 
                     
 
