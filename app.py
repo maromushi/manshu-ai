@@ -1715,7 +1715,7 @@ if st.button("計算"):
             for i in range(4,6):
                 FS_mult[i] *= 0.85
                 
-                SecondAdj[1] *= 0.70
+            SecondAdj[1] *= 0.85
         
         # ★ 攻め時の2残り復活（汎用版）
 
