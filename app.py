@@ -1990,6 +1990,7 @@ if st.button("計算"):
             CPI[1] >= CPI[0] - 0.05
             and Fcount[1] == 0 
             and NoAttackFlag == 0
+            and DoubleAttackScore > WEAK
         ):
             SecondAdj[1] *= 1.10
             
@@ -2145,6 +2146,7 @@ if st.button("計算"):
         # ===============================
         if (
             NoAttackFlag == 0
+            and DoubleAttackScore > WEAK
             and Start[1] >= Start[0] - 0.02
             and CPI[1] >= 0.45
         ):
