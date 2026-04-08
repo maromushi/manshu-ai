@@ -991,12 +991,13 @@ if st.button("計算"):
         
         # 4が明確に強いなら
         if (
-            Turn[3] >= Turn[1]
-            and Foot[3] >= Foot[1]
-            and DoubleAttackScore > WEAK
-            and NoAttackFlag == 0
+            NoAttackFlag == 0
+            and AttackSuccess == 1
+            and DoubleAttackScore > MID
+            and Turn[3] >= max(Turn[1], Turn[2])
+            and Foot[3] >= max(Foot[1], Foot[2])
         ):
-            FS_mult[3] *= 1.08
+            FS_mult[3] *= 1.05
         
         
         # ===============================
