@@ -1695,6 +1695,17 @@ if st.button("計算"):
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
         
+        # ===============================
+        # ★ 無風ロック（ここに移動）
+        # ===============================
+        if NoAttackFlag == 1:
+            for i in range(3,6):
+                SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
+                ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
+        
+            for i in range(4,6):
+                FS_mult[i] *= 0.85
+        
         # ★ 攻め時の2残り復活（汎用版）
 
         if DoubleAttackScore > WEAK and AttackSuccess == 1:
@@ -2667,16 +2678,6 @@ if st.button("計算"):
 
                 remain2=[i for i in remain1 if i!=b and Active[i]==1]
                 
-                # ===============================
-                # ★ 無風ロック（最終・1回だけ）
-                # ===============================
-                if NoAttackFlag == 1:
-                    for i in range(3,6):
-                        SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
-                        ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
-                
-                    for i in range(4,6):
-                        FS_mult[i] *= 0.85
 
                 third_scores = [
                 ThirdAdj[i] if Active[i]==1 else 0
