@@ -1360,9 +1360,9 @@ if st.button("計算"):
                 
             for i in range(6):
 
-                # 弱いイン削る
-                if i == 0 and Skill[i] < 0.45:
-                    FS_mult[i] *= 0.75
+                if i >= 4 and NoAttackFlag == 0:
+                    if AttackIndex[i] < max(AttackIndex):
+                        FS_mult[i] *= 0.85
                         
                 # ===============================
                 #  外の頭条件化（修正）
@@ -1818,7 +1818,8 @@ if st.button("計算"):
         for i in range(4,6):
         
             if (
-                Start[i] >= max(Start[1:4]) - 0.01
+                NoAttackFlag == 0
+                and Start[i] >= max(Start[1:4]) - 0.01
                 and DoubleAttackScore > STRONG
             ):
                 # ★ 上げるんじゃなくて下げを無効化
