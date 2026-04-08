@@ -1058,8 +1058,8 @@ if st.button("計算"):
             FS_mult[3] *= 1.10
 
         # ★ 1の過集中防止
-        if NoAttackFlag == 1 and Start[0] < max(Start[1:4]):
-            FS_mult[0] *= 0.90
+        if NoAttackFlag == 1:
+            FS_mult[1] *= 0.90
 
         # ===============================
         # ★ 攻め競合（共倒れ）
