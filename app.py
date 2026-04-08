@@ -1003,6 +1003,15 @@ if st.button("計算"):
             and Engine[0] >= 0.50
         ):
             FS_mult[0] *= 1.05
+            
+        # ★ 無風時：3の頭抑制（完全版）
+        if (
+            NoAttackFlag == 1
+            and DoubleAttackScore < 0.07
+            and AttackSuccess == 0
+            and CPI[2] <= CPI[0] + 0.02
+        ):
+            FS_mult[2] *= 0.90
         
         # 3が攻め役なら強化
         if (
