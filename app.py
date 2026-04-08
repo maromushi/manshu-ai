@@ -2851,7 +2851,8 @@ if st.button("計算"):
         # =====================================
     # 合成
     # =====================================
-
+    final = {}
+    
     for a,b,c,p in res_waku:
         key=(a,b,c)
         final[key]=final.get(key,0)+w_no*p
