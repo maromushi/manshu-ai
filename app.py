@@ -819,24 +819,7 @@ if st.button("計算"):
 
         ]
 
-        # 2差し強化補正
-        if (
-            NoAttackFlag == 0
-            and CPI[1] >= CPI[0] - 0.03
-            and Start[1] <= Start[0] + 0.03
-        ):
         
-            LaneWin[1] += 0.07
-            LaneWin[0] -= 0.07
-        
-        elif (
-            NoAttackFlag == 0
-            and CPI[1] >= CPI[0] - 0.06
-            and Start[1] <= Start[0] + 0.05
-        ):
-        
-            LaneWin[1] += 0.04
-            LaneWin[0] -= 0.04
             
         # ===============================
         # ★ FirstScoreフラグ箱
@@ -875,6 +858,25 @@ if st.button("計算"):
         # 無風条件
         if AttackSuccess == 0 and DoubleAttackScore < 0.06:
             NoAttackFlag = 1
+            
+        # 2差し強化補正
+        if (
+            NoAttackFlag == 0
+            and CPI[1] >= CPI[0] - 0.03
+            and Start[1] <= Start[0] + 0.03
+        ):
+        
+            LaneWin[1] += 0.07
+            LaneWin[0] -= 0.07
+        
+        elif (
+            NoAttackFlag == 0
+            and CPI[1] >= CPI[0] - 0.06
+            and Start[1] <= Start[0] + 0.05
+        ):
+        
+            LaneWin[1] += 0.04
+            LaneWin[0] -= 0.04
         
     
         # ===============================
