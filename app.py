@@ -1454,6 +1454,11 @@ if st.button("計算"):
             # さらに遅い（完全死亡）
             if Start[i] < max(Start) - 0.08:
                 FS_mult[i] *= 0.50
+                
+        # ★ 無風時：3が2を食うのを防ぐ（正しい位置）
+        if NoAttackFlag == 1:
+            if FirstScore[2] > FirstScore[1] * 0.98:
+                FS_mult[2] *= 0.90
                    
 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
@@ -1707,11 +1712,6 @@ if st.button("計算"):
 
         if total_p1 > 0:
             P1 = [p / total_p1 for p in P1]
-            
-        # ★ 無風時：3が2を超えたら抑制（ここに追加）
-        if NoAttackFlag == 1:
-            if P1[2] > P1[1]:
-                FS_mult[2] *= 0.90
                 
 
         LaneBonus=[0.10,0.09,0.08,0.07,0.06,0.05]
