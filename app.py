@@ -947,14 +947,14 @@ if st.button("計算"):
         elif race_type == "no_attack":
 
             FS_mult[0] *= 1.12
-            FS_mult[1] *= 1.05
+            FS_mult[1] *= 0.98
             FS_mult[2] *= 1.00
         
             FS_mult[3] *= 0.70   # ★修正（重要）
             FS_mult[4] *= 0.65
             FS_mult[5] *= 0.50
         
-            FS_mult[1] *= 0.90   # ★修正（1本化）
+    
         
         
         # ===============================
@@ -1062,12 +1062,6 @@ if st.button("計算"):
             FS_mult[2] *= 1.08
             FS_mult[3] *= 1.10
 
-        # ★ 1の過集中防止
-        if NoAttackFlag == 1:
-            FS_mult[1] *= 0.75
-            
-        if NoAttackFlag == 1:
-            FS_mult[2] *= 0.85
 
         # ===============================
         # ★ 攻め競合（共倒れ）
