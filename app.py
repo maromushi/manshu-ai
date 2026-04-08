@@ -1715,6 +1715,10 @@ if st.button("計算"):
             for i in range(4,6):
                 FS_mult[i] *= 0.85
         
+            # ★これを追加（←今回の本質）
+            SecondAdj[1] *= 0.75
+            ThirdAdj[1] *= 0.85
+        
         # ★ 攻め時の2残り復活（汎用版）
 
         if DoubleAttackScore > WEAK and AttackSuccess == 1:
