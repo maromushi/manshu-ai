@@ -1414,7 +1414,20 @@ if st.button("計算"):
         if len(FirstScore) != 6 or len(FS_mult) != 6:
             st.write("長さエラー", len(FirstScore), len(FS_mult))
             st.stop()
-           
+            
+        # ===============================
+        # ★ ST負け頭禁止（超重要）
+        # ===============================
+        for i in range(6):
+        
+            # 明確にスタート負け
+            if Start[i] < max(Start) - 0.05:
+                FS_mult[i] *= 0.65
+        
+            # さらに遅い（完全死亡）
+            if Start[i] < max(Start) - 0.08:
+                FS_mult[i] *= 0.50
+                   
 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
