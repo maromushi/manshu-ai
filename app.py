@@ -841,15 +841,33 @@ if st.button("計算"):
         # ★ FirstScoreフラグ箱
         # ===============================
 
-        FirstScore=[
-        0.35*Start[i]+
-        0.25*Skill[i]+
-        0.15*Engine[i]+
-        0.15*Foot[i]+
-        0.20*Turn[i]+
-        0.15*LaneWin[i]
-        for i in range(6)
-        ]
+        FirstScore=[]
+
+        for i in range(6):
+        
+            val = (
+                0.35*Start[i]+
+                0.25*Skill[i]+
+                0.15*Engine[i]+
+                0.15*Foot[i]+
+                0.20*Turn[i]+
+                0.15*LaneWin[i]
+            )
+        
+            # ★ 無風：外はそもそも勝負不可
+            if NoAttackFlag == 1 and i >= 3:
+
+            cond = (
+                Start[i] >= max(Start[0:3]) + 0.03
+                and CPI[i] >= 0.55
+            )
+        
+            if not cond:
+                val *= 0.30
+        
+            FirstScore.append(val)
+        
+        
         
         FS_mult = [1.0]*6
 
