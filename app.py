@@ -1168,6 +1168,7 @@ if st.button("計算"):
             CPI[1] >= CPI[0] - 0.10
             and Start[1] <= Start[0] + 0.07
             and DoubleAttackScore < 0.06
+            and NoAttackFlag == 0
         ):
             FS_mult[1] *= 1.01
             FS_mult[0] *= 0.99
