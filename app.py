@@ -685,6 +685,17 @@ if st.button("計算"):
         debug_log.append(("AttackSuccess", AttackSuccess))
         debug_log.append(("DAS", round(DoubleAttackScore,4)))
         debug_log.append(("WEAK/MID/STRONG", (WEAK, MID, STRONG)))
+        
+        # ★ 無風判定（最重要）
+        if (
+            AttackSuccess == 0
+            and len(attackers) == 0
+            and DoubleAttackScore < WEAK
+        ):
+            NoAttackFlag = 1
+        else:
+            NoAttackFlag = 0
+        
 
         # ===============================
         # 攻め主体判定（改良版）
@@ -847,7 +858,6 @@ if st.button("計算"):
         # ===============================
         # ★ FS_mult統一ブロック（完成形）
         # ===============================
-        NoAttackFlag = 0
             
         # 2差し強化補正
         if (
@@ -873,15 +883,6 @@ if st.button("計算"):
         # ① レースタイプ分岐（修正版）
         # ===============================
         
-        # ★ 無風判定（最重要）
-        if (
-            AttackSuccess == 0
-            and len(attackers) == 0
-            and DoubleAttackScore < WEAK
-        ):
-            NoAttackFlag = 1
-        else:
-            NoAttackFlag = 0
         
         
         # ★ レースタイプ決定
