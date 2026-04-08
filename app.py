@@ -1706,21 +1706,15 @@ if st.button("計算"):
         # ★ 無風ロック（ここに移動）
         # ===============================
         if NoAttackFlag == 1:
-            
-            # ★ 2の頭抑制（無風用）
-            if NoAttackFlag == 1:
     
-                # ★ 2は頭も残りも殺す（ここが本質）
-                FS_mult[1] *= 0.85
-                SecondAdj[1] *= 0.65   # ← 強化（超重要）
-                ThirdAdj[1] *= 0.75    # ← 追加
-            
-                for i in range(3,6):
-                    SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
-                    ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
-            
-                for i in range(4,6):
-                    FS_mult[i] *= 0.85
+        # 2の残り制御（最重要）
+        SecondAdj[1] *= 0.65
+        ThirdAdj[1] *= 0.75
+    
+        # 外の暴走防止
+        for i in range(3,6):
+            SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
+            ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
         
         # ★ 攻め時の2残り復活（汎用版）
 
