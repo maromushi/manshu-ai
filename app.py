@@ -857,13 +857,12 @@ if st.button("計算"):
             # ★ 無風：外はそもそも勝負不可
             if NoAttackFlag == 1 and i >= 3:
 
-            cond = (
-                Start[i] >= max(Start[0:3]) + 0.03
-                and CPI[i] >= 0.55
-            )
+            # ★ 無風：外はそもそも勝負不可
+            if NoAttackFlag == 1 and i >= 3:
         
-            if not cond:
-                val *= 0.30
+                # 条件突破型だけ通す
+                if Start[i] < max(Start[0:3]) + 0.02:
+                    val *= 0.35   # ←ここが本質
         
             FirstScore.append(val)
         
