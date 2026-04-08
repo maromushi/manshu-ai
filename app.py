@@ -953,6 +953,8 @@ if st.button("計算"):
             FS_mult[3] *= 0.70   # ★修正（重要）
             FS_mult[4] *= 0.65
             FS_mult[5] *= 0.50
+            
+            
         
     
         
@@ -2059,7 +2061,7 @@ if st.button("計算"):
             and DoubleAttackScore > MID   # ←変更
             and NoAttackFlag == 0
             and (
-                DoubleAttackScore > WEAK
+                DoubleAttackScore > WEAK and NoAttackFlag == 0
                 or OuterClusterFlag == 1
             )
         ):
