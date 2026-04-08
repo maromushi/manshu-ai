@@ -1760,11 +1760,11 @@ if st.button("計算"):
             # 全体を減衰（←これが本質）
             # 全体
             for i in range(6):
-                SecondAdj[i] *= 0.90
-                ThirdAdj[i]  *= 0.92
+                SecondAdj[i] *= 0.95
+                ThirdAdj[i]  *= 0.96
             
             # 個別
-            SecondAdj[2] *= 0.75
+            SecondAdj[2] *= 0.85
             ThirdAdj[2]  *= 0.80
             
             SecondAdj[3] *= 0.65
@@ -1801,6 +1801,14 @@ if st.button("計算"):
             ):
                 if ThirdAdj[2] > ThirdAdj[1]:
                     ThirdAdj[2] *= 0.85
+                    
+            # ===============================
+            # ★ 無風時イン集中（これが本質）
+            # ===============================
+            if NoAttackFlag == 1:
+            
+                if CPI[0] >= 0.65:
+                    P1[0] *= 1.15
             
             # ===============================
             # ★ 無風でもST上位は3着に残す（汎用）
