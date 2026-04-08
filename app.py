@@ -853,9 +853,6 @@ if st.button("計算"):
                 0.20*Turn[i]+
                 0.15*LaneWin[i]
             )
-        
-            # ★ 無風：外はそもそも勝負不可
-            if NoAttackFlag == 1 and i >= 3:
 
             # ★ 無風：外はそもそも勝負不可
             if NoAttackFlag == 1 and i >= 3:
@@ -863,8 +860,14 @@ if st.button("計算"):
                 # 条件突破型だけ通す
                 if Start[i] < max(Start[0:3]) + 0.02:
                     val *= 0.35   # ←ここが本質
+                    
+            # ★ 無風は外頭禁止（最重要）
+            if NoAttackFlag == 1 and i >= 4:
+                val *= 0.20
         
             FirstScore.append(val)
+            
+            
         
         
         
@@ -1154,19 +1157,7 @@ if st.button("計算"):
             FS_mult[2] *= 0.90
             FS_mult[3] *= 0.85
         
-            # ===============================
-            # ★ 外の個別評価（修正版）
-            # ===============================
-            
-            for i in range(4,6):
-            
-                is_fast = Start[i] >= max(Start[2:4]) - 0.01
-                has_power = (Foot[i] >= 0.50 or CPI[i] >= 0.48)
-            
-                if is_fast and has_power:
-                    pass  # 何もしない or 微調整
-                else:
-                    SecondAdj[i] *= 0.90
+        
         
         # ===============================
         # ★ イン安定補正（これが本命）
@@ -1564,11 +1555,21 @@ if st.button("計算"):
             main_attacker = outer_attackers.index(max_outer) + 3
 
         # ===============================
+        # ★ 無風時は展開を完全停止（これが本質）
+        # ===============================
+        if NoAttackFlag == 1:
+            AttackBoost = [1.0]*6
+
+        # ===============================
         # 展開モデル
         # ===============================
 
         CrashFactor=[1.0]*6
         SashiBoost=[1.0]*6
+        
+        if NoAttackFlag == 1:
+            CrashFactor = [1.0]*6
+            SashiBoost = [1.0]*6
 
         if main_attacker is not None:
 
