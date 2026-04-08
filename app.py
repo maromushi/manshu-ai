@@ -942,14 +942,14 @@ if st.button("計算"):
         
         elif race_type == "no_attack":
         
-            FS_mult[0] *= 1.10
-            FS_mult[1] *= 1.02
+            FS_mult[0] *= 1.12
+            FS_mult[1] *= 1.05
             FS_mult[2] *= 1.00
-            FS_mult[3] *= 0.95
-            
-            # ★外は明確に殺す（最重要）
-            FS_mult[4] *= 0.80
-            FS_mult[5] *= 0.70
+            FS_mult[3] *= 0.92
+        
+            # ★ここ修正（超重要）
+            FS_mult[4] *= 0.65
+            FS_mult[5] *= 0.50
         
         
         # ===============================
@@ -2079,7 +2079,7 @@ if st.button("計算"):
         
         for i in range(4,6):
         
-            if Foot[i] >= 0.48:
+            if NoAttackFlag == 0 and Foot[i] >= 0.48:
                 ThirdAdj[i] *= 1.05
         
         for i in range(6):
@@ -2113,7 +2113,8 @@ if st.button("計算"):
         for i in range(6):
         
             if (
-                ExST[i] <= 0.05
+                NoAttackFlag == 0
+                and ExST[i] <= 0.05
                 and DoubleAttackScore > 0.04
             ):
                 ThirdAdj[i] *= 1.20
@@ -2152,6 +2153,7 @@ if st.button("計算"):
         # ★ 展開6（性能じゃない6）
         # ===============================
         if (
+            NoAttackFlag == 0
             DoubleAttackScore > MID
             and Start[5] >= Start[3] - 0.02
             and CLS[5] in ["A1","A2"]
@@ -2165,7 +2167,7 @@ if st.button("計算"):
         if FiveFlowFlag and DoubleAttackScore > WEAK and AttackSuccess == 1:
             ThirdAdj[4] *= 1.15
         
-        if SixFlowFlag:
+        if NoAttackFlag == 0 and SixFlowFlag:
             ThirdAdj[5] *= 1.20
 
         # ===== 3号艇の自然流入 =====
@@ -2684,6 +2686,12 @@ if st.button("計算"):
 
                 remain2=[i for i in remain1 if i!=b and Active[i]==1]
                 
+                # ===============================
+                # ★ 無風ロック（最終防御）
+                # ===============================
+                if NoAttackFlag == 1:
+                    for i in range(4,6):
+                        ThirdAdj[i] *= 0.60
 
                 third_scores = [
                 ThirdAdj[i] if Active[i]==1 else 0
