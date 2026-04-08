@@ -981,7 +981,7 @@ if st.button("計算"):
             Turn[3] >= Turn[1]
             and Foot[3] >= Foot[1]
             and DoubleAttackScore > WEAK
-            and NoAttackFlag == 0
+            and WEAK and NoAttackFlag == 0
         ):
             FS_mult[3] *= 1.08
         
@@ -1135,7 +1135,7 @@ if st.button("計算"):
             and Foot[2] >= max(Foot[0], Foot[1])
             and Turn[2] >= max(Turn[0], Turn[1])
             and DoubleAttackScore > WEAK
-            and NoAttackFlag == 0
+            and and NoAttackFlag == 0
         ):
             FS_mult[2] *= 1.20
             
@@ -1819,9 +1819,18 @@ if st.button("計算"):
         # ★ 攻めゾーン分割（最重要）
         # ===============================
         
-        weak_attack = 0.06 < DoubleAttackScore <= 0.09
-        mid_attack  = 0.09 < DoubleAttackScore <= 0.13
-        strong_attack = DoubleAttackScore > 0.13
+        weak_attack = (
+            0.06 < DoubleAttackScore <= 0.09
+            and NoAttackFlag == 0
+        )
+        mid_attack = (
+            0.09 < DoubleAttackScore <= 0.13
+            and NoAttackFlag == 0
+        )
+        strong_attack = (
+            DoubleAttackScore > 0.13
+            and NoAttackFlag == 0
+        )
         
         
         # ===============================
