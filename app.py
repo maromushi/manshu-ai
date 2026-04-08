@@ -1355,15 +1355,14 @@ if st.button("計算"):
         ):
             FS_mult[5] *= 1.08
         
-        if use_mode == "safe":
-            FS_mult[0] *= 1.08
-                
-            for i in range(6):
+        if use_mode == "safe" and NoAttackFlag == 0:
 
-                if i >= 4 and NoAttackFlag == 0:
-                    if AttackIndex[i] < max(AttackIndex):
-                        FS_mult[i] *= 0.85
-                        
+            FS_mult[0] *= 1.05   # ←少し弱める
+        
+            for i in range(4,6):
+        
+                if AttackIndex[i] < max(AttackIndex) - 0.05:
+                    FS_mult[i] *= 0.92
                 # ===============================
                 #  外の頭条件化（修正）
                 # ===============================
