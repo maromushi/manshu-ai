@@ -2440,9 +2440,10 @@ if st.button("計算"):
                     ThirdAdj[i] *= 1.08
             
                 elif dist >= 2:
-                    SecondAdj[i] *= 1.03
-                    ThirdAdj[i] *= 1.00
-                    
+                    if NoAttackFlag == 0:
+                        SecondAdj[i] *= 1.03
+                        ThirdAdj[i] *= 1.00
+                                    
             # ===============================
             # ★ 壁崩壊（最終完成版）
             # ===============================
@@ -2667,22 +2668,17 @@ if st.button("計算"):
             # ★ 6の最終制御（統一版）
             # ===============================
             
-            six_flow = (
-                DoubleAttackScore > MID
-                and Start[5] >= Start[3] - 0.02
-            )
-            
-            six_power = (
-                Foot[5] >= 0.50
-                or CPI[5] >= 0.48
-            )
-            
-            if six_flow and six_power:
-                SecondAdj[5] *= 1.08
-                ThirdAdj[5] *= 1.12
+            # ★ 6の最終制御
+            if NoAttackFlag == 1:
+                SecondAdj[5] *= 0.65
+                ThirdAdj[5] *= 0.70
             else:
-                SecondAdj[5] *= 0.82
-                ThirdAdj[5] *= 0.85
+                if six_flow and six_power:
+                    SecondAdj[5] *= 1.08
+                    ThirdAdj[5] *= 1.12
+                else:
+                    SecondAdj[5] *= 0.82
+                    ThirdAdj[5] *= 0.85
                 
       
                 
