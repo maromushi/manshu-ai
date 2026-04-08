@@ -1706,10 +1706,16 @@ if st.button("計算"):
         # ★ 無風ロック（ここに移動）
         # ===============================
         if NoAttackFlag == 1:
-    
-            # 2の残り制御（最重要）
-            SecondAdj[1] *= 0.65
-            ThirdAdj[1] *= 0.75
+
+            # 全体を減衰（←これが本質）
+            for i in range(6):
+                SecondAdj[i] *= 0.85
+                ThirdAdj[i]  *= 0.90
+        
+            # 外はさらに抑える
+            for i in range(3,6):
+                SecondAdj[i] *= 0.80
+                ThirdAdj[i]  *= 0.85
         
             # 外の暴走防止
             for i in range(3,6):
