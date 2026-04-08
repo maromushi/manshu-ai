@@ -1135,7 +1135,7 @@ if st.button("計算"):
             and Foot[2] >= max(Foot[0], Foot[1])
             and Turn[2] >= max(Turn[0], Turn[1])
             and DoubleAttackScore > WEAK
-            and and NoAttackFlag == 0
+            and NoAttackFlag == 0
         ):
             FS_mult[2] *= 1.20
             
