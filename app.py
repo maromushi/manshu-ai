@@ -1699,18 +1699,17 @@ if st.button("計算"):
                 ThirdAdj[i]  *= 0.90
                 
             # ★ 外のヒモ完全抑制（これ追加）
-            for i in range(3,6):
                 # 3コース（少し残す）
-                SecondAdj[3] *= 0.60
-                ThirdAdj[3] *= 0.65
+                SecondAdj[2] *= 0.60
+                ThirdAdj[2] *= 0.65
                 
                 # 4コース（普通に削る）
-                SecondAdj[4] *= 0.50
-                ThirdAdj[4] *= 0.55
+                SecondAdj[3] *= 0.50
+                ThirdAdj[3] *= 0.55
                 
                 # 5コース（強く削る）
-                SecondAdj[5] *= 0.40
-                ThirdAdj[5] *= 0.45
+                SecondAdj[4] *= 0.40
+                ThirdAdj[4] *= 0.45
                 
                 # 6（ほぼ消す）
                 SecondAdj[5] *= 0.25
