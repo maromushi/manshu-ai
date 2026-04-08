@@ -2740,7 +2740,7 @@ if st.button("計算"):
                 SecondAdj[5] *= 0.65
                 ThirdAdj[5] *= 0.70
             else:
-                if six_flow and six_power:
+                if SixFlowFlag:
                     SecondAdj[5] *= 1.08
                     ThirdAdj[5] *= 1.12
                 else:
