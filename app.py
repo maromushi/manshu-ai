@@ -1733,26 +1733,23 @@ if st.button("計算"):
         if NoAttackFlag == 1:
 
             # 全体を減衰（←これが本質）
+            # 全体
             for i in range(6):
-                SecondAdj[i] *= 0.85
-                ThirdAdj[i]  *= 0.90
-                
-            # ★ 外のヒモ完全抑制（これ追加）
-                # 3コース（少し残す）
-                SecondAdj[2] *= 0.60
-                ThirdAdj[2] *= 0.65
-                
-                # 4コース（普通に削る）
-                SecondAdj[3] *= 0.50
-                ThirdAdj[3] *= 0.55
-                
-                # 5コース（強く削る）
-                SecondAdj[4] *= 0.40
-                ThirdAdj[4] *= 0.45
-                
-                # 6（ほぼ消す）
-                SecondAdj[5] *= 0.12
-                ThirdAdj[5]  *= 0.15
+                SecondAdj[i] *= 0.90
+                ThirdAdj[i]  *= 0.92
+            
+            # 個別
+            SecondAdj[2] *= 0.75
+            ThirdAdj[2]  *= 0.80
+            
+            SecondAdj[3] *= 0.65
+            ThirdAdj[3]  *= 0.70
+            
+            SecondAdj[4] *= 0.55
+            ThirdAdj[4]  *= 0.60
+            
+            SecondAdj[5] *= 0.40
+            ThirdAdj[5]  *= 0.45
                     
             # 外はさらに抑える
             for i in range(3,6):
@@ -1771,6 +1768,21 @@ if st.button("計算"):
                 
             # ★ 6だけ追加で止める（これ重要）
             SecondAdj[5] = min(SecondAdj[5], SecondScore[5]*0.35)
+            
+            # ===============================
+            # ★ 無風でもST上位は3着に残す（汎用）
+            # ===============================
+            for i in range(6):
+        
+                if Start[i] >= max(Start) - 0.01:
+        
+                    if CPI[i] >= 0.40:
+                        ThirdAdj[i] *= 1.12
+        
+                    elif Foot[i] >= 0.45:
+                        ThirdAdj[i] *= 1.08
+            
+            
                 
             
         
