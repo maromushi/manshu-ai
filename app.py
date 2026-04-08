@@ -819,15 +819,22 @@ if st.button("計算"):
 
         ]
 
-        # ===== 2差し強化補正 =====
-
-        if CPI[1] >= CPI[0] - 0.03 and Start[1] <= Start[0] + 0.03:
-
+        # 2差し強化補正
+        if (
+            NoAttackFlag == 0
+            and CPI[1] >= CPI[0] - 0.03
+            and Start[1] <= Start[0] + 0.03
+        ):
+        
             LaneWin[1] += 0.07
             LaneWin[0] -= 0.07
-
-        elif CPI[1] >= CPI[0] - 0.06 and Start[1] <= Start[0] + 0.05:
-
+        
+        elif (
+            NoAttackFlag == 0
+            and CPI[1] >= CPI[0] - 0.06
+            and Start[1] <= Start[0] + 0.05
+        ):
+        
             LaneWin[1] += 0.04
             LaneWin[0] -= 0.04
             
@@ -1346,7 +1353,7 @@ if st.button("計算"):
         ):
             FS_mult[5] *= 1.08
         
-        if use_mode == "safe":
+        if use_mode == "safe" and NoAttackFlag == 0:
             FS_mult[0] *= 1.08
                 
             for i in range(6):
@@ -2144,7 +2151,8 @@ if st.button("計算"):
         # ★ 2の残り復活（ここに入れる）
         # ===============================
         if (
-            Start[1] >= Start[0] - 0.02
+            NoAttackFlag == 0
+            and Start[1] >= Start[0] - 0.02
             and CPI[1] >= 0.45
         ):
             SecondAdj[1] *= 1.12
