@@ -1712,7 +1712,8 @@ if st.button("計算"):
                 ThirdAdj[4] *= 0.45
                 
                 # 6（ほぼ消す）
-                SecondAdj[5] *= 0.25
+                SecondAdj[5] *= 0.12
+                ThirdAdj[5]  *= 0.15
                     
             # 外はさらに抑える
             for i in range(3,6):
@@ -1728,6 +1729,9 @@ if st.button("計算"):
             for i in range(4,6):
                 SecondAdj[i] *= 0.45
                 ThirdAdj[i] *= 0.50
+                
+            # ★ 6だけ追加で止める（これ重要）
+            SecondAdj[5] = min(SecondAdj[5], SecondScore[5]*0.35)
                 
             
         
