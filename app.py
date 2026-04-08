@@ -2229,15 +2229,17 @@ if st.button("計算"):
             # ★ 展開拾い強化（汎用版）
             # ===============================
             if attack_success:
+                
+                if NoAttackFlag == 0:
             
-                for i in range(a+1,6):
-            
-                    if (
-                        (Turn[i] >= Turn[a] - 0.04 and Foot[i] >= 0.48)
-                        or (Foot[i] >= Foot[a] - 0.04 and Turn[i] >= 0.48)
-                    ):
-                        SecondAdj[i] *= 1.10
-                        ThirdAdj[i] *= 1.18
+                    for i in range(a+1,6):
+                
+                        if (
+                            (Turn[i] >= Turn[a] - 0.04 and Foot[i] >= 0.48)
+                            or (Foot[i] >= Foot[a] - 0.04 and Turn[i] >= 0.48)
+                        ):
+                            SecondAdj[i] *= 1.10
+                            ThirdAdj[i] *= 1.18
                         
             # ===============================
             # ★ 展開3着強化（汎用版）
