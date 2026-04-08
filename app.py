@@ -1700,8 +1700,8 @@ if st.button("計算"):
                 
             # ★ 外のヒモ完全抑制（これ追加）
             for i in range(3,6):
-                SecondAdj[i] *= 0.65
-                ThirdAdj[i] *= 0.70
+                SecondAdj[i] *= 0.55
+                ThirdAdj[i] *= 0.60
                     
             # 外はさらに抑える
             for i in range(3,6):
@@ -1715,8 +1715,8 @@ if st.button("計算"):
             
             # ★ 外完全停止（これが本命）
             for i in range(4,6):
-                SecondAdj[i] *= 0.50
-                ThirdAdj[i] *= 0.55
+                SecondAdj[i] *= 0.45
+                ThirdAdj[i] *= 0.50
                 
             
         
