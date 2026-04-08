@@ -1004,14 +1004,9 @@ if st.button("計算"):
         ):
             FS_mult[0] *= 1.05
             
-        # ★ 無風時：3の頭抑制（完全版）
-        if (
-            NoAttackFlag == 1
-            and DoubleAttackScore < 0.07
-            and AttackSuccess == 0
-            and CPI[2] <= CPI[0] + 0.02
-        ):
-            FS_mult[2] *= 0.90
+        # ★ 無風時：3の頭制御（確実に効かせる）
+        if NoAttackFlag == 1:
+            FS_mult[2] *= 0.85
         
         # 3が攻め役なら強化
         if (
@@ -1712,6 +1707,12 @@ if st.button("計算"):
 
         if total_p1 > 0:
             P1 = [p / total_p1 for p in P1]
+            
+        # ★ 無風時：3が2を超えたら抑制（ここに追加）
+        if NoAttackFlag == 1:
+            if P1[2] > P1[1]:
+                FS_mult[2] *= 0.90
+                
 
         LaneBonus=[0.10,0.09,0.08,0.07,0.06,0.05]
 
@@ -2196,10 +2197,9 @@ if st.button("計算"):
         
         for i in range(6):
 
-        # ★ 3号艇の自然残り（本命修正）
-            if i == 2:
-                if CPI[i] >= 0.45:
-                    ThirdAdj[i] *= 1.18
+        if i == 2 and NoAttackFlag == 0:
+            if CPI[i] >= 0.45:
+                ThirdAdj[i] *= 1.18
         
         # ★ 攻め役の失敗残り（超重要）
         for i in range(6):
@@ -2207,6 +2207,8 @@ if st.button("計算"):
             if i in [2,3]:
                 if DoubleAttackScore > WEAK and NoAttackFlag == 0:
                     ThirdAdj[i] *= 1.12
+                    
+        
     
         # ===============================
         # ★ インの2着・3着粘り復活
