@@ -1708,6 +1708,10 @@ if st.button("計算"):
         # ★ 無風ロック（ここに移動）
         # ===============================
         if NoAttackFlag == 1:
+            
+            # ★ 2の頭抑制（無風用）
+            FS_mult[1] *= 0.88
+            
             for i in range(3,6):
                 SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
                 ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
