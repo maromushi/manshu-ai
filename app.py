@@ -2644,22 +2644,8 @@ if st.button("計算"):
                 SecondAdj[5] *= 0.82
                 ThirdAdj[5] *= 0.85
                 
-            if NoAttackFlag == 1:
-                for i in range(3,6):
-                    SecondAdj[i] *= 0.70
-                    ThirdAdj[i] *= 0.60
-                    
-            if NoAttackFlag == 1:
-                for i in range(4,6):
-                    FS_mult[i] *= 0.85
-                        
-            # ===============================
-            # ★ 無風ロック（最終ブレーキ）
-            # ===============================
-            if race_type == "no_attack":
-                for i in range(3,6):
-                    SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.60)
-                    ThirdAdj[i]  = min(ThirdAdj[i], 0.65)
+            
+                
                     
 
             second_scores = [
@@ -2680,6 +2666,17 @@ if st.button("計算"):
                 P_second = second_probs[idx_b]
 
                 remain2=[i for i in remain1 if i!=b and Active[i]==1]
+                
+                # ===============================
+                # ★ 無風ロック（最終・1回だけ）
+                # ===============================
+                if NoAttackFlag == 1:
+                    for i in range(3,6):
+                        SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
+                        ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
+                
+                    for i in range(4,6):
+                        FS_mult[i] *= 0.85
 
                 third_scores = [
                 ThirdAdj[i] if Active[i]==1 else 0
