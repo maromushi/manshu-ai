@@ -1769,6 +1769,14 @@ if st.button("計算"):
             # ★ 6だけ追加で止める（これ重要）
             SecondAdj[5] = min(SecondAdj[5], SecondScore[5]*0.35)
             
+            # ★ 無風時：3が2を超えすぎない（汎用版）
+            if (
+                NoAttackFlag == 1
+                and DoubleAttackScore < 0.07   # ←これ追加（重要）
+            ):
+                if ThirdAdj[2] > ThirdAdj[1]:
+                    ThirdAdj[2] *= 0.85
+            
             # ===============================
             # ★ 無風でもST上位は3着に残す（汎用）
             # ===============================
