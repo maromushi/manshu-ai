@@ -983,7 +983,7 @@ if st.button("計算"):
             Turn[3] >= Turn[1]
             and Foot[3] >= Foot[1]
             and DoubleAttackScore > WEAK
-            and WEAK and NoAttackFlag == 0
+            and NoAttackFlag == 0
         ):
             FS_mult[3] *= 1.08
         
@@ -1707,14 +1707,14 @@ if st.button("計算"):
         # ===============================
         if NoAttackFlag == 1:
     
-        # 2の残り制御（最重要）
-        SecondAdj[1] *= 0.65
-        ThirdAdj[1] *= 0.75
-    
-        # 外の暴走防止
-        for i in range(3,6):
-            SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
-            ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
+            # 2の残り制御（最重要）
+            SecondAdj[1] *= 0.65
+            ThirdAdj[1] *= 0.75
+        
+            # 外の暴走防止
+            for i in range(3,6):
+                SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
+                ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
         
         # ★ 攻め時の2残り復活（汎用版）
 
