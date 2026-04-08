@@ -1581,6 +1581,12 @@ if st.button("計算"):
                 SashiBoost[i]*
                 AttackBoost[i]
             )
+            # ★ ここ追加（超重要）
+            if NoAttackFlag == 1:
+                if i == 4:
+                    value *= 0.70
+                if i == 5:
+                    value *= 0.55
 
 
             if i == 0 and InsideBreak == 1:
