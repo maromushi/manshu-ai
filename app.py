@@ -950,8 +950,8 @@ if st.button("計算"):
             FS_mult[0] *= 1.12
             if NoAttackFlag == 1:
                 FS_mult[1] *= 0.90
-                
-            FS_mult[2] *= 0.95
+                FS_mult[2] *= 0.85
+            
         
             FS_mult[3] *= 0.70   # ★修正（重要）
             FS_mult[4] *= 0.65
