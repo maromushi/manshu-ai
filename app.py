@@ -1720,6 +1720,11 @@ if st.button("計算"):
             for i in range(3,6):
                 SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
                 ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
+            
+            # ★ 外完全停止（これが本命）
+            for i in range(4,6):
+                SecondAdj[i] *= 0.50
+                ThirdAdj[i] *= 0.55
                 
             
         
@@ -1857,7 +1862,7 @@ if st.button("計算"):
                 else:
                     SecondAdj[i] *= 0.85
             
-            elif mid_attack:
+            elif mid_attack and NoAttackFlag == 0:
                 if valid:
                     SecondAdj[i] *= 1.00
                 else:
@@ -2108,8 +2113,10 @@ if st.button("計算"):
                 ThirdAdj[i] *= 1.15
         
         for i in range(4,6):
+            if NoAttackFlag == 1:
+                continue
         
-            if NoAttackFlag == 0 and Foot[i] >= 0.48:
+            if Foot[i] >= 0.48:
                 ThirdAdj[i] *= 1.05
         
         for i in range(6):
