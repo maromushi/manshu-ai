@@ -690,7 +690,7 @@ if st.button("計算"):
         if (
             AttackSuccess == 0
             and len(attackers) == 0
-            and DoubleAttackScore < WEAK
+            and DoubleAttackScore < MID
         ):
             NoAttackFlag = 1
         else:
