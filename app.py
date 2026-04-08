@@ -2088,7 +2088,7 @@ if st.button("計算"):
         
             if (
                 NoAttackFlag == 0
-                Start[i] < min(Start) + 0.01
+                and Start[i] < min(Start) + 0.01
                 and CPI[i] >= 0.42
             ):
                 ThirdAdj[i] *= 1.15
