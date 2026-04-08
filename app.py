@@ -1824,6 +1824,9 @@ if st.button("計算"):
         # ★ 外の暴走防止（最重要）
         # ===============================
         for i in range(4,6):
+            
+            if NoAttackFlag == 1:
+                continue
 
             valid = (
                 (Foot[i] >= 0.50 or CPI[i] >= 0.48)
