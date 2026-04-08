@@ -2273,6 +2273,10 @@ if st.button("計算"):
             
                 # 後ろが展開拾う
                 for i in range(a+1,6):
+                    
+                    if NoAttackFlag == 1:
+                        continue
+                        
                     SecondAdj[i] *= 1.12
                     ThirdAdj[i] *= 1.15
             
