@@ -293,7 +293,7 @@ if st.button("計算"):
         LT=[LapTime[i] for i in order]
         STT=[StraightTime[i] for i in order]
         
-        WEAK = 0.06
+        WEAK = 0.08
         MID = 0.09
         STRONG = 0.13
 
@@ -887,7 +887,7 @@ if st.button("計算"):
         if (
             AttackSuccess == 0
             and len(attackers) == 0
-            and DoubleAttackScore < 0.08
+            and DoubleAttackScore < WEAK
         ):
             NoAttackFlag = 1
         else:
