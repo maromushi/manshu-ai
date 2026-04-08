@@ -896,7 +896,7 @@ if st.button("計算"):
         
         elif AttackSuccess == 1:
         
-            if DoubleAttackScore > STRONG and NoAttackFlag == 0:
+            if DoubleAttackScore > STRONG and AttackSuccess == 1:
                 race_type = "strong_attack"
         
             elif DoubleAttackScore > MID:
@@ -948,14 +948,22 @@ if st.button("計算"):
         elif race_type == "no_attack":
 
             FS_mult[0] *= 1.12
-            FS_mult[1] *= 0.98
-            FS_mult[2] *= 1.00
+            FS_mult[1] *= 0.88
+            FS_mult[2] *= 0.95
         
             FS_mult[3] *= 0.70   # ★修正（重要）
             FS_mult[4] *= 0.65
             FS_mult[5] *= 0.50
-            
-            
+                
+        # ===============================
+        # ★ 中間展開イン復活（正式版）
+        # ===============================
+        if (
+            0.04 < DoubleAttackScore < 0.09
+            and AttackSuccess == 1
+            and NoAttackFlag == 0
+        ):
+            FS_mult[0] *= 1.05
         
     
         
@@ -1186,7 +1194,7 @@ if st.button("計算"):
             
         # ★ 2の頭制限（これが本命）
         # ★ 2の頭制限（分岐版）
-        if DoubleAttackScore > STRONG and NoAttackFlag == 0:
+        if DoubleAttackScore > STRONG and AttackSuccess == 1:
 
             FS_mult[1] *= 0.88
         
@@ -1197,7 +1205,7 @@ if st.button("計算"):
                 FS_mult[1] *= 0.95
         
         
-        elif DoubleAttackScore > MID and NoAttackFlag == 0:
+        elif DoubleAttackScore > MID and AttackSuccess == 1:
         
             FS_mult[1] *= 0.93
         
@@ -1426,20 +1434,6 @@ if st.button("計算"):
             
         if AvgST[0] > 0.20:
             FS_mult[0] *= 0.92
-            
-        # ===============================
-        # ★ 中間展開のイン復活（最重要）
-        # ===============================
-        if (
-            DoubleAttackScore > 0.04
-            and DoubleAttackScore < 0.09
-            and NoAttackFlag == 0
-        ):
-            FS_mult[0] *= 1.12
-        
-        
-                
-     
                     
         
 
@@ -1744,13 +1738,13 @@ if st.button("計算"):
         st_loss = Start[0] < Start[2]
         weak_inside = InsideSurvival[0] < 0.55
         
-        if DoubleAttackScore > STRONG and NoAttackFlag == 0:
+        if DoubleAttackScore > STRONG and AttackSuccess == 1:
             if st_loss:
                 SecondAdj[0] *= 0.78
             else:
                 SecondAdj[0] *= 0.85
         
-        elif DoubleAttackScore > MID and NoAttackFlag == 0:
+        elif DoubleAttackScore > MID and AttackSuccess == 1:
             if st_loss and weak_inside:
                 SecondAdj[0] *= 0.82
             elif st_loss:
@@ -1769,13 +1763,13 @@ if st.button("計算"):
             st_loss = Start[0] < Start[2]
             weak_inside = InsideSurvival[0] < 0.55
         
-            if DoubleAttackScore > STRONG and NoAttackFlag == 0:
+            if DoubleAttackScore > STRONG and AttackSuccess == 1:
                 if st_loss:
                     ThirdAdj[0] *= 0.85
                 else:
                     ThirdAdj[0] *= 0.90
         
-            elif DoubleAttackScore > MID and NoAttackFlag == 0:
+            elif DoubleAttackScore > MID and AttackSuccess == 1:
                 if st_loss and weak_inside:
                     ThirdAdj[0] *= 0.88
                 elif st_loss:
@@ -1788,7 +1782,7 @@ if st.button("計算"):
                     ThirdAdj[0] *= 0.95
                     
          # ★ 5の流入（統一）
-        if DoubleAttackScore > STRONG and NoAttackFlag == 0:
+        if DoubleAttackScore > STRONG and AttackSuccess == 1:
         
             is_fast = Start[4] >= Start[2] - 0.01
             has_power = (Foot[4] >= 0.52 and CPI[4] >= 0.50)
@@ -1800,7 +1794,7 @@ if st.button("計算"):
 
                 
         # ★ 6の流入（条件厳格化）
-        if DoubleAttackScore > STRONG and NoAttackFlag == 0:
+        if DoubleAttackScore > STRONG and AttackSuccess == 1:
         
             is_fast = Start[5] >= max(Start[2:4]) - 0.01
             has_power = (Foot[5] >= 0.52 and CPI[5] >= 0.50)
