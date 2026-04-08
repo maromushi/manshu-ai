@@ -1156,9 +1156,10 @@ if st.button("計算"):
             CPI[1] >= CPI[0] - 0.06
             and Start[1] <= Start[0] + 0.05
             and DoubleAttackScore < 0.07
+            and NoAttackFlag == 0
         ):
-            FS_mult[1] *= 1.02
-            FS_mult[0] *= 0.97
+            FS_mult[1] *= 1.01
+            FS_mult[0] *= 0.99
         
         # ③（弱い差し）
         elif (
@@ -1987,7 +1988,8 @@ if st.button("計算"):
 
         if (
             CPI[1] >= CPI[0] - 0.05
-            and Fcount[1] == 0   # ←これ追加
+            and Fcount[1] == 0 
+            and NoAttackFlag == 0
         ):
             SecondAdj[1] *= 1.10
             
