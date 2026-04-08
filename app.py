@@ -1064,7 +1064,10 @@ if st.button("計算"):
 
         # ★ 1の過集中防止
         if NoAttackFlag == 1:
-            FS_mult[1] *= 0.90
+            FS_mult[1] *= 0.75
+            
+        if NoAttackFlag == 1:
+            FS_mult[2] *= 0.85
 
         # ===============================
         # ★ 攻め競合（共倒れ）
@@ -1102,7 +1105,7 @@ if st.button("計算"):
             and Start[0] >= 0.13
             and InsideSurvival[0] >= 0.55
         ):
-            FS_mult[0] *= 1.12
+            FS_mult[0] *= 1.08
             
             
         # ===============================
