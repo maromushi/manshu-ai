@@ -818,6 +818,7 @@ if st.button("計算"):
 
         if (
             NoAttackFlag == 0
+            and AttackSuccess == 1
             and CPI[1] >= CPI[0] - 0.05
             and Start[1] <= Start[0] + 0.04
         ):
@@ -1354,7 +1355,7 @@ if st.button("計算"):
         ):
             FS_mult[5] *= 1.08
         
-        if use_mode == "safe" and NoAttackFlag == 0:
+        if use_mode == "safe":
             FS_mult[0] *= 1.08
                 
             for i in range(6):
