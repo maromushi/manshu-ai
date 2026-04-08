@@ -2197,9 +2197,9 @@ if st.button("計算"):
         
         for i in range(6):
 
-        if i == 2 and NoAttackFlag == 0:
-            if CPI[i] >= 0.45:
-                ThirdAdj[i] *= 1.18
+            if i == 2 and NoAttackFlag == 0:
+                if CPI[i] >= 0.45:
+                    ThirdAdj[i] *= 1.18
         
         # ★ 攻め役の失敗残り（超重要）
         for i in range(6):
