@@ -1025,6 +1025,21 @@ if st.button("計算"):
             and Foot[3] >= max(Foot[1], Foot[2])
         ):
             FS_mult[3] *= 1.05
+            
+        # ===============================
+        # ★ 無風時：STだけの頭を禁止（復活）
+        # ===============================
+        if NoAttackFlag == 1:
+        
+            max_st = max(Start)
+        
+            for i in range(2,6):
+        
+                if (
+                    Start[i] == max_st
+                    and CPI[i] < 0.50
+                ):
+                    FS_mult[i] *= 0.88
         
         
         # ===============================
