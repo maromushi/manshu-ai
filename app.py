@@ -2837,23 +2837,28 @@ if st.button("計算"):
     P1 = P1_ex
     DoubleAttackScore = DAS2
     InsideSurvival = IS2
-    # =====================================
+    
+    # ===============================
+    # ★ 無風確率（ここ追加）
+    # ===============================
+    NoAttackProb = max(0, min(1,
+        1
+        - (DoubleAttackScore / 0.12)
+    ))
+    
+    w_no = NoAttackProb
+    w_at = 1 - NoAttackProb
+        # =====================================
     # 合成
     # =====================================
 
-    final={}
-
     for a,b,c,p in res_waku:
-
         key=(a,b,c)
-
-        final[key]=final.get(key,0)+0.3*p
-
+        final[key]=final.get(key,0)+w_no*p
+    
     for a,b,c,p in res_ex:
-
         key=(a,b,c)
-
-        final[key]=final.get(key,0)+0.7*p
+        final[key]=final.get(key,0)+w_at*p
 
     results=[(k[0],k[1],k[2],v) for k,v in final.items()]
     
@@ -3024,8 +3029,10 @@ if st.button("計算"):
     debug_text.append("---- run_ai debug ----")
     for name, val in debug_log:
         debug_text.append(f"{name}: {val}")
+    debug_text.append(f"NoAttackProb: {round(NoAttackProb,4)}")
         
     debug_output = "\n".join(debug_text)
+    
     
         # 出目テキスト
     result_text = "\n".join([
