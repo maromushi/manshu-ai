@@ -1192,32 +1192,24 @@ if st.button("計算"):
         # ===============================
     
             
-        # ★ 2の頭制限（これが本命）
-        # ★ 2の頭制限（分岐版）
-        if DoubleAttackScore > STRONG and AttackSuccess == 1:
-
+        # ★ 2の頭制限（修正版）
+        if DoubleAttackScore > STRONG:
+        
             FS_mult[1] *= 0.88
         
-            # ★ここに入れる
-            if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
-                FS_mult[1] *= 0.90
-            else:
-                FS_mult[1] *= 0.95
+        elif DoubleAttackScore > MID:
+        
+            FS_mult[1] *= 0.92
+        
+        elif DoubleAttackScore > WEAK:
+        
+            FS_mult[1] *= 0.96
+            
+        if NoAttackFlag == 1:
+            FS_mult[1] *= 0.92
         
         
-        elif DoubleAttackScore > MID and AttackSuccess == 1:
-        
-            FS_mult[1] *= 0.93
-        
-            if Turn[3] >= Turn[1] and Foot[3] >= Foot[1]:
-                FS_mult[1] *= 0.90
-            else:
-                FS_mult[1] *= 0.95
-        
-        
-        elif DoubleAttackScore > WEAK and AttackSuccess == 1:
-        
-            FS_mult[1] *= 0.97
+
             
             
         # ===============================
