@@ -3341,37 +3341,14 @@ if st.button("計算"):
     
     for i, (a,b,c,p) in enumerate(sorted_final):
         
-        head = a-1
-        
-        # ===============================
-        # ★ 無風制御（これ追加）
-        # ===============================
-        if NoAttackProb > 0.7:
-            if head >= 4:
-                mark = ""
-                marked.append((mark,a,b,c,p))
-                continue
+        head = a - 1
 
-       
-    
-        # ◎
         if i == 0:
             mark = "◎"
-    
-        # ○
-        elif (
-            i <= 3
-            and (
-                # 無風
-                (NoAttackProb > 0.7 and head <= 2)
         
-                # 攻めあり
-                or (NoAttackProb <= 0.7 and head >= 2)
-            )
-        ):
+        elif i <= 2:
             mark = "○"
-    
-        # ▲
+        
         elif (
             i <= 5
             and head >= 3
@@ -3382,38 +3359,27 @@ if st.button("計算"):
                     and AttackSuccess == 0
                     and 0.03 < DoubleAttackScore < 0.08
                 )
-                or (
-                    AttackSuccess == 1
-                )
+                or AttackSuccess == 1
             )
         ):
             mark = "▲"
-            
+        
         elif (
             i <= 6
             and (
-                # 外がちゃんと来る条件
                 (
                     b >= 4
                     and Start[b-1] >= max(Start) - 0.02
                 )
-        
-                # もしくは内崩れ
                 or (
                     a == 1
                     and InsideSurvival[0] < 0.50
                     and DoubleAttackScore > 0.05
                 )
-                
-                or (
-                    NoAttackFlag == 1
-                    and max(Start) - min(Start) > 0.07
-                    and b >= 4
-                )
             )
         ):
             mark = "△"
-    
+        
         else:
             mark = ""
     
