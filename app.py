@@ -3081,7 +3081,7 @@ if st.button("計算"):
                     
                     results.append((boats[a],boats[b],boats[c],p))
 
-                return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log
+        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log
                 
     def run_zure_ai(order):
     
