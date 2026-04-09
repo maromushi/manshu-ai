@@ -702,10 +702,19 @@ if st.button("計算"):
         # ===============================
         # ★ 壁崩壊フラグ（追加）
         # ===============================
-        WallCollapse = (
-            AttackWeak == 1
-            and Start[1] < Start[2] - 0.02
-        )
+        collapse_flags = [0]*6
+
+        for i in range(1,6):
+            if Start[i] < Start[i-1] - 0.02:
+                collapse_flags[i] = 1)
+                
+        flow_power = [0]*6
+
+        for i in range(1,6):
+            if collapse_flags[i] == 1:
+        
+                for j in range(i+1,6):
+                    flow_power[j] += 1
         
         # ===============================
         # ★ ズレ展開フラグ（NEW）
@@ -1121,12 +1130,19 @@ if st.button("計算"):
         # ③ 個別性能補正（ここだけ許可）
         # ===============================
         
-        # ★ 壁崩壊：外頭を少しだけ許可
-        if WallCollapse:
-
-            for i in range(3,6):
-                if Start[i] >= Start[2] - 0.02:
-                    FS_mult[i] *= 1.15   # ←1.10→1.15に上げろ
+        # ===============================
+        # ★ 崩壊→流れ反映（最重要）
+        # ===============================
+        for i in range(6):
+        
+            if flow_power[i] == 1:
+                FS_mult[i] *= 1.08
+        
+            elif flow_power[i] == 2:
+                FS_mult[i] *= 1.12
+        
+            elif flow_power[i] >= 3:
+                FS_mult[i] *= 1.18
         
         # イン強いなら少し上げる
         if (
@@ -1891,23 +1907,6 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
-        
-        # ★ 壁崩壊：外流れ（2着）
-        if WallCollapse:
-        
-            for i in range(3,6):
-                SecondAdj[i] *= 1.15
-        
-            for i in range(0,2):
-                SecondAdj[i] *= 0.85
-                
-        # ★ 壁崩壊：外流れ（3着）
-        if WallCollapse:
-        
-            for i in range(3,6):
-                ThirdAdj[i] *= 1.20
-        
-            ThirdAdj[0] *= 0.90
         
         # ===============================
         # ★ 攻め失敗
