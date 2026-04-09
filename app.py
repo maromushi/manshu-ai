@@ -2136,6 +2136,30 @@ if st.button("計算"):
         
             if st_good and perf_ok and NoAttackFlag == 0:
                 SecondAdj[1] *= 1.12
+                
+        # ===============================
+        # ★ 2-1ライン強化（最重要）
+        # ===============================
+        if (
+            NoAttackFlag == 0
+            and DoubleAttackScore > WEAK
+            and AttackSuccess == 1
+        ):
+        
+            # 1が完全に死んでない条件
+            if (
+                InsideSurvival[0] >= 0.45
+                and Start[0] >= Start[2] - 0.05
+            ):
+                SecondAdj[0] *= 1.15   # ←ここが本体
+                ThirdAdj[0]  *= 1.08
+        
+            # さらに差し残り（強化版）
+            if (
+                CPI[0] >= 0.48
+                and CLS[0] in ["A1","A2"]
+            ):
+                SecondAdj[0] *= 1.05
         
         # ★ 攻め時のイン2着分岐（完成版）
 
