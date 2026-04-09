@@ -556,6 +556,21 @@ if st.button("計算"):
                 ):
                     AttackSuccess = 1
                     
+            # ===============================
+            # ★ 弱攻め判定（追加）
+            # ===============================
+            AttackWeak = 0
+            
+            if len(attackers) > 0:
+            
+                atk = attackers[0]
+            
+                if (
+                    Start[atk] > Start[atk-1] + 0.005
+                    or Turn[atk] > Turn[atk-1] + 0.01
+                ):
+                    AttackWeak = 1
+                    
             
 
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
@@ -679,9 +694,13 @@ if st.button("計算"):
         DoubleAttackScore += PseudoAttack * 0.03
         
         if AttackSuccess == 0:
-            DoubleAttackScore *= 0.65
+            if AttackWeak == 1:
+                DoubleAttackScore *= 0.85
+            else:
+                DoubleAttackScore *= 0.65
             
         debug_log.append(("attackers", attackers))
+        debug_log.append(("AttackWeak", AttackWeak))
         debug_log.append(("AttackSuccess", AttackSuccess))
         debug_log.append(("DAS", round(DoubleAttackScore,4)))
         debug_log.append(("WEAK/MID/STRONG", (WEAK, MID, STRONG)))
@@ -711,17 +730,21 @@ if st.button("計算"):
             RaceMode = "attack_success"
         
         elif has_attack and AttackSuccess == 0:
+
+            if AttackWeak == 1:
+                RaceMode = "attack_weak"
         
-            crash_flag = any(
-                Start[atk] < Start[atk-1] - 0.02
-                or Turn[atk] < Turn[atk-1]
-                for atk in attackers
-            )
-        
-            if crash_flag:
-                RaceMode = "attack_crash"
             else:
-                RaceMode = "attack_fail"
+                crash_flag = any(
+                    Start[atk] < Start[atk-1] - 0.02
+                    or Turn[atk] < Turn[atk-1]
+                    for atk in attackers
+                )
+        
+                if crash_flag:
+                    RaceMode = "attack_crash"
+                else:
+                    RaceMode = "attack_fail"
         
         else:
             RaceMode = "no_attack"
