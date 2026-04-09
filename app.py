@@ -3099,7 +3099,7 @@ if st.button("計算"):
                     
                     results.append((boats[a],boats[b],boats[c],p))
 
-        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log
+        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
                 
     def run_zure_ai(order):
     
@@ -3147,7 +3147,7 @@ if st.button("計算"):
 
     try:
         res_waku, chaos1, P1_waku, DAS1, IS1, debug_log_waku = run_ai(order_waku)
-        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log_ex = run_ai(order_ex)
+        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log_ex, Start = run_ai(order_ex)
     
     except Exception as e:
         import traceback
