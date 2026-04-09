@@ -3331,36 +3331,36 @@ if st.button("計算"):
     
     for i, (a,b,c,p) in enumerate(sorted_final):
 
-    head = a-1
-
-    # ◎
-    if i == 0:
-        mark = "◎"
-
-    # ○
-    elif i <= 2:
-        mark = "○"
-
-    # ▲
-    elif (
-        i <= 5
-        and head >= 2
-        and (
-            DoubleAttackScore > 0.06
-            or (
-                AttackWeak == 1
-                and AttackSuccess == 0
-                and DoubleAttackScore > 0.03
+        head = a-1
+    
+        # ◎
+        if i == 0:
+            mark = "◎"
+    
+        # ○
+        elif i <= 2:
+            mark = "○"
+    
+        # ▲
+        elif (
+            i <= 5
+            and head >= 2
+            and (
+                DoubleAttackScore > 0.06
+                or (
+                    AttackWeak == 1
+                    and AttackSuccess == 0
+                    and DoubleAttackScore > 0.03
+                )
             )
-        )
-    ):
-        mark = "▲"
-
-    else:
-        mark = ""
-
-    # ★これ絶対必要
-    marked.append((mark,a,b,c,p))
+        ):
+            mark = "▲"
+    
+        else:
+            mark = ""
+    
+        # ★これ絶対必要
+        marked.append((mark,a,b,c,p))
     
     # ===============================
     # ★ 出目＋デバッグ（完全コピペ）
