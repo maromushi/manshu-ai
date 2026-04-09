@@ -805,7 +805,7 @@ if st.button("計算"):
             
             
         
-        elif RaceType == "no_attack_flow":
+        if RaceType == "no_attack_flow":
             ZureFlag = True
             
         # ===============================
