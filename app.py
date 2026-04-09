@@ -970,8 +970,16 @@ if st.button("計算"):
 
             if RaceMode == "no_attack":
                 if i >= 3:
-                    val *= 0.05   # 完全に殺す
-                    
+            
+                    # ★ズレ許可（ここ追加）
+                    if (
+                        AttackWeak == 1
+                        and AttackSuccess == 0
+                        and 0.035 < DoubleAttackScore < 0.075
+                    ):
+                        val *= 0.25   # ←0.05→0.30（超重要）
+                    else:
+                        val *= 0.05
         
             FirstScore.append(val)
             
@@ -3111,7 +3119,7 @@ if st.button("計算"):
                     and AttackSuccess == 0
                     and 0.03 < DAS < 0.08
                 ):
-                    boost = 1.6
+                    boost = 2.2
                     zure_results.append((a,b,c,p * boost))
             
         return zure_results
