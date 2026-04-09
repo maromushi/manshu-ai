@@ -698,6 +698,14 @@ if st.button("計算"):
                 DoubleAttackScore *= 0.85
             else:
                 DoubleAttackScore *= 0.65
+                
+        # ===============================
+        # ★ 壁崩壊フラグ（追加）
+        # ===============================
+        WallCollapse = (
+            AttackWeak == 1
+            and Start[1] < Start[2] - 0.02
+        )
             
         debug_log.append(("attackers", attackers))
         debug_log.append(("AttackWeak", AttackWeak))
@@ -1092,6 +1100,23 @@ if st.button("計算"):
         # ===============================
         # ③ 個別性能補正（ここだけ許可）
         # ===============================
+        
+        # ★ 壁崩壊：外頭を少しだけ許可
+        if WallCollapse:
+        
+            for i in range(3,6):
+                if Start[i] >= max(Start[2:6]) - 0.01:
+                    FS_mult[i] *= 1.10
+        
+        # ★ 壁崩壊フラグ（ここに入れる）
+        if (
+            AttackWeak == 1
+            and Start[1] < Start[2] - 0.02
+        ):
+        
+            for i in range(3,6):
+                if Start[i] >= max(Start[2:6]) - 0.01:
+                    FS_mult[i] *= 1.10
         
         # イン強いなら少し上げる
         if (
@@ -1834,6 +1859,23 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        
+        # ★ 壁崩壊：外流れ（2着）
+        if WallCollapse:
+        
+            for i in range(3,6):
+                SecondAdj[i] *= 1.15
+        
+            for i in range(0,2):
+                SecondAdj[i] *= 0.85
+                
+        # ★ 壁崩壊：外流れ（3着）
+        if WallCollapse:
+        
+            for i in range(3,6):
+                ThirdAdj[i] *= 1.20
+        
+            ThirdAdj[0] *= 0.90
         
         # ===============================
         # ★ 攻め失敗
