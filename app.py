@@ -899,12 +899,6 @@ if st.button("計算"):
                 if i >= 3:
                     val *= 0.05   # 完全に殺す
                     
-            # ===============================
-            # ★ グレー：外うっすら許可
-            # ===============================
-            if RaceMode == "gray":
-                if i >= 3:
-                    val *= 0.55   # ←これがキモ
         
             FirstScore.append(val)
             
@@ -1174,7 +1168,6 @@ if st.button("計算"):
         if (
             NoAttackFlag == 1
             and Skill[0] < 0.55
-            and DoubleAttackScore > WEAK   # ←これ追加
         ):
             FS_mult[0] *= 0.88
             FS_mult[2] *= 1.08
@@ -1525,7 +1518,7 @@ if st.button("計算"):
 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
-        if FS_tmp[5] == max(FS_tmp) and not (Strong6 or Normal6):
+        if FS_tmp[5] >= max(FS_tmp) * 0.99 and not (Strong6 or Normal6):
             FS_mult[5] *= 0.92
             
         # ===============================
@@ -2990,8 +2983,8 @@ if st.button("計算"):
         order_ex=[0,1,2,3,4,5]
 
     try:
-        debug_log_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
-        debug_log_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex)
+        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
+        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex)
     
     except Exception as e:
         import traceback
@@ -2999,7 +2992,7 @@ if st.button("計算"):
         st.code(traceback.format_exc())
         st.stop()
 
-        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex) 
+    
 
     ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
     P1 = P1_ex
@@ -3202,7 +3195,7 @@ if st.button("計算"):
         
     debug_text.append("")
     debug_text.append("---- run_ai debug ----")
-    for name, val in debug_log:
+    for name, val in debug_log_ex:
         debug_text.append(f"{name}: {val}")
     debug_text.append(f"NoAttackProb: {round(NoAttackProb,4)}")
         
