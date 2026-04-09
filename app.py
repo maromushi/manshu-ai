@@ -551,6 +551,28 @@ if st.button("計算"):
             reverse=True
         )
         
+        # ===============================
+        # ★ 攻めタイプ分類（最重要）
+        # ===============================
+        AttackType = "none"
+        
+        if len(attackers) > 0:
+        
+            atk = attackers[0]
+        
+            if atk == 1:
+                AttackType = "sashi"      # 2差し
+        
+            elif atk == 2:
+                if Start[2] > Start[1] + 0.02:
+                    AttackType = "makuri"     # 3まくり
+                else:
+                    AttackType = "makuri_sashi"
+        
+            elif atk >= 3:
+                AttackType = "outer"
+        
+        
         AttackSuccess = 0
 
         if len(attackers) > 0:
@@ -782,10 +804,6 @@ if st.button("計算"):
             RaceType = "attack"
             
             
-            
-        # ★ 無風時のズレ制御（正しい位置）
-        if NoAttackFlag == 1:
-            ZureFlag = False
         
         elif RaceType == "no_attack_flow":
             ZureFlag = True
@@ -1014,6 +1032,28 @@ if st.button("計算"):
         
             elif DoubleAttackScore > 0.05:
                 FS_mult[2] *= 1.05
+                
+        # ===============================
+        # ★ 攻めタイプ反映（ここ追加）
+        # ===============================
+        if NoAttackFlag == 0:
+        
+            if AttackType == "sashi":
+                FS_mult[1] *= 1.08
+                FS_mult[0] *= 0.97
+        
+            elif AttackType == "makuri":
+                FS_mult[2] *= 1.12
+                FS_mult[0] *= 0.90
+                FS_mult[1] *= 0.92
+        
+            elif AttackType == "makuri_sashi":
+                FS_mult[2] *= 1.10
+                FS_mult[0] *= 1.05   # ←ここが2-1-5の核
+        
+            elif AttackType == "outer":
+                FS_mult[3] *= 1.08
+                FS_mult[4] *= 1.05
         
         
         # ===============================
@@ -1985,6 +2025,51 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        
+        # ===============================
+        # ★ AttackType → 2着補正（最重要）
+        # ===============================
+        if NoAttackFlag == 0:
+        
+            if AttackType == "sashi":
+                SecondAdj[1] *= 1.12
+                SecondAdj[0] *= 0.95
+        
+            elif AttackType == "makuri":
+                SecondAdj[2] *= 1.15
+                SecondAdj[1] *= 0.90
+                SecondAdj[0] *= 0.85
+        
+            elif AttackType == "makuri_sashi":
+                SecondAdj[2] *= 1.12
+                SecondAdj[0] *= 1.10   # ←ここ超重要（2-1系）
+        
+            elif AttackType == "outer":
+                SecondAdj[3] *= 1.10
+                SecondAdj[4] *= 1.08
+        
+        # ===============================
+        # ★ AttackType → 3着補正（万舟の核）
+        # ===============================
+        if NoAttackFlag == 0:
+        
+            if AttackType == "sashi":
+                ThirdAdj[1] *= 1.10
+                ThirdAdj[2] *= 1.05
+        
+            elif AttackType == "makuri":
+                ThirdAdj[2] *= 1.15
+                ThirdAdj[3] *= 1.10
+                ThirdAdj[1] *= 0.92
+        
+            elif AttackType == "makuri_sashi":
+                ThirdAdj[2] *= 1.12
+                ThirdAdj[0] *= 1.10   # ←これが万舟ライン
+        
+            elif AttackType == "outer":
+                ThirdAdj[3] *= 1.12
+                ThirdAdj[4] *= 1.10
+                ThirdAdj[5] *= 1.08
         
         # ===============================
         # ★ 攻め失敗
@@ -3233,7 +3318,7 @@ if st.button("計算"):
             if head >= 1:
 
                 if (
-                    P1[0] < 0.48
+                    P1[0] < 0.55
                     and AttackSuccess == 0
                     and (
                         AttackWeak == 1
@@ -3311,7 +3396,7 @@ if st.button("計算"):
     
     for a,b,c,p in res_zure:
         key=(a,b,c)
-        final[key]=final.get(key,0)+p*0.45
+        final[key]=final.get(key,0)+p*0.75
 
     results=[(k[0],k[1],k[2],v) for k,v in final.items()]
     
