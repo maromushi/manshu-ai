@@ -1054,6 +1054,8 @@ if st.button("計算"):
         else:
             race_type = "normal"
             
+        
+            
 
             
         
@@ -2058,6 +2060,8 @@ if st.button("計算"):
                         elif Foot[i] >= 0.45:
                             ThirdAdj[i] *= 1.08 
                 
+            for i in range(4,6):
+                FS_mult[i] = min(FS_mult[i], 0.35)
         
         # ★ 攻め時の2残り復活（汎用版）
 
