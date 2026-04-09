@@ -739,8 +739,8 @@ if st.button("計算"):
         OuterSlip = (
             AttackWeak == 1
             and AttackSuccess == 0
-            and DoubleAttackScore < WEAK
-            and max(Start[4:6]) >= max(Start) - 0.005
+            and DoubleAttackScore < 0.07
+            and max(Start[4:6]) >= max(Start[2:6]) - 0.01
         )
             
         # ===============================
@@ -1123,10 +1123,10 @@ if st.button("計算"):
         
         # ★ 壁崩壊：外頭を少しだけ許可
         if WallCollapse:
-        
+
             for i in range(3,6):
-                if Start[i] >= max(Start[2:6]) - 0.01:
-                    FS_mult[i] *= 1.10
+                if Start[i] >= Start[2] - 0.02:
+                    FS_mult[i] *= 1.15   # ←1.10→1.15に上げろ
         
         # イン強いなら少し上げる
         if (
