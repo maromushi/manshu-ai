@@ -3082,6 +3082,29 @@ if st.button("計算"):
                     results.append((boats[a],boats[b],boats[c],p))
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log
+        
+    def run_zure_ai(order):
+
+    results, ChaosScore, P1, DAS, IS, debug = run_ai(order)
+
+    zure_results = []
+
+    for a,b,c,p in results:
+
+        head = a-1
+
+        # 外の頭だけ拾う（4,5,6コース）
+        if head >= 3:
+
+            # インが弱いときだけ許可
+            if P1[0] < 0.45:
+
+                # 少しだけ強化
+                boost = 1.4
+
+                zure_results.append((a,b,c,p * boost))
+
+    return zure_results
     # =====================================
     # 進入パターン
     # =====================================
@@ -3138,6 +3161,13 @@ if st.button("計算"):
     for a,b,c,p in res_ex:
         key=(a,b,c)
         final[key]=final.get(key,0)+w_gray*p*0.6
+        
+    # ズレ万舟を追加
+    res_zure = run_zure_ai(order_ex)
+    
+    for a,b,c,p in res_zure:
+        key=(a,b,c)
+        final[key]=final.get(key,0)+p*0.15
 
     results=[(k[0],k[1],k[2],v) for k,v in final.items()]
     
