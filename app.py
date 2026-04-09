@@ -963,8 +963,10 @@ if st.button("計算"):
                 and DoubleAttackScore < WEAK
                 and i >= 3
             ):
-                if Start[i] < max(Start[0:3]) + 0.02:
-                    val *= 0.60
+                if Start[i] >= max(Start[2:6]) - 0.01:
+                    val *= 0.70   # STだけ良いなら少し残す
+                else:
+                    val *= 0.25
 
             if RaceMode == "no_attack":
                 if i >= 3:
