@@ -1108,16 +1108,6 @@ if st.button("計算"):
                 if Start[i] >= max(Start[2:6]) - 0.01:
                     FS_mult[i] *= 1.10
         
-        # ★ 壁崩壊フラグ（ここに入れる）
-        if (
-            AttackWeak == 1
-            and Start[1] < Start[2] - 0.02
-        ):
-        
-            for i in range(3,6):
-                if Start[i] >= max(Start[2:6]) - 0.01:
-                    FS_mult[i] *= 1.10
-        
         # イン強いなら少し上げる
         if (
             Skill[0] >= 0.55
@@ -1987,7 +1977,7 @@ if st.button("計算"):
             # ===============================
             # ★ 無風でもST上位は3着に残す（汎用）
             # ===============================
-            if NoAttackFlag == 0:
+            if NoAttackFlag == 1:
 
                 for i in range(6):
             
