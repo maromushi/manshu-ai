@@ -3086,6 +3086,16 @@ if st.button("計算"):
     def run_zure_ai(order):
     
         results, ChaosScore, P1, DAS, IS, debug = run_ai(order)
+
+        # debugから拾う
+        AttackWeak = 0
+        AttackSuccess = 0
+        
+        for name, val in debug:
+            if name == "AttackWeak":
+                AttackWeak = val
+            if name == "AttackSuccess":
+                AttackSuccess = val
         
         zure_results = []
             
@@ -3094,8 +3104,14 @@ if st.button("計算"):
             head = a - 1
             
             if head >= 3:
-                if P1[0] < 0.45:
-                    boost = 1.4
+
+                if (
+                    P1[0] < 0.45
+                    and AttackWeak == 1
+                    and AttackSuccess == 0
+                    and 0.03 < DAS < 0.08
+                ):
+                    boost = 1.6
                     zure_results.append((a,b,c,p * boost))
             
         return zure_results
