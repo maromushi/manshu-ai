@@ -3085,25 +3085,20 @@ if st.button("計算"):
             
         def run_zure_ai(order):
 
-                results, ChaosScore, P1, DAS, IS, debug = run_ai(order)
-    
-                zure_results = []
-            
-                for a,b,c,p in results:
-            
-                    head = a - 1
-            
-                    # 外の頭だけ拾う
-                    if head >= 3:
-            
-                        # イン弱いときだけ
-                        if P1[0] < 0.45:
-            
-                            boost = 1.4
-            
-                            zure_results.append((a,b,c,p * boost))
-            
-                return zure_results
+            results, ChaosScore, P1, DAS, IS, debug = run_ai(order)
+        
+            zure_results = []
+        
+            for a,b,c,p in results:
+        
+                head = a - 1
+        
+                if head >= 3:
+                    if P1[0] < 0.45:
+                        boost = 1.4
+                        zure_results.append((a,b,c,p * boost))
+        
+            return zure_results
             
     # =====================================
     # 進入パターン
