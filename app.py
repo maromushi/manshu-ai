@@ -985,13 +985,13 @@ if st.button("計算"):
             if RaceMode == "no_attack":
                 if i >= 3:
             
-                    # ★ズレ許可（ここ追加）
+                    # ★ズレ許可（厳格化）
                     if (
                         AttackWeak == 1
                         and AttackSuccess == 0
-                        and 0.035 < DoubleAttackScore < 0.075
+                        and 0.04 < DoubleAttackScore < 0.07
                     ):
-                        val *= 0.25   # ←0.05→0.30（超重要）
+                        val *= 0.18   # ←下げる（重要）
                     else:
                         val *= 0.02
         
