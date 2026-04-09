@@ -3338,13 +3338,19 @@ if st.button("計算"):
             mark = "◎"
     
         # ○
-        elif i <= 2:
+        elif (
+            i <= 3
+            and (
+                a-1 == top_head     # 本線
+                or (a-1 >= 2)       # 外寄り
+            )
+        ):
             mark = "○"
     
         # ▲
         elif (
             i <= 5
-            and head >= 2
+            and head >= 3
             and (
                 DoubleAttackScore > 0.06
                 or (
@@ -3355,6 +3361,13 @@ if st.button("計算"):
             )
         ):
             mark = "▲"
+            
+        elif (
+            i <= 6
+            and a == 1
+            and b >= 4
+        ):
+            mark = "△"
     
         else:
             mark = ""
