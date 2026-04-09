@@ -740,7 +740,7 @@ if st.button("計算"):
         ZureSilent = (
             AttackSuccess == 0
             and DoubleAttackScore < 0.05
-            and max(Start) - min(Start) > 0.07
+            and max(Start) - min(Start) > 0.06
             and max(Start[3:6]) >= max(Start) - 0.01
             and InsideSurvival[0] < 0.60
         )
@@ -1767,11 +1767,12 @@ if st.button("計算"):
             if NoAttackFlag == 1 and i >= 4:
                 value *= 0.60
             # ★ ここ追加（超重要）
+            # ★ 無風時：外完全ロック
             if NoAttackFlag == 1:
                 if i == 4:
-                    value *= 0.70
-                if i == 5:
-                    value *= 0.55
+                    value *= 0.35
+                elif i == 5:
+                    value *= 0.20
 
 
             if i == 0 and InsideBreak == 1:
@@ -1884,9 +1885,10 @@ if st.button("計算"):
                 FS_mult[0] *= 0.92
                 
         # ★ 最終ロック（ここが正解位置）
+        # ★ 最終ロック（強制）
         if NoAttackFlag == 1:
-            for i in range(4,6):
-                FS_mult[i] = min(FS_mult[i], 0.20)
+            FS_mult[4] = 0.10
+            FS_mult[5] = 0.05
         
         #デバック
         FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
@@ -3240,6 +3242,17 @@ if st.button("計算"):
     results = filtered
 
     results.sort(key=lambda x:x[3],reverse=True)
+    
+    # ★ 無風：外頭禁止（最終フィルター）
+    tmp = []
+    for a,b,c,p in results:
+    
+        if NoAttackProb > 0.75 and a >= 4:
+            continue
+    
+        tmp.append((a,b,c,p))
+    
+    results = tmp
 
     # ===============================
     # ② 外頭制限（ここに追加）
