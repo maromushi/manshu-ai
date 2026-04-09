@@ -254,7 +254,10 @@ if st.button("計算"):
     
     # 足りなければ埋める
     while len(ExEntry) < 6:
-        ExEntry.append(ExEntry[-1])
+        for i in range(1,7):
+            if i not in ExEntry:
+                ExEntry.append(i)
+                break
 
     ExhibitionF=[0,0,0,0,0,0]
 
@@ -317,11 +320,11 @@ if st.button("計算"):
 
         for i in range(6):
 
-            if Active[i]==0:
+            if Active_local[i]==0:
                 Engine.append(0)
                 continue
 
-            motor_ratio = M[i] / max(avg_motor,1e-6)
+            Active_local = [Active[i] for i in order]
 
             factor = 0.90+ 0.10*motor_ratio
 
@@ -379,10 +382,10 @@ if st.button("計算"):
 
         for i in range(6):
 
-            if Active[i]==0:
+            if Active_local[i]==0:
                 continue
 
-            motor_ratio = M[i] / max(avg_motor,1e-6)
+            Active_local = [Active[i] for i in order]
 
             Foot[i] *= (0.90 + 0.10*motor_ratio)
 
@@ -706,7 +709,7 @@ if st.button("計算"):
 
         for i in range(1,6):
             if Start[i] < Start[i-1] - 0.02:
-                collapse_flags[i] = 1)
+                collapse_flags[i] = 1
                 
         flow_power = [0]*6
 
