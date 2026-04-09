@@ -3128,12 +3128,14 @@ if st.button("計算"):
             if head >= 3:
 
                 if (
-                    P1[0] < 0.45
-                    and AttackWeak == 1
+                    P1[0] < 0.48
                     and AttackSuccess == 0
-                    and 0.03 < DAS < 0.08
+                    and (
+                        AttackWeak == 1
+                        or DAS > 0.015   # ←これ追加（超重要）
+                    )
                 ):
-                    boost = 2.2
+                    boost = 3.0
                     zure_results.append((a,b,c,p * boost))
             
         return zure_results
