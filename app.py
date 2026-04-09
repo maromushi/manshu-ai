@@ -763,12 +763,6 @@ if st.button("計算"):
         else:
             NoAttackFlag = 0
             
-        # ★ 無風時のズレ制御（ここに入れる）
-        if NoAttackFlag == 1:
-            ZureFlag = False
-        
-        elif RaceType == "no_attack_flow":
-            ZureFlag = True
             
         # ===============================
         # ★ RaceType（分類専用・最重要）
@@ -786,6 +780,15 @@ if st.button("計算"):
         
         else:
             RaceType = "attack"
+            
+            
+            
+        # ★ 無風時のズレ制御（正しい位置）
+        if NoAttackFlag == 1:
+            ZureFlag = False
+        
+        elif RaceType == "no_attack_flow":
+            ZureFlag = True
             
         # ===============================
         # ★ 外スルーフラグ（追加）
