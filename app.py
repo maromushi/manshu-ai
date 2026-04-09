@@ -972,10 +972,14 @@ if st.button("計算"):
         elif race_type == "no_attack":
 
             FS_mult[0] *= 1.12
+
+            # ★ 最初に外殺す（これが本質）
+            FS_mult[4] *= 0.65
+            FS_mult[5] *= 0.30
+        
+            # 以降は条件処理
+                
             
-            # ★ 5頭禁止（ここ追加）
-            if CPI[5] < 0.52:
-                FS_mult[5] *= 0.50
         
             # ===============================
             # 2コース（条件型）
@@ -1217,7 +1221,7 @@ if st.button("計算"):
             if CLS[i] == "A1" and Engine[i] >= 0.55:
                 outer_a1 += 1
         
-        if outer_a1 >= 2:
+        if outer_a1 >= 2 and NoAttackFlag == 0:
         
             for i in range(4,6):
                 if CLS[i] == "A1":
@@ -1411,6 +1415,7 @@ if st.button("計算"):
         # ★ 6の展開連動ブースト（ここ）
         # ===============================
         if (
+            NoAttackFlag == 0
             DoubleAttackScore > STRONG
             and Start[5] >= Start[3] - 0.005
             and CLS[5] == "A1"
@@ -1604,6 +1609,9 @@ if st.button("計算"):
                 SashiBoost[i]*
                 AttackBoost[i]
             )
+            
+            if NoAttackFlag == 1 and i >= 4:
+                value *= 0.60
             # ★ ここ追加（超重要）
             if NoAttackFlag == 1:
                 if i == 4:
