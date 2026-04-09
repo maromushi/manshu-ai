@@ -3352,8 +3352,11 @@ if st.button("計算"):
         elif (
             i <= 3
             and (
-                a-1 == top_head     # 本線
-                or (a-1 >= 2)       # 外寄り
+                # 無風
+                (NoAttackProb > 0.7 and head <= 2)
+        
+                # 攻めあり
+                or (NoAttackProb <= 0.7 and head >= 2)
             )
         ):
             mark = "○"
@@ -3362,12 +3365,15 @@ if st.button("計算"):
         elif (
             i <= 5
             and head >= 3
+            and Start[head] >= max(Start) - 0.02
             and (
-                DoubleAttackScore > 0.06
-                or (
+                (
                     AttackWeak == 1
                     and AttackSuccess == 0
-                    and DoubleAttackScore > 0.03
+                    and 0.03 < DoubleAttackScore < 0.08
+                )
+                or (
+                    AttackSuccess == 1
                 )
             )
         ):
@@ -3375,8 +3381,20 @@ if st.button("計算"):
             
         elif (
             i <= 6
-            and a == 1
-            and b >= 4
+            and (
+                # 外がちゃんと来る条件
+                (
+                    b >= 4
+                    and Start[b-1] >= max(Start) - 0.02
+                )
+        
+                # もしくは内崩れ
+                or (
+                    a == 1
+                    and InsideSurvival[0] < 0.50
+                    and DoubleAttackScore > 0.05
+                )
+            )
         ):
             mark = "△"
     
