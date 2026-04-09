@@ -1147,15 +1147,17 @@ if st.button("計算"):
         # ★ 崩壊→流れ反映（最重要）
         # ===============================
         for i in range(6):
+
+            if NoAttackFlag == 0 and DoubleAttackScore > WEAK:
         
-            if flow_power[i] == 1:
-                FS_mult[i] *= 1.08
+                if flow_power[i] == 1:
+                    FS_mult[i] *= 1.05
         
-            elif flow_power[i] == 2:
-                FS_mult[i] *= 1.12
+                elif flow_power[i] == 2:
+                    FS_mult[i] *= 1.08
         
-            elif flow_power[i] >= 3:
-                FS_mult[i] *= 1.18
+                elif flow_power[i] >= 3:
+                    FS_mult[i] *= 1.12
         
         # イン強いなら少し上げる
         if (
@@ -1182,11 +1184,11 @@ if st.button("計算"):
         ):
             FS_mult[3] *= 1.05
             
-        if OuterSlip:
+        if OuterSlip and DoubleAttackScore > MID:
 
             for i in range(4,6):
                 if Start[i] >= max(Start) - 0.005:
-                    FS_mult[i] *= 1.12
+                    FS_mult[i] *= 1.10
         # ===============================
         # ★ ズレ展開処理（最重要）
         # ===============================
