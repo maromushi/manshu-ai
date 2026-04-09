@@ -997,18 +997,40 @@ if st.button("計算"):
         
             FirstScore.append(val)
             
-            
-        
-        
-        
-        FS_mult = [1.0]*6
 
+        FS_mult = [1.0]*6
+        
+        # ===============================
+        # ★ レイヤー1（最重要）
+        # ===============================
+        if NoAttackFlag == 1:
+        
+            FS_mult[3] *= 0.6
+            FS_mult[4] *= 0.3
+            FS_mult[5] *= 0.2
+        
+            FS_mult[0] *= 1.10
+        
+        else:
+        
+            if DoubleAttackScore > 0.10:
+                FS_mult[2] *= 1.10
+                FS_mult[3] *= 1.10
+        
+            elif DoubleAttackScore > 0.05:
+                FS_mult[2] *= 1.05
+        
+        
+        # ===============================
+        # ★ レイヤー3（個別性能）
+        # ===============================
         for i in range(6):
             if Fcount[i] == 1:
                 FS_mult[i] *= 0.95
             elif Fcount[i] >= 2:
                 FS_mult[i] *= 0.90
-            
+        
+        
                 
         # ===============================
         # ★ FS_mult統一ブロック（完成形）
@@ -1219,20 +1241,20 @@ if st.button("計算"):
         # ===============================
         # ★ ズレ展開処理（最重要）
         # ===============================
-        if ZureFlag:
+        #if ZureFlag:
         
-            # イン崩れ
-            FS_mult[0] *= 0.85
-            FS_mult[1] *= 0.90
+            ## イン崩れ
+            #FS_mult[0] *= 0.85
+            #FS_mult[1] *= 0.90
         
-            # 外浮上（ST上位だけ）
-            for i in range(3,6):
-                if Start[i] >= max(Start[2:6]) - 0.02:
-                    FS_mult[i] *= 1.15
+            ## 外浮上（ST上位だけ）
+            #for i in range(3,6):
+                #if Start[i] >= max(Start[2:6]) - 0.02:
+                    #FS_mult[i] *= 1.15
         
-            # 攻め役は潰れる
-            for atk in attackers:
-                FS_mult[atk] *= 0.85
+            ## 攻め役は潰れる
+            #for atk in attackers:
+                #FS_mult[atk] *= 0.85
 
         
         
