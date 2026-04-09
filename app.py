@@ -1035,7 +1035,7 @@ if st.button("計算"):
         # ===============================
         # ★ FS_mult統一ブロック（完成形）
         # ===============================
-            
+                
         # 2差し強化補正
         if (
             NoAttackFlag == 0
@@ -1082,202 +1082,202 @@ if st.button("計算"):
             
         
             
-
+        if False:
             
         
-        # ★ 展示だけ速い雑魚カット
-        
-        if (
-            ExST[3] <= 0.05
-            and Skill[3] < 0.45
-        ):
-            FS_mult[3] *= 0.85
+            # ★ 展示だけ速い雑魚カット
             
-        
-        
-        
-        # ===============================
-        # ② レースタイプごとの処理
-        # ===============================
-        
-        if race_type == "strong_attack":
-        
-            FS_mult[0] *= 0.85
-            FS_mult[1] *= 0.90
-            FS_mult[2] *= 1.10
-            FS_mult[3] *= 1.12
-        
-        elif race_type == "mid_attack":
-        
-            FS_mult[0] *= 0.88
-            FS_mult[1] *= 0.93
-            FS_mult[2] *= 1.05
-            FS_mult[3] *= 1.06
-        
-        elif race_type == "weak_attack":
-        
-            FS_mult[0] *= 0.92
-            FS_mult[1] *= 0.97
-        
-        elif race_type == "no_attack":
-            
-            # ★ 無風：外頭完全禁止（最優先で入れる）
-            FS_mult[3] *= 0.60   # 4コース
-            FS_mult[4] *= 0.40   # 5コース
-            FS_mult[5] *= 0.30   # 6コース
-
-            FS_mult[0] *= 1.12
-
-            # ★ 最初に外殺す（これが本質）
-            FS_mult[4] *= 0.65
-            FS_mult[5] *= 0.30
-        
-            # ★ 無風でも2頭を残す（最重要）
-            if CPI[1] >= CPI[0] - 0.08:
-                FS_mult[1] *= 1.15
-            
-                
-            
-        
-            # ===============================
-            # 2コース（条件型）
-            # ===============================
-            if Start[1] < Start[0] - 0.02:
-                FS_mult[1] *= 0.90
-            elif CPI[1] < CPI[0] - 0.08:
-                FS_mult[1] *= 0.92
-            # それ以外は触らない
-        
-            # ===============================
-            # 3コース（条件型）
-            # ===============================
-            # 3コース（修正版）
-            if CPI[2] < 0.45:
-                FS_mult[2] *= 0.92
-            elif Start[2] >= max(Start) - 0.005:
-                FS_mult[2] *= 0.90   # ←弱める
-            # それ以外は触らない0.92
-            
-        
-            # ===============================
-            # 4コース（条件型）
-            # ===============================
-            # 4コース（修正版）
-            if CPI[3] < 0.40:
-                FS_mult[3] *= 0.80
-            elif Start[3] < Start[2] - 0.02:
+            if (
+                ExST[3] <= 0.05
+                and Skill[3] < 0.45
+            ):
                 FS_mult[3] *= 0.85
-            # それ以外は触らない
+            
         
+        
+            
             # ===============================
-            # 外（固定でOK）
+            # ② レースタイプごとの処理
             # ===============================
-            FS_mult[4] *= 0.65
-            FS_mult[5] *= 0.50
+            
+            if race_type == "strong_attack":
+            
+                FS_mult[0] *= 0.85
+                FS_mult[1] *= 0.90
+                FS_mult[2] *= 1.10
+                FS_mult[3] *= 1.12
+            
+            elif race_type == "mid_attack":
+            
+                FS_mult[0] *= 0.88
+                FS_mult[1] *= 0.93
+                FS_mult[2] *= 1.05
+                FS_mult[3] *= 1.06
+            
+            elif race_type == "weak_attack":
+            
+                FS_mult[0] *= 0.92
+                FS_mult[1] *= 0.97
+            
+            elif race_type == "no_attack":
                 
-        # ===============================
-        # ★ 中間展開イン復活（正式版）
-        # ===============================
-        if (
-            0.04 < DoubleAttackScore < 0.09
-            and AttackSuccess == 1
-            and NoAttackFlag == 0
-        ):
-            FS_mult[0] *= 1.05
-        
+                # ★ 無風：外頭完全禁止（最優先で入れる）
+                FS_mult[3] *= 0.60   # 4コース
+                FS_mult[4] *= 0.40   # 5コース
+                FS_mult[5] *= 0.30   # 6コース
     
-        
-        
-        # ===============================
-        # ③ 個別性能補正（ここだけ許可）
-        # ===============================
-        
-        # ===============================
-        # ★ 崩壊→流れ反映（最重要）
-        # ===============================
-        for i in range(6):
-
-            if NoAttackFlag == 0 and DoubleAttackScore > WEAK:
-        
-                if flow_power[i] == 1:
-                    FS_mult[i] *= 1.05
-        
-                elif flow_power[i] == 2:
-                    FS_mult[i] *= 1.08
-        
-                elif flow_power[i] >= 3:
-                    FS_mult[i] *= 1.12
-        
-        # イン強いなら少し上げる
-        if (
-            Skill[0] >= 0.55
-            and Engine[0] >= 0.50
-        ):
-            FS_mult[0] *= 1.05
-        
-        # 3が攻め役なら強化
-        if (
-            AttackIndex[2] >= AttackIndex[1]
-            and DoubleAttackScore > WEAK
-            and NoAttackFlag == 0
-        ):
-            FS_mult[2] *= 1.08
-        
-        # 4が明確に強いなら
-        if (
-            NoAttackFlag == 0
-            and AttackSuccess == 1
-            and DoubleAttackScore > MID
-            and Turn[3] >= max(Turn[1], Turn[2])
-            and Foot[3] >= max(Foot[1], Foot[2])
-        ):
-            FS_mult[3] *= 1.05
+                FS_mult[0] *= 1.12
+    
+                # ★ 最初に外殺す（これが本質）
+                FS_mult[4] *= 0.65
+                FS_mult[5] *= 0.30
             
-        if OuterSlip and DoubleAttackScore > MID:
-
-            for i in range(4,6):
-                if Start[i] >= max(Start) - 0.005:
-                    FS_mult[i] *= 1.10
-        # ===============================
-        # ★ ズレ展開処理（最重要）
-        # ===============================
-        #if ZureFlag:
-        
-            ## イン崩れ
-            #FS_mult[0] *= 0.85
-            #FS_mult[1] *= 0.90
-        
-            ## 外浮上（ST上位だけ）
-            #for i in range(3,6):
-                #if Start[i] >= max(Start[2:6]) - 0.02:
-                    #FS_mult[i] *= 1.15
-        
-            ## 攻め役は潰れる
-            #for atk in attackers:
-                #FS_mult[atk] *= 0.85
-
-        
-        
-        # ===============================
-        # ★ 主役取りこぼし（最重要）
-        # ===============================
-        if (
-            CLS[3] == "A1"
-            and DoubleAttackScore > WEAK
-            and NoAttackFlag == 0
-            and Start[3] <= Start[2] + 0.01
-        ):
-            FS_mult[3] *= 0.90
+                # ★ 無風でも2頭を残す（最重要）
+                if CPI[1] >= CPI[0] - 0.08:
+                    FS_mult[1] *= 1.15
+                
+                    
+                
             
-        # ===============================
-        # ★ イン事故復活（これ）
-        # ===============================
-        if (
-            CLS[0] in ["B1","B2"]
-            and DoubleAttackScore < 0.08
-        ):
-            FS_mult[0] *= 1.08
+                # ===============================
+                # 2コース（条件型）
+                # ===============================
+                if Start[1] < Start[0] - 0.02:
+                    FS_mult[1] *= 0.90
+                elif CPI[1] < CPI[0] - 0.08:
+                    FS_mult[1] *= 0.92
+                # それ以外は触らない
+            
+                # ===============================
+                # 3コース（条件型）
+                # ===============================
+                # 3コース（修正版）
+                if CPI[2] < 0.45:
+                    FS_mult[2] *= 0.92
+                elif Start[2] >= max(Start) - 0.005:
+                    FS_mult[2] *= 0.90   # ←弱める
+                # それ以外は触らない0.92
+                
+            
+                # ===============================
+                # 4コース（条件型）
+                # ===============================
+                # 4コース（修正版）
+                if CPI[3] < 0.40:
+                    FS_mult[3] *= 0.80
+                elif Start[3] < Start[2] - 0.02:
+                    FS_mult[3] *= 0.85
+                # それ以外は触らない
+            
+                # ===============================
+                # 外（固定でOK）
+                # ===============================
+                FS_mult[4] *= 0.65
+                FS_mult[5] *= 0.50
+                    
+            # ===============================
+            # ★ 中間展開イン復活（正式版）
+            # ===============================
+            if (
+                0.04 < DoubleAttackScore < 0.09
+                and AttackSuccess == 1
+                and NoAttackFlag == 0
+            ):
+                FS_mult[0] *= 1.05
+            
         
+            
+            
+            # ===============================
+            # ③ 個別性能補正（ここだけ許可）
+            # ===============================
+            
+            # ===============================
+            # ★ 崩壊→流れ反映（最重要）
+            # ===============================
+            for i in range(6):
+    
+                if NoAttackFlag == 0 and DoubleAttackScore > WEAK:
+            
+                    if flow_power[i] == 1:
+                        FS_mult[i] *= 1.05
+            
+                    elif flow_power[i] == 2:
+                        FS_mult[i] *= 1.08
+            
+                    elif flow_power[i] >= 3:
+                        FS_mult[i] *= 1.12
+            
+            # イン強いなら少し上げる
+            if (
+                Skill[0] >= 0.55
+                and Engine[0] >= 0.50
+            ):
+                FS_mult[0] *= 1.05
+            
+            # 3が攻め役なら強化
+            if (
+                AttackIndex[2] >= AttackIndex[1]
+                and DoubleAttackScore > WEAK
+                and NoAttackFlag == 0
+            ):
+                FS_mult[2] *= 1.08
+            
+            # 4が明確に強いなら
+            if (
+                NoAttackFlag == 0
+                and AttackSuccess == 1
+                and DoubleAttackScore > MID
+                and Turn[3] >= max(Turn[1], Turn[2])
+                and Foot[3] >= max(Foot[1], Foot[2])
+            ):
+                FS_mult[3] *= 1.05
+                
+            if OuterSlip and DoubleAttackScore > MID:
+    
+                for i in range(4,6):
+                    if Start[i] >= max(Start) - 0.005:
+                        FS_mult[i] *= 1.10
+            # ===============================
+            # ★ ズレ展開処理（最重要）
+            # ===============================
+            #if ZureFlag:
+            
+                ## イン崩れ
+                #FS_mult[0] *= 0.85
+                #FS_mult[1] *= 0.90
+            
+                ## 外浮上（ST上位だけ）
+                #for i in range(3,6):
+                    #if Start[i] >= max(Start[2:6]) - 0.02:
+                        #FS_mult[i] *= 1.15
+            
+                ## 攻め役は潰れる
+                #for atk in attackers:
+                    #FS_mult[atk] *= 0.85
+    
+            
+            
+            # ===============================
+            # ★ 主役取りこぼし（最重要）
+            # ===============================
+            if (
+                CLS[3] == "A1"
+                and DoubleAttackScore > WEAK
+                and NoAttackFlag == 0
+                and Start[3] <= Start[2] + 0.01
+            ):
+                FS_mult[3] *= 0.90
+                
+            # ===============================
+            # ★ イン事故復活（これ）
+            # ===============================
+            if (
+                CLS[0] in ["B1","B2"]
+                and DoubleAttackScore < 0.08
+            ):
+                FS_mult[0] *= 1.08
+            
         # ===============================
         # ★ 6の強さ分類（追加）
         # ===============================
@@ -1299,189 +1299,190 @@ if st.button("計算"):
             and DoubleAttackScore > MID
         )
         
-        # ===============================
-        # ★ 低性能カット（ここ）
-        # ===============================
-        for i in range(6):
-        
-            if Foot[i] < 0.45 and Engine[i] < 0.50:
-                FS_mult[i] *= 0.80
-        
-            if Foot[i] < 0.40:
-                FS_mult[i] *= 0.75
-
-            # ★ ここに追加
-            if i == 5:
-                if Start[5] < Start[3] - 0.02:
-                    FS_mult[5] *= 0.55
-        
-                if RawST[5] > 0.20:
-                    FS_mult[5] *= 0.75
-                    
-
-
-
-
-        # ===============================
-        # ★ 弱イン分散（最重要）
-        # ===============================
-        # ★ 弱イン分散（修正版）
-        if (
-            NoAttackFlag == 1
-            and Skill[0] < 0.55
-        ):
-            FS_mult[0] *= 0.55
-            FS_mult[2] *= 1.05
-        
-            # ★4は条件付きにする
-            if DoubleAttackScore > 0.05:
-                FS_mult[3] *= 1.05
-
-
-        # ===============================
-        # ★ 攻め競合（共倒れ）
-        # ===============================
-        if (
-            Turn[2] > 0.55
-            and Turn[3] > 0.55
-            and abs(Turn[2] - Turn[3]) < 0.04
-            and DoubleAttackScore > MID
-        ):
-            # 共倒れ
-            FS_mult[2] *= 0.90
-            FS_mult[3] *= 0.85
-        
-        
-        
-        # ===============================
-        # ★ イン安定補正（これが本命）
-        # ===============================
-        
-        if (
-            Skill[0] >= 0.50
-            and Start[0] >= 0.13
-            and InsideSurvival[0] >= 0.55
-        ):
-            FS_mult[0] *= 1.08
+        if False:
+            # ===============================
+            # ★ 低性能カット（ここ）
+            # ===============================
+            for i in range(6):
             
+                if Foot[i] < 0.45 and Engine[i] < 0.50:
+                    FS_mult[i] *= 0.80
             
-        # ===============================
-        # ★ 攻め条件（←ここ！！！）
-        # ===============================
-        if (
-            Turn[2] == max(Turn)
-            and Foot[2] >= Foot[1]
-            and DoubleAttackScore > WEAK
-            and NoAttackFlag == 0
-        ):
-            FS_mult[2] *= 1.25
-            
-        # ★ 3の展示攻め補強（追加）
-        if (
-            ExST[2] <= 0.05
-            and Start[2] >= Start[1] + 0.02
-            and NoAttackFlag == 0
-        ):
-            FS_mult[2] *= 1.15
-                    
-        # ===============================
-        # ★ 3のまくり差し強化（超重要）
-        # ===============================
-        if (
-            Skill[2] >= 0.50
-            and Foot[2] >= max(Foot[0], Foot[1])
-            and Turn[2] >= max(Turn[0], Turn[1])
-            and DoubleAttackScore > WEAK
-            and NoAttackFlag == 0
-        ):
-            FS_mult[2] *= 1.20
-            
-        
-        # ===============================
-        # ★ 外A1複数 → 軸分散モード
-        # ===============================
-        
-        outer_a1 = 0
-
-        for i in range(4,6):  # 5・6コース
-            if CLS[i] == "A1" and Engine[i] >= 0.55:
-                outer_a1 += 1
-        
-        if outer_a1 >= 2 and NoAttackFlag == 0:
-        
-            for i in range(4,6):
-                if CLS[i] == "A1":
-                    FS_mult[i] *= 1.15   # 外の頭を引き上げ
-        
-
-        # ===== イン最低保証 =====
-        # イン最低保証（独立させる）
-        if Skill[0] >= 0.55 and Engine[0] >= 0.50:
-            FS_mult[0] *= 1.08
-        
-        # ②（メイン差し）
-        if (
-            CPI[1] >= CPI[0] - 0.06
-            and Start[1] <= Start[0] + 0.05
-            and DoubleAttackScore < 0.07
-            and NoAttackFlag == 0
-        ):
-            FS_mult[1] *= 1.01
-            FS_mult[0] *= 0.99
-        
-        # ③（弱い差し）
-        elif (
-            CPI[1] >= CPI[0] - 0.10
-            and Start[1] <= Start[0] + 0.07
-            and DoubleAttackScore < 0.06
-            and NoAttackFlag == 0
-        ):
-            FS_mult[1] *= 1.01
-            FS_mult[0] *= 0.99
-            
-        # ===============================
-        # ★ FS_tmp作成（←ここ追加）
-        # ===============================
+                if Foot[i] < 0.40:
+                    FS_mult[i] *= 0.75
     
+                # ★ ここに追加
+                if i == 5:
+                    if Start[5] < Start[3] - 0.02:
+                        FS_mult[5] *= 0.55
             
-        # ★ 2の頭制限（修正版）
-        if DoubleAttackScore > STRONG:
-        
-            FS_mult[1] *= 0.88
-        
-        elif DoubleAttackScore > MID:
-        
-            FS_mult[1] *= 0.92
-        
-        elif DoubleAttackScore > WEAK:
-        
-            FS_mult[1] *= 0.96
-            
-        if NoAttackFlag == 1 and Start[1] < Start[0] - 0.02:
-            FS_mult[1] *= 0.92
-        
-        
-
-            
-            
-        # ===============================
-        # ★ イン残り補正（A1＋A2）
-        # ===============================
-        if CLS[0] == "A1":
-            if Start[0] >= 0.13:
-                FS_mult[0] *= 1.12
-        
-        elif CLS[0] == "A2":
-            if Start[0] >= 0.14 and InsideSurvival[0] >= 0.52:
-                FS_mult[0] *= 1.08
-        
-        elif CLS[0] == "B1":
+                    if RawST[5] > 0.20:
+                        FS_mult[5] *= 0.75
+                        
+    
+    
+    
+    
+            # ===============================
+            # ★ 弱イン分散（最重要）
+            # ===============================
+            # ★ 弱イン分散（修正版）
             if (
-                Start[0] >= 0.15
-                and InsideSurvival[0] >= 0.55
-                and DoubleAttackScore < 0.08
+                NoAttackFlag == 1
+                and Skill[0] < 0.55
             ):
-                FS_mult[0] *= 1.05
+                FS_mult[0] *= 0.55
+                FS_mult[2] *= 1.05
+            
+                # ★4は条件付きにする
+                if DoubleAttackScore > 0.05:
+                    FS_mult[3] *= 1.05
+    
+    
+            # ===============================
+            # ★ 攻め競合（共倒れ）
+            # ===============================
+            if (
+                Turn[2] > 0.55
+                and Turn[3] > 0.55
+                and abs(Turn[2] - Turn[3]) < 0.04
+                and DoubleAttackScore > MID
+            ):
+                # 共倒れ
+                FS_mult[2] *= 0.90
+                FS_mult[3] *= 0.85
+            
+            
+            
+            # ===============================
+            # ★ イン安定補正（これが本命）
+            # ===============================
+            
+            if (
+                Skill[0] >= 0.50
+                and Start[0] >= 0.13
+                and InsideSurvival[0] >= 0.55
+            ):
+                FS_mult[0] *= 1.08
+                
+                
+            # ===============================
+            # ★ 攻め条件（←ここ！！！）
+            # ===============================
+            if (
+                Turn[2] == max(Turn)
+                and Foot[2] >= Foot[1]
+                and DoubleAttackScore > WEAK
+                and NoAttackFlag == 0
+            ):
+                FS_mult[2] *= 1.25
+                
+            # ★ 3の展示攻め補強（追加）
+            if (
+                ExST[2] <= 0.05
+                and Start[2] >= Start[1] + 0.02
+                and NoAttackFlag == 0
+            ):
+                FS_mult[2] *= 1.15
+                        
+            # ===============================
+            # ★ 3のまくり差し強化（超重要）
+            # ===============================
+            if (
+                Skill[2] >= 0.50
+                and Foot[2] >= max(Foot[0], Foot[1])
+                and Turn[2] >= max(Turn[0], Turn[1])
+                and DoubleAttackScore > WEAK
+                and NoAttackFlag == 0
+            ):
+                FS_mult[2] *= 1.20
+                
+            
+            # ===============================
+            # ★ 外A1複数 → 軸分散モード
+            # ===============================
+            
+            outer_a1 = 0
+    
+            for i in range(4,6):  # 5・6コース
+                if CLS[i] == "A1" and Engine[i] >= 0.55:
+                    outer_a1 += 1
+            
+            if outer_a1 >= 2 and NoAttackFlag == 0:
+            
+                for i in range(4,6):
+                    if CLS[i] == "A1":
+                        FS_mult[i] *= 1.15   # 外の頭を引き上げ
+            
+    
+            # ===== イン最低保証 =====
+            # イン最低保証（独立させる）
+            if Skill[0] >= 0.55 and Engine[0] >= 0.50:
+                FS_mult[0] *= 1.08
+            
+            # ②（メイン差し）
+            if (
+                CPI[1] >= CPI[0] - 0.06
+                and Start[1] <= Start[0] + 0.05
+                and DoubleAttackScore < 0.07
+                and NoAttackFlag == 0
+            ):
+                FS_mult[1] *= 1.01
+                FS_mult[0] *= 0.99
+            
+            # ③（弱い差し）
+            elif (
+                CPI[1] >= CPI[0] - 0.10
+                and Start[1] <= Start[0] + 0.07
+                and DoubleAttackScore < 0.06
+                and NoAttackFlag == 0
+            ):
+                FS_mult[1] *= 1.01
+                FS_mult[0] *= 0.99
+                
+            # ===============================
+            # ★ FS_tmp作成（←ここ追加）
+            # ===============================
+        
+                
+            # ★ 2の頭制限（修正版）
+            if DoubleAttackScore > STRONG:
+            
+                FS_mult[1] *= 0.88
+            
+            elif DoubleAttackScore > MID:
+            
+                FS_mult[1] *= 0.92
+            
+            elif DoubleAttackScore > WEAK:
+            
+                FS_mult[1] *= 0.96
+                
+            if NoAttackFlag == 1 and Start[1] < Start[0] - 0.02:
+                FS_mult[1] *= 0.92
+            
+            
+    
+                
+                
+            # ===============================
+            # ★ イン残り補正（A1＋A2）
+            # ===============================
+            if CLS[0] == "A1":
+                if Start[0] >= 0.13:
+                    FS_mult[0] *= 1.12
+            
+            elif CLS[0] == "A2":
+                if Start[0] >= 0.14 and InsideSurvival[0] >= 0.52:
+                    FS_mult[0] *= 1.08
+            
+            elif CLS[0] == "B1":
+                if (
+                    Start[0] >= 0.15
+                    and InsideSurvival[0] >= 0.55
+                    and DoubleAttackScore < 0.08
+                ):
+                    FS_mult[0] *= 1.05
                 
         # ===============================
         # ★ 会場補正（ここに入れる）
@@ -1573,127 +1574,132 @@ if st.button("計算"):
                 FS_mult[4] *= 0.90
                 FS_mult[5] *= 0.85
         
-        
-        # ===============================
-        # ★ 攻め役の勝ち切り制限（5）
-        # ===============================
-        if (
-            ExST[4] <= 0.05
-            and Start[4] >= Start[2] - 0.02
-        ):
-            if not (
-                Foot[4] >= max(Foot[1:4])
-                or Turn[4] >= max(Turn[1:4])
+        if False:
+            # ===============================
+            # ★ 攻め役の勝ち切り制限（5）
+            # ===============================
+            if (
+                ExST[4] <= 0.05
+                and Start[4] >= Start[2] - 0.02
             ):
-                FS_mult[4] *= 0.85
-
-        # ===============================
-        # ST遅い艇の頭抑制（追加）
-        # ===============================
-        AvgStart = sum(Start)/6
-
-        for i in range(6):
-            if Start[i] < AvgStart - 0.04:
-                FS_mult[i] *= 0.82
-                        
-            
-        # ===============================
-        # ★ 6の展開連動ブースト（ここ）
-        # ===============================
-        if (
-            NoAttackFlag == 0
-            and DoubleAttackScore > STRONG
-            and Start[5] >= Start[3] - 0.005
-            and CLS[5] == "A1"
-        ):
-            FS_mult[5] *= 1.08
-        
-        if use_mode == "safe" and NoAttackFlag == 0:
-
-            FS_mult[0] *= 1.05   # ←少し弱める
-        
-            for i in range(4,6):
-        
-                if AttackIndex[i] < max(AttackIndex) - 0.05:
-                    FS_mult[i] *= 0.92
-                # ===============================
-                #  外の頭条件化（修正）
-                # ===============================
-                if i >= 4 and NoAttackFlag == 0:
-                    if AttackIndex[i] < max(AttackIndex):
-                        FS_mult[i] *= 0.85
-                        
-
-        # ===== 6頭処理 =====
-
-        # ★ 条件を強化（ここが本質）
-        StrongSixHead = (
-            CPI[5] >= 0.60
-            and Start[5] >= Start[3]
-            and DoubleAttackScore > STRONG
-        )
-        
-        if NoAttackFlag == 0:
-            if SixHeadFlag == 1 and StrongSixHead:
-        
-                boost = 1.15 + 0.25 * (CPI[5] - 0.50)
-            
-                if Engine[5] >= 0.60:
-                    boost += 0.03
-            
-                FS_mult[5] *= boost
-                FS_mult[0] *= 0.85
-                FS_mult[1] *= 0.90
-            
-            else:
-            
-                # ===== 6抑制（強弱分岐） =====
-                
-                if Normal6:
-                    FS_mult[5] *= 0.95
-            
-                if CPI[5] < 0.50:
-                    FS_mult[5] *= 0.60
-            
-                elif Start[5] < Start[3]:
-                    FS_mult[5] *= 0.70
-            
-                else:
-                    FS_mult[5] *= 0.80
+                if not (
+                    Foot[4] >= max(Foot[1:4])
+                    or Turn[4] >= max(Turn[1:4])
+                ):
+                    FS_mult[4] *= 0.85
     
-            # ★ 6の最終制御（絶対必要）  
-            if len(FirstScore) != 6 or len(FS_mult) != 6:
+            # ===============================
+            # ST遅い艇の頭抑制（追加）
+            # ===============================
+            AvgStart = sum(Start)/6
+    
+            for i in range(6):
+                if Start[i] < AvgStart - 0.04:
+                    FS_mult[i] *= 0.82
+                            
+                
+            # ===============================
+            # ★ 6の展開連動ブースト（ここ）
+            # ===============================
+            if (
+                NoAttackFlag == 0
+                and DoubleAttackScore > STRONG
+                and Start[5] >= Start[3] - 0.005
+                and CLS[5] == "A1"
+            ):
+                FS_mult[5] *= 1.08
+            
+            if use_mode == "safe" and NoAttackFlag == 0:
+    
+                FS_mult[0] *= 1.05   # ←少し弱める
+            
+                for i in range(4,6):
+            
+                    if AttackIndex[i] < max(AttackIndex) - 0.05:
+                        FS_mult[i] *= 0.92
+                    # ===============================
+                    #  外の頭条件化（修正）
+                    # ===============================
+                    if i >= 4 and NoAttackFlag == 0:
+                        if AttackIndex[i] < max(AttackIndex):
+                            FS_mult[i] *= 0.85
+                            
+    
+            # ===== 6頭処理 =====
+    
+            # ★ 条件を強化（ここが本質）
+            StrongSixHead = (
+                CPI[5] >= 0.60
+                and Start[5] >= Start[3]
+                and DoubleAttackScore > STRONG
+            )
+            
+            if NoAttackFlag == 0:
+                if SixHeadFlag == 1 and StrongSixHead:
+            
+                    boost = 1.15 + 0.25 * (CPI[5] - 0.50)
+                
+                    if Engine[5] >= 0.60:
+                        boost += 0.03
+                
+                    FS_mult[5] *= boost
+                    FS_mult[0] *= 0.85
+                    FS_mult[1] *= 0.90
+                
+                else:
+                
+                    # ===== 6抑制（強弱分岐） =====
+                    
+                    if Normal6:
+                        FS_mult[5] *= 0.95
+                
+                    if CPI[5] < 0.50:
+                        FS_mult[5] *= 0.60
+                
+                    elif Start[5] < Start[3]:
+                        FS_mult[5] *= 0.70
+                
+                    else:
+                        FS_mult[5] *= 0.80
+        
+                # ★ 6の最終制御（絶対必要）  
+                if len(FirstScore) != 6 or len(FS_mult) != 6:
+                    
                 st.write("長さエラー", len(FirstScore), len(FS_mult))
                 st.stop()
                 
-        # ===============================
-        # ★ ST負け頭禁止（超重要）
-        # ===============================
-        for i in range(6):
-        
-            # 明確にスタート負け
-            if Start[i] < max(Start) - 0.05:
-                FS_mult[i] *= 0.65
-        
-            # さらに遅い（完全死亡）
-            if Start[i] < max(Start) - 0.08:
-                FS_mult[i] *= 0.50
+        if False:
+            # ===============================
+            # ★ ST負け頭禁止（超重要）
+            # ===============================
+            for i in range(6):
+            
+                # 明確にスタート負け
+                if Start[i] < max(Start) - 0.05:
+                    FS_mult[i] *= 0.65
+            
+                # さらに遅い（完全死亡）
+                if Start[i] < max(Start) - 0.08:
+                    FS_mult[i] *= 0.50
                    
 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
-        if FS_tmp[5] >= max(FS_tmp) * 0.99 and not (Strong6 or Normal6):
-            FS_mult[5] *= 0.92
-            
-        # ===============================
-        # ★ 弱インなら強制攻め
-        # =============================
-            
-        # 弱イン補正
-            
-        if AvgST[0] > 0.20:
-            FS_mult[0] *= 0.92
-                    
+        
+        if False:
+        
+            if FS_tmp[5] >= max(FS_tmp) * 0.99 and not (Strong6 or Normal6):
+                FS_mult[5] *= 0.92
+                
+            # ===============================
+            # ★ 弱インなら強制攻め
+            # =============================
+                
+            # 弱イン補正
+                
+            if AvgST[0] > 0.20:
+                FS_mult[0] *= 0.92
+                        
         
 
         # ===============================
@@ -1912,17 +1918,19 @@ if st.button("計算"):
             
      
         
-        # ★ スタート負けイン追加（ここも続けて入れる）
-        if DoubleAttackScore > WEAK and AttackSuccess == 1:
-            if Start[0] < max(Start[1:4]):
-                FS_mult[0] *= 0.92
-                
-        # ★ 最終ロック（ここが正解位置）
-        # ★ 最終ロック（強制）
-        if NoAttackFlag == 1:
-            FS_mult[4] = 0.10
-            FS_mult[5] = 0.05
-        
+        if False:
+            
+            # ★ スタート負けイン追加（ここも続けて入れる）
+            if DoubleAttackScore > WEAK and AttackSuccess == 1:
+                if Start[0] < max(Start[1:4]):
+                    FS_mult[0] *= 0.92
+                    
+            # ★ 最終ロック（ここが正解位置）
+            # ★ 最終ロック（強制）
+            if NoAttackFlag == 1:
+                FS_mult[4] = 0.10
+                FS_mult[5] = 0.05
+            
         #デバック
         FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
 
@@ -2840,7 +2848,8 @@ if st.button("計算"):
                 # ノイズ除去
                 if abs(st_gap) < 0.01:
                     continue
-            
+                
+                
                 # ===============================
                 # ■ 強崩壊（レース壊す）
                 # ===============================
@@ -2849,8 +2858,9 @@ if st.button("計算"):
                     or (st_gap < -0.03 and Start[i] < Start[i-1] - 0.02)
                 ):   
             
-                    # 頭も崩す（最重要）
-                    FS_mult[i] *= 0.70
+                    if False:
+                        # 頭も崩す（最重要）
+                        FS_mult[i] *= 0.70
             
                     # 本体削る
                     SecondAdj[i] *= 0.55
@@ -2885,38 +2895,40 @@ if st.button("計算"):
                         ThirdAdj[j]  *= 0.99
             
                 attacker = i
-
-                if attacker >= 2 and DoubleAttackScore > WEAK:
-            
-                    # スタート負けてたらもっと飛ぶ
-                    if Start[0] < Start[attacker] - 0.02:
-                        FS_mult[0] *= 0.65
-                    else:
-                        FS_mult[0] *= 0.75
-                        
-                # ===============================
-                # ★ 6頭最終ロック
-                # ===============================
-                if NoAttackFlag == 1:
-                    FS_mult[5] *= 0.30
-                    
-                # ===============================
-                # ★ 無風 最終ロック（ここに移動）
-                # ===============================
-                if NoAttackFlag == 1:
                 
-                    for i in range(3,6):
-                        FS_mult[i] *= 0.40
-                        
-                if NoAttackFlag == 1:
-                    for i in range(3,6):
-                        if Start[i] < max(Start) - 0.02:
-                            FS_mult[i] *= 0.60
+                if False:
+
+                    if attacker >= 2 and DoubleAttackScore > WEAK:
+                
+                        # スタート負けてたらもっと飛ぶ
+                        if Start[0] < Start[attacker] - 0.02:
+                            FS_mult[0] *= 0.65
+                        else:
+                            FS_mult[0] *= 0.75
                             
-                # ★ 無風 最終ロック（ここが本命）
-                if NoAttackFlag == 1:
-                    for i in range(3,6):
-                        FS_mult[i] = min(FS_mult[i], 0.35)
+                    # ===============================
+                    # ★ 6頭最終ロック
+                    # ===============================
+                    if NoAttackFlag == 1:
+                        FS_mult[5] *= 0.30
+                        
+                    # ===============================
+                    # ★ 無風 最終ロック（ここに移動）
+                    # ===============================
+                    if NoAttackFlag == 1:
+                    
+                        for i in range(3,6):
+                            FS_mult[i] *= 0.40
+                            
+                    if NoAttackFlag == 1:
+                        for i in range(3,6):
+                            if Start[i] < max(Start) - 0.02:
+                                FS_mult[i] *= 0.60
+                                
+                    # ★ 無風 最終ロック（ここが本命）
+                    if NoAttackFlag == 1:
+                        for i in range(3,6):
+                            FS_mult[i] = min(FS_mult[i], 0.35)
             
                 # ===============================
                 # ★ 差し込み勝ち（ここに入れる）
