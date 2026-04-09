@@ -3083,7 +3083,7 @@ if st.button("計算"):
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log
             
-        def run_zure_ai(order):
+def run_zure_ai(order):
 
             results, ChaosScore, P1, DAS, IS, debug = run_ai(order)
         
