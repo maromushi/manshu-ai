@@ -3222,12 +3222,50 @@ if st.button("計算"):
             filtered.append(r)
     
         # 通常カット条件
-        elif p >= 0.004:
+        elif p >= 0.008:
             filtered.append(r)
     
     results = filtered
 
     results.sort(key=lambda x:x[3],reverse=True)
+
+    # ===============================
+    # ② 外頭制限（ここに追加）
+    # ===============================
+    outer_count = 0
+    tmp = []
+    
+    for a,b,c,p in results:
+    
+        if a >= 4:
+            outer_count += 1
+            if outer_count > 3:
+                continue
+    
+        tmp.append((a,b,c,p))
+    
+    results = tmp
+    
+    
+    # ===============================
+    # ③ 同一展開カット（ここに追加）
+    # ===============================
+    seen = set()
+    tmp = []
+    
+    for a,b,c,p in results:
+    
+        key = (a,b)
+    
+        if key in seen:
+            continue
+    
+        seen.add(key)
+        tmp.append((a,b,c,p))
+    
+    results = tmp
+    
+    
 
     # ===============================
     # 予想信頼度
