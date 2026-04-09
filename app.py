@@ -994,7 +994,7 @@ if st.button("計算"):
                     ):
                         val *= 0.25   # ←0.05→0.30（超重要）
                     else:
-                        val *= 0.05
+                        val *= 0.02
         
             FirstScore.append(val)
             
@@ -2884,6 +2884,11 @@ if st.button("計算"):
                     for i in range(3,6):
                         if Start[i] < max(Start) - 0.02:
                             FS_mult[i] *= 0.60
+                            
+                # ★ 無風 最終ロック（ここが本命）
+                if NoAttackFlag == 1:
+                    for i in range(3,6):
+                        FS_mult[i] = min(FS_mult[i], 0.35)
             
                 # ===============================
                 # ★ 差し込み勝ち（ここに入れる）
