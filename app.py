@@ -699,14 +699,32 @@ if st.button("計算"):
         # ===============================
         # ★ レースモード分類（追加）
         # ===============================
+        # ===============================
+        # ★ レースモード（完全版）
+        # ===============================
+        has_attack = (len(attackers) > 0 or DoubleAttackScore >= 0.04)
+        
         if NoAttackFlag == 1:
             RaceMode = "no_attack"
         
-        elif DoubleAttackScore < WEAK:
-            RaceMode = "gray"
+        elif has_attack and AttackSuccess == 1:
+            RaceMode = "attack_success"
+        
+        elif has_attack and AttackSuccess == 0:
+        
+            crash_flag = any(
+                Start[atk] < Start[atk-1] - 0.02
+                or Turn[atk] < Turn[atk-1]
+                for atk in attackers
+            )
+        
+            if crash_flag:
+                RaceMode = "attack_crash"
+            else:
+                RaceMode = "attack_fail"
         
         else:
-            RaceMode = "attack"
+            RaceMode = "no_attack"
         
 
         # ===============================
@@ -1800,6 +1818,56 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        
+        # ===============================
+        # ★ 攻め失敗
+        # ===============================
+        if RaceMode == "attack_fail":
+        
+            # 1は耐える
+            SecondAdj[0] *= 1.05
+            ThirdAdj[0]  *= 1.03
+        
+            # 攻め艇は少しだけ削る
+            for atk in attackers:
+                SecondAdj[atk] *= 0.92
+                ThirdAdj[atk]  *= 0.95
+        
+            # 3が繰り上がる
+            if CPI[2] >= CPI[1] - 0.03:
+                SecondAdj[2] *= 1.08
+                ThirdAdj[2]  *= 1.05
+        
+        
+        # ===============================
+        # ★ 攻め潰れ（これが本命）
+        # ===============================
+        if RaceMode == "attack_crash":
+        
+            # 1は残るけど少し弱る
+            SecondAdj[0] *= 0.95
+            ThirdAdj[0]  *= 0.92
+        
+            # 攻め艇は飛ぶ
+            for atk in attackers:
+                SecondAdj[atk] *= 0.75
+                ThirdAdj[atk]  *= 0.80
+        
+            # 内が繰り上がる
+            SecondAdj[1] *= 1.08
+            ThirdAdj[1]  *= 1.05
+        
+            SecondAdj[2] *= 1.10
+            ThirdAdj[2]  *= 1.08
+        
+            # 4が展開拾う（重要）
+            if Start[3] >= Start[2] - 0.02:
+                SecondAdj[3] *= 1.08
+                ThirdAdj[3]  *= 1.12
+        
+            # 外は軽くだけ
+            for i in range(4,6):
+                ThirdAdj[i] *= 1.05
         
         # ===============================
         # ★ 無風ロック（ここに移動）
