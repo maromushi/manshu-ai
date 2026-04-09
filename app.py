@@ -3309,6 +3309,15 @@ if st.button("計算"):
     Final = [(k[0],k[1],k[2],v) for k,v in unique.items()]
     
     Final.sort(key=lambda x: x[3], reverse=True)
+    
+    AttackWeak = 0
+    AttackSuccess = 0
+    
+    for name, val in debug_log_ex:
+        if name == "AttackWeak":
+            AttackWeak = val
+        if name == "AttackSuccess":
+            AttackSuccess = val
                     
     # ===============================
     # ★ マーク付け（完成形）
@@ -3321,37 +3330,37 @@ if st.button("計算"):
     marked = []
     
     for i, (a,b,c,p) in enumerate(sorted_final):
-    
-        head = a-1
-    
-        # ◎は1点固定
-        if i == 0:
-            mark = "◎"
-    
-        # ○は上位3点
-        elif i <= 2:
-            mark = "○"
-    
-        # ▲は攻め条件＋上位6まで
-        elif (
-            i <= 5
-            and head >= 2
-            and (
-                DoubleAttackScore > 0.06
-                or (
-                    AttackWeak == 1
-                    and AttackSuccess == 0
-                    and DoubleAttackScore > 0.03
-                )
+
+    head = a-1
+
+    # ◎
+    if i == 0:
+        mark = "◎"
+
+    # ○
+    elif i <= 2:
+        mark = "○"
+
+    # ▲
+    elif (
+        i <= 5
+        and head >= 2
+        and (
+            DoubleAttackScore > 0.06
+            or (
+                AttackWeak == 1
+                and AttackSuccess == 0
+                and DoubleAttackScore > 0.03
             )
-        ):
-            mark = "▲"
-            
-    
-        else:
-            mark = ""
-    
-        marked.append((mark,a,b,c,p))
+        )
+    ):
+        mark = "▲"
+
+    else:
+        mark = ""
+
+    # ★これ絶対必要
+    marked.append((mark,a,b,c,p))
     
     # ===============================
     # ★ 出目＋デバッグ（完全コピペ）
