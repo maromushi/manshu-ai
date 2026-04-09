@@ -730,12 +730,22 @@ if st.button("計算"):
         # ===============================
         # ★ ズレ展開フラグ（NEW）
         # ===============================
-        ZureFlag = (
+        ZureWeak = (
             AttackWeak == 1
             and AttackSuccess == 0
-            and Start[1] >= max(Start[0:3]) - 0.01  # 壁あり
-            and max(Start[3:6]) >= Start[2] - 0.01  # 外も来てる
+            and Start[1] >= max(Start[0:3]) - 0.01
+            and max(Start[3:6]) >= Start[2] - 0.01
         )
+        
+        ZureSilent = (
+            AttackSuccess == 0
+            and DoubleAttackScore < 0.05
+            and max(Start) - min(Start) > 0.07
+            and max(Start[3:6]) >= max(Start) - 0.01
+            and InsideSurvival[0] < 0.60
+        )
+        
+        ZureFlag = ZureWeak or ZureSilent
             
         debug_log.append(("attackers", attackers))
         debug_log.append(("AttackWeak", AttackWeak))
@@ -1085,8 +1095,8 @@ if st.button("計算"):
             
             # ★ 無風：外頭完全禁止（最優先で入れる）
             FS_mult[3] *= 0.50   # 4コース
-            FS_mult[4] *= 0.30   # 5コース
-            FS_mult[5] *= 0.15   # 6コース
+            FS_mult[4] *= 0.55   # 5コース
+            FS_mult[5] *= 0.45   # 6コース
 
             FS_mult[0] *= 1.12
 
@@ -3393,6 +3403,12 @@ if st.button("計算"):
                     a == 1
                     and InsideSurvival[0] < 0.50
                     and DoubleAttackScore > 0.05
+                )
+                
+                or (
+                    NoAttackFlag == 1
+                    and max(Start) - min(Start) > 0.07
+                    and b >= 4
                 )
             )
         ):
