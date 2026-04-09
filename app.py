@@ -3330,6 +3330,15 @@ if st.button("計算"):
     marked = []
     
     for i, (a,b,c,p) in enumerate(sorted_final):
+        
+        # ===============================
+        # ★ 無風制御（これ追加）
+        # ===============================
+        if NoAttackProb > 0.7:
+            if head >= 4:
+                mark = ""
+                marked.append((mark,a,b,c,p))
+                continue
 
         head = a-1
     
