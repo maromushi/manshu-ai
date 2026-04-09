@@ -770,6 +770,23 @@ if st.button("計算"):
             ZureFlag = True
             
         # ===============================
+        # ★ RaceType（分類専用・最重要）
+        # ===============================
+        if AttackSuccess == 0 and len(attackers) == 0:
+        
+            if DoubleAttackScore < 0.04:
+                RaceType = "no_attack_strict"   # 完全無風
+        
+            elif DoubleAttackScore < 0.08:
+                RaceType = "no_attack_flow"     # 弱流れ無風
+        
+            else:
+                RaceType = "weak_attack"
+        
+        else:
+            RaceType = "attack"
+            
+        # ===============================
         # ★ 外スルーフラグ（追加）
         # ===============================
         OuterSlip = (
@@ -778,40 +795,6 @@ if st.button("計算"):
             and DoubleAttackScore < 0.07
             and max(Start[4:6]) >= max(Start[2:6]) - 0.01
         )
-            
-        # ===============================
-        # ★ レースモード分類（追加）
-        # ===============================
-        # ===============================
-        # ★ レースモード（完全版）
-        # ===============================
-        has_attack = (len(attackers) > 0 or DoubleAttackScore >= 0.04)
-        
-        if NoAttackFlag == 1:
-            RaceMode = "no_attack"
-        
-        elif has_attack and AttackSuccess == 1:
-            RaceMode = "attack_success"
-        
-        elif has_attack and AttackSuccess == 0:
-
-            if AttackWeak == 1:
-                RaceMode = "attack_weak"
-        
-            else:
-                crash_flag = any(
-                    Start[atk] < Start[atk-1] - 0.02
-                    or Turn[atk] < Turn[atk-1]
-                    for atk in attackers
-                )
-        
-                if crash_flag:
-                    RaceMode = "attack_crash"
-                else:
-                    RaceMode = "attack_fail"
-        
-        else:
-            RaceMode = "no_attack"
         
 
         # ===============================
@@ -984,18 +967,16 @@ if st.button("計算"):
                 else:
                     val *= 0.25
 
-            if RaceMode == "no_attack":
+            if RaceType == "no_attack_strict":
                 if i >= 3:
+                    val *= 0.02
             
-                    # ★ズレ許可（厳格化）
-                    if (
-                        AttackWeak == 1
-                        and AttackSuccess == 0
-                        and 0.04 < DoubleAttackScore < 0.07
-                    ):
-                        val *= 0.18   # ←下げる（重要）
+            elif RaceType == "no_attack_flow":
+                if i >= 3:
+                    if Start[i] >= max(Start[2:6]) - 0.01:
+                        val *= 0.40
                     else:
-                        val *= 0.02
+                        val *= 0.15
         
             FirstScore.append(val)
             
@@ -1005,13 +986,21 @@ if st.button("計算"):
         # ===============================
         # ★ レイヤー1（最重要）
         # ===============================
-        if NoAttackFlag == 1:
+        if RaceType == "no_attack_strict":
         
             FS_mult[3] *= 0.6
             FS_mult[4] *= 0.3
             FS_mult[5] *= 0.2
         
             FS_mult[0] *= 1.10
+        
+        elif RaceType == "no_attack_flow":
+        
+            FS_mult[3] *= 0.75
+            FS_mult[4] *= 0.55
+            FS_mult[5] *= 0.45
+        
+            FS_mult[0] *= 1.05
         
         else:
         
