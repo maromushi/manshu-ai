@@ -2024,11 +2024,6 @@ if st.button("計算"):
             for i in range(3,6):
                 SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
                 ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
-            
-            # ★ 外完全停止（これが本命）
-            for i in range(4,6):
-                SecondAdj[i] *= 0.45
-                ThirdAdj[i] *= 0.50
                 
             # ★ 6だけ追加で止める（これ重要）
             SecondAdj[5] = min(SecondAdj[5], SecondScore[5]*0.35)
@@ -3025,8 +3020,8 @@ if st.button("計算"):
             
             # ★ 6の最終制御
             if NoAttackFlag == 1:
-                SecondAdj[5] *= 0.65
-                ThirdAdj[5] *= 0.70
+                SecondAdj[5] *= 0.70
+                ThirdAdj[5] *= 0.75
             else:
                 if NoAttackFlag == 0:
 
