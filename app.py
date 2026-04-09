@@ -3238,7 +3238,7 @@ if st.button("計算"):
             filtered.append(r)
     
         # 通常カット条件
-        elif p >= 0.008:
+        elif p >= 0.006:
             filtered.append(r)
     
     results = filtered
@@ -3282,7 +3282,7 @@ if st.button("計算"):
     
     for a,b,c,p in results:
     
-        key = (a,b)
+        key = (a,b,c)
     
         if key in seen:
             continue
