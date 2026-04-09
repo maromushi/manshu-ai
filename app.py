@@ -1931,16 +1931,16 @@ if st.button("計算"):
             # ===============================
             if NoAttackFlag == 0:
 
-            for i in range(6):
-        
-                if Start[i] >= max(Start) - 0.01:
-        
-                    if CPI[i] >= 0.40:
-                        ThirdAdj[i] *= 1.12
-        
-                    elif Foot[i] >= 0.45:
-                        ThirdAdj[i] *= 1.08 
+                for i in range(6):
             
+                    if Start[i] >= max(Start) - 0.01:
+            
+                        if CPI[i] >= 0.40:
+                            ThirdAdj[i] *= 1.12
+            
+                        elif Foot[i] >= 0.45:
+                            ThirdAdj[i] *= 1.08 
+                
         
         # ★ 攻め時の2残り復活（汎用版）
 
@@ -2990,8 +2990,8 @@ if st.button("計算"):
         order_ex=[0,1,2,3,4,5]
 
     try:
-        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
-        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex)
+        debug_log_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
+        debug_log_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex)
     
     except Exception as e:
         import traceback
