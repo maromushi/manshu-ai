@@ -998,9 +998,13 @@ if st.button("計算"):
                 else:
                     val *= 1.02
             # ===============================
-            # ★ 無風ズレ救済（ここに追加）
+            # ★ 無風ズレ救済（修正版）
             # ===============================
-            if NoAttackFlag == 1 and i >= 3:
+            if (
+                NoAttackFlag == 1
+                and RaceType != "no_attack_strict"   # ←これ追加
+                and i >= 3
+            ):
             
                 st_top = Start[i] >= max(Start) - 0.01
             
