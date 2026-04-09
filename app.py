@@ -1591,6 +1591,7 @@ if st.button("計算"):
         if NoAttackFlag == 1:
             CrashFactor = [1.0]*6
             SashiBoost = [1.0]*6
+            main_attacker = None
 
         if main_attacker is not None:
 
@@ -1620,11 +1621,6 @@ if st.button("計算"):
                 SashiBoost[i]*
                 AttackBoost[i]
             )
-            
-            # ★ 無風時：外の評価も落とす（最終防御）
-            if RaceMode == "no_attack":
-                if i >= 3:
-                    value *= 0.40
             
             if NoAttackFlag == 1 and i >= 4:
                 value *= 0.60
@@ -1809,6 +1805,7 @@ if st.button("計算"):
         # ★ 無風ロック（ここに移動）
         # ===============================
         if NoAttackFlag == 1:
+            
 
             # 全体を減衰（←これが本質）
             # 全体
@@ -1828,6 +1825,9 @@ if st.button("計算"):
             
             SecondAdj[5] *= 0.55
             ThirdAdj[5]  *= 0.45
+            
+            for i in range(4,6):
+                SecondAdj[i] *= 0.60
                     
         
             # 外の暴走防止
