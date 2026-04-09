@@ -746,6 +746,10 @@ if st.button("計算"):
         )
         
         ZureFlag = ZureWeak or ZureSilent
+        
+        # ★ 無風時のズレ制御（これ追加）
+        if NoAttackFlag == 1:
+            ZureFlag = (DoubleAttackScore > 0.04)
             
         debug_log.append(("attackers", attackers))
         debug_log.append(("AttackWeak", AttackWeak))
@@ -1096,7 +1100,7 @@ if st.button("計算"):
         elif race_type == "no_attack":
             
             # ★ 無風：外頭完全禁止（最優先で入れる）
-            FS_mult[3] *= 0.50   # 4コース
+            FS_mult[3] *= 0.40   # 4コース
             FS_mult[4] *= 0.55   # 5コース
             FS_mult[5] *= 0.45   # 6コース
 
@@ -1212,7 +1216,7 @@ if st.button("計算"):
         # ===============================
         # ★ ズレ展開処理（最重要）
         # ===============================
-        if ZureFlag and NoAttackFlag == 0:
+        if ZureFlag:
         
             # イン崩れ
             FS_mult[0] *= 0.85
@@ -1300,9 +1304,9 @@ if st.button("計算"):
             NoAttackFlag == 1
             and Skill[0] < 0.55
         ):
-            FS_mult[0] *= 0.88
-            FS_mult[2] *= 1.08
-            FS_mult[3] *= 1.10
+            FS_mult[0] *= 0.55
+            FS_mult[2] *= 1.05
+            FS_mult[3] *= 1.05
 
 
         # ===============================
