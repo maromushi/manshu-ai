@@ -1025,7 +1025,11 @@ if st.button("計算"):
 
             if RaceType == "no_attack_strict":
                 if i >= 3:
-                    val *= 0.02
+            
+                    if Start[i] >= max(Start) - 0.01:
+                        val *= 0.35   # ←ここがキモ
+                    else:
+                        val *= 0.02
             
             elif RaceType == "no_attack_flow":
                 if i >= 3:
