@@ -695,6 +695,18 @@ if st.button("計算"):
             NoAttackFlag = 1
         else:
             NoAttackFlag = 0
+            
+        # ===============================
+        # ★ レースモード分類（追加）
+        # ===============================
+        if NoAttackFlag == 1:
+            RaceMode = "no_attack"
+        
+        elif DoubleAttackScore < WEAK:
+            RaceMode = "gray"
+        
+        else:
+            RaceMode = "attack"
         
 
         # ===============================
@@ -865,9 +877,16 @@ if st.button("計算"):
                 if Start[i] < max(Start[0:3]) + 0.02:
                     val *= 0.60
 
-            # ★ 無風は外頭禁止（最重要）
-            if NoAttackFlag == 1 and i >= 3:
-                val *= 0.20
+            if RaceMode == "no_attack":
+                if i >= 3:
+                    val *= 0.05   # 完全に殺す
+                    
+            # ===============================
+            # ★ グレー：外うっすら許可
+            # ===============================
+            if RaceMode == "gray":
+                if i >= 3:
+                    val *= 0.55   # ←これがキモ
         
             FirstScore.append(val)
             
@@ -970,6 +989,11 @@ if st.button("計算"):
             FS_mult[1] *= 0.97
         
         elif race_type == "no_attack":
+            
+            # ★ 無風：外頭完全禁止（最優先で入れる）
+            FS_mult[3] *= 0.50   # 4コース
+            FS_mult[4] *= 0.30   # 5コース
+            FS_mult[5] *= 0.15   # 6コース
 
             FS_mult[0] *= 1.12
 
@@ -1059,20 +1083,7 @@ if st.button("計算"):
         ):
             FS_mult[3] *= 1.05
             
-        # ===============================
-        # ★ 無風時：STだけの頭を禁止（復活）
-        # ===============================
-        if NoAttackFlag == 1:
-        
-            max_st = max(Start)
-        
-            for i in range(2,6):
-        
-                if (
-                    Start[i] == max_st
-                    and CPI[i] < 0.50
-                ):
-                    FS_mult[i] *= 0.88
+
         
         
         # ===============================
@@ -1609,6 +1620,11 @@ if st.button("計算"):
                 SashiBoost[i]*
                 AttackBoost[i]
             )
+            
+            # ★ 無風時：外の評価も落とす（最終防御）
+            if RaceMode == "no_attack":
+                if i >= 3:
+                    value *= 0.40
             
             if NoAttackFlag == 1 and i >= 4:
                 value *= 0.60
@@ -2932,8 +2948,9 @@ if st.button("計算"):
     ))
     
     w_no = NoAttackProb
-    w_at = 1 - NoAttackProb
-        # =====================================
+    w_at = min(1, DoubleAttackScore / 0.12)
+    w_gray = max(0, 1 - w_no - w_at)
+    # =====================================
     # 合成
     # =====================================
     final = {}
@@ -2945,6 +2962,11 @@ if st.button("計算"):
     for a,b,c,p in res_ex:
         key=(a,b,c)
         final[key]=final.get(key,0)+w_at*p
+        
+    # grayは今は簡易的にex流用でもOK
+    for a,b,c,p in res_ex:
+        key=(a,b,c)
+        final[key]=final.get(key,0)+w_gray*p*0.6
 
     results=[(k[0],k[1],k[2],v) for k,v in final.items()]
     
