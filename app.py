@@ -766,7 +766,8 @@ if st.button("計算"):
         # ★ 無風時のズレ制御（ここに入れる）
         if NoAttackFlag == 1:
             ZureFlag = False
-        elif DoubleAttackScore > 0.04:
+        
+        elif RaceType == "no_attack_flow":
             ZureFlag = True
             
         # ===============================
@@ -2114,6 +2115,13 @@ if st.button("計算"):
             
                         elif Foot[i] >= 0.48:
                             ThirdAdj[i] *= 1.08 
+                            
+        elif RaceType == "no_attack_flow":
+
+            # 少しだけ外を許す（3着のみ）
+            for i in range(3,6):
+                if Start[i] >= max(Start[2:6]) - 0.02:
+                    ThirdAdj[i] *= 1.10
             
                     
         # ★ 攻め時の2残り復活（汎用版）
