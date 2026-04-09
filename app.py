@@ -3132,7 +3132,10 @@ if st.button("計算"):
                     and AttackSuccess == 0
                     and (
                         AttackWeak == 1
-                        or DAS > 0.015
+                        or (
+                            DAS > 0.04
+                            and NoAttackProb < 0.75
+                        )
                     )
                     and P1[head] > 0.15   # ←これ追加
                 ):
