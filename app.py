@@ -3349,21 +3349,24 @@ if st.button("計算"):
         elif i <= 2:
             mark = "○"
         
+        # ▲
         elif (
             i <= 5
             and head >= 3
-            and Start[head] >= max(Start) - 0.02
             and (
                 (
                     AttackWeak == 1
                     and AttackSuccess == 0
                     and 0.03 < DoubleAttackScore < 0.08
                 )
-                or AttackSuccess == 1
+                or (
+                    AttackSuccess == 1
+                )
             )
         ):
             mark = "▲"
         
+        # △
         elif (
             i <= 6
             and (
