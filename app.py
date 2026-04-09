@@ -3089,16 +3089,16 @@ if st.button("計算"):
         
         zure_results = []
             
-            for a,b,c,p in results:
+        for a,b,c,p in results:
             
-                head = a - 1
+            head = a - 1
             
-                if head >= 3:
-                    if P1[0] < 0.45:
-                        boost = 1.4
-                        zure_results.append((a,b,c,p * boost))
+            if head >= 3:
+                if P1[0] < 0.45:
+                    boost = 1.4
+                    zure_results.append((a,b,c,p * boost))
             
-            return zure_results
+        return zure_results
             
     # =====================================
     # 進入パターン
