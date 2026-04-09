@@ -1861,6 +1861,8 @@ if st.button("計算"):
             # ===============================
             # ★ 無風でもST上位は3着に残す（汎用）
             # ===============================
+            if NoAttackFlag == 0:
+
             for i in range(6):
         
                 if Start[i] >= max(Start) - 0.01:
@@ -1869,10 +1871,7 @@ if st.button("計算"):
                         ThirdAdj[i] *= 1.12
         
                     elif Foot[i] >= 0.45:
-                        ThirdAdj[i] *= 1.08
-            
-            
-                
+                        ThirdAdj[i] *= 1.08 
             
         
         # ★ 攻め時の2残り復活（汎用版）
