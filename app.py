@@ -1665,8 +1665,8 @@ if st.button("計算"):
                 # ★ 6の最終制御（絶対必要）  
                 if len(FirstScore) != 6 or len(FS_mult) != 6:
                     
-                st.write("長さエラー", len(FirstScore), len(FS_mult))
-                st.stop()
+                    st.write("長さエラー", len(FirstScore), len(FS_mult))
+                    st.stop()
                 
         if False:
             # ===============================
