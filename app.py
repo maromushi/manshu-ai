@@ -1416,7 +1416,7 @@ if st.button("計算"):
         # ===============================
         if (
             NoAttackFlag == 0
-            DoubleAttackScore > STRONG
+            and DoubleAttackScore > STRONG
             and Start[5] >= Start[3] - 0.005
             and CLS[5] == "A1"
         ):
@@ -1837,8 +1837,7 @@ if st.button("計算"):
                     
             # ===============================
             # ★ 無風時イン集中（これが本質）
-            # ===============================
-            if NoAttackFlag == 1:
+            # ==============================
             
                 if CPI[0] >= 0.65:
                     P1[0] *= 1.15
