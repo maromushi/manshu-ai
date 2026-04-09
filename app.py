@@ -785,6 +785,18 @@ if st.button("計算"):
         else:
             NoAttackFlag = 0
             
+        # ===============================
+        # ★ RaceMode（攻め結果だけ）
+        # ===============================
+        if AttackSuccess == 1:
+            RaceMode = "success"
+        
+        elif len(attackers) > 0 and AttackWeak == 1:
+            RaceMode = "fail"
+        
+        else:
+            RaceMode = "none"
+            
             
         # ===============================
         # ★ RaceType（分類専用・最重要）
@@ -2074,21 +2086,21 @@ if st.button("計算"):
         # ===============================
         # ★ 攻め失敗
         # ===============================
-        if RaceMode == "attack_fail":
+        #if RaceMode == "attack_fail":
         
-            # 1は耐える
-            SecondAdj[0] *= 1.05
-            ThirdAdj[0]  *= 1.03
+            ## 1は耐える
+            #SecondAdj[0] *= 1.05
+            #ThirdAdj[0]  *= 1.03
         
             # 攻め艇は少しだけ削る
-            for atk in attackers:
-                SecondAdj[atk] *= 0.92
-                ThirdAdj[atk]  *= 0.95
+            #for atk in attackers:
+                #SecondAdj[atk] *= 0.92
+                #ThirdAdj[atk]  *= 0.95
         
             # 3が繰り上がる
-            if CPI[2] >= CPI[1] - 0.03:
-                SecondAdj[2] *= 1.08
-                ThirdAdj[2]  *= 1.05
+            #if CPI[2] >= CPI[1] - 0.03:
+                #SecondAdj[2] *= 1.08
+                #ThirdAdj[2]  *= 1.05
         
         
         # ===============================
