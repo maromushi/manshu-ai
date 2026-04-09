@@ -2983,8 +2983,8 @@ if st.button("計算"):
         order_ex=[0,1,2,3,4,5]
 
     try:
-        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log = run_ai(order_waku)
-        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log = run_ai(order_ex)
+        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log_waku = run_ai(order_waku)
+        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log_ex = run_ai(order_ex)
     
     except Exception as e:
         import traceback
