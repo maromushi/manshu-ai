@@ -3202,7 +3202,7 @@ if st.button("計算"):
     
     for a,b,c,p in res_zure:
         key=(a,b,c)
-        final[key]=final.get(key,0)+p*0.15
+        final[key]=final.get(key,0)+p*0.45
 
     results=[(k[0],k[1],k[2],v) for k,v in final.items()]
     
