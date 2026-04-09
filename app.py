@@ -706,6 +706,16 @@ if st.button("計算"):
             AttackWeak == 1
             and Start[1] < Start[2] - 0.02
         )
+        
+        # ===============================
+        # ★ ズレ展開フラグ（NEW）
+        # ===============================
+        ZureFlag = (
+            AttackWeak == 1
+            and AttackSuccess == 0
+            and Start[1] >= max(Start[0:3]) - 0.01  # 壁あり
+            and max(Start[3:6]) >= Start[2] - 0.01  # 外も来てる
+        )
             
         debug_log.append(("attackers", attackers))
         debug_log.append(("AttackWeak", AttackWeak))
@@ -1133,6 +1143,23 @@ if st.button("計算"):
         ):
             FS_mult[3] *= 1.05
             
+        # ===============================
+        # ★ ズレ展開処理（最重要）
+        # ===============================
+        if ZureFlag:
+        
+            # イン崩れ
+            FS_mult[0] *= 0.85
+            FS_mult[1] *= 0.90
+        
+            # 外浮上（ST上位だけ）
+            for i in range(3,6):
+                if Start[i] >= max(Start[2:6]) - 0.02:
+                    FS_mult[i] *= 1.15
+        
+            # 攻め役は潰れる
+            for atk in attackers:
+                FS_mult[atk] *= 0.85
 
         
         
