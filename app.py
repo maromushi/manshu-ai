@@ -556,20 +556,20 @@ if st.button("計算"):
                 ):
                     AttackSuccess = 1
                     
-            # ===============================
-            # ★ 弱攻め判定（追加）
-            # ===============================
-            AttackWeak = 0
+        # ===============================
+        # ★ 弱攻め判定（追加）
+        # ===============================
+        AttackWeak = 0
             
-            if len(attackers) > 0:
+        if len(attackers) > 0:
             
-                atk = attackers[0]
+            atk = attackers[0]
             
-                if (
-                    Start[atk] > Start[atk-1] + 0.005
-                    or Turn[atk] > Turn[atk-1] + 0.01
-                ):
-                    AttackWeak = 1
+            if (
+                Start[atk] > Start[atk-1] + 0.005
+                or Turn[atk] > Turn[atk-1] + 0.01
+            ):
+                AttackWeak = 1
                     
             
 
