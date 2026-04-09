@@ -3331,6 +3331,8 @@ if st.button("計算"):
     
     for i, (a,b,c,p) in enumerate(sorted_final):
         
+        head = a-1
+        
         # ===============================
         # ★ 無風制御（これ追加）
         # ===============================
@@ -3340,7 +3342,7 @@ if st.button("計算"):
                 marked.append((mark,a,b,c,p))
                 continue
 
-        head = a-1
+       
     
         # ◎
         if i == 0:
