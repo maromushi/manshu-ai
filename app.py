@@ -1882,6 +1882,11 @@ if st.button("計算"):
         if DoubleAttackScore > WEAK and AttackSuccess == 1:
             if Start[0] < max(Start[1:4]):
                 FS_mult[0] *= 0.92
+                
+        # ★ 最終ロック（ここが正解位置）
+        if NoAttackFlag == 1:
+            for i in range(4,6):
+                FS_mult[i] = min(FS_mult[i], 0.20)
         
         #デバック
         FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
@@ -2059,10 +2064,7 @@ if st.button("計算"):
             
                         elif Foot[i] >= 0.45:
                             ThirdAdj[i] *= 1.08 
-                
-            # ★ 無風：外頭完全禁止（最終ロック）
-            for i in range(4,6):
-                FS_mult[i] = min(FS_mult[i], 0.25)
+            
                     
         # ★ 攻め時の2残り復活（汎用版）
 
