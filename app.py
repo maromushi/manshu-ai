@@ -746,10 +746,7 @@ if st.button("計算"):
         )
         
         ZureFlag = ZureWeak or ZureSilent
-        
-        # ★ 無風時のズレ制御（これ追加）
-        if NoAttackFlag == 1:
-            ZureFlag = (DoubleAttackScore > 0.04)
+    
             
         debug_log.append(("attackers", attackers))
         debug_log.append(("AttackWeak", AttackWeak))
@@ -766,6 +763,10 @@ if st.button("計算"):
             NoAttackFlag = 1
         else:
             NoAttackFlag = 0
+            
+        # ★ 無風時のズレ制御（ここに入れる）
+        if NoAttackFlag == 1:
+            ZureFlag = (DoubleAttackScore > 0.04)
             
         # ===============================
         # ★ 外スルーフラグ（追加）
