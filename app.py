@@ -318,17 +318,23 @@ if st.button("計算"):
 
         Engine = []
 
-        for i in range(6):
+        Active_local = [Active[i] for i in order]
 
+        Engine = []
+        
+        for i in range(6):
+        
             if Active_local[i]==0:
                 Engine.append(0)
                 continue
-
-            Active_local = [Active[i] for i in order]
-
-            factor = 0.90+ 0.10*motor_ratio
-
+        
+            motor_ratio = M[i] / max(avg_motor,1e-6)
+        
+            factor = 0.90 + 0.10 * motor_ratio
+        
             Engine.append(EngineRaw[i] * factor)
+
+           
 
         # ===============================
         # EXHIBIT
@@ -380,14 +386,16 @@ if st.button("計算"):
 
         Foot=RawFoot
 
-        for i in range(6):
+        Active_local = [Active[i] for i in order]
 
+        for i in range(6):
+        
             if Active_local[i]==0:
                 continue
-
-            Active_local = [Active[i] for i in order]
-
-            Foot[i] *= (0.90 + 0.10*motor_ratio)
+        
+            motor_ratio = M[i] / max(avg_motor,1e-6)
+        
+            Foot[i] *= (0.90 + 0.10 * motor_ratio)
 
         # 外は展示過信を少し下げる
         for i in range(6):
@@ -1254,7 +1262,7 @@ if st.button("計算"):
                 if Start[5] < Start[3] - 0.02:
                     FS_mult[5] *= 0.55
         
-                if AvgST[5] > 0.20:
+                if RawST[5] > 0.20:
                     FS_mult[5] *= 0.75
                     
 
