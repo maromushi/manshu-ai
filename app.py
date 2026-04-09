@@ -740,9 +740,8 @@ if st.button("計算"):
         ZureSilent = (
             AttackSuccess == 0
             and DoubleAttackScore < 0.05
-            and max(Start) - min(Start) > 0.06
-            and max(Start[3:6]) >= max(Start) - 0.01
-            and InsideSurvival[0] < 0.60
+            and max(Start) - min(Start) > 0.05
+            and InsideSurvival[0] < 0.65
         )
         
         ZureFlag = ZureWeak or ZureSilent
@@ -1101,9 +1100,9 @@ if st.button("計算"):
         elif race_type == "no_attack":
             
             # ★ 無風：外頭完全禁止（最優先で入れる）
-            FS_mult[3] *= 0.40   # 4コース
-            FS_mult[4] *= 0.55   # 5コース
-            FS_mult[5] *= 0.45   # 6コース
+            FS_mult[3] *= 0.60   # 4コース
+            FS_mult[4] *= 0.40   # 5コース
+            FS_mult[5] *= 0.30   # 6コース
 
             FS_mult[0] *= 1.12
 
@@ -1111,7 +1110,10 @@ if st.button("計算"):
             FS_mult[4] *= 0.65
             FS_mult[5] *= 0.30
         
-            # 以降は条件処理
+            # ★ 無風でも2頭を残す（最重要）
+            if CPI[1] >= CPI[0] - 0.08:
+                FS_mult[1] *= 1.15
+            
                 
             
         
