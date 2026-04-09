@@ -3125,15 +3125,16 @@ if st.button("計算"):
             
             head = a - 1
             
-            if head >= 3:
+            if head >= 1:
 
                 if (
                     P1[0] < 0.48
                     and AttackSuccess == 0
                     and (
                         AttackWeak == 1
-                        or DAS > 0.015   # ←これ追加（超重要）
+                        or DAS > 0.015
                     )
+                    and P1[head] > 0.15   # ←これ追加
                 ):
                     boost = 3.0
                     zure_results.append((a,b,c,p * boost))
