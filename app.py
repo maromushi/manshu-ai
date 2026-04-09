@@ -765,7 +765,9 @@ if st.button("計算"):
             
         # ★ 無風時のズレ制御（ここに入れる）
         if NoAttackFlag == 1:
-            ZureFlag = (DoubleAttackScore > 0.04)
+            ZureFlag = False
+        elif DoubleAttackScore > 0.04:
+            ZureFlag = True
             
         # ===============================
         # ★ 外スルーフラグ（追加）
@@ -2087,6 +2089,22 @@ if st.button("計算"):
                     ThirdAdj[2] *= 0.85
                     
             # ===============================
+            # ★ 弱展開の外ヒモ拾い（汎用版）
+            # ===============================
+            if (
+                NoAttackFlag == 0
+                and 0.04 < DoubleAttackScore < 0.09
+            ):
+            
+                for i in range(4,6):
+            
+                    if (
+                        Start[i] >= max(Start[1:4]) - 0.02
+                        and Foot[i] >= 0.45
+                    ):
+                        ThirdAdj[i] *= 1.15
+                    
+            # ===============================
             # ★ 無風時イン集中（これが本質）
             # ==============================
             
@@ -2105,7 +2123,7 @@ if st.button("計算"):
                         if CPI[i] >= 0.40:
                             ThirdAdj[i] *= 1.12
             
-                        elif Foot[i] >= 0.45:
+                        elif Foot[i] >= 0.48:
                             ThirdAdj[i] *= 1.08 
             
                     
