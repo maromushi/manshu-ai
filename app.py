@@ -787,6 +787,11 @@ if st.button("計算"):
         else:
             NoAttackFlag = 0
             
+        ZureNoAttack = (
+            NoAttackFlag == 1
+            and max(Start) - min(Start) > 0.06
+        )
+            
         # ===============================
         # ★ 無風の再定義（追加）
         # ===============================
@@ -1227,6 +1232,22 @@ if st.button("計算"):
             FS_mult[5] *= 0.2
         
             FS_mult[0] *= 1.10
+            
+            
+            
+        elif ZureNoAttack:
+
+            # イン弱体（ズレ）
+            FS_mult[0] *= 0.92
+        
+            # 差しゾーン
+            FS_mult[1] *= 1.10
+            FS_mult[2] *= 1.05
+        
+            # 外はまだ抑える
+            FS_mult[3] *= 0.85
+            FS_mult[4] *= 0.75
+            FS_mult[5] *= 0.70
         
         elif NoAttackFlag == 1:
         
