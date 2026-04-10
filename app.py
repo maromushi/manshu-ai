@@ -781,6 +781,7 @@ if st.button("計算"):
             AttackSuccess == 0
             and len(attackers) == 0
             and DoubleAttackScore < WEAK
+            and StartSpread < 0.08
         ):
             NoAttackFlag = 1
         else:
@@ -831,9 +832,9 @@ if st.button("計算"):
         ST_trust = 1.0
         
         if AttackScore < 0.07:
-            ST_trust *= 0.6
+            ST_trust *= 0.7
         elif AttackScore < 0.12:
-            ST_trust *= 0.8
+            ST_trust *= 0.85
         
         if NoAttackFlag == 1:
             ST_trust *= 0.75
@@ -1119,7 +1120,7 @@ if st.button("計算"):
                 )
             
                 if st_top:
-                    val *= (0.50 + 0.55*power)
+                    val *= (0.55 + 0.55*power)
                 else:
                     val *= (0.25 + 0.5*power)
                         
@@ -2007,9 +2008,9 @@ if st.button("計算"):
             # ★ 無風時：外完全ロック
             if NoAttackFlag == 1:
                 if i == 4:
-                    value *= 0.35
+                    value *= 0.45
                 elif i == 5:
-                    value *= 0.20
+                    value *= 0.30
 
 
             if i == 0 and InsideBreak == 1:
