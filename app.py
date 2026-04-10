@@ -887,6 +887,10 @@ if st.button("計算"):
                 for i, s in enumerate(Start)
             ]
             
+        # これ追加（超重要）
+        if ZureNoAttack:
+            Start = Start_adj.copy()
+                    
         # ===============================
         # ★ RaceMode（攻め結果だけ）
         # ===============================
