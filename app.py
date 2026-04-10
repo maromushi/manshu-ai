@@ -875,7 +875,7 @@ if st.button("計算"):
         
         # --- Start補正（最重要・修正版） ---
         Start_adj = [
-            s * ST_trust if i >= 2 else s
+            s if ZureNoAttack else (s * ST_trust if i >= 2 else s)
             for i, s in enumerate(Start)
         ]
             
@@ -1240,16 +1240,16 @@ if st.button("計算"):
             
             
         if ZureNoAttack and not TrueNoAttack:
-        
-            FS_mult[0] *= 0.90   # イン削る
+
+            FS_mult[0] *= 0.82   # ←もっと削る（重要）
         
             # 2差し（主役）
             if CPI[1] >= CPI[0] - 0.08:
-                FS_mult[1] *= 1.25   # ←強化
+                FS_mult[1] *= 1.45   # ←ここ上げろ
         
             # 3ズレ
-            if Start[2] >= max(Start[0:3]) - 0.01:
-                FS_mult[2] *= 1.15
+            if CPI[2] >= CPI[1] - 0.05:
+                FS_mult[2] *= 1.20
         
             # 外は軽く残す
             FS_mult[3] *= 0.90
