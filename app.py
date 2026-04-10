@@ -1197,6 +1197,25 @@ if st.button("計算"):
                 and CPI[i] < 0.52
             ):
                 val *= 0.70
+                
+            # ===============================
+            # ★ ズレ時：外STトップ暴走止め
+            # ===============================
+            if (
+                ZureNoAttack
+                and i >= 4
+                and Start[i] >= max(Start) - 0.001
+            ):
+                val *= 0.70
+                
+            # ズレ無風：内が上がる
+            if ZureNoAttack:
+                if i == 0:
+                    val *= 0.92   # 1を少し下げる
+                elif i == 1:
+                    val *= 1.10   # 2を少し上げる
+                elif i == 2:
+                    val *= 1.05   # 3を少し上げる
         
             FirstScore.append(val)
             
@@ -1224,15 +1243,6 @@ if st.button("計算"):
                 if CPI[2] >= CPI[1] - 0.05:
                     FirstScore[2] *= 1.08
                     
-                # ===============================
-                # ★ ズレ時：外STトップ暴走止め
-                # ===============================
-                if (
-                    ZureNoAttack
-                    and i >= 4
-                    and Start[i] >= max(Start) - 0.001
-                ):
-                    val *= 0.70
             
 
         FS_mult = [1.0]*6
