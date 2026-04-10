@@ -3507,7 +3507,7 @@ if st.button("計算"):
                 
     def run_zure_ai(order):
     
-        results, ChaosScore, P1, DAS, IS, debug, Start = run_ai(order)
+        results, ChaosScore, P1, DAS, IS, debug, Start, Mode = run_ai(order)
 
         # debugから拾う
         AttackWeak = 0
