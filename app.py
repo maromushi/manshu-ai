@@ -788,7 +788,8 @@ if st.button("計算"):
             NoAttackFlag = 0
             
         ZureNoAttack = (
-            NoAttackFlag == 1
+            AttackSuccess == 0
+            and len(attackers) == 0
             and max(Start) - min(Start) > 0.06
         )
             
