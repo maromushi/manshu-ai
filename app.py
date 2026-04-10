@@ -788,6 +788,18 @@ if st.button("計算"):
             NoAttackFlag = 0
             
         # ===============================
+        # ★ モード判定（run_ai内）
+        # ===============================
+        if NoAttackFlag == 1:
+            Mode = "safe"
+        
+        elif DoubleAttackScore > 0.10:
+            Mode = "attack"
+        
+        else:
+            Mode = "middle"
+            
+        # ===============================
         # ★ 無風ズレ検知（追加）
         # ===============================
         NoAttackZure = (
@@ -3572,17 +3584,6 @@ if st.button("計算"):
     w_at = min(1, DoubleAttackScore / 0.12)
     w_gray = max(0, 1 - w_no - w_at)
     
-    # ===============================
-    # ★ モード判定（ここに入れる）
-    # ===============================
-    if NoAttackProb > 0.75:
-        Mode = "safe"
-    
-    elif DoubleAttackScore > 0.10:
-        Mode = "attack"
-    
-    else:
-        Mode = "middle"
         
     # =====================================
     # 合成
