@@ -787,6 +787,14 @@ if st.button("計算"):
             NoAttackFlag = 0
             
         # ===============================
+        # ★ 無風ズレ検知（追加）
+        # ===============================
+        NoAttackZure = (
+            NoAttackFlag == 1
+            and max(Start) - min(Start) > 0.07
+        )
+            
+        # ===============================
         # ★ ST制御ブロック（NEW）
         # ===============================
         
@@ -1091,12 +1099,15 @@ if st.button("計算"):
             # ===============================
             # ★ 無風ズレ救済（修正版）
             # ===============================
+            # ★ 無風ズレ救済（拡張版）
             if (
-                NoAttackFlag == 1
-                and RaceType != "no_attack_strict"   # ←これ追加
-                and i >= 3
-            ):
-            
+                (
+                    NoAttackFlag == 1
+                    and RaceType != "no_attack_strict"
+                )
+                or NoAttackZure
+            ) and i >= 3:
+                        
                 st_top = Start[i] >= max(Start) - 0.01
             
                 has_power = (
