@@ -2366,8 +2366,8 @@ if st.button("計算"):
                 i >= 4
                 and Start[i] >= max(Start) - 0.01
                 and CPI[i] >= 0.50
-            ):
-                ThirdAdj[i] *= 1.05
+                ):
+                    ThirdAdj[i] *= 1.05
                     
             # ===============================
             # ★ 弱展開の外ヒモ拾い（汎用版）
