@@ -1129,17 +1129,15 @@ if st.button("計算"):
             
             
             if ZureNoAttack:
-                if i >= 4:
-                    val *= 0.35
-                    
-            
-            if ZureNoAttack:
 
-                if i >= 3:
-                    val *= 0.65   # ←4も抑える（これが本質）
+                if i == 3:   # 4コース
+                    val *= 0.80
+            
+                elif i >= 4: # 5・6
+                    val *= 0.35
             
                 if i == 1:
-                    val *= 1.12   # 2少し強化
+                    val *= 1.12
             
             # ===============================
             # ★ ST無効化（全体・弱）
