@@ -875,7 +875,12 @@ if st.button("計算"):
         
         # --- Start補正（最重要・修正版） ---
         if ZureNoAttack:
-            Start_adj = [s * 0.30 for s in Start]
+            Start_adj = [
+                s * 0.60 if i == 1 else (
+                    s * 0.45 if i == 0 else s * 0.30
+                )
+                for i, s in enumerate(Start)
+            ]
         else:
             Start_adj = [
                 s * ST_trust if i >= 2 else s
@@ -3505,8 +3510,11 @@ if st.button("計算"):
                         
             if ZureNoAttack:
                 for i in range(4,6):
-                    SecondAdj[i] *= 0.70
-                    ThirdAdj[i] *= 0.75
+                    SecondAdj[i] *= 0.55
+                    ThirdAdj[i] *= 0.60
+                    
+            if ZureNoAttack and i == 5:
+                SecondAdj[5] *= 0.70
                 
       
                 
