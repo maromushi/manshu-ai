@@ -914,9 +914,10 @@ if st.button("計算"):
             
             
         
-        if RaceType == "no_attack_flow":
+        if ZureNoAttack:
+            RaceType = "no_attack_strict"
             ZureFlag = True
-            
+                    
         # ===============================
         # ★ 外スルーフラグ（追加）
         # ===============================
@@ -1222,6 +1223,16 @@ if st.button("計算"):
                 # 3が2を食うズレ
                 if CPI[2] >= CPI[1] - 0.05:
                     FirstScore[2] *= 1.08
+                    
+                # ===============================
+                # ★ ズレ時：外STトップ暴走止め
+                # ===============================
+                if (
+                    ZureNoAttack
+                    and i >= 4
+                    and Start[i] >= max(Start) - 0.001
+                ):
+                    val *= 0.70
             
 
         FS_mult = [1.0]*6
@@ -1252,9 +1263,9 @@ if st.button("計算"):
                 FS_mult[2] *= 1.20
         
             # 外は軽く残す
-            FS_mult[3] *= 0.90
-            FS_mult[4] *= 0.80
-            FS_mult[5] *= 0.75
+            FS_mult[3] *= 0.85
+            FS_mult[4] *= 0.65
+            FS_mult[5] *= 0.55
         
             # ===============================
             # ★ 2差し（条件付き）
