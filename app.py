@@ -898,7 +898,10 @@ if st.button("計算"):
         if AttackSuccess == 0 and len(attackers) == 0:
         
             if DoubleAttackScore < 0.04:
-                RaceType = "no_attack_strict"   # 完全無風
+                if max(Start) - min(Start) > 0.06:
+                    RaceType = "no_attack_flow"
+                else:
+                    RaceType = "no_attack_strict"   # 完全無風
         
             elif DoubleAttackScore < 0.08:
                 RaceType = "no_attack_flow"     # 弱流れ無風
@@ -1168,7 +1171,7 @@ if st.button("計算"):
                 else:
                     val *= 0.25
 
-            if RaceType == "no_attack_strict" and not NoAttackZure:
+            if RaceType == "no_attack_strict" and not ZureNoAttack:
                 if i >= 3:
             
                     if Start[i] >= max(Start) - 0.01:
@@ -1209,7 +1212,7 @@ if st.button("計算"):
             # ===============================
             # ★ 無風ズレ（内だけ動かす）
             # ===============================
-            if NoAttackFlag == 1 and NoAttackZure:
+            if ZureNoAttack and not TrueNoAttack:
             
                 # 2が頭に来るズレ
                 if CPI[1] >= CPI[0] - 0.05:
@@ -1236,10 +1239,22 @@ if st.button("計算"):
             
             
             
-        elif ZureNoAttack:
-
-            # イン弱体（ズレ）
-            FS_mult[0] *= 0.92
+        if ZureNoAttack and not TrueNoAttack:
+        
+            FS_mult[0] *= 0.90   # イン削る
+        
+            # 2差し（主役）
+            if CPI[1] >= CPI[0] - 0.08:
+                FS_mult[1] *= 1.25   # ←強化
+        
+            # 3ズレ
+            if Start[2] >= max(Start[0:3]) - 0.01:
+                FS_mult[2] *= 1.15
+        
+            # 外は軽く残す
+            FS_mult[3] *= 0.90
+            FS_mult[4] *= 0.80
+            FS_mult[5] *= 0.75
         
             # ===============================
             # ★ 2差し（条件付き）
