@@ -1228,20 +1228,7 @@ if st.button("計算"):
             
                 if CPI[2] >= CPI[1] - 0.05:
                     FirstScore[2] *= 1.03
-            
-            # ===============================
-            # ★ 無風ズレ（内だけ動かす）
-            # ===============================
-            if ZureNoAttack and not TrueNoAttack:
-            
-                # 2が頭に来るズレ
-                if CPI[1] >= CPI[0] - 0.05:
-                    FirstScore[1] *= 1.10
-                    FirstScore[0] *= 0.92
-            
-                # 3が2を食うズレ
-                if CPI[2] >= CPI[1] - 0.05:
-                    FirstScore[2] *= 1.08
+    
                     
             
 
@@ -1258,24 +1245,6 @@ if st.button("計算"):
         
             FS_mult[0] *= 1.10
             
-            
-            
-        if ZureNoAttack and not TrueNoAttack:
-
-            FS_mult[0] *= 0.82   # ←もっと削る（重要）
-        
-            # 2差し（主役）
-            if CPI[1] >= CPI[0] - 0.08:
-                FS_mult[1] *= 1.45   # ←ここ上げろ
-        
-            # 3ズレ
-            if CPI[2] >= CPI[1] - 0.05:
-                FS_mult[2] *= 1.20
-        
-            # 外は軽く残す
-            FS_mult[3] *= 0.85
-            FS_mult[4] *= 0.65
-            FS_mult[5] *= 0.55
         
             # ===============================
             # ★ 2差し（条件付き）
