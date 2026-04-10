@@ -875,7 +875,7 @@ if st.button("計算"):
         
         # --- Start補正（最重要・修正版） ---
         if ZureNoAttack:
-            Start_adj = [s * 0.75 for s in Start]
+            Start_adj = [s * 0.50 for s in Start]
         else:
             Start_adj = [
                 s * ST_trust if i >= 2 else s
@@ -2004,6 +2004,7 @@ if st.button("計算"):
         
         if ZureNoAttack:
             AttackBoost = [1.0]*6
+            StartBoost = [1.0]*6
         
 
 
