@@ -1068,7 +1068,7 @@ if st.button("計算"):
             # ===============================
             # ★ ST無効化（全体・弱）
             # ===============================
-            if ST_kill_flag and not NoAttackZure:
+            if ST_kill_flag and not NoAttackZure and not ZureFlag:
             
                 if i >= 4:
                     val *= 0.90   # 外ちょい削る
@@ -1119,7 +1119,7 @@ if st.button("計算"):
                 )
             
                 if st_top:
-                    val *= (0.55 + 0.6*power)
+                    val *= (0.50 + 0.55*power)
                 else:
                     val *= (0.25 + 0.5*power)
                         
@@ -1148,9 +1148,9 @@ if st.button("計算"):
             elif RaceType == "no_attack_flow":
                 if i >= 3:
                     if Start[i] >= max(Start[2:6]) - 0.01:
-                        val *= 0.40
+                        val *= 0.65   # ← 0.40 → 0.65
                     else:
-                        val *= 0.15
+                        val *= 0.30   # ← 0.15 → 0.30
                         
             # ===============================
             # ★ STトップ暴走カット
