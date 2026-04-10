@@ -1169,6 +1169,30 @@ if st.button("計算"):
         
             FirstScore.append(val)
             
+            # 無風ズレ（内だけ動かす）
+            if NoAttackFlag == 1 and NoAttackZure:
+            
+                if CPI[1] >= CPI[0] - 0.05:
+                    FirstScore[1] *= 1.05
+                    FirstScore[0] *= 0.96
+            
+                if CPI[2] >= CPI[1] - 0.05:
+                    FirstScore[2] *= 1.03
+            
+            # ===============================
+            # ★ 無風ズレ（内だけ動かす）
+            # ===============================
+            if NoAttackFlag == 1 and NoAttackZure:
+            
+                # 2が頭に来るズレ
+                if CPI[1] >= CPI[0] - 0.05:
+                    FirstScore[1] *= 1.10
+                    FirstScore[0] *= 0.92
+            
+                # 3が2を食うズレ
+                if CPI[2] >= CPI[1] - 0.05:
+                    FirstScore[2] *= 1.08
+            
 
         FS_mult = [1.0]*6
         
@@ -2339,10 +2363,11 @@ if st.button("計算"):
             for i in range(4,6):
             
                 if (
-                    Start[i] >= max(Start) - 0.01
-                    and CPI[i] >= 0.45
-                ):
-                    ThirdAdj[i] *= 1.15
+                i >= 4
+                and Start[i] >= max(Start) - 0.01
+                and CPI[i] >= 0.50
+            ):
+                ThirdAdj[i] *= 1.05
                     
             # ===============================
             # ★ 弱展開の外ヒモ拾い（汎用版）
@@ -2374,13 +2399,8 @@ if st.button("計算"):
 
                 for i in range(6):
             
-                    if Start[i] >= max(Start) - 0.01:
-            
-                        if CPI[i] >= 0.40:
-                            ThirdAdj[i] *= 1.12
-            
-                        elif Foot[i] >= 0.48:
-                            ThirdAdj[i] *= 1.08 
+                    if Foot[i] >= 0.48:
+                        ThirdAdj[i] *= 1.08 
                             
         elif RaceType == "no_attack_flow":
 
