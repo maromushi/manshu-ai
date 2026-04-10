@@ -1218,17 +1218,6 @@ if st.button("計算"):
                     val *= 1.05   # 3を少し上げる
         
             FirstScore.append(val)
-            
-            # 無風ズレ（内だけ動かす）
-            if NoAttackFlag == 1 and NoAttackZure:
-            
-                if CPI[1] >= CPI[0] - 0.05:
-                    FirstScore[1] *= 1.05
-                    FirstScore[0] *= 0.96
-            
-                if CPI[2] >= CPI[1] - 0.05:
-                    FirstScore[2] *= 1.03
-    
                     
             
 
