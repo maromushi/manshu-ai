@@ -1068,7 +1068,7 @@ if st.button("計算"):
             # ===============================
             # ★ ST無効化（全体・弱）
             # ===============================
-            if ST_kill_flag:
+            if ST_kill_flag and not NoAttackZure:
             
                 if i >= 4:
                     val *= 0.90   # 外ちょい削る
@@ -1099,7 +1099,9 @@ if st.button("計算"):
             # ===============================
             # ★ 無風ズレ救済（修正版）
             # ===============================
-            # ★ 無風ズレ救済（拡張版）
+            # ===============================
+            # ★ 無風ズレ救済（最終版）
+            # ===============================
             if (
                 (
                     NoAttackFlag == 1
@@ -1107,23 +1109,20 @@ if st.button("計算"):
                 )
                 or NoAttackZure
             ) and i >= 3:
-                        
+            
                 st_top = Start[i] >= max(Start) - 0.01
             
-                has_power = (
-                    CPI[i] >= 0.45
-                    or Foot[i] >= 0.48
+                power = (
+                    0.5*CPI[i] +
+                    0.3*Foot[i] +
+                    0.2*Engine[i]
                 )
             
-                if st_top and has_power:
-                    val *= 0.65
-            
-                elif st_top:
-                    val *= 0.40
-            
+                if st_top:
+                    val *= (0.55 + 0.6*power)
                 else:
-                    val *= 0.15
-            
+                    val *= (0.25 + 0.5*power)
+                        
             
             # ===============================
             # ★ グレーゾーンだけ外を少し許可
