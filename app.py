@@ -788,9 +788,18 @@ if st.button("計算"):
             NoAttackFlag = 0
             
         # ===============================
+        # ★ 無風の再定義（追加）
+        # ===============================
+        TrueNoAttack = (
+            NoAttackFlag == 1
+            and max(Start) - min(Start) < 0.04
+            and P1[0] > 0.50
+        )
+            
+        # ===============================
         # ★ モード判定（run_ai内）
         # ===============================
-        if NoAttackFlag == 1:
+        if TrueNoAttack:
             Mode = "safe"
         
         elif DoubleAttackScore > 0.10:
@@ -848,7 +857,7 @@ if st.button("計算"):
         elif AttackScore < 0.12:
             ST_trust *= 0.85
         
-        if NoAttackFlag == 1:
+        if TrueNoAttack:
             ST_trust *= 0.75
         
         if max(CPI[3:6]) < CPI[0] - 0.03:
@@ -1105,7 +1114,7 @@ if st.button("計算"):
             # ===============================
             if ExST[i] <= 0.06:
             
-                if NoAttackFlag == 1:
+                if TrueNoAttack:
                     val *= 1.05
                 else:
                     val *= 1.02
@@ -1211,7 +1220,7 @@ if st.button("計算"):
         # ===============================
         # ★ レイヤー1（最重要）
         # ===============================
-        if RaceType == "no_attack_strict":
+        if TrueNoAttack:
         
             FS_mult[3] *= 0.6
             FS_mult[4] *= 0.3
@@ -1219,13 +1228,16 @@ if st.button("計算"):
         
             FS_mult[0] *= 1.10
         
-        elif RaceType == "no_attack_flow":
+        elif NoAttackFlag == 1:
         
-            FS_mult[3] *= 0.75
-            FS_mult[4] *= 0.55
-            FS_mult[5] *= 0.45
+            # ★ 足レース（ここが③）
+            FS_mult[3] *= 0.85
+            FS_mult[4] *= 0.75
+            FS_mult[5] *= 0.70
         
-            FS_mult[0] *= 1.05
+            for i in range(6):
+                if Foot[i] >= 0.50 and Turn[i] >= 0.50:
+                    FS_mult[i] *= 1.05
         
         else:
         
@@ -1301,7 +1313,7 @@ if st.button("計算"):
         
         
         # ★ レースタイプ決定
-        if NoAttackFlag == 1:
+        if TrueNoAttack:
             race_type = "no_attack"
         
         elif AttackSuccess == 1:
@@ -2007,7 +2019,7 @@ if st.button("計算"):
         CrashFactor=[1.0]*6
         SashiBoost=[1.0]*6
         
-        if NoAttackFlag == 1:
+        if TrueNoAttack:
             CrashFactor = [1.0]*6
             SashiBoost = [1.0]*6
             main_attacker = None
@@ -2045,7 +2057,7 @@ if st.button("計算"):
                 value *= 0.60
             # ★ ここ追加（超重要）
             # ★ 無風時：外完全ロック
-            if NoAttackFlag == 1:
+            if TrueNoAttack:
                 if i == 4:
                     value *= 0.45
                 elif i == 5:
@@ -2165,7 +2177,7 @@ if st.button("計算"):
                     
             # ★ 最終ロック（ここが正解位置）
             # ★ 最終ロック（強制）
-            if NoAttackFlag == 1:
+            if TrueNoAttack:
                 FS_mult[4] = 0.10
                 FS_mult[5] = 0.05
             
@@ -2340,7 +2352,7 @@ if st.button("計算"):
         # ===============================
         # ★ 無風ロック（ここに移動）
         # ===============================
-        if NoAttackFlag == 1:
+        if TrueNoAttack:
             
 
             # 全体を減衰（←これが本質）
@@ -2420,7 +2432,7 @@ if st.button("計算"):
             # ===============================
             # ★ 無風でもST上位は3着に残す（汎用）
             # ===============================
-            if NoAttackFlag == 1:
+            if TrueNoAttack:
 
                 for i in range(6):
             
@@ -2579,7 +2591,7 @@ if st.button("計算"):
         # ===============================
         for i in range(4,6):
             
-            if NoAttackFlag == 1:
+            if TrueNoAttack:
                 continue
 
             valid = (
@@ -2844,7 +2856,7 @@ if st.button("計算"):
                 ThirdAdj[i] *= 1.15
         
         for i in range(4,6):
-            if NoAttackFlag == 1:
+            if TrueNoAttack:
                 continue
         
             if Foot[i] >= 0.48:
@@ -3035,7 +3047,7 @@ if st.button("計算"):
                 # 後ろが展開拾う
                 for i in range(a+1,6):
                     
-                    if NoAttackFlag == 1:
+                    if TrueNoAttack:
                         continue
                         
                     SecondAdj[i] *= 1.12
@@ -3259,24 +3271,24 @@ if st.button("計算"):
                     # ===============================
                     # ★ 6頭最終ロック
                     # ===============================
-                    if NoAttackFlag == 1:
+                    if TrueNoAttack:
                         FS_mult[5] *= 0.30
                         
                     # ===============================
                     # ★ 無風 最終ロック（ここに移動）
                     # ===============================
-                    if NoAttackFlag == 1:
+                    if TrueNoAttack:
                     
                         for i in range(3,6):
                             FS_mult[i] *= 0.40
                             
-                    if NoAttackFlag == 1:
+                    if TrueNoAttack:
                         for i in range(3,6):
                             if Start[i] < max(Start) - 0.02:
                                 FS_mult[i] *= 0.60
                                 
                     # ★ 無風 最終ロック（ここが本命）
-                    if NoAttackFlag == 1:
+                    if TrueNoAttack:
                         for i in range(3,6):
                             FS_mult[i] = min(FS_mult[i], 0.35)
             
@@ -3441,7 +3453,7 @@ if st.button("計算"):
             # ===============================
             
             # ★ 6の最終制御
-            if NoAttackFlag == 1:
+            if TrueNoAttack:
                 SecondAdj[5] *= 0.70
                 ThirdAdj[5] *= 0.75
             else:
