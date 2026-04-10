@@ -1110,8 +1110,7 @@ if st.button("計算"):
                 )
                 or (
                     NoAttackZure
-                    and DoubleAttackScore > 0.03
-                    and max(CPI[3:6]) >= 0.48
+                    and DoubleAttackScore > WEAK * 0.4
                 )
             ) and i >= 3:
             
