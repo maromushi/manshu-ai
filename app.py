@@ -912,6 +912,9 @@ if st.button("計算"):
         else:
             RaceType = "attack"
             
+        if ZureNoAttack:
+            Mode = "zure"
+            
             
         
         if ZureNoAttack:
@@ -1071,8 +1074,8 @@ if st.button("計算"):
         # ★ 無風ズレ：レーン補正（ここ）
         # ===============================
         if ZureNoAttack:
-            LaneWin[0] *= 0.80
-            LaneWin[1] *= 1.12
+            LaneWin[0] *= 0.75
+            LaneWin[1] *= 1.20
         
         # ===============================
         # ★ ST無効化フラグ（事前計算）
@@ -1138,19 +1141,16 @@ if st.button("計算"):
             # ===============================
             # ★ 無風ズレ救済（修正版）
             # ===============================
-            # ===============================
-            # ★ 無風ズレ救済（最終版）
-            # ===============================
-            if (
-                (
-                    NoAttackFlag == 1
-                    and DoubleAttackScore > 0.03   # ←追加
-                )
-                or (
-                    NoAttackZure
-                    and DoubleAttackScore > WEAK * 0.5
-                )
-            ) and i >= 3:
+            if ZureNoAttack:
+            
+                if i == 0:
+                    val *= 0.85   # 1を削る
+            
+                elif i == 1:
+                    val *= 1.18   # ★これが本命（2を上げる）
+            
+                elif i == 2:
+                    val *= 1.10   # 3も少し上げる
             
                 st_top = Start[i] >= max(Start) - 0.01
             
