@@ -791,6 +791,7 @@ if st.button("計算"):
             AttackSuccess == 0
             and len(attackers) == 0
             and max(Start) - min(Start) > 0.06
+            and max(Start[3:6]) >= max(Start[0:3]) - 0.01   # ←追加
         )
             
         # ===============================
@@ -1125,6 +1126,12 @@ if st.button("計算"):
                 0.20*Turn[i]+
                 0.15*LaneWin[i]
             )
+            
+            
+            if ZureNoAttack:
+                if i >= 4:
+                    val *= 0.35
+                    
             
             if ZureNoAttack:
 
@@ -3737,7 +3744,7 @@ if st.button("計算"):
     tmp = []
     for a,b,c,p in results:
     
-        if Mode == "safe" and a >= 4:
+        if (Mode == "safe" or Mode == "zure") and a >= 4:
             continue
     
         tmp.append((a,b,c,p))
