@@ -874,10 +874,13 @@ if st.button("計算"):
         
         
         # --- Start補正（最重要・修正版） ---
-        Start_adj = [
-            s if ZureNoAttack else (s * ST_trust if i >= 2 else s)
-            for i, s in enumerate(Start)
-        ]
+        if ZureNoAttack:
+            Start_adj = [s * 0.75 for s in Start]
+        else:
+            Start_adj = [
+                s * ST_trust if i >= 2 else s
+                for i, s in enumerate(Start)
+            ]
             
         # ===============================
         # ★ RaceMode（攻め結果だけ）
@@ -918,7 +921,7 @@ if st.button("計算"):
             
         
         if ZureNoAttack:
-            RaceType = "no_attack_strict"
+            RaceType = "no_attack_flow"   # ←変更
             ZureFlag = True
                     
         # ===============================
@@ -1107,6 +1110,14 @@ if st.button("計算"):
                 0.15*LaneWin[i]
             )
             
+            if ZureNoAttack:
+
+                if i >= 4:
+                    val *= 0.75   # 外弱体
+            
+                elif i == 1:
+                    val *= 1.10   # 2強化
+            
             # ===============================
             # ★ ST無効化（全体・弱）
             # ===============================
@@ -1138,37 +1149,6 @@ if st.button("計算"):
                     val *= 1.05
                 else:
                     val *= 1.02
-            # ===============================
-            # ★ 無風ズレ救済（修正版）
-            # ===============================
-            if ZureNoAttack:
-            
-                if i == 0:
-                    val *= 0.85   # 1を削る
-            
-                elif i == 1:
-                    val *= 1.18   # ★これが本命（2を上げる）
-            
-                elif i == 2:
-                    val *= 1.10   # 3も少し上げる
-            
-                st_top = Start[i] >= max(Start) - 0.01
-            
-                power = (
-                    0.5*CPI[i] +
-                    0.3*Foot[i] +
-                    0.2*Engine[i]
-                )
-            
-                if st_top:
-
-                    if i >= 4:
-                        val *= (0.40 + 0.45*power)   # ←外だけ弱体化
-                    else:
-                        val *= (0.55 + 0.55*power)
-                
-                else:
-                    val *= (0.25 + 0.5*power)
                         
             
             # ===============================
