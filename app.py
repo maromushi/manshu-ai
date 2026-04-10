@@ -520,62 +520,7 @@ if st.button("計算"):
         for i in range(6)
         ]
         
-        # ===============================
-        # ★ ST制御ブロック（NEW）
-        # ===============================
-        
-        # --- 展開スコア ---
-        AttackPower = [
-            0.35*Start[i] +
-            0.30*Turn[i] +
-            0.20*Foot[i] +
-            0.15*Engine[i]
-            for i in range(6)
-        ]
-        
-        AttackGap = [0]*6
-        
-        for i in range(1,6):
-            AttackGap[i] = (
-                max(0, Start[i] - Start[i-1]) * 0.5 +
-                max(0, Turn[i] - Turn[i-1]) * 0.3 +
-                max(0, Foot[i] - Foot[i-1]) * 0.2
-            )
-        
-        Flow = 0
-        for i in range(2,6):
-            if Start[i] > Start[i-1] - 0.01:
-                Flow += 0.25
-        
-        AttackScore = max([
-            AttackPower[i] * AttackGap[i]
-            for i in range(1,6)
-        ]) + Flow * 0.3
-        
-        
-        # --- ST信頼度 ---
-        ST_trust = 1.0
-        
-        if AttackScore < 0.07:
-            ST_trust *= 0.6
-        elif AttackScore < 0.12:
-            ST_trust *= 0.8
-        
-        if NoAttackFlag == 1:
-            ST_trust *= 0.75
-        
-        if max(CPI[3:6]) < CPI[0] - 0.03:
-            ST_trust *= 0.75
-        
-        if max(Start) - min(Start) > 0.08:
-            ST_trust *= 0.7
-        
-        
-        # --- Start補正（最重要・修正版） ---
-        Start_adj = [
-            s * ST_trust if i >= 2 else s
-            for i, s in enumerate(Start)
-        ]
+ 
         # ===============================
         # ★ 攻め候補（複数化）
         # ===============================
@@ -840,6 +785,63 @@ if st.button("計算"):
             NoAttackFlag = 1
         else:
             NoAttackFlag = 0
+            
+        # ===============================
+        # ★ ST制御ブロック（NEW）
+        # ===============================
+        
+        # --- 展開スコア ---
+        AttackPower = [
+            0.35*Start[i] +
+            0.30*Turn[i] +
+            0.20*Foot[i] +
+            0.15*Engine[i]
+            for i in range(6)
+        ]
+        
+        AttackGap = [0]*6
+        
+        for i in range(1,6):
+            AttackGap[i] = (
+                max(0, Start[i] - Start[i-1]) * 0.5 +
+                max(0, Turn[i] - Turn[i-1]) * 0.3 +
+                max(0, Foot[i] - Foot[i-1]) * 0.2
+            )
+        
+        Flow = 0
+        for i in range(2,6):
+            if Start[i] > Start[i-1] - 0.01:
+                Flow += 0.25
+        
+        AttackScore = max([
+            AttackPower[i] * AttackGap[i]
+            for i in range(1,6)
+        ]) + Flow * 0.3
+        
+        
+        # --- ST信頼度 ---
+        ST_trust = 1.0
+        
+        if AttackScore < 0.07:
+            ST_trust *= 0.6
+        elif AttackScore < 0.12:
+            ST_trust *= 0.8
+        
+        if NoAttackFlag == 1:
+            ST_trust *= 0.75
+        
+        if max(CPI[3:6]) < CPI[0] - 0.03:
+            ST_trust *= 0.75
+        
+        if max(Start) - min(Start) > 0.08:
+            ST_trust *= 0.7
+        
+        
+        # --- Start補正（最重要・修正版） ---
+        Start_adj = [
+            s * ST_trust if i >= 2 else s
+            for i, s in enumerate(Start)
+        ]
             
         # ===============================
         # ★ RaceMode（攻め結果だけ）
