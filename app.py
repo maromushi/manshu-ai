@@ -1118,11 +1118,11 @@ if st.button("計算"):
             if (
                 (
                     NoAttackFlag == 1
-                    and RaceType != "no_attack_strict"
+                    and DoubleAttackScore > 0.03   # ←追加
                 )
                 or (
                     NoAttackZure
-                    and DoubleAttackScore > WEAK * 0.4
+                    and DoubleAttackScore > WEAK * 0.5
                 )
             ) and i >= 3:
             
