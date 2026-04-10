@@ -1138,7 +1138,7 @@ if st.button("計算"):
                 else:
                     val *= 0.25
 
-            if RaceType == "no_attack_strict":
+            if RaceType == "no_attack_strict" and not NoAttackZure:
                 if i >= 3:
             
                     if Start[i] >= max(Start) - 0.01:
