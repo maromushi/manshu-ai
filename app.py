@@ -2363,9 +2363,9 @@ if st.button("計算"):
             for i in range(4,6):
             
                 if (
-                i >= 4
-                and Start[i] >= max(Start) - 0.01
-                and CPI[i] >= 0.50
+                    i >= 4
+                    and Start[i] >= max(Start) - 0.01
+                    and CPI[i] >= 0.50
                 ):
                     ThirdAdj[i] *= 1.05
                     
