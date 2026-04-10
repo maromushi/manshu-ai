@@ -3503,7 +3503,7 @@ if st.button("計算"):
                     
                     results.append((boats[a],boats[b],boats[c],p))
 
-        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
+        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start, Mode
                 
     def run_zure_ai(order):
     
@@ -3556,8 +3556,9 @@ if st.button("計算"):
         order_ex=[0,1,2,3,4,5]
 
     try:
-        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log_waku, Start_waku = run_ai(order_waku)
-        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log_ex, Start = run_ai(order_ex)
+        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log_waku, Start_waku, Mode_waku = run_ai(order_waku)
+
+        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log_ex, Start, Mode_ex = run_ai(order_ex)
     
     except Exception as e:
         import traceback
@@ -3583,6 +3584,8 @@ if st.button("計算"):
     w_no = NoAttackProb
     w_at = min(1, DoubleAttackScore / 0.12)
     w_gray = max(0, 1 - w_no - w_at)
+    
+    Mode = Mode_ex
     
         
     # =====================================
