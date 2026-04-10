@@ -2002,6 +2002,9 @@ if st.button("計算"):
         AttackBoost6
         ]
         
+        if ZureNoAttack:
+            AttackBoost = [1.0]*6
+        
 
 
         if OuterPowerCheck < 0.55:
@@ -2581,9 +2584,9 @@ if st.button("計算"):
             ):
                 # ★ 上げるんじゃなくて下げを無効化
                 # ❌ 削除 or 弱体化
-                SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.01)
-                ThirdAdj[i]  = max(ThirdAdj[i], 1.05)
-        
+                if not ZureNoAttack:
+                    SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.01)
+                    ThirdAdj[i]  = max(ThirdAdj[i], 1.05)
         # ===============================
         # ★ 攻めゾーン分割（最重要）
         # ===============================
@@ -3490,6 +3493,12 @@ if st.button("計算"):
                 
                     if CPI[5] < 0.50:
                         SecondAdj[5] *= 0.60
+                        
+                        
+            if ZureNoAttack:
+                for i in range(4,6):
+                    SecondAdj[i] *= 0.70
+                    ThirdAdj[i] *= 0.75
                 
       
                 
