@@ -2635,11 +2635,11 @@ if st.button("計算"):
                 
         if (
             DoubleAttackScore > STRONG
-            and Start[5] == max(Start)
-            and CPI[5] > 0.45   # ←ここ上げろ
-            and Foot[5] > 0.48  # ←これ追加
+            and AttackSuccess == 1
+            and Start[5] >= Start[3] - 0.01
+            and Foot[5] >= 0.50
         ):
-            SecondAdj[5] *= 1.15
+            SecondAdj[5] *= 1.10
                 
                 
         
