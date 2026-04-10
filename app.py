@@ -875,7 +875,7 @@ if st.button("計算"):
         
         # --- Start補正（最重要・修正版） ---
         if ZureNoAttack:
-            Start_adj = [s * 0.50 for s in Start]
+            Start_adj = [s * 0.30 for s in Start]
         else:
             Start_adj = [
                 s * ST_trust if i >= 2 else s
@@ -1101,8 +1101,15 @@ if st.button("計算"):
 
         for i in range(6):
         
+            # ★ 追加（valの直前に書く）
+            if ZureNoAttack:
+                start_weight = 0.15
+            else:
+                start_weight = 0.35
+            
+            # ★ ここを書き換える
             val = (
-                0.35*Start_adj[i]+
+                start_weight*Start_adj[i]+
                 0.25*Skill[i]+
                 0.15*Engine[i]+
                 0.15*Foot[i]+
@@ -1113,7 +1120,7 @@ if st.button("計算"):
             if ZureNoAttack:
 
                 if i >= 3:
-                    val *= 0.80   # ←4も抑える（これが本質）
+                    val *= 0.65   # ←4も抑える（これが本質）
             
                 if i == 1:
                     val *= 1.12   # 2少し強化
