@@ -1108,7 +1108,11 @@ if st.button("計算"):
                     NoAttackFlag == 1
                     and RaceType != "no_attack_strict"
                 )
-                or NoAttackZure
+                or (
+                    NoAttackZure
+                    and DoubleAttackScore > 0.03
+                    and max(CPI[3:6]) >= 0.48
+                )
             ) and i >= 3:
             
                 st_top = Start[i] >= max(Start) - 0.01
