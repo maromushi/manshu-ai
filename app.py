@@ -214,8 +214,8 @@ if st.session_state.run:
     second_idx = sorted(range(6), key=lambda i: SecondScore[i], reverse=True)[:3]
     third_idx = sorted(range(6), key=lambda i: ThirdScore[i], reverse=True)
     
-    # ===== 組み立て =====
-    results = []
+    # ===== 組み立て（スコア付き） =====
+    scored_results = []
     
     for a in first_idx:
         for b in second_idx:
@@ -224,7 +224,17 @@ if st.session_state.run:
             for c in third_idx:
                 if c in [a,b]:
                     continue
-                results.append((a+1,b+1,c+1))
+                
+                score = (
+                    FirstScore[a]*0.6 +
+                    SecondScore[b]*0.3 +
+                    ThirdScore[c]*0.1
+                )
+                
+                scored_results.append(((a+1,b+1,c+1), score))
+    
+    # ===== 並び替え =====
+    scored_results = sorted(scored_results, key=lambda x: x[1], reverse=True)
     
     # ===== 重複削除 =====
     results = list(dict.fromkeys(results))
@@ -236,8 +246,8 @@ if st.session_state.run:
     st.markdown("### ▼ 買い目")
     
     output_text = ""
-    
-    for r in results[:10]:
+
+    for r, s in scored_results[:10]:
         line = f"{r[0]}-{r[1]}-{r[2]}"
         st.write(line)
         output_text += line + "\n"
