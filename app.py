@@ -3995,10 +3995,10 @@ if st.button("計算"):
     # ===============================
     
     # タイプ判定
-    if TrueNoAttack:
+    if Mode == "safe":
         race_label = "鉄板レース"
     
-    elif ZureNoAttack:
+    elif Mode == "zure":
         race_label = "ズレ無風レース"
     
     elif DoubleAttackScore > 0.10:
@@ -4011,10 +4011,10 @@ if st.button("計算"):
         race_label = "通常レース"
     
     # 点数ガイド
-    if TrueNoAttack:
+    if Mode == "safe":
         guide = "1〜3点（ガチ絞り）"
     
-    elif ZureNoAttack:
+    elif Mode == "zure":
         guide = "4〜6点（ズレ狙い）"
     
     elif DoubleAttackScore > 0.10:
@@ -4027,10 +4027,10 @@ if st.button("計算"):
         guide = "3〜6点"
     
     # 買い方コメント
-    if ZureNoAttack:
+    if Mode == "safe":
         buy_comment = "2軸＋1残し（横に広げない）"
     
-    elif TrueNoAttack:
+    elif Mode == "zure":
         buy_comment = "イン固定でOK"
     
     elif DoubleAttackScore > 0.10:
