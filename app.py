@@ -226,8 +226,8 @@ if st.session_state.run:
                     continue
                 
                 score = (
-                    FirstScore[a]*0.6 +
-                    SecondScore[b]*0.3 +
+                    FirstScore[a]*0.7 +
+                    SecondScore[b]*0.2 +
                     ThirdScore[c]*0.1
                 )
                 
