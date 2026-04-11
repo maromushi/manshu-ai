@@ -246,8 +246,11 @@ if st.session_state.run:
 
     for r, s in scored_results[:10]:
         line = f"{r[0]}-{r[1]}-{r[2]}"
-        st.write(line)
-        output_text += line + "\n"
+        
+        # スコア表示
+        st.write(f"{line}  ({round(s,3)})")
+        
+        output_text += f"{line} ({round(s,3)})\n"
     
     # ===== 最終コピー用（入力＋結果まとめ） =====
     final_output = "【入力データ】\n"
