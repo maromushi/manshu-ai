@@ -1218,10 +1218,10 @@ if st.button("計算"):
             
             elif RaceType == "no_attack_flow":
                 if i >= 3:
-                    if Start[i] >= max(Start[2:6]) - 0.01:
-                        val *= 0.65   # ← 0.40 → 0.65
+                    if CPI[i] >= 0.48 and Start[i] >= Start[2] - 0.02:
+                        val *= 0.75   # 条件付きで残す
                     else:
-                        val *= 0.30   # ← 0.15 → 0.30
+                        val *= 0.35   # 弱い外は消す
                         
             # ===============================
             # ★ STトップ暴走カット
@@ -2412,7 +2412,21 @@ if st.button("計算"):
         
             # 外は軽くだけ
             for i in range(4,6):
-                ThirdAdj[i] *= 1.05
+
+                if i == 5:
+                    # 6は条件付きで残す
+                    if (
+                        CPI[5] >= 0.48
+                        and Foot[5] >= 0.48
+                        and Start[5] >= Start[3] - 0.02
+                    ):
+                        ThirdAdj[5] *= 1.08
+                    else:
+                        ThirdAdj[5] *= 0.70
+            
+                else:
+                    # 5は基本抑える
+                    ThirdAdj[4] *= 0.80
         
         # ===============================
         # ★ 無風ロック（ここに移動）
