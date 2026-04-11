@@ -195,6 +195,18 @@ if st.button("計算"):
     
     st.markdown("### ▼ 買い目")
     
-    for r in results[:10]:
-        st.write(f"{r[0]}-{r[1]}-{r[2]}")
+    output_text = ""
     
+    for r in results[:10]:
+        line = f"{r[0]}-{r[1]}-{r[2]}"
+        st.write(line)
+        output_text += line + "\n"
+    
+    # ===== コピー用（最適版） =====
+    st.markdown("### ▼ コピー用")
+    
+    # PCはここでワンクリックコピーできる
+    st.code(output_text)
+    
+    # スマホ用（長押しコピー）
+    st.text_area("スマホ用コピー", output_text, height=150)
