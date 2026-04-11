@@ -255,8 +255,13 @@ if st.session_state.run:
     # ===== 最終コピー用（入力＋結果まとめ） =====
     final_output = "【入力データ】\n"
     final_output += data.strip() + "\n\n"
+    
+    final_output += "【風】\n"
+    final_output += wind + "\n\n"
+    
     final_output += "【レースタイプ】\n"
     final_output += race_type + "\n\n"
+    
     final_output += "【買い目】\n"
     final_output += output_text
     
