@@ -265,5 +265,7 @@ if st.session_state.run:
     final_output += "【買い目】\n"
     final_output += output_text
     
+    output_text += f"{line} ({round(s,3)})\n"
+    
     st.markdown("### ▼ まとめてコピー")
     st.code(final_output)
