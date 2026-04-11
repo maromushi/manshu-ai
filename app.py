@@ -92,14 +92,7 @@ if st.button("計算"):
     # ===============================
     
     import itertools
-    
-    # ===== 正規化 =====
-    def normalize(arr):
-        mn = min(arr)
-        mx = max(arr)
-        if mx - mn < 1e-6:
-            return [0.5]*len(arr)
-        return [(x-mn)/(mx-mn) for x in arr]
+
     
     # ===== 基本スコア =====
     StartScore = [0.30 - x for x in AvgST]
@@ -203,11 +196,5 @@ if st.button("計算"):
     st.markdown("### ▼ 買い目")
     
     for r in results[:10]:
-        st.write(f"{r[0]}-{r[1]}-{r[2]}")        + "\n\n"
-            + check_output
-            + "\n\n"
-            + debug_output
-        )
-        
-        st.code(full_output, language="text")
+        st.write(f"{r[0]}-{r[1]}-{r[2]}")
     
