@@ -27,6 +27,27 @@ def normalize(values):
 data = st.text_area("抽出データを貼り付け")
 
 # ===============================
+# 風選択
+# ===============================
+if "wind" not in st.session_state:
+    st.session_state.wind = "なし"
+
+st.markdown("### 風")
+
+wind_labels = ["なし","向かい風","追い風"]
+
+cols = st.columns(3)
+
+for i, w in enumerate(wind_labels):
+    with cols[i]:
+        if st.button(w, use_container_width=True):
+            st.session_state.wind = w
+
+wind = st.session_state.wind
+
+st.write(f"風：{wind}")
+
+# ===============================
 # ★ 会場ボタン（横並び完全版）
 # ===============================
 if "venue" not in st.session_state:
@@ -115,18 +136,31 @@ if st.button("計算"):
         0.10*ClassScore[i]
         for i in range(6)
     ]
+
     
     # ===== レース分類 =====
     st_spread = max(StartScore) - min(StartScore)
+
+    inside_gap = FirstScore[0] - max(FirstScore[1:])
     
-    if FirstScore[0] < 0.48:
+    if FirstScore[0] < 0.45 and inside_gap < -0.05:
         race_type = "inside_weak"
+    
     elif st_spread > 0.10:
         race_type = "chaos"
+    
     elif st_spread > 0.06:
         race_type = "middle"
+    
     else:
         race_type = "normal"
+        
+    #風補正
+    if wind == "向かい風":
+        FirstScore[0] *= 1.03
+    
+    elif wind == "追い風":
+        FirstScore[0] *= 0.97
     
     # ===== 分岐補正（ここだけ） =====
     if race_type == "inside_weak":
