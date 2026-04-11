@@ -71,7 +71,13 @@ venue = st.session_state.venue
 
 st.write(f"選択中：{venue}")
 
+if "run" not in st.session_state:
+    st.session_state.run = False
+
 if st.button("計算"):
+    st.session_state.run = True
+
+if st.session_state.run:
 
     if not data:
         st.write("データを貼ってください")
