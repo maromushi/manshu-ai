@@ -163,14 +163,14 @@ if st.session_state.run:
         
     #風補正
     if wind == "向かい風":
-        FirstScore[0] *= 1.03
+        FirstScore[0] *= 1.05
     
     elif wind == "追い風":
         FirstScore[0] *= 0.97
     
     # ===== 分岐補正（ここだけ） =====
     if race_type == "inside_weak":
-        FirstScore[0] *= 0.75
+        FirstScore[0] *= 0.88
         FirstScore[1] *= 1.10
         FirstScore[2] *= 1.08
     
@@ -181,6 +181,15 @@ if st.session_state.run:
     elif race_type == "middle":
         FirstScore[2] *= 1.05
         FirstScore[3] *= 1.05
+        
+    # 外が来る条件のときだけ強化
+    if (
+        st_spread > 0.08 and
+        (max(TurnScore) - min(TurnScore)) > 0.20 and
+        inside_gap < 0.03
+    ):
+        for i in range(3,6):
+            FirstScore[i] *= 1.10
     
     # ===== 2着スコア =====
     SecondScore = [
