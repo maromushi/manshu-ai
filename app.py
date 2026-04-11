@@ -202,11 +202,13 @@ if st.button("計算"):
         st.write(line)
         output_text += line + "\n"
     
-    # ===== コピー用（最適版） =====
-    st.markdown("### ▼ コピー用")
+    # ===== 最終コピー用（入力＋結果まとめ） =====
+    final_output = "【入力データ】\n"
+    final_output += data.strip() + "\n\n"
+    final_output += "【レースタイプ】\n"
+    final_output += race_type + "\n\n"
+    final_output += "【買い目】\n"
+    final_output += output_text
     
-    # PCはここでワンクリックコピーできる
-    st.code(output_text)
-    
-    # スマホ用（長押しコピー）
-    st.text_area("スマホ用コピー", output_text, height=150)
+    st.markdown("### ▼ まとめてコピー")
+    st.code(final_output)
