@@ -3965,6 +3965,61 @@ if st.button("計算"):
         for (mark,a,b,c,p) in marked
     ])
     
+    # ===============================
+    # ★ レース判定UI（ここ追加）
+    # ===============================
+    
+    # タイプ判定
+    if TrueNoAttack:
+        race_label = "鉄板レース"
+    
+    elif ZureNoAttack:
+        race_label = "ズレ無風レース"
+    
+    elif DoubleAttackScore > 0.10:
+        race_label = "荒れレース"
+    
+    elif DoubleAttackScore > 0.05:
+        race_label = "中荒れレース"
+    
+    else:
+        race_label = "通常レース"
+    
+    # 点数ガイド
+    if TrueNoAttack:
+        guide = "1〜3点（ガチ絞り）"
+    
+    elif ZureNoAttack:
+        guide = "4〜6点（ズレ狙い）"
+    
+    elif DoubleAttackScore > 0.10:
+        guide = "8〜15点（広げる）"
+    
+    elif DoubleAttackScore > 0.05:
+        guide = "5〜10点（中間）"
+    
+    else:
+        guide = "3〜6点"
+    
+    # 買い方コメント
+    if ZureNoAttack:
+        buy_comment = "2軸＋1残し（横に広げない）"
+    
+    elif TrueNoAttack:
+        buy_comment = "イン固定でOK"
+    
+    elif DoubleAttackScore > 0.10:
+        buy_comment = "フォーメーション広げる"
+    
+    else:
+        buy_comment = "2〜3軸で流す"
+    
+    # 表示
+    st.markdown("### ▼ レース判定")
+    st.write(f"タイプ：{race_label}")
+    st.write(f"推奨点数：{guide}")
+    st.write(f"買い方：{buy_comment}")
+    
     st.markdown("### ▼ 買い目")
 
     for line in result_text.split("\n"):
