@@ -876,11 +876,11 @@ if st.button("計算"):
         
         # --- Start補正（最重要・修正版） ---
         if ZureNoAttack:
-        Start_adj = [
-            s * 0.60 if i == 1 else (
-                s * 0.55 if i == 0 else s * 0.30
-            )
-                for i, s in enumerate(Start)
+            Start_adj = [
+                s * 0.60 if i == 1 else (
+                    s * 0.55 if i == 0 else s * 0.30
+                )
+                    for i, s in enumerate(Start)
             ]
         else:
             Start_adj = [
