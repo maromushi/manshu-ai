@@ -1254,6 +1254,16 @@ if st.button("計算"):
                     val *= 1.05   # 3を少し上げる
         
             FirstScore.append(val)
+            
+        # ===============================
+        # ★ ズレ時3固定防止
+        # ===============================
+        if (
+            AttackWeak == 1
+            and AttackSuccess == 0
+            and Start[2] == max(Start)
+        ):
+            FS_mult[2] *= 0.85
                     
             
 
@@ -2262,6 +2272,23 @@ if st.button("計算"):
             (FinalFirst[i]/TotalFirst) if Active[i]==1 else 0
             for i in range(6)
         ]
+        
+        
+        # ===============================
+        # ★ 3の空回り（最重要）
+        # ===============================
+        if (
+            AttackWeak == 1
+            and AttackSuccess == 0
+            and Start[2] == max(Start)
+            and Start[2] > Start[1] + 0.07
+        ):
+            # 3は頭じゃなく展開役にする
+            P1[2] *= 0.72
+        
+            # 差し側を上げる
+            P1[1] *= 1.12
+            P1[0] *= 1.05
 
         # ===============================
         # トップ集中ブースト
@@ -2363,6 +2390,18 @@ if st.button("計算"):
                 ThirdAdj[3] *= 1.12
                 ThirdAdj[4] *= 1.10
                 ThirdAdj[5] *= 1.08
+                
+        # ===============================
+        # ★ 4コース展開拾い（超重要）
+        # ===============================
+        if (
+            AttackWeak == 1
+            and AttackSuccess == 0
+            and Start[2] == max(Start)
+            and Start[3] >= Start[2] - 0.10
+        ):
+            SecondAdj[3] *= 1.18
+            ThirdAdj[3] *= 1.12
         
         # ===============================
         # ★ 攻め失敗
