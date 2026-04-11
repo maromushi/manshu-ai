@@ -1087,8 +1087,8 @@ if st.button("計算"):
         # ★ 無風ズレ：レーン補正（ここ）
         # ===============================
         if ZureNoAttack:
-            LaneWin[0] *= 0.75
-            LaneWin[1] *= 1.20
+            LaneWin[0] *= 0.65
+            LaneWin[1] *= 1.35
         
         # ===============================
         # ★ ST無効化フラグ（事前計算）
@@ -1119,7 +1119,7 @@ if st.button("計算"):
             
             # ★ ここを書き換える
             val = (
-                start_weight*Start_adj[i]+
+                start_weight*Start[i]+
                 0.25*Skill[i]+
                 0.15*Engine[i]+
                 0.15*Foot[i]+
@@ -2026,7 +2026,8 @@ if st.button("計算"):
         if ZureNoAttack:
             AttackBoost = [1.0]*6
             StartBoost = [1.0]*6
-        
+            AttackBoost[4] *= 0.85
+            AttackBoost[5] *= 0.80
 
 
         if OuterPowerCheck < 0.55:
