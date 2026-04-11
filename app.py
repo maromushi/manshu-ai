@@ -1127,6 +1127,29 @@ if st.button("計算"):
                 0.15*LaneWin[i]
             )
             
+            if i == 5:
+
+                strong6 = (
+                    CPI[i] >= 0.52
+                    or Foot[i] >= 0.52
+                )
+            
+                flow6 = (
+                    Start[i] >= Start[3] - 0.02
+                    and DoubleAttackScore > 0.08
+                )
+            
+                if not (strong6 or flow6):
+                    val *= 0.80
+                    
+            if ZureNoAttack and i == 5:
+
+                if not (
+                    CPI[i] >= 0.55
+                    and Start[i] >= max(Start[3:6]) - 0.01
+                ):
+                    val *= 0.65
+                        
             
             if ZureNoAttack:
 
@@ -2813,10 +2836,12 @@ if st.button("計算"):
         # ★ 2頭時の1残り（これだけ追加）
         # ===============================
         if ZureNoAttack:
-        
+
             if P1[1] >= P1[0] * 0.75:
-        
                 SecondAdj[0] *= 1.15
+        
+            if P1[1] > P1[0] * 0.8:
+                SecondAdj[0] *= 1.20
                     
         # ===============================
         # ★ F持ち最終補正（完全版）
