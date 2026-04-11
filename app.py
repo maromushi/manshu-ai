@@ -253,14 +253,27 @@ if st.session_state.run:
     
     output_text = ""
 
-    for r, s in scored_results[:10]:
-        line = f"{r[0]}-{r[1]}-{r[2]}"
-        
-        # スコア表示
-        st.write(f"{line}  ({round(s,3)})")
-        
-        output_text += f"{line} ({round(s,3)})\n"
+    top_score = scored_results[0][1]
+
+    output_text = ""
     
+    for r, s in scored_results[:10]:
+    
+        line = f"{r[0]}-{r[1]}-{r[2]}"
+        diff = top_score - s
+    
+        if diff < 0.01:
+            mark = "◎"
+        elif diff < 0.03:
+            mark = "○"
+        elif diff < 0.05:
+            mark = "▲"
+        else:
+            mark = "△"
+    
+        st.write(f"{mark} {line} ({round(s,3)})")
+    
+        output_text += f"{mark} {line} ({round(s,3)})\n"
     # ===== 最終コピー用（入力＋結果まとめ） =====
     final_output = "【入力データ】\n"
     final_output += data.strip() + "\n\n"
