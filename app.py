@@ -1219,9 +1219,9 @@ if st.button("計算"):
             elif RaceType == "no_attack_flow":
                 if i >= 3:
                     if CPI[i] >= 0.48 and Start[i] >= Start[2] - 0.02:
-                        val *= 0.75   # 条件付きで残す
+                        val *= 0.70   # 条件付きで残す
                     else:
-                        val *= 0.35   # 弱い外は消す
+                        val *= 0.30   # 弱い外は消す
                         
             # ===============================
             # ★ STトップ暴走カット
@@ -2520,10 +2520,22 @@ if st.button("計算"):
                             
         elif RaceType == "no_attack_flow":
 
-            # 少しだけ外を許す（3着のみ）
             for i in range(3,6):
-                if Start[i] >= max(Start[2:6]) - 0.02:
-                    ThirdAdj[i] *= 1.10
+        
+                if (
+                    CPI[i] >= 0.48
+                    and Foot[i] >= 0.46
+                    and Start[i] >= max(Start[2:6]) - 0.02
+                ):
+                    ThirdAdj[i] *= 1.05   # 強い外だけ残す
+        
+                elif (
+                    Start[i] >= max(Start[2:6]) - 0.01
+                ):
+                    ThirdAdj[i] *= 0.90   # STだけなら少し残す（←重要）
+        
+                else:
+                    ThirdAdj[i] *= 0.65   # 弱い外は消す
             
                     
         # ★ 攻め時の2残り復活（汎用版）
