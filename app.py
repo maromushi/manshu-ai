@@ -236,9 +236,6 @@ if st.session_state.run:
     # ===== 並び替え =====
     scored_results = sorted(scored_results, key=lambda x: x[1], reverse=True)
     
-    # ===== 重複削除 =====
-    results = list(dict.fromkeys(results))
-    
     # ===== 上位表示 =====
     st.markdown("### ▼ レースタイプ")
     st.write(race_type)
