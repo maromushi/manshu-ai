@@ -2521,21 +2521,19 @@ if st.button("計算"):
         elif RaceType == "no_attack_flow":
 
             for i in range(3,6):
-        
+            
                 if (
                     CPI[i] >= 0.48
                     and Foot[i] >= 0.46
-                    and Start[i] >= max(Start[2:6]) - 0.02
+                    and Start[i] >= Start[2] - 0.02
                 ):
-                    ThirdAdj[i] *= 1.05   # 強い外だけ残す
-        
-                elif (
-                    Start[i] >= max(Start[2:6]) - 0.01
-                ):
-                    ThirdAdj[i] *= 0.90   # STだけなら少し残す（←重要）
-        
+                    ThirdAdj[i] *= 1.05
+            
+                elif Start[i] >= max(Start[2:6]) - 0.01:
+                    ThirdAdj[i] *= 0.90
+            
                 else:
-                    ThirdAdj[i] *= 0.65   # 弱い外は消す
+                    ThirdAdj[i] *= 0.70
             
                     
         # ★ 攻め時の2残り復活（汎用版）
@@ -3576,6 +3574,23 @@ if st.button("計算"):
                     
             if ZureNoAttack and i == 5:
                 SecondAdj[5] *= 0.70
+                
+            # ===============================
+            # ★ ズレ無風：外は1枚制限（最重要）
+            # ===============================
+            if ZureNoAttack:
+            
+                outer_count = 0
+            
+                for i in [4,5]:  # 5号艇・6号艇
+            
+                    # 「来そうな外」をカウント
+                    if ThirdAdj[i] > 0.95:
+                        outer_count += 1
+            
+                        # 2枚目を強制カット
+                        if outer_count >= 2:
+                            ThirdAdj[i] *= 0.55
                 
       
                 
