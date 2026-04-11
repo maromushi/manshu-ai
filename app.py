@@ -249,6 +249,20 @@ if st.session_state.run:
     st.markdown("### ▼ レースタイプ")
     st.write(race_type)
     
+    st.markdown("### ▼ 買い方ガイド")
+
+    if race_type == "normal":
+        st.write("◎本線3点厚め / ○5点まで")
+    
+    elif race_type == "middle":
+        st.write("◎5点 / ○7点 / ▲中穴少し")
+    
+    elif race_type == "chaos":
+        st.write("◎広め10点 / 外絡め必須")
+    
+    elif race_type == "inside_weak":
+        st.write("◎2・3頭中心 / ○1残し")
+    
     st.markdown("### ▼ 買い目")
     
     output_text = ""
@@ -286,8 +300,6 @@ if st.session_state.run:
     
     final_output += "【買い目】\n"
     final_output += output_text
-    
-    output_text += f"{line} ({round(s,3)})\n"
     
     st.markdown("### ▼ まとめてコピー")
     st.code(final_output)
