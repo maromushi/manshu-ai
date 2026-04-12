@@ -190,6 +190,27 @@ if st.session_state.run:
     ):
         for i in range(3,6):
             FirstScore[i] *= 1.10
+            
+    # ===== F補正（完成版） =====
+    for i in range(6):
+    
+        if Fcount[i] >= 1:
+    
+            # 階級で強さ調整
+            if Class[i] == "A1":
+                penalty = 0.98
+            elif Class[i] == "A2":
+                penalty = 0.95
+            else:
+                penalty = 0.92
+    
+            # 外コースだけ適用（インは無視）
+            if i >= 2:
+                FirstScore[i] *= penalty
+    
+            # ST遅い×F持ちはさらに弱く
+            if AvgST[i] > 0.14:
+                FirstScore[i] *= 0.95
     
     # ===== 2着スコア =====
     SecondScore = [
