@@ -3162,17 +3162,14 @@ if st.button("計算"):
             if total2<=0:
                 total2=1e-6
 
-            second_probs=[s/total2 for s in second_scores]
+            second_probs = [s/total2 for s in second_scores]
 
-            for idx_b,b in enumerate(remain1):
+            for b, P_second in zip(remain1, second_probs):
+            
                 if Active[b] == 0:
                     continue
-
-                P_second = second_probs[idx_b]
-
-                remain2=[i for i in remain1 if i!=b and Active[i]==1]
-                
-          
+            
+                remain2 = [i for i in remain1 if i != b and Active[i] == 1] 
 
                 third_scores = [
                 ThirdAdj[i] if Active[i]==1 else 0
@@ -3276,7 +3273,7 @@ if st.button("計算"):
                     
                         for b, P_second in zip(remain1, second_probs):
                     
-                            P_second = second_probs[idx_b]
+                
                     
                             remain2 = [i for i in remain1 if i != b and Active[i]==1]
                     
@@ -3286,7 +3283,7 @@ if st.button("計算"):
                     
                             for c, P_third in zip(remain2, third_probs):
                     
-                                P_third = third_probs[idx_c]
+                               
                     
                                 p = P_first * P_second * P_third
                     
