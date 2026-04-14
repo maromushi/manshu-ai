@@ -3426,6 +3426,22 @@ if st.button("計算"):
     
     sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
 
+    # ===============================
+    # ★ 見送り判定（これだけ入れろ）
+    # ===============================
+    SkipFlag = False
+    
+    # 条件①②③
+    if (
+        AttackSuccess == 0
+        and NoAttackProb > 0.55
+    ):
+        # 上位5個の中に「3号艇以上の頭」があるか
+        for (a,b,c,p) in sorted_final[:5]:
+            if a >= 3:
+                SkipFlag = True
+                break
+
     top_head = P1.index(max(P1))
     
     marked = []
@@ -3569,6 +3585,9 @@ if st.button("計算"):
         f"{a}-{b}-{c} ({round(p,4)}) {mark}" if mark != "" else f"{a}-{b}-{c} ({round(p,4)})"
         for (mark,a,b,c,p) in marked
     ])
+    
+    if SkipFlag:
+        st.markdown("## ⚠ 見送りレース")
     
     st.markdown("### ◎ 本線")
     for a,b,c in main:
