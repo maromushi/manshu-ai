@@ -945,12 +945,12 @@ if st.button("計算"):
         for i in range(6):
         
             val = (
-                0.30*Start
-                +0.22*Skill
-                +0.13*Engine
-                +0.13*Foot
-                +0.12*Turn
-                +0.10*LaneWin
+                0.30*Start[i]
+                +0.22*Skill[i]
+                +0.13*Engine[i]
+                +0.13*Foot[i]
+                +0.12*Turn[i]
+                +0.10*LaneWin[i]
             )
             
             # ===============================
