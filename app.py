@@ -3571,71 +3571,38 @@ if st.button("計算"):
     Final = [(k[0],k[1],k[2],v) for k,v in unique.items()]
     
     Final.sort(key=lambda x: x[3], reverse=True)
-    
-    
-            
-    
-    
-    
                     
     # ===============================
-    # ★ マーク付け（完成形）
+    # ★ マーク付け（修正版）
     # ===============================
     
-    sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
-    
-
-    top_head = P1.index(max(P1))
-    
-    marked = []
+    top_p = sorted_final[0][4]
     
     for i, (a,b,c,p) in enumerate(sorted_final):
-        
+    
         head = a - 1
-
+    
+        # ◎（頭本命）
         if i == 0:
             mark = "◎"
-        
-        elif i <= 2:
+    
+        # ○（本線：確率で決める）
+        elif p >= top_p * 0.75:
             mark = "○"
-        
-        # ▲
+    
+        # ▲（展開系）
         elif (
-            i <= 5
-            and head >= 3
-            and (
-                (
-                    AttackWeak == 1
-                    and AttackSuccess == 0
-                    and 0.03 < DoubleAttackScore < 0.08
-                )
-                or (
-                    AttackSuccess == 1
-                )
-            )
+            head >= 2
+            and (AttackWeak == 1 or DoubleAttackScore > 0.05)
         ):
             mark = "▲"
-        
-        # △
-        elif (
-            i <= 6
-            and (
-                (
-                    b >= 4
-                    and Start[b-1] >= max(Start) - 0.02
-                )
-                or (
-                    a == 1
-                    and InsideSurvival[0] < 0.50
-                    and DoubleAttackScore > 0.05
-                )
-            )
-        ):
+    
+        # △（ヒモ）
+        elif p >= 0.05:
             mark = "△"
-        
+    
         else:
             mark = ""
-    
         # ★これ絶対必要
         marked.append((mark,a,b,c,p))
         
