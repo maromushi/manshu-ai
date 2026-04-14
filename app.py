@@ -3187,7 +3187,7 @@ if st.button("計算"):
                     if Active[c] == 0:
                         continue
 
-                    P_third = third_probs[idx_c]
+                
 
                     # ===============================
                     # ★ 頭ごとに世界を分離（本質版）
@@ -3303,22 +3303,7 @@ if st.button("計算"):
                     
                                 results.append((boats[a],boats[b],boats[c],p))
                     
-                    # ★ 最終フィルター（絶対防御）
-                    if (
-                        Active[a] == 0
-                        or Active[b] == 0
-                        or Active[c] == 0
-                    ):
-                        continue
-                        
-                    if (
-                        boats[a] <= 0
-                        or boats[b] <= 0
-                        or boats[c] <= 0
-                    ):
-                        continue
-                    
-                    results.append((boats[a],boats[b],boats[c],p))
+        
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
                 
