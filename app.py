@@ -17,7 +17,7 @@ def normalize(values):
     mx = max(valid)
 
     if mx-mn < 1e-6:
-        return [0.5 if v is not None else 0 for v in values]
+        return [0.5 for _ in values]
 
     return [
        ((v-mn)/(mx-mn)) if v is not None else 0
@@ -307,7 +307,7 @@ if st.button("計算"):
         WinScore=normalize(WR)
         PlaceScore=normalize(PR)
 
-        SkillRaw=[WinScore[i] for i in range(6)]
+        Skill=[0.7*WinScore[i] + 0.3*PlaceScore[i] for i in range(6)]
         Skill=SkillRaw 
         
         # ===============================
@@ -457,7 +457,7 @@ if st.button("計算"):
 
             # A1は軽減だけ（打ち消さない）
             if CLS[i] == "A1":
-                penalty = max(penalty, 0.85)
+                Start[i] *= 0.95
             
             Start[i] *= penalty
     
@@ -1793,7 +1793,7 @@ if st.button("計算"):
             )
             
             if NoAttackFlag == 1 and i >= 4:
-                value *= 0.60
+                value *= 0.75
             # ★ ここ追加（超重要）
             
 
@@ -1915,10 +1915,10 @@ if st.button("計算"):
                 FS_mult[4] = 0.10
                 FS_mult[5] = 0.05
                 
-        FinalFirst = [max(FirstScore[i]*FS_mult[i], 0.02) for i in range(6)]
+        
             
         #デバック
-        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
+        FinalFirst = [max(FirstScore[i]*FS_mult[i], 0.02) for i in range(6)]
 
         
         debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
@@ -3318,7 +3318,7 @@ if st.button("計算"):
     tmp = []
     for a,b,c,p in results:
     
-        if NoAttackProb > 0.75 and a >= 4:
+        if NoAttackProb > 0.85 and a >= 4:
             continue
     
         tmp.append((a,b,c,p))
