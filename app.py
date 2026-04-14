@@ -1930,6 +1930,14 @@ if st.button("計算"):
             (FinalFirst[i]/TotalFirst) if Active[i]==1 else 0
             for i in range(6)
         ]
+        
+        # ★ 無風時：2の頭抑制（完成版）
+        if NoAttackFlag == 1:
+            if (
+                P1[0] > P1[1]
+                and InsideSurvival[0] >= 0.55
+            ):
+                P1[1] *= 0.85
 
         # ===============================
         # トップ集中ブースト
@@ -3540,21 +3548,21 @@ if st.button("計算"):
     # ===============================
     # ★ 買い方分類（これに変更）
     # ===============================
-    
+
     main = []
     sub = []
     hole = []
     insurance = []
     
-    for i, (mark,a,b,c,p) in enumerate(marked):
+    for (mark,a,b,c,p) in marked:
     
-        if i <= 2:
+        if mark == "◎":
             main.append((a,b,c))
     
-        elif i <= 5:
+        elif mark == "○":
             sub.append((a,b,c))
     
-        elif a >= 4 or p < 0.03:
+        elif mark in ["▲","△"]:
             hole.append((a,b,c))
     
         if a == 1:
