@@ -3238,6 +3238,15 @@ if st.button("計算"):
     DoubleAttackScore = DAS2
     InsideSurvival = IS2
     
+    AttackWeak = 0
+    AttackSuccess = 0
+    
+    for name, val in debug_log_ex:
+        if name == "AttackWeak":
+            AttackWeak = val
+        if name == "AttackSuccess":
+            AttackSuccess = val
+    
     # ===============================
     # ★ 無風確率（ここ追加）
     # ===============================
@@ -3392,17 +3401,34 @@ if st.button("計算"):
     if SkipFlag:
         max_bets = 0
     
-    elif NoAttackProb > 0.70:
-        max_bets = 4
-    
-    elif DoubleAttackScore < 0.08:
-        max_bets = 6
-    
-    elif DoubleAttackScore < 0.13:
-        max_bets = 8
-    
     else:
-        max_bets = 12
+    
+        # 超集中（ガチ本線）
+        if Top3 > 0.55:
+            max_bets = 3
+    
+        # 本線寄り
+        elif Top5 > 0.65:
+            max_bets = 5
+    
+        # 中間
+        elif Top5 > 0.55:
+            max_bets = 7
+    
+        # 荒れ寄り
+        elif Top1 < 0.20:
+            max_bets = 10
+    
+        # デフォ
+        else:
+            max_bets = 8
+        
+        
+    Top1 = results[0][3] if len(results) > 0 else 0
+    Top3 = sum(r[3] for r in results[:3])
+    Top5 = sum(r[3] for r in results[:5])
+    
+    
 
 
     # =====================================
@@ -3437,15 +3463,10 @@ if st.button("計算"):
     
     Final.sort(key=lambda x: x[3], reverse=True)
     
-    AttackWeak = 0
-    AttackSuccess = 0
     
-    for name, val in debug_log_ex:
-        if name == "AttackWeak":
-            AttackWeak = val
-        if name == "AttackSuccess":
-            AttackSuccess = val
             
+    
+    
     
                     
     # ===============================
@@ -3586,6 +3607,7 @@ if st.button("計算"):
         
     debug_text.append("")
     debug_text.append("---- run_ai debug ----")
+    for name, val in debug_log_ex:
         debug_text.append(f"{name}: {val}")
     debug_text.append(f"NoAttackProb: {round(NoAttackProb,4)}")
         
