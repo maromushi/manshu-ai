@@ -2224,38 +2224,53 @@ if st.button("計算"):
         
         
         # ===============================
-        # ★ 外の暴走防止（最重要）
+        # ★ 外の暴走防止（修正版）
         # ===============================
         for i in range(4,6):
-            
+        
             if NoAttackFlag == 1:
                 continue
-
+        
+            # ===============================
+            # ① 弱展開は外を強制的に削る
+            # ===============================
+            if DoubleAttackScore < 0.06:
+                SecondAdj[i] *= 0.60
+                continue
+        
+            if DoubleAttackScore < 0.09:
+                SecondAdj[i] *= 0.70
+                continue
+        
+            # ===============================
+            # ② それ以上だけ条件評価
+            # ===============================
             valid = (
                 (Foot[i] >= 0.50 or CPI[i] >= 0.48)
                 and Start[i] >= Start[3] - 0.02
             )
-            
-            if strong_attack:
+        
+            if DoubleAttackScore > STRONG:
                 if valid:
                     SecondAdj[i] *= 1.05
                 else:
                     SecondAdj[i] *= 0.85
-            
-            elif mid_attack and NoAttackFlag == 0:
+        
+            else:
                 if valid:
                     SecondAdj[i] *= 1.00
                 else:
                     SecondAdj[i] *= 0.88
-            
-            else:
-                SecondAdj[i] *= 0.90
-                
+        
+        
+        # ===============================
+        # ★ 6の特例（強展開のみ）
+        # ===============================
         if (
             DoubleAttackScore > STRONG
             and Start[5] == max(Start)
-            and CPI[5] > 0.45   # ←ここ上げろ
-            and Foot[5] > 0.48  # ←これ追加
+            and CPI[5] > 0.45
+            and Foot[5] > 0.48
         ):
             SecondAdj[5] *= 1.15
                 
