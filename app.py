@@ -744,6 +744,40 @@ if st.button("計算"):
             NoAttackFlag = 1
         else:
             NoAttackFlag = 0
+        
+        # ===============================
+        # ★ 無風：流れ込みモデル（最重要）
+        # ===============================
+        if NoAttackFlag == 1:
+        
+            # -----------------------------
+            # ① センターST主導
+            # -----------------------------
+            center_max = max(Start[2:4])
+        
+            for i in range(2,4):  # 3・4コース
+                
+                if Start[i] >= center_max - 0.01:
+                    SecondAdj[i] *= 1.25
+                    ThirdAdj[i]  *= 1.25
+        
+            # -----------------------------
+            # ② 内が弱いと席ズレ
+            # -----------------------------
+            if Start[1] < Start[2] - 0.02:
+                SecondAdj[2] *= 1.15
+        
+            if Start[2] < Start[3] - 0.02:
+                SecondAdj[3] *= 1.15
+        
+            # -----------------------------
+            # ③ 外連動（隣がついてくる）
+            # -----------------------------
+            for i in range(2,5):
+        
+                if Start[i] >= max(Start) - 0.015:
+                    if i+1 < 6:
+                        ThirdAdj[i+1] *= 1.20
             
         # ★ 無風時のズレ制御（ここに入れる）
         if NoAttackFlag == 1:
@@ -2112,14 +2146,36 @@ if st.button("計算"):
             SecondAdj[5] *= 0.55
             ThirdAdj[5]  *= 0.45
             
+            # ===============================
+            # ★ 無風：バランス調整（修正版）
+            # ===============================
+            if NoAttackFlag == 1:
+            
+                # -----------------------------
+                # ① インがちゃんと強い時だけ2を残す
+                # -----------------------------
+                if InsideSurvival[0] >= 0.60 and Start[1] >= Start[0] - 0.02:
+                    SecondAdj[1] *= 1.08
+            
+                # -----------------------------
+                # ② 3は「条件付き」で残す
+                # -----------------------------
+                if (
+                    CPI[2] >= 0.48
+                    and Start[2] >= Start[1] - 0.01
+                ):
+                    SecondAdj[2] *= 1.05
+            
+                # -----------------------------
+                # ③ ただしセンターST最速なら優先はそっち
+                # -----------------------------
+                if max(Start[2:4]) >= max(Start) - 0.01:
+                    SecondAdj[1] *= 0.95
+                    SecondAdj[2] *= 0.97
+            
             for i in range(4,6):
-                SecondAdj[i] *= 0.60
-                    
-        
-            # 外の暴走防止
-            for i in range(3,6):
-                SecondAdj[i] = min(SecondAdj[i], SecondScore[i]*0.55)
-                ThirdAdj[i]  = min(ThirdAdj[i], 0.60)
+                SecondAdj[i] *= 0.75
+                
                 
             # ★ 6だけ追加で止める（これ重要）
             SecondAdj[5] = min(SecondAdj[5], SecondScore[5]*0.35)
@@ -3212,87 +3268,21 @@ if st.button("計算"):
                     # ===============================
                     
                     for a in range(6):
-                    
+
                         if Active[a] == 0:
                             continue
-                            
-                        # ===============================
-                        # ★ 頭優先ロック（世界内）
-                        # ===============================
-                        top = max(P1)
-                        
-                        if P1[a] < top * 0.90:
+                    
+                        # 頭優先ロック
+                        if P1[a] < max(P1) * 0.90:
                             continue
                     
                         P_first = P1[a]
                     
-                        # -----------------------------
-                        # ★ 頭ごとのコピー（重要）
-                        # -----------------------------
                         SecondAdj_local = SecondAdj.copy()
                         ThirdAdj_local  = ThirdAdj.copy()
                     
-                        # ===============================
-                        # ★ 頭別ロジック（ここが本体）
-                        # ===============================
+                        # ★ 頭別ロジック（ここ重要）
                     
-                        # ■ 1頭（イン逃げ世界）
-                        if a == 0:
-                    
-                            # 2・3が自然に残る
-                            SecondAdj_local[1] *= 1.10
-                            SecondAdj_local[2] *= 1.05
-                    
-                            # 外は抑える
-                            for i in range(3,6):
-                                SecondAdj_local[i] *= 0.85
-                                ThirdAdj_local[i]  *= 0.90
-                    
-                        # ■ 2頭（差し世界）
-                        elif a == 1:
-                    
-                            # 1は高確率で残る
-                            SecondAdj_local[0] *= 1.10
-                            ThirdAdj_local[0]  *= 1.15
-                    
-                            # 3も連動
-                            SecondAdj_local[2] *= 1.05
-                    
-                        # ■ 3頭（まくり差し）
-                        elif a == 2:
-                    
-                            # 内が崩れる
-                            SecondAdj_local[0] *= 0.85
-                            SecondAdj_local[1] *= 0.90
-                    
-                            # 外が流れる
-                            for i in range(3,6):
-                                SecondAdj_local[i] *= 1.08
-                                ThirdAdj_local[i]  *= 1.10
-                    
-                        # ■ 4頭（展開）
-                        elif a == 3:
-                    
-                            for i in range(0,2):
-                                SecondAdj_local[i] *= 0.80
-                    
-                            for i in range(4,6):
-                                SecondAdj_local[i] *= 1.10
-                                ThirdAdj_local[i]  *= 1.12
-                    
-                        # ■ 5・6頭（万舟ゾーン）
-                        else:
-                    
-                            for i in range(0,3):
-                                SecondAdj_local[i] *= 0.75
-                    
-                            ThirdAdj_local[a] *= 1.10
-                            
-                        
-                    
-                        # ===============================
-                        # ★ 2着確率（再計算）
-                        # ===============================
                         remain1 = [i for i in range(6) if i != a and Active[i]==1]
                     
                         second_scores = [SecondAdj_local[i] for i in remain1]
@@ -3300,8 +3290,6 @@ if st.button("計算"):
                         second_probs = [s/total2 for s in second_scores]
                     
                         for b, P_second in zip(remain1, second_probs):
-                    
-                
                     
                             remain2 = [i for i in remain1 if i != b and Active[i]==1]
                     
@@ -3311,25 +3299,12 @@ if st.button("計算"):
                     
                             for c, P_third in zip(remain2, third_probs):
                     
-                               
-                    
                                 p = P_first * P_second * P_third
                     
-                                if (
-                                    Active[a] == 0
-                                    or Active[b] == 0
-                                    or Active[c] == 0
-                                ):
+                                if boats[a] <= 0 or boats[b] <= 0 or boats[c] <= 0:
                                     continue
                     
-                                if (
-                                    boats[a] <= 0
-                                    or boats[b] <= 0
-                                    or boats[c] <= 0
-                                ):
-                                    continue
-                    
-                                results.append((boats[a],boats[b],boats[c],p))
+                                results.append((boats[a], boats[b], boats[c], p))
                     
         
 
