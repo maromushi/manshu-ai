@@ -3422,6 +3422,9 @@ if st.button("計算"):
         # デフォ
         else:
             max_bets = 8
+            
+    if not SkipFlag:
+        max_bets = int(max_bets * (0.9 + 0.6 * ChaosScore))
         
         
     Top1 = results[0][3] if len(results) > 0 else 0
