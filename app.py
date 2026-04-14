@@ -3301,7 +3301,6 @@ if st.button("計算"):
     for a,b,c,p in results:
     
         if NoAttackProb > 0.90 and a >= 5:
-    continue
             continue
     
         tmp.append((a,b,c,p))
