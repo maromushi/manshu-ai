@@ -3458,43 +3458,29 @@ if st.button("計算"):
         marked.append((mark,a,b,c,p))
         
     # ===============================
-    # ★ 資金配分（ここに追加）
+    # ★ 買い方分類（これに変更）
     # ===============================
     
-    total_budget = 10000
-    
-    bets = []
+    main = []
+    sub = []
+    hole = []
+    insurance = []
     
     for i, (mark,a,b,c,p) in enumerate(marked):
     
         if i <= 2:
-            weight = 0.22
+            main.append((a,b,c))
+    
         elif i <= 5:
-            weight = 0.12
+            sub.append((a,b,c))
+    
         elif a >= 4 or p < 0.03:
-            weight = 0.06
-        else:
-            weight = 0.08
+            hole.append((a,b,c))
     
-        bets.append((a,b,c,weight))
+        if a == 1:
+            insurance.append((a,b,c))
     
-    # 保険（イン）
-    insurance = [(a,b,c) for (mark,a,b,c,p) in marked if a == 1][:3]
-    
-    for a,b,c in insurance:
-        bets.append((a,b,c,0.05))
-    
-    # 正規化して金額化
-    total_weight = sum(w for _,_,_,w in bets)
-    
-    bet_text = []
-    
-    for a,b,c,w in bets:
-        amt = int((w / total_weight) * total_budget / 100) * 100
-        if amt >= 100:
-            bet_text.append(f"{a}-{b}-{c} ：{amt}円")
-    
-    bet_output = "\n".join(bet_text)
+    insurance = insurance[:3]
     
     # ===============================
     # ★ 出目＋デバッグ（完全コピペ）
@@ -3561,10 +3547,21 @@ if st.button("計算"):
         for (mark,a,b,c,p) in marked
     ])
     
-    st.markdown("### 💰 買い方")
-
-    for line in bet_output.split("\n"):
-        st.write(line)
+    st.markdown("### ◎ 本線")
+    for a,b,c in main:
+        st.write(f"{a}-{b}-{c}")
+    
+    st.markdown("### ○ 押さえ")
+    for a,b,c in sub:
+        st.write(f"{a}-{b}-{c}")
+    
+    st.markdown("### ▲ ヒモ荒れ")
+    for a,b,c in hole:
+        st.write(f"{a}-{b}-{c}")
+    
+    st.markdown("### 保険（イン）")
+    for a,b,c in insurance:
+        st.write(f"{a}-{b}-{c}")
     
     st.markdown("### ▼ 買い目")
     
