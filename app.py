@@ -2014,40 +2014,44 @@ if st.button("計算"):
         ThirdAdj = [1.0]*6
         
         # ===============================
-        # ★ 無風：流れ込みモデル（最重要）
+        # ★ 無風：位置逆転モデル（最終形）
         # ===============================
         if NoAttackFlag == 1:
         
-            # -----------------------------
-            # ① センターST主導
-            # -----------------------------
-            center_max = max(Start[2:4])
+            for i in range(1,6):
         
-            for i in range(2,4):  # 3・4コース
-                
-                if Start[i] >= center_max - 0.01:
-                    SecondAdj[i] *= 1.25
-                    ThirdAdj[i]  *= 1.25
+                diff = Start[i] - Start[i-1]
+        
+                # -----------------------------
+                # ① 明確な逆転（強）
+                # -----------------------------
+                if diff > 0.03:
+                    # 後ろが勝ってる
+                    SecondAdj[i] *= 1.15
+                    ThirdAdj[i]  *= 1.12
+        
+                    # 前が負けてる
+                    SecondAdj[i-1] *= 0.75
+                    ThirdAdj[i-1]  *= 0.80
+        
+                # -----------------------------
+                # ② 軽い逆転（中）
+                # -----------------------------
+                elif diff > 0.02:
+                    SecondAdj[i] *= 1.08
+                    ThirdAdj[i]  *= 1.05
+        
+                    SecondAdj[i-1] *= 0.85
+                    ThirdAdj[i-1]  *= 0.90
         
             # -----------------------------
-            # ② 内が弱いと席ズレ
+            # ③ 無風の外抑制（最低限）
             # -----------------------------
-            if Start[1] < Start[2] - 0.02:
-                SecondAdj[2] *= 1.15
+            for i in range(4,6):
+                SecondAdj[i] *= 0.85
+                ThirdAdj[i]  *= 0.90
         
-            if Start[2] < Start[3] - 0.02:
-                SecondAdj[3] *= 1.15
-        
-            # -----------------------------
-            # ③ 外連動（隣がついてくる）
-            # -----------------------------
-            for i in range(2,5):
-        
-                if Start[i] >= max(Start) - 0.015:
-                    if i+1 < 6:
-                        ThirdAdj[i+1] *= 1.20
-            
-        
+    
         # ===============================
         # ★ 2着の暴走防止（本質）
         # ===============================
@@ -2730,17 +2734,75 @@ if st.button("計算"):
             if Active[a] == 0:
                 continue
         
-            P_first = P1[a]
-            
-            attack_center = max(range(1,6), key=lambda x: AttackIndex[x])
-
-            InsideResist = (
-                InsideSurvival[0]
-                - 0.6 * DoubleAttackScore
-                - 0.6 * max(0, Start[attack_center] - Start[0])
-            )
+            if P1[a] < max(P1) * 0.90:
+                continue
         
-            ThirdScoreBase = ThirdScore.copy()
+            P_first = P1[a]
+        
+            # ★ ここが本質
+            SecondAdj_local = SecondAdj.copy()
+            ThirdAdj_local  = ThirdAdj.copy()
+        
+            # ===============================
+            # ★ 頭別ロジック
+            # ===============================
+        
+            if a == 0:
+                SecondAdj_local[1] *= 1.10
+                SecondAdj_local[2] *= 1.05
+                for i in range(3,6):
+                    SecondAdj_local[i] *= 0.85
+                    ThirdAdj_local[i]  *= 0.90
+        
+            elif a == 1:
+                SecondAdj_local[0] *= 1.10
+                ThirdAdj_local[0]  *= 1.15
+                SecondAdj_local[2] *= 1.05
+        
+            elif a == 2:
+                SecondAdj_local[0] *= 0.85
+                SecondAdj_local[1] *= 0.90
+                for i in range(3,6):
+                    SecondAdj_local[i] *= 1.08
+                    ThirdAdj_local[i]  *= 1.10
+        
+            elif a == 3:
+                for i in range(0,2):
+                    SecondAdj_local[i] *= 0.80
+                for i in range(4,6):
+                    SecondAdj_local[i] *= 1.10
+                    ThirdAdj_local[i]  *= 1.12
+        
+            else:
+                for i in range(0,3):
+                    SecondAdj_local[i] *= 0.75
+                ThirdAdj_local[a] *= 1.10
+        
+            # ===============================
+            # 2着
+            # ===============================
+            remain1 = [i for i in range(6) if i != a and Active[i]==1]
+        
+            second_scores = [SecondAdj_local[i] for i in remain1]
+            total2 = sum(second_scores) if sum(second_scores) > 0 else 1e-6
+            second_probs = [s/total2 for s in second_scores]
+        
+            for b, P_second in zip(remain1, second_probs):
+        
+                remain2 = [i for i in remain1 if i != b and Active[i]==1]
+        
+                third_scores = [ThirdAdj_local[i] for i in remain2]
+                total3 = sum(third_scores) if sum(third_scores) > 0 else 1e-6
+                third_probs = [s/total3 for s in third_scores]
+        
+                for c, P_third in zip(remain2, third_probs):
+        
+                    p = P_first * P_second * P_third
+        
+                    if boats[a] <= 0 or boats[b] <= 0 or boats[c] <= 0:
+                        continue
+        
+                    results.append((boats[a], boats[b], boats[c], p))
             
             # ===============================
             # ★ 攻め成立判定
@@ -3262,52 +3324,15 @@ if st.button("計算"):
 
                     if Active[c] == 0:
                         continue
+                        
+                    p = P_first * P_second * P_third
+                    
+                    if boats[a] <= 0 or boats[b] <= 0 or boats[c] <= 0:
+                        continue
+                    
+                    results.append((boats[a], boats[b], boats[c], p))
 
-                
-
-                    # ===============================
-                    # ★ 頭ごとに世界を分離（本質版）
-                    # ===============================
-                    
-                    for a in range(6):
-
-                        if Active[a] == 0:
-                            continue
-                    
-                        # 頭優先ロック
-                        if P1[a] < max(P1) * 0.90:
-                            continue
-                    
-                        P_first = P1[a]
-                    
-                        SecondAdj_local = SecondAdj.copy()
-                        ThirdAdj_local  = ThirdAdj.copy()
-                    
-                        # ★ 頭別ロジック（ここ重要）
-                    
-                        remain1 = [i for i in range(6) if i != a and Active[i]==1]
-                    
-                        second_scores = [SecondAdj_local[i] for i in remain1]
-                        total2 = sum(second_scores) if sum(second_scores) > 0 else 1e-6
-                        second_probs = [s/total2 for s in second_scores]
-                    
-                        for b, P_second in zip(remain1, second_probs):
-                    
-                            remain2 = [i for i in remain1 if i != b and Active[i]==1]
-                    
-                            third_scores = [ThirdAdj_local[i] for i in remain2]
-                            total3 = sum(third_scores) if sum(third_scores) > 0 else 1e-6
-                            third_probs = [s/total3 for s in third_scores]
-                    
-                            for c, P_third in zip(remain2, third_probs):
-                    
-                                p = P_first * P_second * P_third
-                    
-                                if boats[a] <= 0 or boats[b] <= 0 or boats[c] <= 0:
-                                    continue
-                    
-                                results.append((boats[a], boats[b], boats[c], p))
-                    
+        
         
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
