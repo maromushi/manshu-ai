@@ -945,12 +945,12 @@ if st.button("計算"):
         for i in range(6):
         
             val = (
-                0.30*Start[i]
-                +0.22*Skill[i]
-                +0.13*Engine[i]
-                +0.13*Foot[i]
-                +0.12*Turn[i]
-                +0.10*LaneWin[i]
+                0.30*Start
+                +0.22*Skill
+                +0.13*Engine
+                +0.13*Foot
+                +0.12*Turn
+                +0.10*LaneWin
             )
             
             # ===============================
@@ -2385,6 +2385,7 @@ if st.button("計算"):
             and Fcount[1] == 0 
             and NoAttackFlag == 0
             and DoubleAttackScore > WEAK
+            and NoAttackFlag == 0
         ):
             SecondAdj[1] *= 1.10
             
@@ -3300,6 +3301,7 @@ if st.button("計算"):
     for a,b,c,p in results:
     
         if NoAttackProb > 0.90 and a >= 5:
+    continue
             continue
     
         tmp.append((a,b,c,p))
@@ -3455,6 +3457,45 @@ if st.button("計算"):
     
         # ★これ絶対必要
         marked.append((mark,a,b,c,p))
+        
+    # ===============================
+    # ★ 資金配分（ここに追加）
+    # ===============================
+    
+    total_budget = 10000
+    
+    bets = []
+    
+    for i, (mark,a,b,c,p) in enumerate(marked):
+    
+        if i <= 2:
+            weight = 0.22
+        elif i <= 5:
+            weight = 0.12
+        elif a >= 4 or p < 0.03:
+            weight = 0.06
+        else:
+            weight = 0.08
+    
+        bets.append((a,b,c,weight))
+    
+    # 保険（イン）
+    insurance = [(a,b,c) for (mark,a,b,c,p) in marked if a == 1][:3]
+    
+    for a,b,c in insurance:
+        bets.append((a,b,c,0.05))
+    
+    # 正規化して金額化
+    total_weight = sum(w for _,_,_,w in bets)
+    
+    bet_text = []
+    
+    for a,b,c,w in bets:
+        amt = int((w / total_weight) * total_budget / 100) * 100
+        if amt >= 100:
+            bet_text.append(f"{a}-{b}-{c} ：{amt}円")
+    
+    bet_output = "\n".join(bet_text)
     
     # ===============================
     # ★ 出目＋デバッグ（完全コピペ）
@@ -3521,7 +3562,13 @@ if st.button("計算"):
         for (mark,a,b,c,p) in marked
     ])
     
+    st.markdown("### 💰 買い方")
+
+    for line in bet_output.split("\n"):
+        st.write(line)
+    
     st.markdown("### ▼ 買い目")
+    
 
     for line in result_text.split("\n"):
         st.write(line)
