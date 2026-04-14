@@ -735,11 +735,6 @@ if st.button("計算"):
         debug_log.append(("DAS", round(DoubleAttackScore,4)))
         debug_log.append(("WEAK/MID/STRONG", (WEAK, MID, STRONG)))
         
-        # ★ 6の最低制限（重要）
-        if Fcount[5] >= 2 and Start[5] < Start[3]:
-            SecondAdj[5] *= 0.6
-            ThirdAdj[5] *= 0.6
-        
         # ★ 無風判定（最重要）
         if (
             AttackSuccess == 0
@@ -1978,6 +1973,13 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        
+        # ===============================
+        # ★ 6の最低制限（ここに入れる）
+        # ===============================
+        if Fcount[5] >= 2 and Start[5] < Start[3]:
+            SecondAdj[5] *= 0.6
+            ThirdAdj[5] *= 0.6
         
         # ===============================
         # ★ 攻め失敗
