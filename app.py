@@ -3192,7 +3192,119 @@ if st.button("計算"):
 
                     P_third = third_probs[idx_c]
 
-                    p = P_first * P_second * P_third
+                    # ===============================
+                    # ★ 頭ごとに世界を分離（本質版）
+                    # ===============================
+                    
+                    for a in range(6):
+                    
+                        if Active[a] == 0:
+                            continue
+                    
+                        P_first = P1[a]
+                    
+                        # -----------------------------
+                        # ★ 頭ごとのコピー（重要）
+                        # -----------------------------
+                        SecondAdj_local = SecondAdj.copy()
+                        ThirdAdj_local  = ThirdAdj.copy()
+                    
+                        # ===============================
+                        # ★ 頭別ロジック（ここが本体）
+                        # ===============================
+                    
+                        # ■ 1頭（イン逃げ世界）
+                        if a == 0:
+                    
+                            # 2・3が自然に残る
+                            SecondAdj_local[1] *= 1.10
+                            SecondAdj_local[2] *= 1.05
+                    
+                            # 外は抑える
+                            for i in range(3,6):
+                                SecondAdj_local[i] *= 0.85
+                                ThirdAdj_local[i]  *= 0.90
+                    
+                        # ■ 2頭（差し世界）
+                        elif a == 1:
+                    
+                            # 1は高確率で残る
+                            SecondAdj_local[0] *= 1.25
+                            ThirdAdj_local[0]  *= 1.15
+                    
+                            # 3も連動
+                            SecondAdj_local[2] *= 1.05
+                    
+                        # ■ 3頭（まくり差し）
+                        elif a == 2:
+                    
+                            # 内が崩れる
+                            SecondAdj_local[0] *= 0.85
+                            SecondAdj_local[1] *= 0.90
+                    
+                            # 外が流れる
+                            for i in range(3,6):
+                                SecondAdj_local[i] *= 1.08
+                                ThirdAdj_local[i]  *= 1.10
+                    
+                        # ■ 4頭（展開）
+                        elif a == 3:
+                    
+                            for i in range(0,2):
+                                SecondAdj_local[i] *= 0.80
+                    
+                            for i in range(4,6):
+                                SecondAdj_local[i] *= 1.10
+                                ThirdAdj_local[i]  *= 1.12
+                    
+                        # ■ 5・6頭（万舟ゾーン）
+                        else:
+                    
+                            for i in range(0,3):
+                                SecondAdj_local[i] *= 0.75
+                    
+                            ThirdAdj_local[a] *= 1.10
+                    
+                        # ===============================
+                        # ★ 2着確率（再計算）
+                        # ===============================
+                        remain1 = [i for i in range(6) if i != a and Active[i]==1]
+                    
+                        second_scores = [SecondAdj_local[i] for i in remain1]
+                        total2 = sum(second_scores) if sum(second_scores) > 0 else 1e-6
+                        second_probs = [s/total2 for s in second_scores]
+                    
+                        for idx_b, b in enumerate(remain1):
+                    
+                            P_second = second_probs[idx_b]
+                    
+                            remain2 = [i for i in remain1 if i != b and Active[i]==1]
+                    
+                            third_scores = [ThirdAdj_local[i] for i in remain2]
+                            total3 = sum(third_scores) if sum(third_scores) > 0 else 1e-6
+                            third_probs = [s/total3 for s in third_scores]
+                    
+                            for idx_c, c in enumerate(remain2):
+                    
+                                P_third = third_probs[idx_c]
+                    
+                                p = P_first * P_second * P_third
+                    
+                                if (
+                                    Active[a] == 0
+                                    or Active[b] == 0
+                                    or Active[c] == 0
+                                ):
+                                    continue
+                    
+                                if (
+                                    boats[a] <= 0
+                                    or boats[b] <= 0
+                                    or boats[c] <= 0
+                                ):
+                                    continue
+                    
+                                results.append((boats[a],boats[b],boats[c],p))
                     
                     # ★ 最終フィルター（絶対防御）
                     if (
