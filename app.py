@@ -3575,40 +3575,38 @@ if st.button("計算"):
     # ===============================
     # ★ マーク付け（修正版）
     # ===============================
+    
     st.write(sorted_final[0])
     
-    if len(sorted_final) > 0:
-        top_p = sorted_final[0][3]
+    if len(Final) > 0:
+        top_p = Final[0][3]
     else:
         top_p = 0
-            
     
-    for i, (a,b,c,p) in enumerate(sorted_final):
+    marked = []
+    
+    for i, (a,b,c,p) in enumerate(Final):
     
         head = a - 1
     
-        # ◎（頭本命）
         if i == 0:
             mark = "◎"
     
-        # ○（本線：確率で決める）
         elif p >= top_p * 0.75:
             mark = "○"
     
-        # ▲（展開系）
         elif (
             head >= 2
             and (AttackWeak == 1 or DoubleAttackScore > 0.05)
         ):
             mark = "▲"
     
-        # △（ヒモ）
         elif p >= 0.05:
             mark = "△"
     
         else:
             mark = ""
-        # ★これ絶対必要
+    
         marked.append((mark,a,b,c,p))
         
     # ===============================
