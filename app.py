@@ -17,7 +17,7 @@ def normalize(values):
     mx = max(valid)
 
     if mx-mn < 1e-6:
-        return [0.5 for _ in values]
+        return [0.5 + (i-2.5)*0.02 for i in range(len(values))]
 
     return [
        ((v-mn)/(mx-mn)) if v is not None else 0
@@ -308,7 +308,7 @@ if st.button("計算"):
         PlaceScore=normalize(PR)
 
         Skill=[0.7*WinScore[i] + 0.3*PlaceScore[i] for i in range(6)]
-        Skill=SkillRaw 
+        
         
         # ===============================
         # ENGINE
@@ -328,9 +328,10 @@ if st.button("計算"):
                 Engine.append(0)
                 continue
         
-            motor_ratio = M[i] / max(avg_motor,1e-6)
-        
-            factor = 0.90 + 0.10 * motor_ratio
+            # Engineだけ補正
+            motor_ratio = M[i] / (avg_motor + 1e-6)
+            factor = 0.95 + 0.05 * motor_ratio
+         
         
             Engine.append(EngineRaw[i] * factor)
 
@@ -392,10 +393,6 @@ if st.button("計算"):
         
             if Active_local[i]==0:
                 continue
-        
-            motor_ratio = M[i] / max(avg_motor,1e-6)
-        
-            Foot[i] *= (0.90 + 0.10 * motor_ratio)
 
         # 外は展示過信を少し下げる
         for i in range(6):
@@ -445,21 +442,6 @@ if st.button("計算"):
 
             Start[i] *= factor
             
-            # 遅いSTペナルティ（基本）
-
-            penalty = 1.0
-            
-            if ST[i] > 0.20:
-                Start[i] *= 0.90
-
-            if ST[i] > 0.25:
-                Start[i] *= 0.80
-
-            # A1は軽減だけ（打ち消さない）
-            if CLS[i] == "A1":
-                Start[i] *= 0.95
-            
-            Start[i] *= penalty
     
         # ===============================
         # TURN
@@ -765,7 +747,7 @@ if st.button("計算"):
             
         # ★ 無風時のズレ制御（ここに入れる）
         if NoAttackFlag == 1:
-            ZureFlag = False
+            ZureFlag = ZureWeak or ZureSilent
         elif DoubleAttackScore > 0.04:
             ZureFlag = True
             
@@ -963,12 +945,12 @@ if st.button("計算"):
         for i in range(6):
         
             val = (
-                0.35*Start[i]+
-                0.25*Skill[i]+
-                0.15*Engine[i]+
-                0.15*Foot[i]+
-                0.20*Turn[i]+
-                0.15*LaneWin[i]
+                0.30*Start
+                +0.22*Skill
+                +0.13*Engine
+                +0.13*Foot
+                +0.12*Turn
+                +0.10*LaneWin
             )
             
             # ===============================
@@ -3170,7 +3152,7 @@ if st.button("計算"):
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
                 
-    def run_zure_ai(order):
+    def run_zure_ai(order, NoAttackProb):
     
         results, ChaosScore, P1, DAS, IS, debug, Start = run_ai(order)
 
@@ -3267,7 +3249,7 @@ if st.button("計算"):
         final[key]=final.get(key,0)+w_gray*p*0.6
         
     # ズレ万舟を追加
-    res_zure = run_zure_ai(order_ex)
+    res_zure = run_zure_ai(order_ex, NoAttackProb)
     
     for a,b,c,p in res_zure:
         key=(a,b,c)
@@ -3318,7 +3300,8 @@ if st.button("計算"):
     tmp = []
     for a,b,c,p in results:
     
-        if NoAttackProb > 0.85 and a >= 4:
+        if NoAttackProb > 0.90 and a >= 5:
+    continue
             continue
     
         tmp.append((a,b,c,p))
