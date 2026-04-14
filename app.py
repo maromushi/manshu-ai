@@ -3575,8 +3575,13 @@ if st.button("計算"):
     # ===============================
     # ★ マーク付け（修正版）
     # ===============================
+    st.write(sorted_final[0])
     
-    top_p = sorted_final[0][4]
+    if len(sorted_final) > 0:
+        top_p = sorted_final[0][3]
+    else:
+        top_p = 0
+            
     
     for i, (a,b,c,p) in enumerate(sorted_final):
     
