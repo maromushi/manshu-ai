@@ -3274,7 +3274,7 @@ if st.button("計算"):
                         total2 = sum(second_scores) if sum(second_scores) > 0 else 1e-6
                         second_probs = [s/total2 for s in second_scores]
                     
-                        for idx_b, b in enumerate(remain1):
+                        for b, P_second in zip(remain1, second_probs):
                     
                             P_second = second_probs[idx_b]
                     
@@ -3284,7 +3284,7 @@ if st.button("計算"):
                             total3 = sum(third_scores) if sum(third_scores) > 0 else 1e-6
                             third_probs = [s/total3 for s in third_scores]
                     
-                            for idx_c, c in enumerate(remain2):
+                            for c, P_third in zip(remain2, third_probs):
                     
                                 P_third = third_probs[idx_c]
                     
