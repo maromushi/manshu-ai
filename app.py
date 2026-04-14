@@ -3178,10 +3178,6 @@ if st.button("計算"):
     def run_zure_ai(order, NoAttackProb):
     
         results, ChaosScore, P1, DAS, IS, debug, Start = run_ai(order)
-
-        # debugから拾う
-        AttackWeak = 0
-        AttackSuccess = 0
         
         for name, val in debug:
             if name == "AttackWeak":
@@ -3590,7 +3586,6 @@ if st.button("計算"):
         
     debug_text.append("")
     debug_text.append("---- run_ai debug ----")
-    for name, val in debug_log_ex:
         debug_text.append(f"{name}: {val}")
     debug_text.append(f"NoAttackProb: {round(NoAttackProb,4)}")
         
