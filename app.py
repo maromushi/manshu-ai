@@ -3434,8 +3434,10 @@ if st.button("計算"):
     
     if (
         AttackSuccess == 0
-        and NoAttackProb > 0.75
+        and NoAttackProb > 0.90
+        and P1[0] < 0.45   # ←これ追加（最重要）
         and any(a >= 4 for (a,b,c,p) in results[:5])
+        and InsideSurvival[0] < 0.55
     ):
         SkipFlag = True
         
@@ -3448,7 +3450,7 @@ if st.button("計算"):
     # ===============================
     
     if SkipFlag:
-        max_bets = 0
+        max_bets = max(5, max_bets)
     
     else:
     
