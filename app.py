@@ -3434,10 +3434,8 @@ if st.button("計算"):
     
     if (
         AttackSuccess == 0
-        and NoAttackProb > 0.90
-        and P1[0] < 0.45   # ←これ追加（最重要）
+        and NoAttackProb > 0.75
         and any(a >= 4 for (a,b,c,p) in results[:5])
-        and InsideSurvival[0] < 0.55
     ):
         SkipFlag = True
         
@@ -3448,34 +3446,31 @@ if st.button("計算"):
     # ===============================
     # ★ 点数制御（追加）
     # ===============================
-    
+    max_bets = 0
+
     if SkipFlag:
-        max_bets = max(5, max_bets)
+        max_bets = 0
     
     else:
     
-        # 超集中（ガチ本線）
         if Top3 > 0.55:
             max_bets = 3
     
-        # 本線寄り
         elif Top5 > 0.65:
             max_bets = 5
     
-        # 中間
         elif Top5 > 0.55:
             max_bets = 7
     
-        # 荒れ寄り
         elif Top1 < 0.20:
             max_bets = 10
     
-        # デフォ
         else:
             max_bets = 8
-            
-    if not SkipFlag:
+    
         max_bets = int(max_bets * (0.9 + 0.6 * ChaosScore))
+        max_bets = max(5, max_bets)
+        
         
         
     Top1 = results[0][3] if len(results) > 0 else 0
