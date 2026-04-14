@@ -952,6 +952,21 @@ if st.button("計算"):
                 +0.12*Turn[i]
                 +0.10*LaneWin[i]
             )
+            # ★ 外頭の最終制御（ここだけで完結させる）
+
+            if i >= 4:
+            
+                # 強攻めだけ許可
+                if DoubleAttackScore > 0.13 and AttackSuccess == 1:
+                    val *= 0.90
+            
+                # 中攻め（ヒモまで）
+                elif DoubleAttackScore > 0.08:
+                    val *= 0.60
+            
+                # 弱攻め（ほぼ禁止）
+                else:
+                    val *= 0.40
             
             # ===============================
             # ★ グレーゾーンだけ外を少し許可
