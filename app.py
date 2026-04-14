@@ -3206,8 +3206,11 @@ if st.button("計算"):
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
                 
     def run_zure_ai(order, NoAttackProb):
-    
+        
         results, ChaosScore, P1, DAS, IS, debug, Start = run_ai(order)
+        
+        if NoAttackProb > 0.95 and IS[0] > 0.60:
+            return []
         
         for name, val in debug:
             if name == "AttackWeak":
@@ -3224,18 +3227,22 @@ if st.button("計算"):
             if head >= 1:
 
                 if (
-                    P1[0] < 0.48
-                    and AttackSuccess == 0
-                    and (
-                        AttackWeak == 1
-                        or (
-                            DAS > 0.04
-                            and NoAttackProb < 0.75
-                        )
-                    )
-                    and P1[head] > 0.15   # ←これ追加
+                    AttackSuccess == 0
+                    and NoAttackProb > 0.75
+                
+                    # イン弱すぎでも強すぎでもない
+                    and 0.30 < P1[0] < 0.48
+                
+                    # イン耐久も中途半端（ここ重要）
+                    and 0.45 < IS[0] < 0.65
+                
+                    # 2が近い（ズレ条件）
+                    and abs(P1[1] - P1[0]) < 0.15
+                
+                    and P1[head] > 0.15
                 ):
-                    boost = 3.0
+                    boost = 1.6
+                    
                     zure_results.append((a,b,c,p * boost))
             
         return zure_results
