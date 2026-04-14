@@ -3215,6 +3215,14 @@ if st.button("計算"):
                     
                         if Active[a] == 0:
                             continue
+                            
+                        # ===============================
+                        # ★ 頭優先ロック（世界内）
+                        # ===============================
+                        top = max(P1)
+                        
+                        if P1[a] < top * 0.90:
+                            continue
                     
                         P_first = P1[a]
                     
@@ -3244,7 +3252,7 @@ if st.button("計算"):
                         elif a == 1:
                     
                             # 1は高確率で残る
-                            SecondAdj_local[0] *= 1.25
+                            SecondAdj_local[0] *= 1.10
                             ThirdAdj_local[0]  *= 1.15
                     
                             # 3も連動
@@ -3279,6 +3287,8 @@ if st.button("計算"):
                                 SecondAdj_local[i] *= 0.75
                     
                             ThirdAdj_local[a] *= 1.10
+                            
+                        
                     
                         # ===============================
                         # ★ 2着確率（再計算）
