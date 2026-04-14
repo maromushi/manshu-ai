@@ -3182,7 +3182,7 @@ if st.button("計算"):
 
                 third_probs=[s/total3 for s in third_scores]
 
-                for idx_c,c in enumerate(remain2):
+                for c, P_third in zip(remain2, third_probs):
 
                     if Active[c] == 0:
                         continue
