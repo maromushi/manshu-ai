@@ -2197,20 +2197,6 @@ if st.button("計算"):
             else:
                 SecondAdj[5] *= 0.80
         
-        # ===============================
-        # ★ スタート主導の外流入（追加）
-        # ===============================
-        for i in range(4,6):
-        
-            if (
-                NoAttackFlag == 0
-                and Start[i] >= max(Start[1:4]) - 0.01
-                and DoubleAttackScore > STRONG
-            ):
-                # ★ 上げるんじゃなくて下げを無効化
-                # ❌ 削除 or 弱体化
-                SecondAdj[i] = max(SecondAdj[i], SecondScore[i] * 1.01)
-                ThirdAdj[i]  = max(ThirdAdj[i], 1.05)
         
         # ===============================
         # ★ 攻めゾーン分割（最重要）
