@@ -3576,8 +3576,6 @@ if st.button("計算"):
     # ★ マーク付け（修正版）
     # ===============================
     
-    st.write(sorted_final[0])
-    
     if len(Final) > 0:
         top_p = Final[0][3]
     else:
