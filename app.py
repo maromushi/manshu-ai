@@ -3376,6 +3376,37 @@ if st.button("計算"):
         TopGap = results[0][3] - results[1][3]
     else:
         TopGap = 0
+        
+    # ===============================
+    # ★ 見送り判定（追加）
+    # ===============================
+    SkipFlag = False
+    
+    if (
+        AttackSuccess == 0
+        and NoAttackProb > 0.75
+        and any(a >= 4 for (a,b,c,p) in results[:5])
+    ):
+        SkipFlag = True
+        
+    # ===============================
+    # ★ 点数制御（追加）
+    # ===============================
+    
+    if SkipFlag:
+        max_bets = 0
+    
+    elif NoAttackProb > 0.70:
+        max_bets = 4
+    
+    elif DoubleAttackScore < 0.08:
+        max_bets = 6
+    
+    elif DoubleAttackScore < 0.13:
+        max_bets = 8
+    
+    else:
+        max_bets = 12
 
 
     # =====================================
@@ -3419,58 +3450,14 @@ if st.button("計算"):
         if name == "AttackSuccess":
             AttackSuccess = val
             
-    # ===============================
-    # ★ 見送り判定（追加）
-    # ===============================
-    SkipFlag = False
     
-    if (
-        AttackSuccess == 0
-        and NoAttackProb > 0.75
-        and any(a >= 4 for (a,b,c,p) in results[:5])
-    ):
-        SkipFlag = True
-        
-    # ===============================
-    # ★ 点数制御（追加）
-    # ===============================
-    
-    if SkipFlag:
-        max_bets = 0
-    
-    elif NoAttackProb > 0.70:
-        max_bets = 4
-    
-    elif DoubleAttackScore < 0.08:
-        max_bets = 6
-    
-    elif DoubleAttackScore < 0.13:
-        max_bets = 8
-    
-    else:
-        max_bets = 12
                     
     # ===============================
     # ★ マーク付け（完成形）
     # ===============================
     
     sorted_final = sorted(Final, key=lambda x: x[3], reverse=True)
-
-    # ===============================
-    # ★ 見送り判定（これだけ入れろ）
-    # ===============================
-    SkipFlag = False
     
-    # 条件①②③
-    if (
-        AttackSuccess == 0
-        and NoAttackProb > 0.55
-    ):
-        # 上位5個の中に「3号艇以上の頭」があるか
-        for (a,b,c,p) in sorted_final[:5]:
-            if a >= 3:
-                SkipFlag = True
-                break
 
     top_head = P1.index(max(P1))
     
