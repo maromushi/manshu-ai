@@ -2128,67 +2128,60 @@ if st.button("計算"):
                 ThirdAdj[i] *= 1.05
         
         # ===============================
-        # ★ 無風ロック（ここに移動）
+        # ★ 無風：再構築（完全版）
         # ===============================
         if NoAttackFlag == 1:
-            
-
-            # 全体を減衰（←これが本質）
-            # 全体
-            for i in range(6):
-                SecondAdj[i] *= 0.95
-                ThirdAdj[i]  *= 0.96
-            
-            # 個別
-            SecondAdj[2] *= 0.85
-            ThirdAdj[2]  *= 0.80
-            
-            SecondAdj[3] *= 0.80
-            ThirdAdj[3]  *= 0.70
-            
-            SecondAdj[4] *= 0.75
-            ThirdAdj[4]  *= 0.60
-            
-            SecondAdj[5] *= 0.70
-            ThirdAdj[5]  *= 0.45
-            
-            # ===============================
-            # ★ 無風：バランス調整（修正版）
-            # ===============================
-            if NoAttackFlag == 1:
-            
-                # -----------------------------
-                # ① インがちゃんと強い時だけ2を残す
-                # -----------------------------
-                if (
-                    InsideSurvival[0] >= 0.60
-                    and Start[1] >= Start[2] - 0.01
-                ):
-                    SecondAdj[1] *= 1.05
-            
-                # -----------------------------
-                # ② 3は「条件付き」で残す
-                # -----------------------------
-                if (
-                    Start[2] >= max(Start) - 0.01
-                    and CPI[2] >= 0.45
-                ):
-                    SecondAdj[2] *= 1.08
-                            
-                # -----------------------------
-                # ③ ただしセンターST最速なら優先はそっち
-                # -----------------------------
-                if max(Start[2:4]) >= max(Start) - 0.01:
-                    SecondAdj[1] *= 0.95
-                    SecondAdj[2] *= 0.97
-            
+        
+            # -----------------------------
+            # ① ベースを作り直す（重要）
+            # -----------------------------
+            SecondAdj = SecondScore.copy()
+            ThirdAdj  = [1.0]*6
+        
+            # -----------------------------
+            # ② 外は最低限だけ削る
+            # -----------------------------
             for i in range(4,6):
-                SecondAdj[i] *= 0.75
-                
-                
-            # ★ 6だけ追加で止める（これ重要）
-            SecondAdj[5] = min(SecondAdj[5], SecondScore[5]*0.35)
-            
+                SecondAdj[i] *= 0.80
+                ThirdAdj[i]  *= 0.85
+        
+            # -----------------------------
+            # ③ 内から順の安定構造
+            # -----------------------------
+            for i in range(1,6):
+        
+                diff = Start[i] - Start[i-1]
+        
+                if diff > 0.03:
+                    SecondAdj[i] *= 1.15
+                    SecondAdj[i-1] *= 0.75
+        
+                elif diff > 0.02:
+                    SecondAdj[i] *= 1.08
+                    SecondAdj[i-1] *= 0.85
+        
+            # -----------------------------
+            # ④ 2コース vs センター比較（進入対応）
+            # -----------------------------
+            idx2 = 1
+            center = max(range(2,5), key=lambda i: CPI[i] + Start[i])
+        
+            diff = (
+                0.5*(CPI[center] - CPI[idx2]) +
+                0.5*(Start[center] - Start[idx2])
+            )
+        
+            if diff > 0.02:
+                SecondAdj[center] *= 1.12
+                SecondAdj[idx2]   *= 0.90
+        
+            elif diff < -0.02:
+                SecondAdj[idx2]   *= 1.10
+                SecondAdj[center] *= 0.92
+        
+            else:
+                SecondAdj[idx2]   *= 1.03
+                SecondAdj[center] *= 1.03
             # ★ 無風時：3が2を超えすぎない（汎用版）
             if (
                 NoAttackFlag == 1
