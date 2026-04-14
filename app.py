@@ -3376,6 +3376,38 @@ if st.button("計算"):
         TopGap = results[0][3] - results[1][3]
     else:
         TopGap = 0
+        
+    # ===============================
+    # ★ 見送り判定（追加）
+    # ===============================
+    
+    SkipFlag = False
+    
+    if (
+        AttackSuccess == 0
+        and NoAttackProb > 0.75
+        and any(a >= 4 for (a,b,c,p) in results[:5])
+    ):
+        SkipFlag = True
+        
+    # ===============================
+    # ★ 点数制御（追加）
+    # ===============================
+    
+    if SkipFlag:
+        max_bets = 0
+    
+    elif NoAttackProb > 0.70:
+        max_bets = 4
+    
+    elif DoubleAttackScore < 0.08:
+        max_bets = 6
+    
+    elif DoubleAttackScore < 0.13:
+        max_bets = 8
+    
+    else:
+        max_bets = 12
 
 
     # =====================================
@@ -3386,7 +3418,6 @@ if st.button("計算"):
     Final = []
     
     target = 0.72 + 0.10 * ChaosScore
-    max_bets = int(10 + 16 * ChaosScore)
     
     for r in results:
     
