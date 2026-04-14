@@ -3245,7 +3245,7 @@ if st.button("計算"):
             # ===============================
             weak_head = FirstScore[0] < max(FirstScore) * 0.92
             
-            has_resist = InsideResist >= 0.48
+            has_resist = InsideSurvival[0] >= 0.48
             
             weak_sashi = (
                 Start[1] < Start[0] - 0.02
