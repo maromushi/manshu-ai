@@ -2143,13 +2143,13 @@ if st.button("計算"):
             SecondAdj[2] *= 0.85
             ThirdAdj[2]  *= 0.80
             
-            SecondAdj[3] *= 0.65
+            SecondAdj[3] *= 0.80
             ThirdAdj[3]  *= 0.70
             
-            SecondAdj[4] *= 0.55
+            SecondAdj[4] *= 0.75
             ThirdAdj[4]  *= 0.60
             
-            SecondAdj[5] *= 0.55
+            SecondAdj[5] *= 0.70
             ThirdAdj[5]  *= 0.45
             
             # ===============================
@@ -2160,18 +2160,21 @@ if st.button("計算"):
                 # -----------------------------
                 # ① インがちゃんと強い時だけ2を残す
                 # -----------------------------
-                if InsideSurvival[0] >= 0.60 and Start[1] >= Start[0] - 0.02:
-                    SecondAdj[1] *= 1.08
+                if (
+                    InsideSurvival[0] >= 0.60
+                    and Start[1] >= Start[2] - 0.01
+                ):
+                    SecondAdj[1] *= 1.05
             
                 # -----------------------------
                 # ② 3は「条件付き」で残す
                 # -----------------------------
                 if (
-                    CPI[2] >= 0.48
-                    and Start[2] >= Start[1] - 0.01
+                    Start[2] >= max(Start) - 0.01
+                    and CPI[2] >= 0.45
                 ):
-                    SecondAdj[2] *= 1.05
-            
+                    SecondAdj[2] *= 1.08
+                            
                 # -----------------------------
                 # ③ ただしセンターST最速なら優先はそっち
                 # -----------------------------
