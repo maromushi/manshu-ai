@@ -1957,6 +1957,28 @@ if st.button("計算"):
 
         if total_p1 > 0:
             P1 = [p / total_p1 for p in P1]
+            
+        # ===============================
+        # ★ 1位保護（条件付き）
+        # ===============================
+        top_idx = P1.index(max(P1))
+        
+        if (
+            top_idx == 0
+            and NoAttackFlag == 1
+            and InsideSurvival[0] >= 0.55
+            and Start[1] >= Start[0] - 0.02
+        ):
+        
+            if P1[1] > P1[0] * 0.90:
+                P1[1] *= 0.85
+        
+            if P1[2] > P1[0] * 0.95:
+                P1[2] *= 0.90
+        
+            # 再正規化
+            total = sum(P1)
+            P1 = [p / total for p in P1]
                 
 
         LaneBonus=[0.10,0.09,0.08,0.07,0.06,0.05]
