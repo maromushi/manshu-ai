@@ -378,6 +378,34 @@ if st.button("計算"):
                 factor = 0.65
 
             Exhibit.append(ExhibitRaw[i]*factor)
+            
+        def convert_exst(x):
+
+            if x <= 0.06:
+                return 0.10 + (x * 0.5)
+        
+            elif x <= 0.18:
+                return x
+        
+            elif x <= 0.25:
+                return 0.18 + (x - 0.18) * 0.5
+        
+            else:
+                return 0.20
+                
+        def exst_weight(x):
+
+            if 0.08 <= x <= 0.18:
+                return 0.45
+        
+            elif x < 0.08:
+                return 0.30
+        
+            elif x <= 0.25:
+                return 0.25
+        
+            else:
+                return 0.10
 
         # ===============================
         # FOOT
@@ -417,12 +445,25 @@ if st.button("計算"):
         # START
         # ===============================
 
-        BaseStart = ([0.30 - x for x in ST])
-        ExhibitStart = ([0.30 - x for x in EST])
+        adj_exst = [convert_exst(x) for x in EST]
+        w_ex = [exst_weight(x) for x in EST]
         
-        StartRaw=[0.75*BaseStart[i]+0.25*ExhibitStart[i] for i in range(6)]
-
-        Start=StartRaw
+        Start = []
+        
+        for i in range(6):
+        
+            base = 0.30 - ST[i]
+            ex   = 0.30 - adj_exst[i]
+        
+            w = w_ex[i]
+        
+            val = (1 - w)*base + w*ex
+        
+            Start.append(val)
+            
+        # ★ 異常展示フラグ
+        BadExST = [1 if x >= 0.30 else 0 for x in EST]
+        GoodExST = [1 if x <= 0.10 else 0 for x in EST]
         # F補正（階級 + 展示ST）
 
         F_TABLE = {
@@ -486,6 +527,8 @@ if st.button("計算"):
         0.10*Foot[i]
         for i in range(6)
         ]
+        
+        
 
         # ===============================
         # CPI
@@ -515,6 +558,14 @@ if st.button("計算"):
         0.10*Engine[i]
         for i in range(6)
         ]
+        
+        for i in range(6):
+
+            if BadExST[i] == 1:
+                InsideSurvival[i] *= 0.92
+        
+            if GoodExST[i] == 1:
+                AttackIndex[i] *= 1.05
         
         # ===============================
         # ★ 攻め候補（複数化）
