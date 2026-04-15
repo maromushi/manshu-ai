@@ -1003,22 +1003,53 @@ if st.button("計算"):
         FS_mult = [1.0]*6
         
         # ===============================
-        # ★ レイヤー1（最重要）
+        # ★ レイヤー1（最重要・修正版）
         # ===============================
+        
+        # ★ 展開ゾーン分類（追加）
         if NoAttackFlag == 1:
-
+            RaceZone = "no_attack"
+        
+        elif DoubleAttackScore < 0.06 and AttackSuccess == 0:
+            RaceZone = "weak"
+        
+        else:
+            RaceZone = "attack"
+        
+        
+        # ===============================
+        # ★ ゾーン別処理
+        # ===============================
+        
+        if RaceZone == "no_attack":
+        
             weak_factor = min(1.0, DoubleAttackScore / WEAK)
         
             FS_mult[0] *= (1.05 - 0.12 * weak_factor)
         
-            # 外は残す余地
             FS_mult[1] *= (1.00 + 0.20 * weak_factor)
             FS_mult[2] *= (1.00 + 0.25 * weak_factor)
+        
             FS_mult[3] *= 0.80
             FS_mult[4] *= 0.65
             FS_mult[5] *= 0.55
         
-        else:
+        
+        elif RaceZone == "weak":
+        
+            # ★ 最重要：イン殺す
+            FS_mult[0] *= 0.78
+        
+            # 内〜センター上げる
+            FS_mult[1] *= 1.06
+            FS_mult[2] *= 1.08
+        
+            # STドカ遅れなら即死
+            if Start[0] == min(Start):
+                FS_mult[0] *= 0.70
+        
+        
+        else:  # attack
         
             if DoubleAttackScore > 0.10:
                 FS_mult[2] *= 1.10
