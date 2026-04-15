@@ -804,10 +804,14 @@ if st.button("計算"):
         
 
         DoubleAttackScore = (
-        (ThreeLaneAttackScore * FourLaneAttackScore)
-        +
-        0.5 * (TwoLaneAttackScore * ThreeLaneAttackScore)
+            (ThreeLaneAttackScore * FourLaneAttackScore)
+            +
+            0.5 * (TwoLaneAttackScore * ThreeLaneAttackScore)
         )
+        
+        # ★ ここに追加（これが正解位置）
+        if AttackSuccess == 0:
+            DoubleAttackScore *= 0.55
         
         # ===============================
         # ★ 崩れは攻め扱いにする（最重要）
@@ -842,12 +846,6 @@ if st.button("計算"):
         ])
         
         DoubleAttackScore += PseudoAttack * 0.07
-        
-        if AttackSuccess == 0:
-            if AttackWeak == 1:
-                DoubleAttackScore *= 0.85
-            else:
-                DoubleAttackScore *= 0.65
                 
         # ===============================
         # ★ attackers救済（正しい位置）
