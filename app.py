@@ -492,6 +492,13 @@ if st.button("計算"):
         
             Start.append(val)
             
+        # ===============================
+        # ★ 疑似攻め（ここに入れる）
+        # ===============================
+        PseudoAttackFlag = (
+            max(Start[2] - Start[1], Start[3] - Start[2]) > 0.015
+        )
+            
         # ★ 異常展示フラグ
         BadExST = [1 if x >= 0.30 else 0 for x in EST]
         GoodExST = [1 if x <= 0.10 else 0 for x in EST]
@@ -970,7 +977,11 @@ if st.button("計算"):
         # ===============================
         # ★ レースモード（完全版）
         # ===============================
-        has_attack = (len(attackers) > 0 or DoubleAttackScore >= 0.04)
+        has_attack = (
+            len(attackers) > 0
+            or DoubleAttackScore >= 0.04
+            or PseudoAttackFlag
+        )
         
         if NoAttackFlag == 1:
             RaceMode = "no_attack"
