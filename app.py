@@ -3485,7 +3485,7 @@ if st.button("計算"):
                         
             if (
                 0.85 <= FirstScore[0] / max(FirstScore) <= 0.98
-                and InsideResist >= 0.45
+                and InsideSurvival[0] >= 0.45
             ):
                 SecondAdj[0] *= 1.10
                 ThirdAdj[0] *= 1.05
