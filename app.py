@@ -2350,6 +2350,26 @@ if st.button("計算"):
             for i in range(6)
         ]
         
+        # ===============================
+        # ★ 外の頭禁止（最重要）
+        # ===============================
+        for i in range(4,6):
+        
+            can_break = (
+                DoubleAttackScore > 0.12
+                or AttackSuccess == 1
+                or StartCollapse == 1
+                or WallBreak == 1
+            )
+        
+            if not can_break:
+                P1[i] *= 0.35
+        
+        # 再正規化（絶対必要）
+        total = sum(P1)
+        if total > 0:
+            P1 = [p / total for p in P1]
+        
         # ★ 無風時：イン優先ロック（修正版）
         if NoAttackFlag == 1:
         
