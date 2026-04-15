@@ -497,6 +497,16 @@ if st.button("計算"):
 
             Start[i] *= factor
             
+        # ===============================
+        # ★ スタート崩壊検知（これが本質）
+        # ===============================
+        StartCollapse = 0
+        
+        if (
+            Start[0] < max(Start[1:4]) - 0.03
+        ):
+            StartCollapse = 1
+            
     
         # ===============================
         # TURN
@@ -527,6 +537,8 @@ if st.button("計算"):
         0.10*Foot[i]
         for i in range(6)
         ]
+        
+        
         
         
 
@@ -811,14 +823,46 @@ if st.button("計算"):
         )
         
         # ===============================
-        # ★ 無風判定（修正版）
+        # ★ イン弱さ検知
+        # ===============================
+        WeakInside = (
+            Skill[0] < 0.48
+            or Start[0] < max(Start[1:3]) - 0.015
+            or InsideSurvival[0] < 0.58
+            or ExST[0] >= 0.25
+        )
+        
+        # ===============================
+        # ★ スタート崩壊検知（最重要）
+        # ===============================
+        StartCollapse = 0
+        
+        if Start[0] < max(Start[1:4]) - 0.03:
+            StartCollapse = 1
+        
+        # ===============================
+        # ★ 疑似展開（攻め無しでも展開扱い）
+        # ===============================
+        PseudoAttack2 = max([
+            max(0, Start[2] - Start[1]),
+            max(0, Start[3] - Start[2]),
+            max(0, Start[4] - Start[3])
+        ])
+        
+        # スタート崩壊してたら展開を強制発生
+        if StartCollapse == 1:
+            DoubleAttackScore += 0.03 + PseudoAttack2 * 0.10
+        
+        # ===============================
+        # ★ 無風判定（完成版）
         # ===============================
         if (
             AttackSuccess == 0
             and len(attackers) == 0
             and DoubleAttackScore < WEAK
             and max(Start) - min(Start) < 0.04
-            and WeakInside == False   # ←これが本質
+            and WeakInside == False
+            and StartCollapse == 0
         ):
             NoAttackFlag = 1
         else:
