@@ -593,8 +593,9 @@ if st.button("計算"):
         
             class_attack = (
                 CLS[i] in ["A1","A2"]
-                and Start[i] >= Start[i-1] - 0.005
+                and Start[i] >= Start[i-1] - 0.015
                 and AttackIndex[i] >= AttackIndex[i-1] - 0.02
+                and Turn[i] >= Turn[i-1] - 0.02
             )
         
             if (
@@ -759,6 +760,21 @@ if st.button("計算"):
         +
         0.5 * (TwoLaneAttackScore * ThreeLaneAttackScore)
         )
+        
+        # ===============================
+        # ★ 壁崩れ検知（超重要）
+        # ===============================
+        WallBreak = 0
+        
+        if (
+            Start[1] > Start[0] + 0.03   # 2が1より遅い（イン孤立）
+            or Start[1] > Start[2] + 0.01  # 2が3より遅い（差し開く）
+        ):
+            WallBreak = 1
+        
+        # 展開に加算（ここが本体）
+        if WallBreak == 1:
+            DoubleAttackScore += 0.03
     
         
         # ===============================
@@ -794,6 +810,12 @@ if st.button("計算"):
         
                 for j in range(i+1,6):
                     flow_power[j] += 1
+                    
+        # ===============================
+        # ★ 壁崩れ → 3優遇
+        # ===============================
+        if WallBreak == 1:
+            FS_mult[2] *= 1.10
         
         # ===============================
         # ★ ズレ展開フラグ（NEW）
