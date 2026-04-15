@@ -584,12 +584,21 @@ if st.button("計算"):
         # ===============================
         attackers = []
         
-        
-        
         for i in range(2,4):
-            if (
+
+            normal_attack = (
                 Start[i] > Start[i-1] + 0.01
                 and AttackIndex[i] > AttackIndex[i-1]
+            )
+        
+            class_attack = (
+                CLS[i] in ["A1","A2"]
+                and Start[i] >= Start[i-1] - 0.005
+                and AttackIndex[i] >= AttackIndex[i-1] - 0.02
+            )
+        
+            if (
+                (normal_attack or class_attack)
                 and (
                     AttackIndex[i] >= max(AttackIndex[2:6]) - 0.05
                     or Turn[i] >= max(Turn[2:6]) - 0.03
