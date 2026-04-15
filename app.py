@@ -939,6 +939,14 @@ if st.button("計算"):
             NoAttackFlag = 1
         else:
             NoAttackFlag = 0
+            
+        # ★ 強制：インスタート負けは無風禁止
+        if Start[0] < max(Start[1:4]) - 0.04:
+            NoAttackFlag = 0
+            
+        # ★ イン死亡は強制展開
+        if Start[0] == min(Start):
+            DoubleAttackScore += 0.05
         
         # ★ 無風時のズレ制御（ここに入れる）
         if NoAttackFlag == 1:
