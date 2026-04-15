@@ -3728,7 +3728,7 @@ if st.button("計算"):
         for (mark,a,b,c,p) in marked
     ])
     
-    if SkipFlag:
+    if BuyRank == "skip":
         st.markdown("## ⚠ 見送りレース")
     
     st.markdown("### ◎ 本線")
