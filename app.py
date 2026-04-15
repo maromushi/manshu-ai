@@ -800,17 +800,29 @@ if st.button("計算"):
         debug_log.append(("DAS", round(DoubleAttackScore,4)))
         debug_log.append(("WEAK/MID/STRONG", (WEAK, MID, STRONG)))
         
-        # ★ 無風判定（最重要）
+        # ===============================
+        # ★ 弱イン判定（追加）
+        # ===============================
+        WeakInside = (
+            Skill[0] < 0.48
+            or Start[0] < max(Start[1:3]) - 0.015
+            or InsideSurvival[0] < 0.58
+            or ExST[0] >= 0.25
+        )
+        
+        # ===============================
+        # ★ 無風判定（修正版）
+        # ===============================
         if (
             AttackSuccess == 0
             and len(attackers) == 0
             and DoubleAttackScore < WEAK
             and max(Start) - min(Start) < 0.04
+            and WeakInside == False   # ←これが本質
         ):
             NoAttackFlag = 1
         else:
             NoAttackFlag = 0
-        
         
         # ★ 無風時のズレ制御（ここに入れる）
         if NoAttackFlag == 1:
