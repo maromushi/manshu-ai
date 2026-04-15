@@ -3774,8 +3774,7 @@ if st.button("計算"):
     for a,b,c in insurance:
         st.write(f"{a}-{b}-{c}")
         
-    st.write(f"NoAttackProb：{round(NoAttackProb,3)}")
-    st.write(f"DoubleAttackScore：{round(DoubleAttackScore,3)}")
+    st.caption(f"NoAttackProb：{round(NoAttackProb,3)} / DAS：{round(DoubleAttackScore,3)}")
     
     
     st.markdown("## 🎯 買い目")
