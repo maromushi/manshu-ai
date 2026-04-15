@@ -3774,10 +3774,6 @@ if st.button("計算"):
     for a,b,c in insurance:
         st.write(f"{a}-{b}-{c}")
         
-    
-
-    
-    st.write(f"推奨点数：{max_bets}点")
     st.write(f"NoAttackProb：{round(NoAttackProb,3)}")
     st.write(f"DoubleAttackScore：{round(DoubleAttackScore,3)}")
     
