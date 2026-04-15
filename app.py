@@ -547,15 +547,6 @@ if st.button("計算"):
             Start[0] < max(Start[1:4]) - 0.03
         ):
             StartCollapse = 1
-        
-        
-        # ===============================
-        # ★ 崩れは攻め扱いにする（最重要）
-        # ===============================
-        if StartCollapse == 1:
-            AttackWeak = 1
-            DoubleAttackScore += 0.04
-            
     
         # ===============================
         # TURN
@@ -809,6 +800,13 @@ if st.button("計算"):
         +
         0.5 * (TwoLaneAttackScore * ThreeLaneAttackScore)
         )
+        
+        # ===============================
+        # ★ 崩れは攻め扱いにする（最重要）
+        # ===============================
+        if StartCollapse == 1:
+            AttackWeak = 1
+            DoubleAttackScore += 0.04
         
         # ===============================
         # ★ 壁崩れ検知（超重要）
