@@ -1494,86 +1494,105 @@ if st.button("計算"):
                 FS_mult[3] *= 1.05
                 
         # ===============================
-        # ★ 会場差分補正（最終）
+        # ★ 会場補正（完成版）
         # ===============================
         
-        # ■ 桐生（軽水面・まくり強）
-        if venue == "桐生":
+        if venue == "多摩川":
         
-            # イン弱め
-            if InsideSurvival[0] < 0.65:
-                FS_mult[0] *= 0.93
+            # ■ 常時（弱）
+            FS_mult[0] *= 1.05
         
-            # 3・4攻め強化
+            # ■ 条件
+            if DoubleAttackScore < 0.05:
+                FS_mult[4] *= 0.92
+                FS_mult[5] *= 0.90
+        
+        
+        elif venue == "びわこ":
+        
+            # ■ 常時（ほぼ無し）
+        
+            # ■ 条件
+            if StartSpread > 0.10:
+                chaos_weight *= 0.92
+        
             if DoubleAttackScore > WEAK and AttackSuccess == 1:
-                FS_mult[2] *= 1.08
-                FS_mult[3] *= 1.10
-        
-        
-        # ■ 住之江（センター主役）
-        elif venue == "住之江":
-        
-            # インさらに弱い
-            if InsideSurvival[0] < 0.70:
-                FS_mult[0] *= 0.90
-        
-            # 2を削る（最重要）
-            FS_mult[1] *= 0.90
-        
-            # 3・4主役化
-            if DoubleAttackScore > 0.04:
-                FS_mult[2] *= 1.10
-                FS_mult[3] *= 1.12
-  
-        
-        
-        # ■ 丸亀（ヒモ荒れ）
-        elif venue == "丸亀":
-        
-            # 頭はそのまま（触らない）
-        
-            # 中間展開を広げる
-            if 0.04 < DoubleAttackScore < 0.10:
                 FS_mult[2] *= 1.05
                 FS_mult[3] *= 1.06
         
         
-        # ■ 蒲郡（浜名湖ほぼ互換）
+        elif venue == "桐生":
+        
+            # ■ 常時（弱）
+            FS_mult[0] *= 0.97
+        
+            # ■ 条件
+            if DoubleAttackScore > WEAK and AttackSuccess == 1:
+                FS_mult[2] *= 1.07
+                FS_mult[3] *= 1.08
+        
+        
+        elif venue == "住之江":
+        
+            # ■ 常時（弱）
+            FS_mult[1] *= 0.95
+        
+            # ■ 条件（ここが本体）
+            if DoubleAttackScore > 0.04:
+                FS_mult[2] *= 1.08
+                FS_mult[3] *= 1.10
+        
+            if InsideSurvival[0] < 0.65:
+                FS_mult[0] *= 0.95
+        
+        
+        elif venue == "丸亀":
+        
+            # ■ 常時なし
+        
+            # ■ 条件（ヒモ荒れ）
+            if 0.04 < DoubleAttackScore < 0.10:
+                FS_mult[2] *= 1.05
+                FS_mult[3] *= 1.05
+                FS_mult[4] *= 1.03
+        
+        
         elif venue == "蒲郡":
         
-            # ほぼそのまま＋微調整だけ
+            # ■ 常時なし
+        
+            # ■ 条件（軽微）
             if DoubleAttackScore > WEAK and AttackSuccess == 1:
-                FS_mult[2] *= 1.03
-                FS_mult[3] *= 1.04
-                
-        # 三国（追加）
-        if venue == "三国":
+                FS_mult[2] *= 1.04
+                FS_mult[3] *= 1.05
         
-            FS_mult[0] *= 1.05   # イン少し強い
         
-            # 2・3差し許可（これが本質）
+        elif venue == "三国":
+        
+            # ■ 常時（弱）
+            FS_mult[0] *= 1.04
+        
+            # ■ 条件（差し水面）
             if DoubleAttackScore < 0.06:
                 FS_mult[1] *= 1.05
                 FS_mult[2] *= 1.05
         
-            # 4はヒモだけ少し
             if DoubleAttackScore > 0.04:
                 FS_mult[3] *= 1.03
-                
-        #常滑
-        elif venue == "常滑":
-
-            # 2を弱める（最重要）
-            FS_mult[1] *= 0.92
         
-            # 3を少し上げる
+        
+        elif venue == "常滑":
+        
+            # ■ 常時（弱）
+            FS_mult[1] *= 0.96
+        
+            # ■ 条件
             if DoubleAttackScore > 0.04:
                 FS_mult[2] *= 1.05
         
-            # 外は抑制
             if DoubleAttackScore < 0.06:
                 FS_mult[4] *= 0.90
-                FS_mult[5] *= 0.85
+                FS_mult[5] *= 0.88
         
         if False:
             # ===============================
