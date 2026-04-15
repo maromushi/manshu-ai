@@ -991,12 +991,13 @@ if st.button("計算"):
         # ★ レイヤー1（最重要）
         # ===============================
         if NoAttackFlag == 1:
+
+            FS_mult[0] *= 1.05   # ←弱める
         
-            FS_mult[3] *= 0.75
-            FS_mult[4] *= 0.55
-            FS_mult[5] *= 0.45
-        
-            FS_mult[0] *= 1.10
+            # 外は残す余地
+            FS_mult[3] *= 0.80
+            FS_mult[4] *= 0.65
+            FS_mult[5] *= 0.55
         
         else:
         
@@ -1733,6 +1734,8 @@ if st.button("計算"):
         
             if Turn[1] > Turn[0]:
                 FS_mult[1] *= 1.08
+                
+        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
         
         if False:
