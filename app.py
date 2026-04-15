@@ -3764,7 +3764,7 @@ if st.button("計算"):
     # ===============================
     
     # ① シャープ化
-    power = 1.45 + 0.35 * ChaosScore
+    power = 1.25 + 0.25 * ChaosScore
     
     results = [
         (a,b,c, p**power)
@@ -3818,9 +3818,10 @@ if st.button("計算"):
     for a,b,c,p in results:
     
         if a >= 4:
-            outer_count += 1
-            if outer_count > 3:
-                continue
+            if DoubleAttackScore < 0.08:  # 弱い時だけ制限
+                outer_count += 1
+                if outer_count > 3:
+                    continue
     
         tmp.append((a,b,c,p))
     
@@ -3945,7 +3946,7 @@ if st.button("計算"):
     Coverage = 0
     Final = []
     
-    target = 0.72 + 0.10 * ChaosScore
+    target = 0.80 + 0.10 * ChaosScore
     
     for r in results:
     
