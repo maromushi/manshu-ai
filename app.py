@@ -1172,6 +1172,16 @@ if st.button("計算"):
             
             # ←ここに追加！！！！
             if i >= 4:
+
+                can_break = (
+                    DoubleAttackScore > 0.12
+                    or AttackSuccess == 1
+                    or StartCollapse == 1
+                    or WallBreak == 1   # ←これ追加が本質
+                )
+            
+                if not can_break:
+                    val *= 0.60
             
                 outer_power = (
                     0.4 * CPI[i]
