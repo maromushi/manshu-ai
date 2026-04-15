@@ -1192,6 +1192,14 @@ if st.button("計算"):
                 +0.10*LaneWin[i]
             )
             
+            if i >= 4:
+
+                if AttackSuccess == 0:
+                    val *= 0.35
+            
+                    if DoubleAttackScore < 0.12:
+                        val *= 0.5
+            
             # ←ここに追加！！！！
             if i >= 4:
 
