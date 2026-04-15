@@ -1118,9 +1118,8 @@ if st.button("計算"):
             RaceZone = "no_attack"
         
         elif (
-            DoubleAttackScore < 0.07
+            0.05 <= DoubleAttackScore < 0.09
             and AttackSuccess == 0
-            and StartSpread > 0.04
         ):
             RaceZone = "weak"
         
@@ -1147,17 +1146,25 @@ if st.button("計算"):
         
         
         elif RaceZone == "weak":
+
+            # ★ 最重要：イン殺す（ベース）
+            FS_mult[0] *= 0.75
+            
+            # センター強化
+            FS_mult[1] *= 1.10
+            FS_mult[2] *= 1.15
+            
+            # 外もチャンス残す
+            if Start[3] >= max(Start[1:3]) - 0.01:
+                FS_mult[3] *= 1.08
         
-            # ★ 最重要：イン殺す
-            FS_mult[0] *= 0.78
-        
-            # 内〜センター上げる
-            FS_mult[1] *= 1.06
-            FS_mult[2] *= 1.08
-        
-            # STドカ遅れなら即死
-            if Start[0] == min(Start):
-                FS_mult[0] *= 0.70
+            # ★ STドカ遅れ（追加ペナ）
+            if (
+                NoAttackFlag == 0
+                and DoubleAttackScore > 0.05
+                and Start[0] < max(Start[1:4]) - 0.03
+            ):
+                FS_mult[0] *= 0.80
         
         
         else:  # attack
