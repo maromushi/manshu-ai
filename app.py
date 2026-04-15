@@ -2185,7 +2185,6 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
-        debug_log.append(("SecondAdj_final", [round(x,3) for x in SecondAdj_final]))
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
         
