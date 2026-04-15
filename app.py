@@ -296,7 +296,7 @@ if st.button("計算"):
         LT=[LapTime[i] for i in order]
         STT=[StraightTime[i] for i in order]
         
-        WEAK = 0.08
+        WEAK = 0.06
         MID = 0.09
         STRONG = 0.13
 
@@ -511,7 +511,7 @@ if st.button("計算"):
         
         for i in range(2,4):
             if (
-                Start[i] > Start[i-1] + 0.015
+                Start[i] > Start[i-1] + 0.01
                 and AttackIndex[i] > AttackIndex[i-1]
                 and (
                     AttackIndex[i] >= max(AttackIndex[2:6]) - 0.05
@@ -684,7 +684,7 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        DoubleAttackScore += PseudoAttack * 0.03
+        DoubleAttackScore += PseudoAttack * 0.07
         
         if AttackSuccess == 0:
             if AttackWeak == 1:
@@ -740,6 +740,7 @@ if st.button("計算"):
             AttackSuccess == 0
             and len(attackers) == 0
             and DoubleAttackScore < WEAK
+            and max(Start) - min(Start) < 0.04
         ):
             NoAttackFlag = 1
         else:
@@ -992,7 +993,7 @@ if st.button("計算"):
         # ===============================
         if NoAttackFlag == 1:
 
-            FS_mult[0] *= 1.05   # ←弱める
+            FS_mult[0] *= 1.02   # ←弱める
         
             # 外は残す余地
             FS_mult[3] *= 0.80
