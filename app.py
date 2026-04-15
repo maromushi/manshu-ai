@@ -853,10 +853,12 @@ if st.button("計算"):
         # ★ attackers救済（正しい位置）
         # ===============================
         if len(attackers) == 0 and DoubleAttackScore > 0.09:
-        
-            atk = max(range(2,6), key=lambda i: Start[i])
+
+            atk = max(range(2,5), key=lambda i: Start[i])  # 3〜5コース
         
             attackers.append(atk)
+
+            
                 
         # ===============================
         # ★ 壁崩壊フラグ（追加）
