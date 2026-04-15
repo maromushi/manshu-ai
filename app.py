@@ -3516,6 +3516,22 @@ if st.button("計算"):
     Top1 = results[0][3] if len(results) > 0 else 0
     Top3 = sum(r[3] for r in results[:3])
     Top5 = sum(r[3] for r in results[:5])
+    
+    # ===============================
+    # ★ レースタイプ判定（高精度版）
+    # ===============================
+    
+    if Top1 >= 0.30 and Top3 >= 0.60:
+        OddsType = "堅い"
+    
+    elif Top1 >= 0.22:
+        OddsType = "中穴"
+    
+    elif ChaosScore > 0.55:
+        OddsType = "荒れ（強）"
+    
+    else:
+        OddsType = "荒れ（万舟寄り）"
         
     # ===============================
     # ★ 点数制御（追加）
@@ -3638,7 +3654,11 @@ if st.button("計算"):
         elif mark in ["▲","△"]:
             hole.append((a,b,c))
     
-        if a == 1:
+        if (
+            a == 1
+            and (a,b,c) not in main
+            and (a,b,c) not in sub
+        ):
             insurance.append((a,b,c))
     
     insurance = insurance[:3]
@@ -3728,15 +3748,18 @@ if st.button("計算"):
         st.write(f"{a}-{b}-{c}")
         
     st.markdown("## 🧠 判定")
-
-    if BuyRank == "skip":
-        st.write("状態：見送り")
     
-    elif BuyRank == "weak":
-        st.write("状態：購入（微妙）")
+    if BuyRank == "skip":
+        st.error("見送りレース")
+    
+    if BuyRank == "weak":
+        st.warning(f"購入（微妙）｜Top1={round(Top1,3)}")
     
     else:
-        st.write("状態：購入（推奨）")
+        st.success("購入（推奨）")
+        
+    st.write(f"タイプ：{OddsType}")
+
     
     st.write(f"推奨点数：{max_bets}点")
     st.write(f"NoAttackProb：{round(NoAttackProb,3)}")
