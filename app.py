@@ -3518,7 +3518,7 @@ if st.button("計算"):
     Top5 = sum(r[3] for r in results[:5])
     
     # ===============================
-    # ★ レースタイプ判定（高精度版）
+    # ★ レースタイプ判定（進化版）
     # ===============================
     
     if Top1 >= 0.30 and Top3 >= 0.60:
@@ -3527,11 +3527,14 @@ if st.button("計算"):
     elif Top1 >= 0.22:
         OddsType = "中穴"
     
+    elif P1[0] >= 0.30:
+        OddsType = "ヒモ荒れ"
+    
     elif ChaosScore > 0.55:
         OddsType = "荒れ（強）"
     
     else:
-        OddsType = "荒れ（万舟寄り）"
+        OddsType = "万舟"
         
     # ===============================
     # ★ 点数制御（追加）
@@ -3748,8 +3751,6 @@ if st.button("計算"):
         st.write(f"{a}-{b}-{c}")
         
     st.markdown("## 🧠 判定")
-    
-    OddsType = "不明"
     
     if BuyRank == "skip":
         st.error("見送りレース")
