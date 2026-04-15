@@ -1010,7 +1010,11 @@ if st.button("計算"):
         if NoAttackFlag == 1:
             RaceZone = "no_attack"
         
-        elif DoubleAttackScore < 0.06 and AttackSuccess == 0:
+        elif (
+            DoubleAttackScore < 0.07
+            and AttackSuccess == 0
+            and StartSpread > 0.04
+        ):
             RaceZone = "weak"
         
         else:
