@@ -3789,10 +3789,7 @@ if st.button("計算"):
         key=(a,b,c)
         final[key]=final.get(key,0)+w_at*p
         
-    # grayは今は簡易的にex流用でもOK
-    for a,b,c,p in res_ex:
-        key=(a,b,c)
-        final[key]=final.get(key,0)+w_gray*p*0.6
+
         
     # ズレ万舟を追加
     res_zure = run_zure_ai(order_ex, NoAttackProb)
