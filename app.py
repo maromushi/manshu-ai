@@ -3737,6 +3737,20 @@ if st.button("計算"):
     
     if BuyRank == "skip":
         st.markdown("## ⚠ 見送りレース")
+        
+    st.markdown("## 🧠 判定")
+
+    if BuyRank == "skip":
+        st.error("見送りレース")
+    
+    elif BuyRank == "weak":
+        st.warning(f"購入（微妙）｜Top1={round(Top1,3)}")
+    
+    else:
+        st.success("購入（推奨）")
+    
+    st.write(f"タイプ：{OddsType}")
+    st.write(f"推奨点数：{max_bets}点")
     
     st.markdown("### ◎ 本線")
     for a,b,c in main:
@@ -3761,18 +3775,6 @@ if st.button("計算"):
     st.write(f"NoAttackProb：{round(NoAttackProb,3)}")
     st.write(f"DoubleAttackScore：{round(DoubleAttackScore,3)}")
     
-    st.markdown("## 🧠 判定")
-    
-    if BuyRank == "skip":
-        st.error("見送りレース")
-    
-    if BuyRank == "weak":
-        st.warning(f"購入（微妙）｜Top1={round(Top1,3)}")
-    
-    else:
-        st.success("購入（推奨）")
-        
-    st.write(f"タイプ：{OddsType}")
     
     st.markdown("## 🎯 買い目")
     
