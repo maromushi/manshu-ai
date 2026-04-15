@@ -943,27 +943,20 @@ if st.button("計算"):
             DoubleAttackScore += 0.03 + PseudoAttack2 * 0.10
         
         # ===============================
-        # ★ 無風判定（完成版）
+        # ★ 無風判定（シンプル版）
         # ===============================
+        NoAttackFlag = 1
+        
         if (
-            AttackSuccess == 0
-            and len(attackers) == 0
-            and DoubleAttackScore < WEAK
-            and max(Start) - min(Start) < 0.04
-            and WeakInside == False
-            and StartCollapse == 0
+            AttackSuccess == 1
+            or len(attackers) > 0
+            or DoubleAttackScore >= WEAK
+            or max(Start) - min(Start) >= 0.04
+            or WeakInside
+            or StartCollapse == 1
         ):
-            NoAttackFlag = 1
-        else:
             NoAttackFlag = 0
-            
-        # ★ 強制：インスタート負けは無風禁止
-        if Start[0] < max(Start[1:4]) - 0.04:
-            NoAttackFlag = 0
-            
-        # ★ イン死亡は強制展開
-        if Start[0] == min(Start):
-            DoubleAttackScore += 0.05
+    
         
         # ★ 無風時のズレ制御（ここに入れる）
         if NoAttackFlag == 1:
@@ -1227,8 +1220,18 @@ if st.button("計算"):
                     val *= 0.25
         
             FirstScore.append(val)
-            
+        
         FS_mult = [1.0]*6
+
+        # ===============================
+        # ★ イン死亡は強制排除（ここが正解位置）
+        # ===============================
+        if Start[0] == min(Start):
+        
+            FS_mult[0] *= 0.45
+        
+            if max(Start[1:4]) - Start[0] > 0.05:
+                FS_mult[0] *= 0.65
             
         # ===============================
         # ★ ST最下位インは強制排除（最重要）
