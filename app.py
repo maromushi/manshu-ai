@@ -2274,6 +2274,8 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        SecondAdj_final = SecondAdj.copy()
+        ThirdAdj_final = ThirdAdj.copy()
         
         SecondAdj_base = SecondAdj.copy()
         
@@ -2960,8 +2962,6 @@ if st.button("計算"):
         
             P_first = P1[a]
             
-            SecondAdj_final = SecondAdj.copy()
-            ThirdAdj_final = ThirdAdj.copy()
         
             # ★ ここが本質
             SecondAdj_local = SecondAdj_final.copy()
