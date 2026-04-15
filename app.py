@@ -554,6 +554,28 @@ if st.button("計算"):
             Start[0] < max(Start[1:4]) - 0.03
         ):
             StartCollapse = 1
+            
+        # ===============================
+        # ★ スタート崩壊検知
+        # ===============================
+        StartCollapse = 0
+        
+        if Start[0] < max(Start[1:4]) - 0.03:
+            StartCollapse = 1
+        
+        
+        # ===============================
+        # ★ FrontBreak（ここに追加）
+        # ===============================
+        FrontBreak = (
+            StartCollapse == 1
+            or WallBreak == 1
+            or Start[0] == min(Start)
+        
+            or Start[1] < Start[0] - 0.02
+            or Start[2] < Start[1] - 0.02
+            or max(Start[1:4]) - Start[0] > 0.04
+)
     
         # ===============================
         # TURN
