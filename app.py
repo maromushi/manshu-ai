@@ -3662,7 +3662,6 @@ if st.button("計算"):
             and P1[0] < 0.40
             and P1[0] > 0.18
             and InsideSurvival[0] > 0.45
-            and CPI[0] > 0.40
             and p < top_p * 0.60
             and (a,b,c) not in main
             and (a,b,c) not in sub
