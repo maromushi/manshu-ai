@@ -1169,7 +1169,32 @@ if st.button("計算"):
                 +0.12*Turn[i]
                 +0.10*LaneWin[i]
             )
-            # ★ 外頭の最終制御（ここだけで完結させる）
+            
+            # ←ここに追加！！！！
+            if i >= 4:
+            
+                outer_power = (
+                    0.4 * CPI[i]
+                    + 0.3 * Start[i]
+                    + 0.3 * Foot[i]
+                )
+            
+                if DoubleAttackScore < 0.08:
+            
+                    if outer_power < 0.52:
+                        val *= 0.55
+                    else:
+                        val *= 0.75
+            
+                elif DoubleAttackScore < 0.12:
+            
+                    if outer_power < 0.50:
+                        val *= 0.70
+                    else:
+                        val *= 0.90
+            
+                else:
+                    val *= 0.95
 
             # ===============================
             # ★ 外の突破判定（汎用版）
