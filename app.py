@@ -34,7 +34,7 @@ if "venue" not in st.session_state:
 
 st.markdown("### 会場選択")
 
-labels = ["浜名湖","桐生","住之江","丸亀","多摩川","びわこ","常滑"]
+labels = ["浜名湖","桐生","住之江","丸亀","多摩川","びわこ","常滑","三国"]
 
 # 2列
 for i in range(0, len(labels), 2):
@@ -1545,6 +1545,20 @@ if st.button("計算"):
             if DoubleAttackScore > WEAK and AttackSuccess == 1:
                 FS_mult[2] *= 1.03
                 FS_mult[3] *= 1.04
+                
+        # 三国（追加）
+        if venue == "三国":
+        
+            FS_mult[0] *= 1.05   # イン少し強い
+        
+            # 2・3差し許可（これが本質）
+            if DoubleAttackScore < 0.06:
+                FS_mult[1] *= 1.05
+                FS_mult[2] *= 1.05
+        
+            # 4はヒモだけ少し
+            if DoubleAttackScore > 0.04:
+                FS_mult[3] *= 1.03
                 
         #常滑
         elif venue == "常滑":
@@ -3493,11 +3507,6 @@ if st.button("計算"):
     # ===============================
     # ★ 購入ランク分類（NEW）
     # ===============================
-    
-    Top1 = results[0][3] if len(results) > 0 else 0
-    Top3 = sum(r[3] for r in results[:3])
-    Top5 = sum(r[3] for r in results[:5])
-    
     BuyRank = "strong"
     
     # 見送り
@@ -3518,7 +3527,9 @@ if st.button("計算"):
     elif Top1 < 0.22:
         BuyRank = "weak"
         
-    
+    Top1 = results[0][3] if len(results) > 0 else 0
+    Top3 = sum(r[3] for r in results[:3])
+    Top5 = sum(r[3] for r in results[:5])
     
     # ===============================
     # ★ レースタイプ判定（進化版）
