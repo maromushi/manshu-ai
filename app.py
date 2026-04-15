@@ -226,7 +226,18 @@ if st.button("計算"):
     ]
     
     ExTime=clamp(to_float_list(fix_length(ExTime)),6,8)
-    ExST=clamp(to_float_list(fix_length(ExST)),0,0.40)
+    def clamp_exst(arr):
+        out=[]
+        for x in arr:
+            if x <= 0:
+                out.append(0.18)   # 平均扱い
+            elif x > 0.50:
+                out.append(0.50)   # 上限だけ抑える
+            else:
+                out.append(x)
+        return out
+    
+    ExST = clamp_exst(to_float_list(fix_length(ExST)))
 
     TurnTime=to_float_list(fix_length(TurnTime))
     LapTime=to_float_list(fix_length(LapTime))
@@ -344,7 +355,10 @@ if st.button("計算"):
         AvgEx=sum(ET)/6
 
         TimeScore=normalize([AvgEx-x for x in ET])
-        ExSTScore=normalize([0.30-x for x in EST])
+        ExSTScore = normalize([
+            0.25 - x if x > 0 else 0.0
+            for x in EST
+        ])
 
         ExhibitRaw=[0.80*TimeScore[i]+0.20*ExSTScore[i] for i in range(6)]
 
