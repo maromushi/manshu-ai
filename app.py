@@ -1472,28 +1472,6 @@ if st.button("計算"):
                     FS_mult[0] *= 1.05
                 
         # ===============================
-        # ★ 会場補正（ここに入れる）
-        # ===============================
-        
-        if venue == "多摩川":
-            DynamicInsideFactor *= 1.08
-            FS_mult[0] *= 1.10
-            
-            # 外の暴走だけ軽く抑える
-            if DoubleAttackScore < 0.05:
-                FS_mult[4] *= 0.95
-                FS_mult[5] *= 0.92
-        
-        if venue == "びわこ":
-            if StartSpread > 0.10:
-                chaos_weight *= 0.9
-                
-            # でも完全イン信頼ではない
-            if DoubleAttackScore > WEAK and AttackSuccess == 1:
-                FS_mult[2] *= 1.04
-                FS_mult[3] *= 1.05
-                
-        # ===============================
         # ★ 会場補正（完成版）
         # ===============================
         
@@ -3782,15 +3760,14 @@ if st.button("計算"):
     st.markdown("## 🧠 判定")
 
     if BuyRank == "skip":
-        st.error("見送りレース")
+        st.error(f"見送り｜{OddsType}")
     
     elif BuyRank == "weak":
-        st.warning(f"購入（微妙）｜Top1={round(Top1,3)}")
+        st.warning(f"購入（微妙）｜{OddsType}")
     
     else:
-        st.success("購入（推奨）")
+        st.success(f"購入（推奨）｜{OddsType}")
     
-    st.write(f"タイプ：{OddsType}")
     st.write(f"推奨点数：{max_bets}点")
     
     st.markdown("### ◎ 本線")
