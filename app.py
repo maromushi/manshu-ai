@@ -1181,11 +1181,11 @@ if st.button("計算"):
         elif RaceZone == "weak":
 
             # ★ 最重要：イン殺す（ベース）
-            FS_mult[0] *= 0.75
+            FS_mult[0] *= 0.65
             
             # センター強化
             FS_mult[1] *= 1.10
-            FS_mult[2] *= 1.15
+            FS_mult[2] *= 1.25
             
             # 外もチャンス残す
             if Start[3] >= max(Start[1:3]) - 0.01:
