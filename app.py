@@ -2185,7 +2185,7 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
-        
+        debug_log.append(("SecondAdj_final", [round(x,3) for x in SecondAdj_final]))
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
         
@@ -2274,6 +2274,8 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
+        
+        SecondAdj_base = SecondAdj.copy()
         
         # ===============================
         # ★ 6の最低制限（ここに入れる）
@@ -2957,10 +2959,13 @@ if st.button("計算"):
                 continue
         
             P_first = P1[a]
+            
+            SecondAdj_final = SecondAdj.copy()
+            ThirdAdj_final = ThirdAdj.copy()
         
             # ★ ここが本質
-            SecondAdj_local = SecondAdj.copy()
-            ThirdAdj_local  = ThirdAdj.copy()
+            SecondAdj_local = SecondAdj_final.copy()
+            ThirdAdj_local  = ThirdAdj_final.copy()
         
             # ===============================
             # ★ 頭別ロジック
@@ -3555,7 +3560,14 @@ if st.button("計算"):
         
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
+    
+    def calc_base(order):
+        return run_ai(order)
+    
+    def calc_ex(order):
+        return run_ai(order)
                 
+                                        
     def run_zure_ai(order, NoAttackProb):
         
         results, ChaosScore, P1, DAS, IS, debug, Start = run_ai(order)
@@ -3563,11 +3575,7 @@ if st.button("計算"):
         if NoAttackProb > 0.95 and IS[0] > 0.60:
             return []
         
-        for name, val in debug:
-            if name == "AttackWeak":
-                AttackWeak = val
-            if name == "AttackSuccess":
-                AttackSuccess = val
+        AttackWeak, AttackSuccess, _ = detect_state(debug, DAS)
         
         zure_results = []
             
@@ -3610,8 +3618,8 @@ if st.button("計算"):
         order_ex=[0,1,2,3,4,5]
 
     try:
-        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log_waku, Start_waku = run_ai(order_waku)
-        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log_ex, Start = run_ai(order_ex)
+        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log_waku, Start_waku = calc_base(order_waku)
+        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log_ex, Start = calc_ex(order_ex)
     
     except Exception as e:
         import traceback
@@ -3626,22 +3634,23 @@ if st.button("計算"):
     DoubleAttackScore = DAS2
     InsideSurvival = IS2
     
-    AttackWeak = 0
-    AttackSuccess = 0
     
-    for name, val in debug_log_ex:
-        if name == "AttackWeak":
-            AttackWeak = val
-        if name == "AttackSuccess":
-            AttackSuccess = val
+    def detect_state(debug_log, DAS):
+
+        AttackWeak = 0
+        AttackSuccess = 0
     
-    # ===============================
-    # ★ 無風確率（ここ追加）
-    # ===============================
-    NoAttackProb = max(0, min(1,
-        1
-        - (DoubleAttackScore / 0.12)
-    ))
+        for name, val in debug_log:
+            if name == "AttackWeak":
+                AttackWeak = val
+            if name == "AttackSuccess":
+                AttackSuccess = val
+    
+        NoAttackProb = max(0, min(1, 1 - (DAS / 0.12)))
+    
+        return AttackWeak, AttackSuccess, NoAttackProb
+    
+    AttackWeak, AttackSuccess, NoAttackProb = detect_state(debug_log_ex, DAS2)
     
     w_no = NoAttackProb
     w_at = min(1, DoubleAttackScore / 0.12)
