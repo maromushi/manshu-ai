@@ -667,14 +667,6 @@ if st.button("計算"):
             reverse=True
         )
         
-        # ===============================
-        # ★ attackers救済（ここに入れる）
-        # ===============================
-        if len(attackers) == 0 and DoubleAttackScore > 0.09:
-        
-            atk = max(range(2,6), key=lambda i: Start[i])
-        
-            attackers.append(atk)
                 
         AttackSuccess = 0
 
@@ -856,6 +848,15 @@ if st.button("計算"):
                 DoubleAttackScore *= 0.85
             else:
                 DoubleAttackScore *= 0.65
+                
+        # ===============================
+        # ★ attackers救済（正しい位置）
+        # ===============================
+        if len(attackers) == 0 and DoubleAttackScore > 0.09:
+        
+            atk = max(range(2,6), key=lambda i: Start[i])
+        
+            attackers.append(atk)
                 
         # ===============================
         # ★ 壁崩壊フラグ（追加）
