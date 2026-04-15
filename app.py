@@ -3523,6 +3523,10 @@ if st.button("計算"):
     else:
         TopGap = 0
         
+    Top1 = results[0][3] if len(results) > 0 else 0
+    Top3 = sum(r[3] for r in results[:3])
+    Top5 = sum(r[3] for r in results[:5])
+        
     # ===============================
     # ★ 購入ランク分類（NEW）
     # ===============================
@@ -3546,9 +3550,7 @@ if st.button("計算"):
     elif Top1 < 0.22:
         BuyRank = "weak"
         
-    Top1 = results[0][3] if len(results) > 0 else 0
-    Top3 = sum(r[3] for r in results[:3])
-    Top5 = sum(r[3] for r in results[:5])
+    
     
     # ===============================
     # ★ レースタイプ判定（進化版）
