@@ -2274,8 +2274,6 @@ if st.button("計算"):
         
         SecondAdj = SecondScore.copy()
         ThirdAdj = [1.0]*6
-        SecondAdj_final = SecondAdj.copy()
-        ThirdAdj_final = ThirdAdj.copy()
         
         SecondAdj_base = SecondAdj.copy()
         
@@ -2947,6 +2945,9 @@ if st.button("計算"):
             and NoAttackFlag == 0
         ):
             ThirdAdj[2] *= 1.12
+            
+        SecondAdj_final = SecondAdj.copy()
+        ThirdAdj_final = ThirdAdj.copy()
             
         # ===============================
         # ★ 非頭艇の残り補正（最重要）
