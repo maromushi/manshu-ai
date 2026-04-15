@@ -3749,6 +3749,8 @@ if st.button("計算"):
         
     st.markdown("## 🧠 判定")
     
+    OddsType = "不明"
+    
     if BuyRank == "skip":
         st.error("見送りレース")
     
