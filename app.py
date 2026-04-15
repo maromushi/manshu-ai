@@ -3754,6 +3754,13 @@ if st.button("計算"):
     for a,b,c in insurance:
         st.write(f"{a}-{b}-{c}")
         
+    
+
+    
+    st.write(f"推奨点数：{max_bets}点")
+    st.write(f"NoAttackProb：{round(NoAttackProb,3)}")
+    st.write(f"DoubleAttackScore：{round(DoubleAttackScore,3)}")
+    
     st.markdown("## 🧠 判定")
     
     if BuyRank == "skip":
@@ -3766,13 +3773,8 @@ if st.button("計算"):
         st.success("購入（推奨）")
         
     st.write(f"タイプ：{OddsType}")
-
     
-    st.write(f"推奨点数：{max_bets}点")
-    st.write(f"NoAttackProb：{round(NoAttackProb,3)}")
-    st.write(f"DoubleAttackScore：{round(DoubleAttackScore,3)}")
-    
-    st.markdown("### ▼ 買い目")
+    st.markdown("## 🎯 買い目")
     
 
     for line in result_text.split("\n"):
