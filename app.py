@@ -442,22 +442,53 @@ if st.button("計算"):
                 Foot[i] *= 0.95
 
         # ===============================
-        # START
+        # START（精度版）
         # ===============================
-
-        adj_exst = [convert_exst(x) for x in EST]
-        w_ex = [exst_weight(x) for x in EST]
         
+        adj_exst = [convert_exst(x) for x in EST]
+        
+        # ===============================
+        # ① 展示信頼度
+        # ===============================
+        trust = []
+        
+        for i in range(6):
+        
+            diff = abs(EST[i] - ST[i])
+        
+            t = 1.0
+        
+            if diff > 0.12:
+                t *= 0.7
+        
+            if diff > 0.20:
+                t *= 0.5
+        
+            if EST[i] >= 0.30:
+                t *= 0.4
+        
+            elif EST[i] <= 0.10:
+                t *= 1.1
+        
+            # B級は崩れやすい
+            if CLS[i] in ["B1","B2"] and EST[i] >= 0.25:
+                t *= 0.8
+        
+            trust.append(t)
+        
+        # ===============================
+        # ② Start計算
+        # ===============================
         Start = []
         
         for i in range(6):
         
-            base = 0.30 - ST[i]
-            ex   = 0.30 - adj_exst[i]
+            avg = 0.30 - ST[i]
+            ex  = 0.30 - adj_exst[i]
         
-            w = w_ex[i]
+            t = trust[i]
         
-            val = (1 - w)*base + w*ex
+            val = (1 - t)*avg + t*ex
         
             Start.append(val)
             
