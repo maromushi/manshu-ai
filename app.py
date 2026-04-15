@@ -2354,12 +2354,19 @@ if st.button("計算"):
         # ★ 外の頭禁止（最重要）
         # ===============================
         for i in range(4,6):
+            
+            if not FrontBreak:
+                val *= 0.40
         
             can_break = (
                 DoubleAttackScore > 0.12
                 or AttackSuccess == 1
                 or StartCollapse == 1
                 or WallBreak == 1
+                or Start[1] < Start[0] - 0.02
+                or Start[2] < Start[1] - 0.02
+                or max(Start[1:4]) - Start[0] > 0.04
+
             )
         
             if i >= 4:
