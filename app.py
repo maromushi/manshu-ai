@@ -2362,13 +2362,29 @@ if st.button("計算"):
                 or WallBreak == 1
             )
         
-            if not can_break:
-                P1[i] *= 0.35
+            if i >= 4:
+
+                if DoubleAttackScore < 0.12:
+                    P1[i] *= 0.20   # ←強化
+            
+                if DoubleAttackScore < 0.08:
+                    P1[i] *= 0.10   # ←さらに強化
         
         # 再正規化（絶対必要）
         total = sum(P1)
         if total > 0:
             P1 = [p / total for p in P1]
+            
+        # ===============================
+        # ★ 外の能力ゴリ押し禁止
+        # ===============================
+        for i in range(4,6):
+        
+            if DoubleAttackScore < 0.12:
+        
+                # 能力だけで1位になってる場合
+                if P1[i] == max(P1):
+                    P1[i] *= 0.55
         
         # ★ 無風時：イン優先ロック（修正版）
         if NoAttackFlag == 1:
