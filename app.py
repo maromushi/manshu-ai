@@ -3740,6 +3740,28 @@ if st.button("計算"):
                 
                     if CPI[5] < 0.50:
                         SecondAdj[5] *= 0.60
+                        
+            # ===============================
+            # ★ 2着の構造（改良版）
+            # ===============================
+            if DoubleAttackScore < 0.12:
+            
+                for i in range(6):
+            
+                    if i == a:
+                        continue
+            
+                    # 同格（最重要）
+                    if abs(i - a) == 1:
+                        SecondAdj[i] *= 1.10
+            
+                    # 内（残り）
+                    elif i < a:
+                        SecondAdj[i] *= 1.05
+            
+                    # 外（基本弱い）
+                    elif i > a:
+                        SecondAdj[i] *= 0.90
                 
       
                 
