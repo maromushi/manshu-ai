@@ -2289,6 +2289,24 @@ if st.button("計算"):
             
                         elif Foot[i] >= 0.48:
                             ThirdAdj[i] *= 1.08 
+                            
+        # ===============================
+        # ★ weakゾーンのイン2着制御（ここ追加）
+        # ===============================
+        if RaceZone == "weak":
+        
+            st_loss = Start[0] < max(Start[1:3]) - 0.02
+            weak_inside = InsideSurvival[0] < 0.55
+            strong_enemy = max(CPI[1:3]) > CPI[0] + 0.03
+        
+            if st_loss and weak_inside and strong_enemy:
+                SecondAdj[0] *= 0.55
+        
+            elif st_loss and (weak_inside or strong_enemy):
+                SecondAdj[0] *= 0.70
+        
+            elif st_loss:
+                SecondAdj[0] *= 0.82
             
                     
         # ★ 攻め時の2残り復活（汎用版）
