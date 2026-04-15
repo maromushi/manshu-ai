@@ -3647,13 +3647,13 @@ if st.button("計算"):
     insurance = []
     
     for (mark,a,b,c,p) in marked:
-
+    
         # ===============================
-        # ★ 保険（弱い目だけ）
+        # ★ 保険（ここだけにする）
         # ===============================
         if (
             a == 1
-            and mark in ["▲","△"]   # ←これが本質
+            and mark in ["▲","△"]
             and 0.22 < P1[0] < 0.40
             and InsideSurvival[0] > 0.50
             and Start[0] >= max(Start[1:3]) - 0.03
@@ -3673,17 +3673,6 @@ if st.button("計算"):
     
         elif mark in ["▲","△"]:
             hole.append((a,b,c))
-    
-        if (
-            a == 1
-            and P1[0] < 0.40
-            and P1[0] > 0.18
-            and InsideSurvival[0] > 0.45
-            and p < top_p * 0.60
-            and (a,b,c) not in main
-            and (a,b,c) not in sub
-        ):
-            insurance.append((a,b,c))
     
     insurance = insurance[:2]
     
