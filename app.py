@@ -3647,7 +3647,24 @@ if st.button("計算"):
     insurance = []
     
     for (mark,a,b,c,p) in marked:
+
+        # ===============================
+        # ★ 保険（弱い目だけ）
+        # ===============================
+        if (
+            a == 1
+            and mark in ["▲","△"]   # ←これが本質
+            and 0.22 < P1[0] < 0.40
+            and InsideSurvival[0] > 0.50
+            and Start[0] >= max(Start[1:3]) - 0.03
+            and p < top_p * 0.55
+        ):
+            insurance.append((a,b,c))
+            continue
     
+        # ===============================
+        # 通常分類
+        # ===============================
         if mark == "◎":
             main.append((a,b,c))
     
