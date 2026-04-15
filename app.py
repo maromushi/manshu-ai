@@ -1156,24 +1156,8 @@ if st.button("計算"):
         
         else:
             RaceZone = "attack"
-            
-        # ===============================
-        # ★ 展開ゾーン分類（追加）
-        # ===============================
-        if NoAttackFlag == 1:
-            RaceZone = "no_attack"
-        
-        elif (
-            0.05 <= DoubleAttackScore < 0.09
-            and AttackSuccess == 0
-        ):
-            RaceZone = "weak"
-        
-        else:
-            RaceZone = "attack"
-        
-        # ★ ここに追加 ↓↓↓
-        disable_late_boost = (RaceZone == "weak")
+      
+    
         
         
         # ===============================
@@ -1896,58 +1880,57 @@ if st.button("計算"):
 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
-        if not disable_late_boost:
         
-            # ===============================
+        # ===============================
             # ★ 能力逆転（最重要）
             # ===============================
             
             # 1 vs 3（基本形）
-            PowerGap_13 = CPI[2] - CPI[0]
+        PowerGap_13 = CPI[2] - CPI[0]
             
-            NaturalOvertake_3 = (
-                PowerGap_13 > 0.05
-                and Start[2] >= Start[0] - 0.02
-            )
+        NaturalOvertake_3 = (
+            PowerGap_13 > 0.05
+            and Start[2] >= Start[0] - 0.02
+        )
             
-            if NaturalOvertake_3:
+        if NaturalOvertake_3:
             
-                # 3を引き上げ
-                FS_mult[2] *= 1.20
+            # 3を引き上げ
+            FS_mult[2] *= 1.20
             
-                # 1を落とす
-                FS_mult[0] *= 0.82
+                #1を落とす
+            FS_mult[0] *= 0.82
             
                 # ターン勝ってたらさらに強化
-                if Turn[2] > Turn[0]:
-                    FS_mult[2] *= 1.10
+            if Turn[2] > Turn[0]:
+                FS_mult[2] *= 1.10
             
                 # 足も勝ってたら追加
-                if Foot[2] > Foot[0]:
-                    FS_mult[2] *= 1.05
+            if Foot[2] > Foot[0]:
+                FS_mult[2] *= 1.05
             
                 # イン耐久弱いならさらに削る
-                if InsideSurvival[0] < 0.60:
-                    FS_mult[0] *= 0.90
+            if InsideSurvival[0] < 0.60:
+                FS_mult[0] *= 0.90
                     
             # ===============================
             # ★ 能力逆転（2コース）
             # ===============================
             
-            PowerGap_12 = CPI[1] - CPI[0]
+        PowerGap_12 = CPI[1] - CPI[0]
             
-            NaturalOvertake_2 = (
-                PowerGap_12 > 0.04
-                and Start[1] >= Start[0] - 0.02
-            )
+        NaturalOvertake_2 = (
+            PowerGap_12 > 0.04
+            and Start[1] >= Start[0] - 0.02
+        )
             
-            if NaturalOvertake_2:
+        if NaturalOvertake_2:
             
-                FS_mult[1] *= 1.15
-                FS_mult[0] *= 0.88
+            FS_mult[1] *= 1.15
+            FS_mult[0] *= 0.88
             
-                if Turn[1] > Turn[0]:
-                    FS_mult[1] *= 1.08
+            if Turn[1] > Turn[0]:
+                FS_mult[1] *= 1.08
                 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
