@@ -1201,10 +1201,16 @@ if st.button("計算"):
                 dist_penalty = 1.0 - 0.08*(i-3)   # 4=1.0, 5=0.92, 6=0.84
             
                 if not can_break and wall_strong:
-                    val *= 0.65 * dist_penalty
+                    if AttackSuccess == 0:
+                        val *= 0.50 * dist_penalty
+                    else:
+                        val *= 0.65 * dist_penalty
             
                 elif not can_break:
-                    val *= 0.80 * dist_penalty
+                    if AttackSuccess == 0:
+                        val *= 0.60 * dist_penalty   # ←ここ強化
+                    else:
+                        val *= 0.80 * dist_penalty
             
                 else:
                     val *= 0.95 * dist_penalty
