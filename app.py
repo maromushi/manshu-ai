@@ -1157,19 +1157,34 @@ if st.button("計算"):
             )
             # ★ 外頭の最終制御（ここだけで完結させる）
 
-            if i >= 4:
+            # ===============================
+            # ★ 外の突破判定（汎用版）
+            # ===============================
+            if i >= 3:
             
-                # 強攻めだけ許可
-                if DoubleAttackScore > 0.13 and AttackSuccess == 1:
-                    val *= 0.90
+                # ■ 展開で突破できるか
+                can_break = (
+                    DoubleAttackScore > 0.12
+                    or AttackSuccess == 1
+                    or StartCollapse == 1
+                )
             
-                # 中攻め（ヒモまで）
-                elif DoubleAttackScore > 0.08:
-                    val *= 0.70
+                # ■ 前が詰まってる（壁）
+                wall_strong = (
+                    Start[i-1] >= Start[i] - 0.01
+                )
             
-                # 弱攻め（ほぼ禁止）
+                # ■ 外ほど不利（距離）
+                dist_penalty = 1.0 - 0.08*(i-3)   # 4=1.0, 5=0.92, 6=0.84
+            
+                if not can_break and wall_strong:
+                    val *= 0.65 * dist_penalty
+            
+                elif not can_break:
+                    val *= 0.80 * dist_penalty
+            
                 else:
-                    val *= 0.50
+                    val *= 0.95 * dist_penalty
             
             # ===============================
             # ★ グレーゾーンだけ外を少し許可
