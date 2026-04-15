@@ -3491,16 +3491,27 @@ if st.button("計算"):
         TopGap = 0
         
     # ===============================
-    # ★ 見送り判定（追加）
+    # ★ 購入ランク分類（NEW）
     # ===============================
-    SkipFlag = False
+    BuyRank = "strong"
     
+    # 見送り
     if (
         AttackSuccess == 0
         and NoAttackProb > 0.75
         and any(a >= 4 for (a,b,c,p) in results[:5])
     ):
-        SkipFlag = True
+        BuyRank = "skip"
+    
+    # 購入（微妙）
+    elif (
+        NoAttackProb > 0.90
+        and ChaosScore < 0.50
+    ):
+        BuyRank = "weak"
+    
+    elif Top1 < 0.22:
+        BuyRank = "weak"
         
     Top1 = results[0][3] if len(results) > 0 else 0
     Top3 = sum(r[3] for r in results[:3])
@@ -3511,7 +3522,7 @@ if st.button("計算"):
     # ===============================
     max_bets = 0
 
-    if SkipFlag:
+    if BuyRank == "skip":
         max_bets = 0
     
     else:
@@ -3718,10 +3729,14 @@ if st.button("計算"):
         
     st.markdown("## 🧠 判定")
 
-    if SkipFlag:
+    if BuyRank == "skip":
         st.write("状態：見送り")
+    
+    elif BuyRank == "weak":
+        st.write("状態：購入（微妙）")
+    
     else:
-        st.write("状態：購入")
+        st.write("状態：購入（推奨）")
     
     st.write(f"推奨点数：{max_bets}点")
     st.write(f"NoAttackProb：{round(NoAttackProb,3)}")
