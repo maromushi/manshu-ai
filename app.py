@@ -4013,9 +4013,23 @@ if st.button("計算"):
     final = {}
 
     # 重み
-    w_no = 0.5
-    w_weak = 0.3
-    w_at = 0.2
+    if NoAttackProb > 0.75:
+        # 無風レース（イン中心）
+        w_no = 0.65
+        w_weak = 0.25
+        w_at = 0.10
+    
+    elif DoubleAttackScore < 0.08:
+        # 中間ゾーン（ズレ・一番むずい）
+        w_no = 0.45
+        w_weak = 0.40
+        w_at = 0.15
+    
+    else:
+        # 攻めレース
+        w_no = 0.30
+        w_weak = 0.30
+        w_at = 0.40
     
     for a,b,c,p in res_no:
         final[(a,b,c)] = final.get((a,b,c),0) + w_no*p
