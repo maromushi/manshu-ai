@@ -2372,6 +2372,12 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
+        # ★ デバッグ追加（ここ！！）
+        debug_log.append(("P1_pre", [round(x,4) for x in FinalFirst]))
+        debug_log.append(("SecondAdj_pre", [round(x,4) for x in SecondAdj]))
+        debug_log.append(("ThirdAdj_pre", [round(x,4) for x in ThirdAdj]))
+        
+        TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
         
@@ -4386,10 +4392,19 @@ if st.button("計算"):
     debug_text.append("")
     debug_text.append("CoreDebug:")
     for name, val in debug_log_ex:
-        if name in ["AttackWeak", "AttackSuccess", "Start"]:
+        if name in [
+            "AttackWeak",
+            "AttackSuccess",
+            "Start",
+            "P1_pre",
+            "SecondAdj_pre",
+            "ThirdAdj_pre"
+        ]:
             debug_text.append(f"{name}: {val}")
     
     debug_output = "\n".join(debug_text)
+    
+    
     
     
         # 出目テキスト
