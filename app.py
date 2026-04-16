@@ -2115,6 +2115,17 @@ if st.button("計算"):
                 
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
+        # ===============================
+        # ★ 弱攻め時の3復活（最重要）
+        # ===============================
+        if AttackWeak == 1 and AttackSuccess == 0:
+        
+            # 3コースを主役として復活
+            FS_mult[2] *= 1.10
+        
+            # ついでに4もほんの少しだけ
+            FS_mult[3] *= 1.05
+        
         
         if False:
         
@@ -3250,8 +3261,8 @@ if st.button("計算"):
                 SecondAdj_local[0] *= 0.85
                 SecondAdj_local[1] *= 0.90
                 for i in range(3,6):
-                    SecondAdj_local[i] *= 1.08
-                    ThirdAdj_local[i]  *= 1.10
+                    SecondAdj_local[i] *= 1.03
+                    ThirdAdj_local[i]  *= 1.05
         
             elif a == 3:
                 for i in range(0,2):
@@ -3281,7 +3292,7 @@ if st.button("計算"):
             # ===============================
             # ★ 2着構造（ここに移動）
             # ===============================
-            if DoubleAttackScore < 0.12:
+            if DoubleAttackScore < 0.15:
             
                 for i in range(6):
             
@@ -3810,7 +3821,7 @@ if st.button("計算"):
             # ===============================
             # ★ 2着の構造（強化版）
             # ===============================
-            if DoubleAttackScore < 0.12:
+            if DoubleAttackScore < 0.15:
             
                 for i in range(6):
             
