@@ -2881,6 +2881,35 @@ if st.button("計算"):
                 ):
                     SecondAdj[5] *= 0.70
                     ThirdAdj[5] *= 0.75
+                    
+        # ===== 6の2着残り強化 =====
+
+        SixSecondFlag = 0
+
+        if (
+            CPI[5] >= 0.50
+            and Foot[5] >= 0.55
+            and DoubleAttackScore > MID   # ←変更
+            and NoAttackFlag == 0
+            and (
+                DoubleAttackScore > WEAK and NoAttackFlag == 0
+                or OuterClusterFlag == 1
+            )
+        ):
+            SixSecondFlag = 1
+
+            # 1〜3を少し削る（前残り崩れ）
+            SecondAdj_local[0] *= 0.92
+            SecondAdj_local[1] *= 0.95
+            SecondAdj_local[2] *= 0.97
+
+        else:
+
+            # 弱い6はしっかり消す
+            if Foot[5] < 0.45:
+                SecondAdj_local[5] *= 0.90
+            else:
+                SecondAdj_local[5] *= 1.00
         
         
         # ===============================
@@ -3075,34 +3104,7 @@ if st.button("計算"):
                 SecondAdj[i] *= factor
 
 
-        # ===== 6の2着残り強化 =====
-
-        SixSecondFlag = 0
-
-        if (
-            CPI[5] >= 0.50
-            and Foot[5] >= 0.55
-            and DoubleAttackScore > MID   # ←変更
-            and NoAttackFlag == 0
-            and (
-                DoubleAttackScore > WEAK and NoAttackFlag == 0
-                or OuterClusterFlag == 1
-            )
-        ):
-            SixSecondFlag = 1
-
-            # 1〜3を少し削る（前残り崩れ）
-            SecondAdj_local[0] *= 0.92
-            SecondAdj_local[1] *= 0.95
-            SecondAdj_local[2] *= 0.97
-
-        else:
-
-            # 弱い6はしっかり消す
-            if Foot[5] < 0.45:
-                SecondAdj_local[5] *= 0.90
-            else:
-                SecondAdj_local[5] *= 1.00
+        
                 
 
         ThirdScore=[
