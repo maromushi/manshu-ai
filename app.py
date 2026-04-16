@@ -3358,6 +3358,25 @@ if st.button("計算"):
             
                     elif i > a:
                         SecondAdj_local[i] *= 0.70
+                        
+            # ===============================
+            # ★ 距離で最終決定（これが本体）
+            # ===============================
+            for i in range(6):
+            
+                if i == a:
+                    continue
+            
+                dist = abs(i - a)
+            
+                if dist == 1:
+                    SecondAdj_local[i] *= 1.20
+            
+                elif dist == 2:
+                    SecondAdj_local[i] *= 1.05
+            
+                elif dist >= 3:
+                    SecondAdj_local[i] *= 0.70
         
         
                     
