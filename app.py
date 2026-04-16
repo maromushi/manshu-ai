@@ -3092,17 +3092,17 @@ if st.button("計算"):
             SixSecondFlag = 1
 
             # 1〜3を少し削る（前残り崩れ）
-            SecondAdj[0] *= 0.92
-            SecondAdj[1] *= 0.95
-            SecondAdj[2] *= 0.97
+            SecondAdj_local[0] *= 0.92
+            SecondAdj_local[1] *= 0.95
+            SecondAdj_local[2] *= 0.97
 
         else:
 
             # 弱い6はしっかり消す
             if Foot[5] < 0.45:
-                SecondAdj[5] *= 0.90
+                SecondAdj_local[5] *= 0.90
             else:
-                SecondAdj[5] *= 1.00
+                SecondAdj_local[5] *= 1.00
                 
 
         ThirdScore=[
@@ -3855,17 +3855,17 @@ if st.button("計算"):
             
             # ★ 6の最終制御
             if NoAttackFlag == 1:
-                SecondAdj[5] *= 0.70
-                ThirdAdj[5] *= 0.75
+                SecondAdj_local[5] *= 0.70
+                ThirdAdj_local[5] *= 0.75
             else:
                 if NoAttackFlag == 0:
 
                     if SixFlowFlag:
-                        SecondAdj[5] *= 1.08
-                        ThirdAdj[5] *= 1.12
+                        SecondAdj_local[5] *= 1.08
+                        ThirdAdj_local[5] *= 1.12
                 
                     if CPI[5] < 0.50:
-                        SecondAdj[5] *= 0.60
+                        SecondAdj_local[5] *= 0.60
                         
             # ===============================
             # ★ 2着の構造（強化版）
