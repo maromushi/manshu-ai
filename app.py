@@ -4078,10 +4078,6 @@ if st.button("計算"):
         tmp.append((a,b,c,p))
     
     results = tmp
-        
-        tmp.append((a,b,c,p))
-    
-    results = tmp
     
     
     # ===============================
