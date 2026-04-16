@@ -276,7 +276,16 @@ if st.button("計算"):
     # AI CORE
     # =====================================
 
-    def run_ai(order):
+    def run_no_attack(order):
+        return run_core(order, mode="no")
+    
+    def run_weak(order):
+        return run_core(order, mode="weak")
+    
+    def run_attack(order):
+        return run_core(order, mode="attack")
+        
+    def run_core(order, mode):
         
         debug_log = []
         
@@ -491,6 +500,20 @@ if st.button("計算"):
             val = (1 - t)*avg + t*ex
         
             Start.append(val)
+            
+        # ===============================
+        # ★ モード初期制御（ここ重要）
+        # ===============================
+        if mode == "no":
+            DoubleAttackScore = 0
+            AttackSuccess = 0
+            AttackWeak = 0
+        
+        elif mode == "weak":
+            pass  # ここは後で効かせる
+        
+        elif mode == "attack":
+            pass
             
         # ===============================
         # ★ 疑似攻め（ここに入れる）
@@ -1178,6 +1201,8 @@ if st.button("計算"):
         # ===============================
         # ★ FirstScoreフラグ箱
         # ===============================
+        
+        
 
         FirstScore=[]
 
@@ -1287,6 +1312,43 @@ if st.button("計算"):
             FirstScore.append(val)
         
         FS_mult = [1.0]*6
+        
+        # ===============================
+        # ★ モード別 性格付け（最重要）
+        # ===============================
+        
+        if mode == "no":
+        
+            # イン強化
+            FS_mult = [1.0]*6
+            FS_mult[0] *= 1.15
+        
+            # 外を殺す
+            for i in range(4,6):
+                FS_mult[i] *= 0.40
+        
+        elif mode == "weak":
+        
+            FS_mult = [1.0]*6
+        
+            # イン少し弱める
+            FS_mult[0] *= 0.85
+        
+            # センター強化
+            FS_mult[2] *= 1.15
+            FS_mult[3] *= 1.10
+        
+        elif mode == "attack":
+        
+            FS_mult = [1.0]*6
+        
+            # イン削る
+            FS_mult[0] *= 0.75
+        
+            # 外まで解放
+            FS_mult[3] *= 1.10
+            FS_mult[4] *= 1.10
+            FS_mult[5] *= 1.08
 
         # ===============================
         # ★ イン死亡は強制排除（ここが正解位置）
@@ -2384,9 +2446,8 @@ if st.button("計算"):
         # ★ 外の頭禁止（最重要）
         # ===============================
         for i in range(4,6):
-            
             if not FrontBreak:
-                val *= 0.40
+                P1[i] *= 0.40
         
             can_break = (
                 DoubleAttackScore > 0.12
@@ -2501,8 +2562,45 @@ if st.button("計算"):
             0.07 < DoubleAttackScore <= 0.13
         )
         
+        
         SecondAdj = SecondScore.copy()
+        
+        # ===============================
+        # ★ 2着モード制御（ここ重要）
+        # ===============================
+        
+        if mode == "no":
+            for i in range(4,6):
+                SecondAdj[i] *= 0.6
+        
+        elif mode == "weak":
+            for i in range(4,6):
+                if DoubleAttackScore < 0.10:
+                    SecondAdj[i] *= 0.75
+        
+        elif mode == "attack":
+            for i in range(4,6):
+                SecondAdj[i] *= 1.05
+                
+        
         ThirdAdj = [1.0]*6
+        
+        # ===============================
+        # ★ 3着モード制御
+        # ===============================
+        
+        if mode == "no":
+            for i in range(4,6):
+                ThirdAdj[i] *= 0.7
+        
+        elif mode == "weak":
+            for i in range(4,6):
+                if DoubleAttackScore < 0.10:
+                    ThirdAdj[i] *= 0.8
+        
+        elif mode == "attack":
+            for i in range(4,6):
+                ThirdAdj[i] *= 1.10
         
         SecondAdj_base = SecondAdj.copy()
         
@@ -3814,10 +3912,10 @@ if st.button("計算"):
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
     
     def calc_base(order):
-        return run_ai(order)
+        return run_core(order, mode="no")
     
     def calc_ex(order):
-        return run_ai(order)
+        return run_core(order, mode="attack")
                 
                                         
     def run_zure_ai(order, NoAttackProb):
@@ -3870,8 +3968,10 @@ if st.button("計算"):
         order_ex=[0,1,2,3,4,5]
 
     try:
-        res_waku, chaos1, P1_waku, DAS1, IS1, debug_log_waku, Start_waku = calc_base(order_waku)
-        res_ex, chaos2, P1_ex, DAS2, IS2, debug_log_ex, Start = calc_ex(order_ex)
+        _, chaos1, P1_base, DAS_base, IS_base, debug_log_base, Start_base = calc_base(order_waku)
+        res_no, chaos_no, P1_no, DAS_no, IS_no, debug_no, _ = run_no_attack(order_ex)
+        res_weak, chaos_w, P1_w, DAS_w, IS_w, debug_w, _ = run_weak(order_ex)
+        res_attack, chaos_a, P1_a, DAS_a, IS_a, debug_a, _ = run_attack(order_ex)
     
     except Exception as e:
         import traceback
@@ -3881,10 +3981,13 @@ if st.button("計算"):
 
     
 
-    ChaosScore = 0.3 * chaos1 + 0.7 * chaos2
-    P1 = P1_ex
-    DoubleAttackScore = DAS2
-    InsideSurvival = IS2
+    # ベースは attack を採用（←一番安定）
+    ChaosScore = chaos_a
+    P1 = P1_a
+    DoubleAttackScore = DAS_a
+    InsideSurvival = IS_a
+    debug_log_ex = debug_a
+    Start = Start_a
     
     
     def detect_state(debug_log, DAS):
@@ -3902,34 +4005,28 @@ if st.button("計算"):
     
         return AttackWeak, AttackSuccess, NoAttackProb
     
-    AttackWeak, AttackSuccess, NoAttackProb = detect_state(debug_log_ex, DAS2)
+    AttackWeak, AttackSuccess, NoAttackProb = detect_state(debug_log_ex, DoubleAttackScore)
     
-    w_no = NoAttackProb
-    w_at = min(1, DoubleAttackScore / 0.12)
-    w_gray = max(0, 1 - w_no - w_at)
     # =====================================
     # 合成
     # =====================================
     final = {}
-    
-    for a,b,c,p in res_waku:
-        key=(a,b,c)
-        final[key]=final.get(key,0)+w_no*p
-    
-    for a,b,c,p in res_ex:
-        key=(a,b,c)
-        final[key]=final.get(key,0)+w_at*p
-        
 
-        
-    # ズレ万舟を追加
-    res_zure = run_zure_ai(order_ex, NoAttackProb)
+    # 重み
+    w_no = 0.5
+    w_weak = 0.3
+    w_at = 0.2
     
-    for a,b,c,p in res_zure:
-        key=(a,b,c)
-        final[key]=final.get(key,0)+p*0.45
-
-    results=[(k[0],k[1],k[2],v) for k,v in final.items()]
+    for a,b,c,p in res_no:
+        final[(a,b,c)] = final.get((a,b,c),0) + w_no*p
+    
+    for a,b,c,p in res_weak:
+        final[(a,b,c)] = final.get((a,b,c),0) + w_weak*p
+    
+    for a,b,c,p in res_attack:
+        final[(a,b,c)] = final.get((a,b,c),0) + w_at*p
+    
+    results = [(a,b,c,p) for (a,b,c),p in final.items()]
     
     # ===============================
     # ★ シャープ化 & 正規化 & カット
@@ -4254,8 +4351,9 @@ if st.button("計算"):
         
     debug_text.append("===== DEBUG =====")
         
-    debug_text.append(f"DAS_waku: {round(DAS1,4)}")
-    debug_text.append(f"DAS_ex: {round(DAS2,4)}")
+    debug_text.append(f"DAS_no: {round(DAS_no,4)}")
+    debug_text.append(f"DAS_weak: {round(DAS_w,4)}")
+    debug_text.append(f"DAS_attack: {round(DAS_a,4)}")
     debug_text.append(f"ChaosScore: {round(ChaosScore,4)}")
         
     debug_text.append("")
