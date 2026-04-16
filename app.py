@@ -1252,42 +1252,24 @@ if st.button("計算"):
             FirstScore.append(val)
         
         FS_mult = [1.0]*6
-        if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
-            FS_mult[WeakLeader] *= 1.12
+
         
         # ===============================
         # ★ モード別 性格付け（最重要）
         # ===============================
         
         if mode == "no":
-        
-            # イン強化
-            FS_mult = [1.0]*6
             FS_mult[0] *= 1.15
-        
-            # 外を殺す
             for i in range(4,6):
                 FS_mult[i] *= 0.40
         
         elif mode == "weak":
-        
-            FS_mult = [1.0]*6
-        
-            # イン少し弱める
             FS_mult[0] *= 0.85
-        
-            # センター強化
             FS_mult[2] *= 1.15
             FS_mult[3] *= 1.10
         
         elif mode == "attack":
-        
-            FS_mult = [1.0]*6
-        
-            # イン削る
             FS_mult[0] *= 0.75
-        
-            # 外まで解放
             FS_mult[3] *= 1.10
             FS_mult[4] *= 1.10
             FS_mult[5] *= 1.08
@@ -3843,15 +3825,15 @@ if st.button("計算"):
             
                     # 同格（最重要）
                     if abs(i - a) == 1:
-                        SecondAdj[i] *= 1.20
+                        SecondAdj_local[i] *= 1.20
             
                     # 内（残り）
                     elif i < a:
-                        SecondAdj[i] *= 1.10
+                        SecondAdj_local[i] *= 1.10
             
                     # 外（ここを強く落とす）
                     elif i > a:
-                        SecondAdj[i] *= 0.70
+                        SecondAdj_local[i] *= 0.70
                 
       
                 
