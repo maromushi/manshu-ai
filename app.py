@@ -1272,24 +1272,24 @@ if st.button("計算"):
             FirstScore.append(val)
         
         FS_mult = [1.0]*6
-        
+
         # ===============================
-        # ★ インST差ペナルティ（統一版）
+        # ★ 1 インST差（ここ）
         # ===============================
         diff = max(Start[1:4]) - Start[0]
         
         if diff > 0.06:
             FS_mult[0] *= 0.50
-        
         elif diff > 0.04:
             FS_mult[0] *= 0.70
-        
         elif diff > 0.02:
             FS_mult[0] *= 0.85
-
+            
+            
         
+            
         # ===============================
-        # ★ モード別 性格付け（最重要）
+        # ★ 2 モード別 性格付け（最重要）
         # ===============================
         
         if mode == "no":
@@ -1311,6 +1311,33 @@ if st.button("計算"):
         if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
             FS_mult[WeakLeader] *= 1.12
 
+            
+        # ===============================
+        # ★ 2 展開補正
+        # ===============================
+        
+        if AttackWeak == 1 and AttackSuccess == 0:
+            FS_mult[WeakLeader] *= 1.10
+        
+        if NoAttackFlag == 1:
+            FS_mult[0] *= 1.05
+        
+        # ===============================
+        # ★ 3 個別補正
+        # ===============================
+        
+        for i in range(6):
+        
+            if Fcount[i] >= 1:
+                FS_mult[i] *= 0.85
+        
+            if Class[i] == "A1":
+                FS_mult[i] *= 1.05
+        
+        
+        
+        
+        
         
         # ===============================
         # ★ 壁崩れ → 3優遇（ここに移動）
