@@ -1193,6 +1193,23 @@ if st.button("計算"):
                 +0.10*LaneWin[i]
             )
             
+            # ===============================
+            # ★ 外の突破判定（1着用）
+            # ===============================
+            if i >= 3:  # 4,5,6号艇
+            
+                front_break = (
+                    Start[0] < Start[2] - 0.04
+                    or Start[1] < Start[2] - 0.03
+                )
+            
+                outer_fast = (
+                    Start[i] > max(Start[1:4]) + 0.02
+                )
+            
+                if front_break and outer_fast:
+                    val *= 1.15
+            
             if i >= 4:
 
                 if AttackSuccess == 0:
@@ -1283,35 +1300,25 @@ if st.button("計算"):
         # ===============================
         # ★ イン死亡は強制排除（ここが正解位置）
         # ===============================
-        if Start[0] == min(Start):
+        diff2 = Start[1] - Start[0]  # 2コースとの差
+        diff3 = Start[2] - Start[0]  # 3コースとの差
         
-            FS_mult[0] *= 0.45
-        
-            if max(Start[1:4]) - Start[0] > 0.05:
-                FS_mult[0] *= 0.65
-            
-        # ===============================
-        # ★ ST最下位インは強制排除（最重要）
-        # ===============================
-        if Start[0] == min(Start):
-        
-            # 完全最遅 → ほぼ死亡
+        # 3が速い＆2が遅い → 最悪パターン
+        if diff3 < -0.03 and diff2 > 0.03:
             FS_mult[0] *= 0.55
         
-            # さらに差が大きいなら即死
-            if max(Start[1:4]) - Start[0] > 0.06:
-                FS_mult[0] *= 0.60
-                
-        # ===============================
-        # ★ ST順位ペナルティ（イン専用）
-        # ===============================
-        rank = sorted(Start, reverse=True).index(Start[0])
-        
-        if rank >= 4:   # 下位2艇
+        # 3だけ速い（まくり）
+        elif diff3 < -0.03:
             FS_mult[0] *= 0.70
         
-        if rank == 5:   # 最下位
-            FS_mult[0] *= 0.60
+        # 全体的に負け
+        elif max(Start[1:4]) - Start[0] > 0.05:
+            FS_mult[0] *= 0.75
+        
+        # ほぼ横並び
+        else:
+            pass
+                
         
         # ===============================
         # ★ 壁崩れ → 3優遇（ここに移動）
@@ -3253,6 +3260,19 @@ if st.button("計算"):
             
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
+            
+            # ===============================
+            # ★ 外の詰まり・抜け判定（3着用）
+            # ===============================
+            for i in range(3,6):
+            
+                # 前より速い → 抜けてこれる
+                if Start[i] > Start[i-1] + 0.02:
+                    ThirdAdj_local[i] *= 1.10
+            
+                # 前より遅い → 詰まる
+                elif Start[i] < Start[i-1] - 0.02:
+                    ThirdAdj_local[i] *= 0.80
             
             # ===============================
             # ★ 3着：位置ボーナス
