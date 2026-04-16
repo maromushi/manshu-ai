@@ -725,6 +725,25 @@ if st.button("計算"):
                 or Turn[atk] > Turn[atk-1] + 0.01
             ):
                 AttackWeak = 1
+                
+        # ===============================
+        # ★ 疑似主役（弱攻め）
+        # ===============================
+        WeakLeader = None
+        
+        if AttackWeak == 1 and AttackSuccess == 0:
+            WeakLeader = max(range(2,5), key=lambda i: AttackIndex[i])
+        
+        if WeakLeader is not None:
+        
+            FS_mult[WeakLeader] *= 1.12
+        
+            for i in range(WeakLeader):
+                FS_mult[i] *= 0.92
+        
+            for i in range(WeakLeader+1, 6):
+                SecondAdj[i] *= 1.08
+                ThirdAdj[i]  *= 1.05
                     
             
 
