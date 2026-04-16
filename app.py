@@ -3206,15 +3206,7 @@ if st.button("計算"):
                 
         
         
-        # ===============================
-        # ★ 3着強化
-        # ===============================
         
-        if FiveFlowFlag and DoubleAttackScore > WEAK and AttackSuccess == 1:
-            ThirdAdj_local[4] *= 1.15
-        
-        if NoAttackFlag == 0 and SixFlowFlag:
-            ThirdAdj_local[5] *= 1.20
 
         # ===== 3号艇の自然流入 =====
 
@@ -3248,6 +3240,16 @@ if st.button("計算"):
             
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
+            
+            # ===============================
+            # ★ 3着強化
+            # ===============================
+            
+            if FiveFlowFlag and DoubleAttackScore > WEAK and AttackSuccess == 1:
+                ThirdAdj_local[4] *= 1.15
+            
+            if NoAttackFlag == 0 and SixFlowFlag:
+                ThirdAdj_local[5] *= 1.20
             
             
             
