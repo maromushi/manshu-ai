@@ -16,8 +16,24 @@ def normalize(values):
     mn = min(valid)
     mx = max(valid)
 
-    if mx-mn < 1e-6:
-        return [0.5 + (i-2.5)*0.02 for i in range(len(values))]
+    def normalize(values):
+
+        valid = [v for v in values if v is not None]
+    
+        if len(valid) == 0:
+            return [0]*len(values)
+    
+        mn = min(valid)
+        mx = max(valid)
+    
+        # ★ 同値は完全フラット（超重要）
+        if mx - mn < 1e-6:
+            return [0.5] * len(values)
+    
+        return [
+            ((v - mn) / (mx - mn)) if v is not None else 0
+            for v in values
+        ]
 
     return [
        ((v-mn)/(mx-mn)) if v is not None else 0
@@ -59,7 +75,14 @@ if st.button("計算"):
     local_vars={}
 
     try:
-        exec(data,{"__builtins__":{}},local_vars)
+        safe_builtins = {
+        "range": range,
+        "len": len,
+        "min": min,
+        "max": max,
+        "sum": sum
+    }
+    exec(data, {"__builtins__": safe_builtins}, local_vars)
     except:
         st.write("抽出データの形式が正しくありません")
         st.stop()
@@ -440,10 +463,6 @@ if st.button("計算"):
 
         Active_local = [Active[i] for i in order]
 
-        for i in range(6):
-        
-            if Active_local[i]==0:
-                continue
 
         # 外は展示過信を少し下げる
         for i in range(6):
@@ -567,11 +586,25 @@ if st.button("計算"):
             Start[0] < max(Start[1:4]) - 0.03
         ):
             StartCollapse = 1
+            
+        # ===============================
+        # ★ 壁崩れ検知（超重要）
+        # ===============================
+        WallBreak = 0
+        
+        if (
+            Start[1] > Start[0] + 0.03   # 2が1より遅い（イン孤立）
+            or Start[1] > Start[2] + 0.01  # 2が3より遅い（差し開く）
+        ):
+            WallBreak = 1
         
         
         # ===============================
         # ★ FrontBreak（ここに追加）
         # ===============================
+        
+        
+        
         FrontBreak = (
             StartCollapse == 1
             or WallBreak == 1
@@ -855,16 +888,7 @@ if st.button("計算"):
             AttackWeak = 1
             DoubleAttackScore += 0.04
         
-        # ===============================
-        # ★ 壁崩れ検知（超重要）
-        # ===============================
-        WallBreak = 0
         
-        if (
-            Start[1] > Start[0] + 0.03   # 2が1より遅い（イン孤立）
-            or Start[1] > Start[2] + 0.01  # 2が3より遅い（差し開く）
-        ):
-            WallBreak = 1
         
         # 展開に加算（ここが本体）
         if WallBreak == 1:
@@ -942,7 +966,6 @@ if st.button("計算"):
         # ===============================
         # ★ スタート崩壊検知（最重要）
         # ===============================
-        StartCollapse = 0
         
         if Start[0] < max(Start[1:4]) - 0.03:
             StartCollapse = 1
@@ -2891,31 +2914,7 @@ if st.button("計算"):
                     SecondAdj[5] *= 0.70
                     ThirdAdj[5] *= 0.75
                     
-        # ===== 6の2着残り強化 =====
-
-        SixSecondFlag = 0
         
-        if (
-            CPI[5] >= 0.55
-            and Foot[5] >= 0.55
-            and DoubleAttackScore > 0.15
-            and NoAttackFlag == 0
-            and (
-                DoubleAttackScore > WEAK
-                or OuterClusterFlag == 1
-            )
-        ):
-            SixSecondFlag = 1
-        
-            # 前削り
-            SecondAdj_local[0] *= 0.92
-            SecondAdj_local[1] *= 0.95
-            SecondAdj_local[2] *= 0.97
-            SecondAdj_local[5] *= 0.90
-        
-        else:
-            if Foot[5] < 0.45:
-                SecondAdj_local[5] *= 0.90
         
         
         
@@ -3241,6 +3240,32 @@ if st.button("計算"):
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
             
+            # ===== 6の2着残り強化 =====
+
+            SixSecondFlag = 0
+            
+            if (
+                CPI[5] >= 0.55
+                and Foot[5] >= 0.55
+                and DoubleAttackScore > 0.15
+                and NoAttackFlag == 0
+                and (
+                    DoubleAttackScore > WEAK
+                    or OuterClusterFlag == 1
+                )
+            ):
+                SixSecondFlag = 1
+            
+                # 前削り
+                SecondAdj_local[0] *= 0.92
+                SecondAdj_local[1] *= 0.95
+                SecondAdj_local[2] *= 0.97
+                SecondAdj_local[5] *= 0.90
+            
+            else:
+                if Foot[5] < 0.45:
+                    SecondAdj_local[5] *= 0.90
+            
             # ===============================
             # ★ 3着強化
             # ===============================
@@ -3495,11 +3520,11 @@ if st.button("計算"):
                     and Turn[0] < Turn[a]
                     and NoAttackFlag == 0
                 ):
-                    SecondAdj[0] *= 0.65
-                    ThirdAdj[0] *= 0.60
+                    SecondAdj_local[0] *= 0.65
+                    ThirdAdj_local[0] *= 0.60
             
-                    SecondAdj[1] *= 1.15
-                    ThirdAdj[1] *= 1.08
+                    SecondAdj_local[1] *= 1.15
+                    ThirdAdj_local[1] *= 1.08
             
             
             
@@ -3665,18 +3690,18 @@ if st.button("計算"):
                         FS_mult[i] *= 0.70
             
                     # 本体削る
-                    SecondAdj[i] *= 0.55
-                    ThirdAdj[i]  *= 0.60
+                    SecondAdj_local[i] *= 0.55
+                    ThirdAdj_local[i]  *= 0.60
             
                     # 外に強く流す
                     for j in range(i+1,6):
-                        SecondAdj[j] *= 1.25
-                        ThirdAdj[j]  *= 1.20
+                        SecondAdj_local[j] *= 1.25
+                        ThirdAdj_local[j]  *= 1.20
             
                     # 内も少し崩す
                     for j in range(0,i):
-                        SecondAdj[j] *= 0.95
-                        ThirdAdj[j]  *= 0.97
+                        SecondAdj_local[j] *= 0.95
+                        ThirdAdj_local[j]  *= 0.97
             
                     continue
             
@@ -3685,16 +3710,16 @@ if st.button("計算"):
                 # ===============================
                 elif st_gap < -0.02:
             
-                    SecondAdj[i] *= 0.80
-                    ThirdAdj[i]  *= 0.85
+                    SecondAdj_local[i] *= 0.80
+                    ThirdAdj_local[i]  *= 0.85
             
                     for j in range(i+1,6):
-                        SecondAdj[j] *= 1.08
-                        ThirdAdj[j]  *= 1.05
+                        SecondAdj_local[j] *= 1.08
+                        ThirdAdj_local[j]  *= 1.05
             
                     for j in range(0,i):
-                        SecondAdj[j] *= 0.98
-                        ThirdAdj[j]  *= 0.99
+                        SecondAdj_local[j] *= 0.98
+                        ThirdAdj_local[j]  *= 0.99
             
                 attacker = i
                 
@@ -3940,7 +3965,7 @@ if st.button("計算"):
                                         
     def run_zure_ai(order, NoAttackProb):
         
-        results, ChaosScore, P1, DAS, IS, debug, Start = run_ai(order)
+        results, ChaosScore, P1, DAS, IS, debug, Start = run_attack(order)
         
         if NoAttackProb > 0.95 and IS[0] > 0.60:
             return []
