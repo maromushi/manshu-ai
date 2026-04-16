@@ -4043,6 +4043,7 @@ if st.button("計算"):
             if name == "AttackSuccess":
                 AttackSuccess = val
     
+        NoAttackProb = max(0, min(1, 1 - (DAS / 0.12)))
     
         return AttackWeak, AttackSuccess, NoAttackProb
     
