@@ -3393,18 +3393,18 @@ if st.button("計算"):
             # ★ 展開拾い強化（汎用版）
             # ===============================
             if attack_success and NoAttackFlag == 0:
-                
-                if NoAttackFlag == 0:
+                for i in range(a+1,6):
             
-                    for i in range(a+1,6):
-                
-                        if (
-                            (Turn[i] >= Turn[a] - 0.04 and Foot[i] >= 0.48)
-                            or (Foot[i] >= Foot[a] - 0.04 and Turn[i] >= 0.48)
-                        ):
-                            SecondAdj_local[i] *= 1.10
-                            ThirdAdj_local[i] *= 1.18
-                        
+                    # ★ 追加（最重要）
+                    if i >= 4:
+                        can_pass = (
+                            Start[i] >= Start[i-1] - 0.01
+                            and Turn[i] >= Turn[i-1] - 0.02
+                        )
+                        if not can_pass:
+                            continue
+            
+                    SecondAdj_local[i] *= 1.10
             # ===============================
             # ★ 展開3着強化（汎用版）
             # ===============================
@@ -3439,10 +3439,11 @@ if st.button("計算"):
             
                 # 後ろが展開拾う
                 for i in range(a+1,6):
-                    
-                    if NoAttackFlag == 1:
-                        continue
-                        
+
+                    if i >= 4:
+                        if Start[i] < Start[i-1] - 0.01:
+                            continue
+                
                     SecondAdj_local[i] *= 1.12
                     ThirdAdj_local[i] *= 1.15
             
@@ -3592,6 +3593,11 @@ if st.button("計算"):
             
                 elif dist >= 2:
                     if NoAttackFlag == 0:
+                
+                        if i >= 4:
+                            if Start[i] < Start[i-1] - 0.01:
+                                continue
+                
                         SecondAdj_local[i] *= 1.03
                         ThirdAdj_local[i] *= 1.00
                                     
