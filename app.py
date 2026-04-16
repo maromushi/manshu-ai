@@ -3402,8 +3402,8 @@ if st.button("計算"):
                             (Turn[i] >= Turn[a] - 0.04 and Foot[i] >= 0.48)
                             or (Foot[i] >= Foot[a] - 0.04 and Turn[i] >= 0.48)
                         ):
-                            SecondAdj[i] *= 1.10
-                            ThirdAdj[i] *= 1.18
+                            SecondAdj_local[i] *= 1.10
+                            ThirdAdj_local[i] *= 1.18
                         
             # ===============================
             # ★ 展開3着強化（汎用版）
@@ -3432,10 +3432,10 @@ if st.button("計算"):
                     ):
                         continue
             
-                    SecondAdj[i] *= 0.80
+                    SecondAdj_local[i] *= 0.80
             
                 # 攻め艇は少し残る
-                SecondAdj[a] *= 1.05
+                SecondAdj_local[a] *= 1.05
             
                 # 後ろが展開拾う
                 for i in range(a+1,6):
@@ -3443,8 +3443,8 @@ if st.button("計算"):
                     if NoAttackFlag == 1:
                         continue
                         
-                    SecondAdj[i] *= 1.12
-                    ThirdAdj[i] *= 1.15
+                    SecondAdj_local[i] *= 1.12
+                    ThirdAdj_local[i] *= 1.15
             
             # ===============================
             # ★ 1だけ飛ぶパターン
@@ -3495,22 +3495,22 @@ if st.button("計算"):
                 ):
             
                     # 攻め役を少し削る
-                    SecondAdj[main] *= 0.92
-                    SecondAdj[sub]  *= 0.92
+                    SecondAdj_local[main] *= 0.92
+                    SecondAdj_local[sub]  *= 0.92
                 
-                    ThirdAdj[main] *= 0.95
-                    ThirdAdj[sub]  *= 0.95
+                    ThirdAdj_local[main] *= 0.95
+                    ThirdAdj_local[sub]  *= 0.95
                 
                     # その他を底上げ（差し・待ち）
                     for i in range(6):
                         if i not in [main, sub]:
-                            ThirdAdj[i] *= 1.10
+                            ThirdAdj_local[i] *= 1.10
                 
                     # 攻めが近いときはさらに崩れやすい
                     if abs(main - sub) <= 2:
                         for i in range(6):
                             if i not in [main, sub]:
-                                ThirdAdj[i] *= 1.05
+                                ThirdAdj_local[i] *= 1.05
                         
             # ★ ズレ決着の許容（万舟用）
             #if DoubleAttackScore > WEAK and NoAttackFlag == 0:
@@ -3543,18 +3543,18 @@ if st.button("計算"):
             ):
             
                 # 3・4の残りを削る
-                SecondAdj[2] *= 0.90
-                SecondAdj[3] *= 0.90
+                SecondAdj_local[2] *= 0.90
+                SecondAdj_local[3] *= 0.90
             
-                ThirdAdj[2] *= 0.90
-                ThirdAdj[3] *= 0.90
+                ThirdAdj_local[2] *= 0.90
+                ThirdAdj_local[3] *= 0.90
             
                 # 外と内に流す
-                SecondAdj[5] *= 1.02
-                ThirdAdj[5] *= 1.05
+                SecondAdj_local[5] *= 1.02
+                ThirdAdj_local[5] *= 1.05
             
-                SecondAdj[0] *= 1.05
-                ThirdAdj[0] *= 1.05
+                SecondAdj_local[0] *= 1.05
+                ThirdAdj_local[0] *= 1.05
 
             
             # ===============================
@@ -3714,8 +3714,8 @@ if st.button("計算"):
                         )
                     )
             
-                    SecondAdj[best] *= 1.18
-                    ThirdAdj[best]  *= 1.12
+                    SecondAdj_local[best] *= 1.18
+                    ThirdAdj_local[best]  *= 1.12
                         
                         
 
@@ -3735,10 +3735,10 @@ if st.button("計算"):
                                     and Start[i] >= Start[3] - 0.02
                                 ):
                                     if Foot[i] < 0.50:
-                                        ThirdAdj[i] *= 0.95
+                                        ThirdAdj_local[i] *= 0.95
                     else:
                         if Foot[i] < 0.55:
-                            SecondAdj[i] *= 0.90
+                            SecondAdj_local[i] *= 0.90
                             
                     # ===== 外の残り再設計 =====
                     if i == 4:
@@ -3748,8 +3748,8 @@ if st.button("計算"):
                             and Foot[i] >= 0.50
                             and CPI[i] >= 0.48
                         ):
-                            SecondAdj[i] *= 1.08
-                            ThirdAdj[i] *= 1.04
+                            SecondAdj_local[i] *= 1.08
+                            ThirdAdj_local[i] *= 1.04
 
                     # ★ 6だけは条件付きにする
                     if i == 5:
@@ -3758,8 +3758,8 @@ if st.button("計算"):
                             DoubleAttackScore > MID
                             and Start[5] >= Start[3] - 0.02
                         ):
-                            SecondAdj[5] *= 0.85
-                            ThirdAdj[5] *= 0.85
+                            SecondAdj_local[5] *= 0.85
+                            ThirdAdj_local[5] *= 0.85
             
                 # ===============================
                 # 内残り（条件付きに変更）
