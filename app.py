@@ -2065,6 +2065,8 @@ if st.button("計算"):
         FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
         
+        
+        
         # ===============================
             # ★ 能力逆転（最重要）
             # ===============================
@@ -2143,6 +2145,36 @@ if st.button("計算"):
                 
             if AvgST[0] > 0.20:
                 FS_mult[0] *= 0.92
+                
+        # ===============================
+        # ★ 壁判定（FS後に入れる）
+        # ===============================
+        CLASS_WALL = {
+            "A1": 1.10,
+            "A2": 1.05,
+            "B1": 0.95,
+            "B2": 0.90
+        }
+        
+        for i in range(1,6):
+        
+            prev = i - 1
+        
+            wall = (
+                0.5 * Turn[prev] +
+                0.3 * Skill[prev] +
+                0.2 * Engine[prev]
+            ) * CLASS_WALL[CLS[prev]]
+        
+            attack = (
+                0.4 * Start[i] +
+                0.3 * Turn[i] +
+                0.3 * Foot[i]
+            )
+        
+            if attack > wall + 0.02:
+                FS_mult[i] *= 1.12
+                FS_mult[prev] *= 0.92
                         
         
 
