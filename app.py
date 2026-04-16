@@ -1312,7 +1312,8 @@ if st.button("計算"):
         # ★ 2 壁崩れ → 3優遇（ここに移動）
         # ===============================
         if WallBreak == 1:
-            FS_mult[2] *= 1.10
+            FS_mult[2] *= 1.12
+            FS_mult[3] *= 1.05
 
             
         if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
