@@ -3257,6 +3257,32 @@ if st.button("計算"):
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
             
+            # ===============================
+            # ★ 5・6の壁（ここに入れる）
+            # ===============================
+            for i in range(4,6):
+            
+                if i == a:
+                    continue
+            
+                # ■ 5コース
+                if i == 4:
+                    if (
+                        max(CPI[2:4]) > CPI[4] - 0.02
+                        and max(Turn[2:4]) >= Turn[4] - 0.02
+                    ):
+                        SecondAdj_local[4] *= 0.80
+                        ThirdAdj_local[4] *= 0.85
+            
+                # ■ 6コース
+                if i == 5:
+                    if (
+                        max(CPI[2:5]) > CPI[5] - 0.03
+                        and max(Turn[2:5]) >= Turn[5] - 0.02
+                    ):
+                        SecondAdj_local[5] *= 0.70
+                        ThirdAdj_local[5] *= 0.75
+            
             
             # ===============================
             # ★ 頭別ロジック
