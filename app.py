@@ -3294,7 +3294,8 @@ if st.button("計算"):
             # ★ ここが本質
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
-        
+            
+            
             # ===============================
             # ★ 頭別ロジック
             # ===============================
@@ -3333,6 +3334,67 @@ if st.button("計算"):
             # ===============================
             # 2着
             # ===============================
+            
+            SecondAdj_local = SecondAdj_final.copy()
+            ThirdAdj_local  = ThirdAdj_final.copy()
+            
+            
+            # ===============================
+            # ★ 頭別ロジック
+            # ===============================
+        
+            if a == 0:
+                SecondAdj_local[1] *= 1.10
+                SecondAdj_local[2] *= 1.05
+                for i in range(3,6):
+                    SecondAdj_local[i] *= 0.85
+                    ThirdAdj_local[i]  *= 0.90
+        
+            elif a == 1:
+                SecondAdj_local[0] *= 1.10
+                ThirdAdj_local[0]  *= 1.15
+                SecondAdj_local[2] *= 1.05
+        
+            elif a == 2:
+                SecondAdj_local[0] *= 0.85
+                SecondAdj_local[1] *= 0.90
+                for i in range(3,6):
+                    SecondAdj_local[i] *= 1.08
+                    ThirdAdj_local[i]  *= 1.10
+        
+            elif a == 3:
+                for i in range(0,2):
+                    SecondAdj_local[i] *= 0.80
+                for i in range(4,6):
+                    SecondAdj_local[i] *= 1.10
+                    ThirdAdj_local[i]  *= 1.12
+        
+            else:
+                for i in range(0,3):
+                    SecondAdj_local[i] *= 0.75
+                ThirdAdj_local[a] *= 1.10
+        
+            # ===============================
+            # ★ 2着構造（ここに移動）
+            # ===============================
+            if DoubleAttackScore < 0.12:
+            
+                for i in range(6):
+            
+                    if i == a:
+                        continue
+            
+                    if abs(i - a) == 1:
+                        SecondAdj_local[i] *= 1.20
+            
+                    elif i < a:
+                        SecondAdj_local[i] *= 1.10
+            
+                    elif i > a:
+                        SecondAdj_local[i] *= 0.70
+        
+        
+                    
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
         
             second_scores = [SecondAdj_local[i] for i in remain1]
