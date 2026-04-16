@@ -2927,7 +2927,7 @@ if st.button("計算"):
             and CPI[5] > 0.45
             and Foot[5] > 0.48
         ):
-            SecondAdj[5] *= 1.15
+            SecondAdj_local[5] *= 1.15
                 
                 
         
@@ -3222,17 +3222,17 @@ if st.button("計算"):
             and Start[5] >= Start[3] - 0.02
             and CLS[5] in ["A1","A2"]
         ):
-            ThirdAdj[5] *= 1.25
+            ThirdAdj_local[5] *= 1.25
         
         # ===============================
         # ★ 3着強化
         # ===============================
         
         if FiveFlowFlag and DoubleAttackScore > WEAK and AttackSuccess == 1:
-            ThirdAdj[4] *= 1.15
+            ThirdAdj_local[4] *= 1.15
         
         if NoAttackFlag == 0 and SixFlowFlag:
-            ThirdAdj[5] *= 1.20
+            ThirdAdj_local[5] *= 1.20
 
         # ===== 3号艇の自然流入 =====
 
