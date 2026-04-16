@@ -4063,17 +4063,22 @@ if st.button("計算"):
     # ===============================
     # ② 外頭制限（ここに追加）
     # ===============================
-    outer_count = 0
-    tmp = []
     
+    results.sort(key=lambda x: x[3], reverse=True)
+    
+    outer_count = 0
+    
+    tmp = []
+
     for a,b,c,p in results:
     
-        if a >= 4:
-            if DoubleAttackScore < 0.08:  # 弱い時だけ制限
-                outer_count += 1
-                if outer_count > 3:
-                    continue
+        if a >= 4 and DoubleAttackScore < 0.08:
+            p *= 0.5
     
+        tmp.append((a,b,c,p))
+    
+    results = tmp
+        
         tmp.append((a,b,c,p))
     
     results = tmp
