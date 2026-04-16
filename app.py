@@ -2388,6 +2388,8 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
+        start_rank = sorted(range(6), key=lambda i: Start[i])
+        debug_log.append(("StartRank", start_rank))
         # ★ デバッグ追加（ここ！！）
         if len(debug_log) > 50:
             debug_log = debug_log[-50:]
@@ -2640,6 +2642,17 @@ if st.button("計算"):
             for i in range(4,6):
                 ThirdAdj[i] *= 1.05
                 
+        # ===============================
+        # ★ 3着：位置ボーナス
+        # ===============================
+        for i in range(6):
+        
+            dist = i - a  # aは1着
+        
+            if dist == -1:
+                ThirdAdj_local[i] *= 1.10  # 直内
+            elif dist == -2:
+                ThirdAdj_local[i] *= 1.05  # さらに内
         
         # ===============================
         # ★ 無風：再構築（完全版）
@@ -3248,19 +3261,6 @@ if st.button("計算"):
             
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
-            
-            # ===============================
-            # ★ 3着：位置ボーナス
-            # ===============================
-            for i in range(6):
-            
-                dist = i - a  # aは1着
-            
-                if dist == -1:
-                    ThirdAdj_local[i] *= 1.10  # 直内
-                elif dist == -2:
-                    ThirdAdj_local[i] *= 1.05  # さらに内
-            
             
             # ===== 6の2着残り強化 =====
 
