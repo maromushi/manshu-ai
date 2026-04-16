@@ -3882,54 +3882,7 @@ if st.button("計算"):
                     # 外（ここを強く落とす）
                     elif i > a:
                         SecondAdj_local[i] *= 0.70
-                
-      
-                
-                    
 
-            second_scores = [
-                SecondAdj[i] if Active[i]==1 else 0
-                for i in remain1
-            ]
-            total2=sum(second_scores)
-
-            if total2<=0:
-                total2=1e-6
-
-            second_probs = [s/total2 for s in second_scores]
-
-            for b, P_second in zip(remain1, second_probs):
-            
-                if Active[b] == 0:
-                    continue
-            
-                remain2 = [i for i in remain1 if i != b and Active[i] == 1] 
-
-                third_scores = [
-                ThirdAdj[i] if Active[i]==1 else 0
-                for i in remain2
-                ]
-                total3=sum(third_scores)
-
-                if total3<=0:
-                    total3=1e-6
-
-                third_probs=[s/total3 for s in third_scores]
-
-                for c, P_third in zip(remain2, third_probs):
-
-                    if Active[c] == 0:
-                        continue
-                        
-                    p = P_first * P_second * P_third
-                    
-                    if boats[a] <= 0 or boats[b] <= 0 or boats[c] <= 0:
-                        continue
-                    
-                    results.append((boats[a], boats[b], boats[c], p))
-
-        
-        
 
         return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
     
