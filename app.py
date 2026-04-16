@@ -2896,9 +2896,9 @@ if st.button("計算"):
         SixSecondFlag = 0
         
         if (
-            CPI[5] >= 0.50
+            CPI[5] >= 0.55
             and Foot[5] >= 0.55
-            and DoubleAttackScore > MID
+            and DoubleAttackScore > 0.15
             and NoAttackFlag == 0
             and (
                 DoubleAttackScore > WEAK
@@ -2908,13 +2908,14 @@ if st.button("計算"):
             SixSecondFlag = 1
         
             # 前削り
-            SecondAdj[0] *= 0.92
-            SecondAdj[1] *= 0.95
-            SecondAdj[2] *= 0.97
+            SecondAdj_local[0] *= 0.92
+            SecondAdj_local[1] *= 0.95
+            SecondAdj_local[2] *= 0.97
+            SecondAdj_local[5] *= 0.90
         
         else:
             if Foot[5] < 0.45:
-                SecondAdj[5] *= 0.90
+                SecondAdj_local[5] *= 0.90
         
         
         # ===============================
