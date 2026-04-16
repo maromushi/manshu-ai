@@ -2374,8 +2374,7 @@ if st.button("計算"):
         debug_log.append(("Start", [round(x,3) for x in Start]))
         # ★ デバッグ追加（ここ！！）
         debug_log.append(("P1_pre", [round(x,4) for x in FinalFirst]))
-        debug_log.append(("SecondAdj_pre", [round(x,4) for x in SecondAdj]))
-        debug_log.append(("ThirdAdj_pre", [round(x,4) for x in ThirdAdj]))
+        
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
         
@@ -2510,6 +2509,8 @@ if st.button("計算"):
         
         
         SecondAdj = SecondScore.copy()
+        # ★ デバッグ（ここが正解）
+        debug_log.append(("SecondAdj_pre", [round(x,4) for x in SecondAdj]))
         
         # ===============================
         # ★ 2着モード制御（ここ重要）
@@ -2530,6 +2531,8 @@ if st.button("計算"):
                 
         
         ThirdAdj = [1.0]*6
+        
+        debug_log.append(("ThirdAdj_pre", [round(x,4) for x in ThirdAdj]))
         
         # ===============================
         # ★ 3着モード制御
