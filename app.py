@@ -1272,6 +1272,20 @@ if st.button("計算"):
             FirstScore.append(val)
         
         FS_mult = [1.0]*6
+        
+        # ===============================
+        # ★ インST差ペナルティ（統一版）
+        # ===============================
+        diff = max(Start[1:4]) - Start[0]
+        
+        if diff > 0.06:
+            FS_mult[0] *= 0.50
+        
+        elif diff > 0.04:
+            FS_mult[0] *= 0.70
+        
+        elif diff > 0.02:
+            FS_mult[0] *= 0.85
 
         
         # ===============================
@@ -1297,28 +1311,6 @@ if st.button("計算"):
         if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
             FS_mult[WeakLeader] *= 1.12
 
-        # ===============================
-        # ★ イン死亡は強制排除（ここが正解位置）
-        # ===============================
-        diff2 = Start[1] - Start[0]  # 2コースとの差
-        diff3 = Start[2] - Start[0]  # 3コースとの差
-        
-        # 3が速い＆2が遅い → 最悪パターン
-        if diff3 < -0.03 and diff2 > 0.03:
-            FS_mult[0] *= 0.55
-        
-        # 3だけ速い（まくり）
-        elif diff3 < -0.03:
-            FS_mult[0] *= 0.70
-        
-        # 全体的に負け
-        elif max(Start[1:4]) - Start[0] > 0.05:
-            FS_mult[0] *= 0.75
-        
-        # ほぼ横並び
-        else:
-            pass
-                
         
         # ===============================
         # ★ 壁崩れ → 3優遇（ここに移動）
@@ -2572,10 +2564,6 @@ if st.button("計算"):
         
         debug_log.append(("ThirdAdj_pre", [round(x,4) for x in ThirdAdj]))
         
-        for i in range(4,6):
-            if DoubleAttackScore < 0.15:
-                ThirdAdj[i] *= 0.85
-        
         # ===============================
         # ★ 3着モード制御
         # ===============================
@@ -3547,12 +3535,7 @@ if st.button("計算"):
                 # 攻め艇は少し残る
                 SecondAdj_local[a] *= 1.05
             
-                # 後ろが展開拾う
-                for i in range(a+1,6):
-
-                    if i >= 4:
-                        if Start[i] < Start[i-1] - 0.01:
-                            continue
+    
                 
                     SecondAdj_local[i] *= 1.12
                     ThirdAdj_local[i] *= 1.15
