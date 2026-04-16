@@ -1295,7 +1295,7 @@ if st.button("計算"):
         if mode == "no":
             FS_mult[0] *= 1.15
             for i in range(4,6):
-                FS_mult[i] *= 0.40
+                FS_mult[i] *= 0.60
         
         elif mode == "weak":
             FS_mult[0] *= 0.85
@@ -1308,8 +1308,16 @@ if st.button("計算"):
             FS_mult[4] *= 1.10
             FS_mult[5] *= 1.08
             
+        # ===============================
+        # ★ 2 壁崩れ → 3優遇（ここに移動）
+        # ===============================
+        if WallBreak == 1:
+            FS_mult[2] *= 1.10
+
+            
         if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
             FS_mult[WeakLeader] *= 1.12
+            
 
             
         # ===============================
@@ -1339,11 +1347,7 @@ if st.button("計算"):
         
         
         
-        # ===============================
-        # ★ 壁崩れ → 3優遇（ここに移動）
-        # ===============================
-        if WallBreak == 1:
-            FS_mult[2] *= 1.10
+        
                 
         # ===============================
         # ★ レイヤー1（最重要・修正版）
