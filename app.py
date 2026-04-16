@@ -67,8 +67,7 @@ if st.button("計算"):
         "max": max,
         "sum": sum
     }
-        exec(data, {"__builtins__": safe_builtins}, local_vars)
-    except:
+        exec(data.strip(), {"__builtins__": safe_builtins}, local_vars)    except:
         st.write("抽出データの形式が正しくありません")
         st.stop()
         
@@ -258,25 +257,18 @@ if st.button("計算"):
     ExEntry=fix_exentry(ExEntry)
     
     # ★ 欠場艇を進入から除外（修正版）
-    new_entry = []
+    valid = [i+1 for i in range(6) if Active[i] == 1]
     
-    for e in ExEntry:
-        idx = e - 1
-        if idx >= 0 and idx < 6 and Active[idx] == 1:
-            new_entry.append(e)
+    # 有効な艇だけ残す
+    ExEntry = [e for e in ExEntry if e in valid]
     
-    # ←ここから外（超重要）
-    if len(new_entry) >= 3:
-        ExEntry = new_entry
-    else:
-        ExEntry = [i+1 for i in range(6) if Active[i] == 1]
+    # 足りない分を後ろに追加
+    for i in valid:
+        if i not in ExEntry:
+            ExEntry.append(i)
     
-    # 足りなければ埋める
-    while len(ExEntry) < 6:
-        for i in range(1,7):
-            if i not in ExEntry:
-                ExEntry.append(i)
-                break
+    # 念のため6に揃える
+    ExEntry = ExEntry[:6]
 
     ExhibitionF=[0,0,0,0,0,0]
 
@@ -1568,22 +1560,6 @@ if st.button("計算"):
             # ③ 個別性能補正（ここだけ許可）
             # ===============================
             
-            # ===============================
-            # ★ 崩壊→流れ反映（最重要）
-            # ===============================
-            for i in range(6):
-    
-                if NoAttackFlag == 0 and DoubleAttackScore > WEAK:
-            
-                    if flow_power[i] == 1:
-                        FS_mult[i] *= 1.05
-            
-                    elif flow_power[i] == 2:
-                        FS_mult[i] *= 1.08
-            
-                    elif flow_power[i] >= 3:
-                        FS_mult[i] *= 1.12
-            
             # イン強いなら少し上げる
             if (
                 Skill[0] >= 0.55
@@ -2062,9 +2038,6 @@ if st.button("計算"):
                     FS_mult[i] *= 0.50
                    
 
-        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
-        
-        
         
         
         # ===============================
@@ -2413,6 +2386,8 @@ if st.button("計算"):
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
         # ★ デバッグ追加（ここ！！）
+        if len(debug_log) > 50:
+            debug_log = debug_log[-50:]
         debug_log.append(("P1_pre", [round(x,4) for x in FinalFirst]))
         
         
@@ -3987,7 +3962,7 @@ if st.button("計算"):
         if NoAttackProb > 0.95 and IS[0] > 0.60:
             return []
         
-        AttackWeak, AttackSuccess, _ = detect_state(debug, DAS)
+        AttackWeak, AttackSuccess, NoAttackProb = detect_state(debug, DAS)
         
         zure_results = []
             
@@ -4063,7 +4038,6 @@ if st.button("計算"):
             if name == "AttackSuccess":
                 AttackSuccess = val
     
-        NoAttackProb = max(0, min(1, 1 - (DAS / 0.12)))
     
         return AttackWeak, AttackSuccess, NoAttackProb
     
