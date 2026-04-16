@@ -16,28 +16,13 @@ def normalize(values):
     mn = min(valid)
     mx = max(valid)
 
-    def normalize(values):
-
-        valid = [v for v in values if v is not None]
-    
-        if len(valid) == 0:
-            return [0]*len(values)
-    
-        mn = min(valid)
-        mx = max(valid)
-    
-        # ★ 同値は完全フラット（超重要）
-        if mx - mn < 1e-6:
-            return [0.5] * len(values)
-    
-        return [
-            ((v - mn) / (mx - mn)) if v is not None else 0
-            for v in values
-        ]
+    # ★ 同値処理（最重要）
+    if mx - mn < 1e-6:
+        return [0.5] * len(values)
 
     return [
-       ((v-mn)/(mx-mn)) if v is not None else 0
-       for v in values
+        ((v - mn) / (mx - mn)) if v is not None else 0
+        for v in values
     ]
 
 data = st.text_area("抽出データを貼り付け")
@@ -82,7 +67,7 @@ if st.button("計算"):
         "max": max,
         "sum": sum
     }
-    exec(data, {"__builtins__": safe_builtins}, local_vars)
+        exec(data, {"__builtins__": safe_builtins}, local_vars)
     except:
         st.write("抽出データの形式が正しくありません")
         st.stop()
