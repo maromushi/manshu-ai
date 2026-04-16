@@ -2548,7 +2548,7 @@ if st.button("計算"):
                 SecondAdj[i] *= 1.05
                 
         
-        ThirdAdj = [1.0]*6
+        
         
         ThirdAdj = [
             1.10,  # 1
