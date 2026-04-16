@@ -57,45 +57,43 @@ if st.button("計算"):
         st.write("データを貼ってください")
         st.stop()
 
-    local_vars={}
+    local_vars = {}
 
     try:
         safe_builtins = {
-        "range": range,
-        "len": len,
-        "min": min,
-        "max": max,
-        "sum": sum
-    }
-        try:
-            exec(data.strip(), {"__builtins__": safe_builtins}, local_vars)
-        except Exception as e:
-            st.write("抽出データエラー:", e)
-            st.stop()
+            "range": range,
+            "len": len,
+            "min": min,
+            "max": max,
+            "sum": sum
+        }
     
-        st.write("抽出データの形式が正しくありません")
+        exec(data.strip(), {"__builtins__": safe_builtins}, local_vars)
+    
+    except Exception as e:
+        st.write("抽出データエラー:", e)
         st.stop()
-        
-    WinRate=local_vars.get("WinRate",[0]*6)
-    PlaceRate=local_vars.get("PlaceRate",[0]*6)
-
-    AvgST=local_vars.get("AvgST",[0]*6)
-
-    Motor2=local_vars.get("Motor2",[0]*6)
-    Boat2=local_vars.get("Boat2",[0]*6)
-
-    ExTime=local_vars.get("ExTime",[0]*6)
-    ExST=local_vars.get("ExST",[0]*6)
-
-    TurnTime=local_vars.get("TurnTime",[0]*6)
-    LapTime=local_vars.get("LapTime",[0]*6)
-    StraightTime=local_vars.get("StraightTime",[0]*6)
-
-    Class=local_vars.get("Class",["B1"]*6)
-    Fcount=local_vars.get("Fcount",[0]*6)
-    ExEntry=local_vars.get("ExEntry",[1,2,3,4,5,6])
-
-    Boat=[1,2,3,4,5,6]
+    
+    WinRate = local_vars.get("WinRate",[0]*6)
+    PlaceRate = local_vars.get("PlaceRate",[0]*6)
+    
+    AvgST = local_vars.get("AvgST",[0]*6)
+    
+    Motor2 = local_vars.get("Motor2",[0]*6)
+    Boat2 = local_vars.get("Boat2",[0]*6)
+    
+    ExTime = local_vars.get("ExTime",[0]*6)
+    ExST = local_vars.get("ExST",[0]*6)
+    
+    TurnTime = local_vars.get("TurnTime",[0]*6)
+    LapTime = local_vars.get("LapTime",[0]*6)
+    StraightTime = local_vars.get("StraightTime",[0]*6)
+    
+    Class = local_vars.get("Class",["B1"]*6)
+    Fcount = local_vars.get("Fcount",[0]*6)
+    ExEntry = local_vars.get("ExEntry",[1,2,3,4,5,6])
+    
+    Boat = [1,2,3,4,5,6]
 
     # ↓ここから万舟AIコード
 
