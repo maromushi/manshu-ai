@@ -67,7 +67,12 @@ if st.button("計算"):
         "max": max,
         "sum": sum
     }
-        exec(data.strip(), {"__builtins__": safe_builtins}, local_vars)    except:
+        try:
+            exec(data.strip(), {"__builtins__": safe_builtins}, local_vars)
+        except Exception as e:
+            st.write("抽出データエラー:", e)
+            st.stop()
+    
         st.write("抽出データの形式が正しくありません")
         st.stop()
         
