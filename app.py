@@ -3971,7 +3971,7 @@ if st.button("計算"):
         _, chaos1, P1_base, DAS_base, IS_base, debug_log_base, Start_base = calc_base(order_waku)
         res_no, chaos_no, P1_no, DAS_no, IS_no, debug_no, _ = run_no_attack(order_ex)
         res_weak, chaos_w, P1_w, DAS_w, IS_w, debug_w, _ = run_weak(order_ex)
-        res_attack, chaos_a, P1_a, DAS_a, IS_a, debug_a, _ = run_attack(order_ex)
+        res_attack, chaos_a, P1_a, DAS_a, IS_a, debug_a, Start_a = run_attack(order_ex)
     
     except Exception as e:
         import traceback
@@ -4362,29 +4362,53 @@ if st.button("計算"):
         
     # デバッグテキスト
     debug_text = []
-        
+    
     debug_text.append("===== DEBUG =====")
-        
-    debug_text.append(f"DAS_no: {round(DAS_no,4)}")
-    debug_text.append(f"DAS_weak: {round(DAS_w,4)}")
-    debug_text.append(f"DAS_attack: {round(DAS_a,4)}")
+    
+    # ===============================
+    # 状態（最重要）
+    # ===============================
+    debug_text.append("")
+    debug_text.append("RaceState:")
+    debug_text.append(f"NoAttackProb: {round(NoAttackProb,4)}")
+    debug_text.append(f"DAS: {round(DoubleAttackScore,4)}")
     debug_text.append(f"ChaosScore: {round(ChaosScore,4)}")
-        
+    
+    # ===============================
+    # 重み（今回の核心）
+    # ===============================
+    debug_text.append("")
+    debug_text.append("Weights:")
+    debug_text.append(f"w_no: {round(w_no,3)}")
+    debug_text.append(f"w_weak: {round(w_weak,3)}")
+    debug_text.append(f"w_at: {round(w_at,3)}")
+    
+    # ===============================
+    # モード比較
+    # ===============================
+    debug_text.append("")
+    debug_text.append("ModeScores:")
+    debug_text.append(f"P1_no_top: {round(max(P1_no),3)}")
+    debug_text.append(f"P1_weak_top: {round(max(P1_w),3)}")
+    debug_text.append(f"P1_attack_top: {round(max(P1_a),3)}")
+    
+    # ===============================
+    # 最終P1
+    # ===============================
     debug_text.append("")
     debug_text.append("P1:")
     for i,p in enumerate(P1):
         debug_text.append(f"{i+1}: {round(p,4)}")
-        
+    
+    # ===============================
+    # 内部ログ（必要最低限）
+    # ===============================
     debug_text.append("")
-    debug_text.append("P1順位:")
-    debug_text.append(str(sorted(range(6), key=lambda i: P1[i], reverse=True)))
-        
-    debug_text.append("")
-    debug_text.append("---- run_ai debug ----")
+    debug_text.append("CoreDebug:")
     for name, val in debug_log_ex:
-        debug_text.append(f"{name}: {val}")
-    debug_text.append(f"NoAttackProb: {round(NoAttackProb,4)}")
-        
+        if name in ["AttackWeak", "AttackSuccess", "Start"]:
+            debug_text.append(f"{name}: {val}")
+    
     debug_output = "\n".join(debug_text)
     
     
