@@ -3204,16 +3204,7 @@ if st.button("計算"):
             ThirdAdj[1] *= 1.08
         
                 
-        # ===============================
-        # ★ 展開6（性能じゃない6）
-        # ===============================
-        if (
-            NoAttackFlag == 0
-            and DoubleAttackScore > MID
-            and Start[5] >= Start[3] - 0.02
-            and CLS[5] in ["A1","A2"]
-        ):
-            ThirdAdj_local[5] *= 1.25
+        
         
         # ===============================
         # ★ 3着強化
@@ -3235,6 +3226,8 @@ if st.button("計算"):
             
         SecondAdj_final = SecondAdj.copy()
         ThirdAdj_final = ThirdAdj.copy()
+        
+        
             
         # ===============================
         # ★ 非頭艇の残り補正（最重要）
@@ -3255,6 +3248,17 @@ if st.button("計算"):
             
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
+            
+            # ===============================
+            # ★ 展開6（性能じゃない6）
+            # ===============================
+            if (
+                NoAttackFlag == 0
+                and DoubleAttackScore > MID
+                and Start[5] >= Start[3] - 0.02
+                and CLS[5] in ["A1","A2"]
+            ):
+                ThirdAdj_local[5] *= 1.25
             
             # ===============================
             # ★ 6の特例（強展開のみ）
