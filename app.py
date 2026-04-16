@@ -3411,25 +3411,7 @@ if st.button("計算"):
                 if blockers >= 2:
                     SecondAdj_local[i] *= 0.65
         
-            # ===============================
-            # ★ 2着構造（ここに移動）
-            # ===============================
-            if DoubleAttackScore < 0.15:
             
-                for i in range(6):
-            
-                    if i == a:
-                        continue
-            
-                    if abs(i - a) == 1:
-                        SecondAdj_local[i] *= 1.20
-            
-                    elif i < a:
-                        SecondAdj_local[i] *= 1.10
-            
-                    elif i > a:
-                        SecondAdj_local[i] *= 0.70
-                        
             # ===============================
             # ★ 距離で最終決定（これが本体）
             # ===============================
@@ -3514,7 +3496,7 @@ if st.button("計算"):
                         Turn[i] >= 0.48
                         and Start[i] >= Start[a] - 0.04
                     ):
-                        ThirdAdj[i] *= 1.08
+                        ThirdAdj_local[i] *= 1.08
             
             # ===============================
             # ★ 攻め連動
