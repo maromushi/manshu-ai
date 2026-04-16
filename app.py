@@ -2640,17 +2640,6 @@ if st.button("計算"):
             for i in range(4,6):
                 ThirdAdj[i] *= 1.05
                 
-        # ===============================
-        # ★ 3着：位置ボーナス
-        # ===============================
-        for i in range(6):
-        
-            dist = i - a  # aは1着
-        
-            if dist == -1:
-                ThirdAdj_local[i] *= 1.10  # 直内
-            elif dist == -2:
-                ThirdAdj_local[i] *= 1.05  # さらに内
         
         # ===============================
         # ★ 無風：再構築（完全版）
@@ -3259,6 +3248,19 @@ if st.button("計算"):
             
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
+            
+            # ===============================
+            # ★ 3着：位置ボーナス
+            # ===============================
+            for i in range(6):
+            
+                dist = i - a  # aは1着
+            
+                if dist == -1:
+                    ThirdAdj_local[i] *= 1.10  # 直内
+                elif dist == -2:
+                    ThirdAdj_local[i] *= 1.05  # さらに内
+            
             
             # ===== 6の2着残り強化 =====
 
