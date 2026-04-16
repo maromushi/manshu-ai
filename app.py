@@ -567,24 +567,6 @@ if st.button("計算"):
             Start[0] < max(Start[1:4]) - 0.03
         ):
             StartCollapse = 1
-            
-        # ===============================
-        # ★ スタート崩壊検知（これが本質）
-        # ===============================
-        StartCollapse = 0
-        
-        if (
-            Start[0] < max(Start[1:4]) - 0.03
-        ):
-            StartCollapse = 1
-            
-        # ===============================
-        # ★ スタート崩壊検知
-        # ===============================
-        StartCollapse = 0
-        
-        if Start[0] < max(Start[1:4]) - 0.03:
-            StartCollapse = 1
         
         
         # ===============================
@@ -911,14 +893,7 @@ if st.button("計算"):
         for i in range(1,6):
             if Start[i] < Start[i-1] - 0.02:
                 collapse_flags[i] = 1
-                
-        flow_power = [0]*6
-
-        for i in range(1,6):
-            if collapse_flags[i] == 1:
-        
-                for j in range(i+1,6):
-                    flow_power[j] += 1
+            
         
         # ===============================
         # ★ ズレ展開フラグ（NEW）
@@ -948,16 +923,6 @@ if st.button("計算"):
         
         # ===============================
         # ★ 弱イン判定（追加）
-        # ===============================
-        WeakInside = (
-            Skill[0] < 0.48
-            or Start[0] < max(Start[1:3]) - 0.015
-            or InsideSurvival[0] < 0.58
-            or ExST[0] >= 0.25
-        )
-        
-        # ===============================
-        # ★ イン弱さ検知
         # ===============================
         WeakInside = (
             Skill[0] < 0.48
@@ -1261,40 +1226,7 @@ if st.button("計算"):
                 else:
                     val *= 0.95
 
-            # ===============================
-            # ★ 外の突破判定（汎用版）
-            # ===============================
-            if i >= 3:
             
-                # ■ 展開で突破できるか
-                can_break = (
-                    DoubleAttackScore > 0.12
-                    or AttackSuccess == 1
-                    or StartCollapse == 1
-                )
-            
-                # ■ 前が詰まってる（壁）
-                wall_strong = (
-                    Start[i-1] >= Start[i] - 0.01
-                )
-            
-                # ■ 外ほど不利（距離）
-                dist_penalty = 1.0 - 0.08*(i-3)   # 4=1.0, 5=0.92, 6=0.84
-            
-                if not can_break and wall_strong:
-                    if AttackSuccess == 0:
-                        val *= 0.50 * dist_penalty
-                    else:
-                        val *= 0.65 * dist_penalty
-            
-                elif not can_break:
-                    if AttackSuccess == 0:
-                        val *= 0.60 * dist_penalty   # ←ここ強化
-                    else:
-                        val *= 0.80 * dist_penalty
-            
-                else:
-                    val *= 0.95 * dist_penalty
             
             # ===============================
             # ★ グレーゾーンだけ外を少し許可
@@ -2442,31 +2374,7 @@ if st.button("計算"):
             for i in range(6)
         ]
         
-        # ===============================
-        # ★ 外の頭禁止（最重要）
-        # ===============================
-        for i in range(4,6):
-            if not FrontBreak:
-                P1[i] *= 0.40
         
-            can_break = (
-                DoubleAttackScore > 0.12
-                or AttackSuccess == 1
-                or StartCollapse == 1
-                or WallBreak == 1
-                or Start[1] < Start[0] - 0.02
-                or Start[2] < Start[1] - 0.02
-                or max(Start[1:4]) - Start[0] > 0.04
-
-            )
-        
-            if i >= 4:
-
-                if DoubleAttackScore < 0.12:
-                    P1[i] *= 0.20   # ←強化
-            
-                if DoubleAttackScore < 0.08:
-                    P1[i] *= 0.10   # ←さらに強化
         
         # 再正規化（絶対必要）
         total = sum(P1)
@@ -2499,6 +2407,32 @@ if st.button("計算"):
                 # 再正規化
                 total = sum(P1)
                 P1 = [p / total for p in P1]
+                
+        # ===============================
+        # ★ 外の頭禁止（最重要）
+        # ===============================
+        for i in range(4,6):
+            if not FrontBreak:
+                P1[i] *= 0.40
+        
+            can_break = (
+                DoubleAttackScore > 0.12
+                or AttackSuccess == 1
+                or StartCollapse == 1
+                or WallBreak == 1
+                or Start[1] < Start[0] - 0.02
+                or Start[2] < Start[1] - 0.02
+                or max(Start[1:4]) - Start[0] > 0.04
+
+            )
+        
+            if i >= 4:
+
+                if DoubleAttackScore < 0.12:
+                    P1[i] *= 0.20   # ←強化
+            
+                if DoubleAttackScore < 0.08:
+                    P1[i] *= 0.10   # ←さらに強化
 
         # ===============================
         # トップ集中ブースト
@@ -2602,8 +2536,7 @@ if st.button("計算"):
             for i in range(4,6):
                 ThirdAdj[i] *= 1.10
         
-        SecondAdj_base = SecondAdj.copy()
-        
+     
         # ===============================
         # ★ 6の最低制限（ここに入れる）
         # ===============================
@@ -3289,51 +3222,9 @@ if st.button("計算"):
                 continue
         
             P_first = P1[a]
-            
-        
-            # ★ ここが本質
-            SecondAdj_local = SecondAdj_final.copy()
-            ThirdAdj_local  = ThirdAdj_final.copy()
+    
             
             
-            # ===============================
-            # ★ 頭別ロジック
-            # ===============================
-        
-            if a == 0:
-                SecondAdj_local[1] *= 1.10
-                SecondAdj_local[2] *= 1.05
-                for i in range(3,6):
-                    SecondAdj_local[i] *= 0.85
-                    ThirdAdj_local[i]  *= 0.90
-        
-            elif a == 1:
-                SecondAdj_local[0] *= 1.10
-                ThirdAdj_local[0]  *= 1.15
-                SecondAdj_local[2] *= 1.05
-        
-            elif a == 2:
-                SecondAdj_local[0] *= 0.85
-                SecondAdj_local[1] *= 0.90
-                for i in range(3,6):
-                    SecondAdj_local[i] *= 1.08
-                    ThirdAdj_local[i]  *= 1.10
-        
-            elif a == 3:
-                for i in range(0,2):
-                    SecondAdj_local[i] *= 0.80
-                for i in range(4,6):
-                    SecondAdj_local[i] *= 1.10
-                    ThirdAdj_local[i]  *= 1.12
-        
-            else:
-                for i in range(0,3):
-                    SecondAdj_local[i] *= 0.75
-                ThirdAdj_local[a] *= 1.10
-        
-            # ===============================
-            # 2着
-            # ===============================
             
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
@@ -3373,6 +3264,19 @@ if st.button("計算"):
                 for i in range(0,3):
                     SecondAdj_local[i] *= 0.75
                 ThirdAdj_local[a] *= 1.10
+                
+            # ===============================
+            # ★ 外の進路制限（ここに入れる）
+            # ===============================
+            for i in range(4,6):
+            
+                if i == a:
+                    continue
+            
+                blockers = sum(1 for j in range(i) if j != a)
+            
+                if blockers >= 2:
+                    SecondAdj_local[i] *= 0.65
         
             # ===============================
             # ★ 2着構造（ここに移動）
@@ -3604,12 +3508,14 @@ if st.button("計算"):
             # ===============================
             if a == 2:  # 3号艇が1着
                 if Turn[2] > Turn[1] and NoAttackFlag == 0:
-                    SecondAdj[1] *= 0.92
+                    SecondAdj_local[1] *= 0.92
             
             # 残り5艇（ここ追加）
             remain1 = [i for i in range(6) if i != a and Active[i] == 1]
     
             for i in range(6):
+                if i == a:
+                    continue
 
                 # ★ 2号艇の遅れ残り（最小補正）
                 if (
@@ -3618,22 +3524,22 @@ if st.button("計算"):
                     and CPI[1] >= 0.42
                     and NoAttackFlag == 0
                 ):
-                    ThirdAdj[1] *= 1.08
+                    ThirdAdj_local[1] *= 1.08
 
                 dist = i - a
             
                 if dist < 0:
-                    SecondAdj[i] *= (1 - 0.04*DoubleAttackScore)                  
-                    ThirdAdj[i] *= (1 - 0.06*DoubleAttackScore)
+                    SecondAdj_local[i] *= (1 - 0.04*DoubleAttackScore)                  
+                    ThirdAdj_local[i] *= (1 - 0.06*DoubleAttackScore)
             
                 elif dist == 1:
-                    SecondAdj[i] *= 1.12
-                    ThirdAdj[i] *= 1.08
+                    SecondAdj_local[i] *= 1.12
+                    ThirdAdj_local[i] *= 1.08
             
                 elif dist >= 2:
                     if NoAttackFlag == 0:
-                        SecondAdj[i] *= 1.03
-                        ThirdAdj[i] *= 1.00
+                        SecondAdj_local[i] *= 1.03
+                        ThirdAdj_local[i] *= 1.00
                                     
             # ===============================
             # ★ 壁崩壊（最終完成版）
