@@ -733,17 +733,6 @@ if st.button("計算"):
         
         if AttackWeak == 1 and AttackSuccess == 0:
             WeakLeader = max(range(2,5), key=lambda i: AttackIndex[i])
-        
-        if WeakLeader is not None:
-        
-            FS_mult[WeakLeader] *= 1.12
-        
-            for i in range(WeakLeader):
-                FS_mult[i] *= 0.92
-        
-            for i in range(WeakLeader+1, 6):
-                SecondAdj[i] *= 1.08
-                ThirdAdj[i]  *= 1.05
                     
             
 
@@ -1263,6 +1252,8 @@ if st.button("計算"):
             FirstScore.append(val)
         
         FS_mult = [1.0]*6
+        if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
+            FS_mult[WeakLeader] *= 1.12
         
         # ===============================
         # ★ モード別 性格付け（最重要）
@@ -1300,6 +1291,9 @@ if st.button("計算"):
             FS_mult[3] *= 1.10
             FS_mult[4] *= 1.10
             FS_mult[5] *= 1.08
+            
+        if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
+            FS_mult[WeakLeader] *= 1.12
 
         # ===============================
         # ★ イン死亡は強制排除（ここが正解位置）
