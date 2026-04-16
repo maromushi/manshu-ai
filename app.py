@@ -2918,16 +2918,7 @@ if st.button("計算"):
                 SecondAdj_local[5] *= 0.90
         
         
-        # ===============================
-        # ★ 6の特例（強展開のみ）
-        # ===============================
-        if (
-            DoubleAttackScore > STRONG
-            and Start[5] == max(Start)
-            and CPI[5] > 0.45
-            and Foot[5] > 0.48
-        ):
-            SecondAdj_local[5] *= 1.15
+        
                 
                 
         
@@ -3264,6 +3255,17 @@ if st.button("計算"):
             
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
+            
+            # ===============================
+            # ★ 6の特例（強展開のみ）
+            # ===============================
+            if (
+                DoubleAttackScore > STRONG
+                and Start[5] == max(Start)
+                and CPI[5] > 0.45
+                and Foot[5] > 0.48
+            ):
+                SecondAdj_local[5] *= 1.15
             
             # ===============================
             # ★ 5・6の壁（ここに入れる）
