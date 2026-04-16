@@ -2550,7 +2550,20 @@ if st.button("計算"):
         
         ThirdAdj = [1.0]*6
         
+        ThirdAdj = [
+            1.10,  # 1
+            1.08,  # 2
+            1.12,  # 3（最重要）
+            1.08,  # 4
+            0.95,  # 5
+            0.90   # 6
+        ]
+        
         debug_log.append(("ThirdAdj_pre", [round(x,4) for x in ThirdAdj]))
+        
+        for i in range(4,6):
+            if DoubleAttackScore < 0.15:
+                ThirdAdj[i] *= 0.85
         
         # ===============================
         # ★ 3着モード制御
@@ -3160,7 +3173,7 @@ if st.button("計算"):
         
             if (
                 NoAttackFlag == 0
-                and ExST[i] <= 0.05
+                and ExST[i] <= 0.08
                 and DoubleAttackScore > 0.04
             ):
                 ThirdAdj[i] *= 1.20
@@ -3861,9 +3874,13 @@ if st.button("計算"):
                         ThirdAdj[i] *= 1.00   # 基本はあまり削らない
 
                 # 展開ある時だけ6を少し戻す
-                if i == 5 and DoubleAttackScore > MID and NoAttackFlag == 0:
-                    ThirdAdj[i] *= 1.10
-
+                if (
+                    i == 5
+                    and DoubleAttackScore > 0.16
+                    and Start[i] >= Start[3] - 0.01
+                    and Foot[i] >= 0.50
+                ):
+                    ThirdAdj[i] *= 1.08
                 # 弱すぎる艇だけ削る
                 if Skill[i] < 0.30:
                     ThirdAdj[i] *= 0.90  
