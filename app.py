@@ -3249,16 +3249,7 @@ if st.button("計算"):
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
             
-            # ===============================
-            # ★ 展開6（性能じゃない6）
-            # ===============================
-            if (
-                NoAttackFlag == 0
-                and DoubleAttackScore > MID
-                and Start[5] >= Start[3] - 0.02
-                and CLS[5] in ["A1","A2"]
-            ):
-                ThirdAdj_local[5] *= 1.25
+            
             
             # ===============================
             # ★ 6の特例（強展開のみ）
@@ -3270,6 +3261,19 @@ if st.button("計算"):
                 and Foot[5] > 0.48
             ):
                 SecondAdj_local[5] *= 1.15
+                
+            # ===============================
+            # ★ 展開6（性能じゃない6）
+            # ===============================
+            if (
+                NoAttackFlag == 0
+                and DoubleAttackScore > MID
+                and Start[5] >= Start[3] - 0.02
+                and CLS[5] in ["A1","A2"]
+            ):
+                ThirdAdj_local[5] *= 1.25
+                
+                
             
             # ===============================
             # ★ 5・6の壁（ここに入れる）
