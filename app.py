@@ -3840,7 +3840,7 @@ if st.button("計算"):
                         SecondAdj[5] *= 0.60
                         
             # ===============================
-            # ★ 2着の構造（改良版）
+            # ★ 2着の構造（強化版）
             # ===============================
             if DoubleAttackScore < 0.12:
             
@@ -3851,15 +3851,15 @@ if st.button("計算"):
             
                     # 同格（最重要）
                     if abs(i - a) == 1:
-                        SecondAdj[i] *= 1.10
+                        SecondAdj[i] *= 1.20
             
                     # 内（残り）
                     elif i < a:
-                        SecondAdj[i] *= 1.05
+                        SecondAdj[i] *= 1.10
             
-                    # 外（基本弱い）
+                    # 外（ここを強く落とす）
                     elif i > a:
-                        SecondAdj[i] *= 0.90
+                        SecondAdj[i] *= 0.70
                 
       
                 
