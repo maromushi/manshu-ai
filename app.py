@@ -1365,13 +1365,6 @@ if st.button("計算"):
             FS_mult[5] *= 1.08
             
         # ===============================
-        # ★ 2 弱攻め時の3主役化
-        # ===============================
-        if AttackWeak == 1 and AttackSuccess == 0:
-            FS_mult[2] *= 1.06
-            FS_mult[3] *= 1.03
-            
-        # ===============================
         # ★ 壁判定（FS後に入れる）
         # ===============================
         CLASS_WALL = {
@@ -1410,7 +1403,7 @@ if st.button("計算"):
 
             
         if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
-            FS_mult[WeakLeader] *= 1.12
+            FS_mult[WeakLeader] *= 1.10
             
          # ===============================
         # ★ 2 ゾーン別処理（整理版）
@@ -1578,8 +1571,6 @@ if st.button("計算"):
             # ■ 常時（ほぼ無し）
         
             # ■ 条件
-            if StartSpread > 0.10:
-                chaos_weight *= 0.92
         
             if DoubleAttackScore > WEAK and AttackSuccess == 1:
                 FS_mult[2] *= 1.05
@@ -1659,15 +1650,11 @@ if st.button("計算"):
                 FS_mult[4] *= 0.95
                 FS_mult[5] *= 0.94
 
+        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
-        
-                    
-            
-        
-                
-        
-                        
-        
+        TotalFirst = sum(FS_tmp) if sum(FS_tmp) > 0 else 1e-6
+
+        P1 = [FS_tmp[i]/TotalFirst for i in range(6)]
 
         # ===============================
         # ATTACK BOOST
@@ -1878,20 +1865,6 @@ if st.button("計算"):
 
             LaneCPI.append(value)
             
-     
-        
-        if False:
-            
-            # ★ スタート負けイン追加（ここも続けて入れる）
-            if DoubleAttackScore > WEAK and AttackSuccess == 1:
-                if Start[0] < max(Start[1:4]):
-                    FS_mult[0] *= 0.92
-                    
-            # ★ 最終ロック（ここが正解位置）
-            # ★ 最終ロック（強制）
-            if NoAttackFlag == 1:
-                FS_mult[4] = 0.10
-                FS_mult[5] = 0.05
                 
         
             
@@ -3195,96 +3168,51 @@ if st.button("計算"):
                         ThirdAdj_local[i] *= 1.00
                                     
             # ===============================
-            # ★ 壁崩壊（最終完成版）
+            # ★ 壁崩壊（調整版）
             # ===============================
             for i in range(1,4):
-                collapse = False 
+            
                 st_gap = Start[i] - Start[i-1]
             
                 # ノイズ除去
                 if abs(st_gap) < 0.01:
                     continue
-                
-                
+            
                 # ===============================
-                # ■ 強崩壊（レース壊す）
+                # ■ 強崩壊
                 # ===============================
                 if (
-                    (st_gap < -0.04 and DoubleAttackScore > WEAK and NoAttackFlag == 0)
-                    or (st_gap < -0.03 and Start[i] < Start[i-1] - 0.02)
-                ):   
+                    st_gap < -0.04
+                    and DoubleAttackScore > MID
+                    and NoAttackFlag == 0
+                ):
             
-                    if False:
-                        # 頭も崩す（最重要）
-                        FS_mult[i] *= 0.70
+                    # 崩れた艇を落とす（軽く）
+                    SecondAdj_local[i] *= 0.70
+                    ThirdAdj_local[i]  *= 0.75
             
-                    # 本体削る
-                    SecondAdj_local[i] *= 0.55
-                    ThirdAdj_local[i]  *= 0.60
-            
-                    # 外に強く流す
+                    # 外に流す（控えめ）
                     for j in range(i+1,6):
-                        SecondAdj_local[j] *= 1.25
-                        ThirdAdj_local[j]  *= 1.20
+                        SecondAdj_local[j] *= 1.12
+                        ThirdAdj_local[j]  *= 1.08
             
-                    # 内も少し崩す
+                    # 内は微調整だけ
                     for j in range(0,i):
-                        SecondAdj_local[j] *= 0.95
-                        ThirdAdj_local[j]  *= 0.97
-            
-                    continue
+                        SecondAdj_local[j] *= 0.97
+                        ThirdAdj_local[j]  *= 0.98
             
                 # ===============================
-                # ■ 弱崩壊（ズレるだけ）
+                # ■ 弱崩壊
                 # ===============================
                 elif st_gap < -0.02:
             
-                    SecondAdj_local[i] *= 0.80
-                    ThirdAdj_local[i]  *= 0.85
+                    SecondAdj_local[i] *= 0.85
+                    ThirdAdj_local[i]  *= 0.90
             
                     for j in range(i+1,6):
-                        SecondAdj_local[j] *= 1.08
-                        ThirdAdj_local[j]  *= 1.05
-            
-                    for j in range(0,i):
-                        SecondAdj_local[j] *= 0.98
-                        ThirdAdj_local[j]  *= 0.99
-            
-                attacker = i
+                        SecondAdj_local[j] *= 1.05
+                        ThirdAdj_local[j]  *= 1.03    
                 
-                if False:
-
-                    if attacker >= 2 and DoubleAttackScore > WEAK:
-                
-                        # スタート負けてたらもっと飛ぶ
-                        if Start[0] < Start[attacker] - 0.02:
-                            FS_mult[0] *= 0.65
-                        else:
-                            FS_mult[0] *= 0.75
-                            
-                    # ===============================
-                    # ★ 6頭最終ロック
-                    # ===============================
-                    if NoAttackFlag == 1:
-                        FS_mult[5] *= 0.30
-                        
-                    # ===============================
-                    # ★ 無風 最終ロック（ここに移動）
-                    # ===============================
-                    if NoAttackFlag == 1:
-                    
-                        for i in range(3,6):
-                            FS_mult[i] *= 0.40
-                            
-                    if NoAttackFlag == 1:
-                        for i in range(3,6):
-                            if Start[i] < max(Start) - 0.02:
-                                FS_mult[i] *= 0.60
-                                
-                    # ★ 無風 最終ロック（ここが本命）
-                    if NoAttackFlag == 1:
-                        for i in range(3,6):
-                            FS_mult[i] = min(FS_mult[i], 0.35)
             
                 # ===============================
                 # ★ 差し込み勝ち（ここに入れる）
