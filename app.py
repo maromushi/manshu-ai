@@ -1365,6 +1365,43 @@ if st.button("計算"):
             FS_mult[5] *= 1.08
             
         # ===============================
+        # ★ 2 弱攻め時の3主役化
+        # ===============================
+        if AttackWeak == 1 and AttackSuccess == 0:
+            FS_mult[2] *= 1.06
+            FS_mult[3] *= 1.03
+            
+        # ===============================
+        # ★ 壁判定（FS後に入れる）
+        # ===============================
+        CLASS_WALL = {
+            "A1": 1.10,
+            "A2": 1.05,
+            "B1": 0.95,
+            "B2": 0.90
+        }
+        
+        for i in range(1,6):
+        
+            prev = i - 1
+        
+            wall = (
+                0.5 * Turn[prev] +
+                0.3 * Skill[prev] +
+                0.2 * Engine[prev]
+            ) * CLASS_WALL[CLS[prev]]
+        
+            attack = (
+                0.4 * Start[i] +
+                0.3 * Turn[i] +
+                0.3 * Foot[i]
+            )
+        
+            if attack > wall + 0.02:
+                FS_mult[i] *= 1.08
+                FS_mult[prev] *= 0.94
+            
+        # ===============================
         # ★ 2 壁崩れ → 3優遇（ここに移動）
         # ===============================
         if WallBreak == 1:
@@ -1625,82 +1662,10 @@ if st.button("計算"):
         
         
                     
-            # ===============================
-            # ★ 能力逆転（2コース）
-            # ===============================
             
-        PowerGap_12 = CPI[1] - CPI[0]
-            
-        NaturalOvertake_2 = (
-            PowerGap_12 > 0.04
-            and Start[1] >= Start[0] - 0.02
-        )
-            
-        if NaturalOvertake_2:
-            
-            FS_mult[1] *= 1.15
-            FS_mult[0] *= 0.88
-            
-            if Turn[1] > Turn[0]:
-                FS_mult[1] *= 1.08
+        
                 
-        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
-        # ===============================
-        # ★ 弱攻め時の3復活（最重要）
-        # ===============================
-        if AttackWeak == 1 and AttackSuccess == 0:
-        
-            # 3コースを主役として復活
-            FS_mult[2] *= 1.10
-        
-            # ついでに4もほんの少しだけ
-            FS_mult[3] *= 1.05
-        
-        
-        if False:
-        
-            if FS_tmp[5] >= max(FS_tmp) * 0.99 and not (Strong6 or Normal6):
-                FS_mult[5] *= 0.92
-                
-            # ===============================
-            # ★ 弱インなら強制攻め
-            # =============================
-                
-            # 弱イン補正
-                
-            if AvgST[0] > 0.20:
-                FS_mult[0] *= 0.92
-                
-        # ===============================
-        # ★ 壁判定（FS後に入れる）
-        # ===============================
-        CLASS_WALL = {
-            "A1": 1.10,
-            "A2": 1.05,
-            "B1": 0.95,
-            "B2": 0.90
-        }
-        
-        for i in range(1,6):
-        
-            prev = i - 1
-        
-            wall = (
-                0.5 * Turn[prev] +
-                0.3 * Skill[prev] +
-                0.2 * Engine[prev]
-            ) * CLASS_WALL[CLS[prev]]
-        
-            attack = (
-                0.4 * Start[i] +
-                0.3 * Turn[i] +
-                0.3 * Foot[i]
-            )
-        
-            if attack > wall + 0.02:
-                FS_mult[i] *= 1.12
-                FS_mult[prev] *= 0.92
                         
         
 
