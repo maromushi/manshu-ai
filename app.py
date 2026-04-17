@@ -1266,6 +1266,29 @@ if st.button("計算"):
                     val *= 0.25
         
             FirstScore.append(val)
+            
+        # ===============================
+        # ★ 2差し強化（ここ）
+        # ===============================
+        if (
+            NoAttackFlag == 0
+            and CPI[1] >= CPI[0] - 0.03
+            and Start[1] <= Start[0] + 0.03
+        ):
+        
+            LaneWin[1] += 0.07
+            LaneWin[0] -= 0.07
+        
+        elif (
+            NoAttackFlag == 0
+            and CPI[1] >= CPI[0] - 0.06
+            and Start[1] <= Start[0] + 0.05
+        ):
+        
+            LaneWin[1] += 0.04
+            LaneWin[0] -= 0.04
+            
+        
         
         FS_mult = [1.0]*6
         
@@ -1285,6 +1308,7 @@ if st.button("計算"):
         
         else:
             RaceZone = "attack"
+            
 
         # ===============================
         # ★ 1 インST差（ここ）
@@ -1340,32 +1364,63 @@ if st.button("計算"):
         
             weak_factor = min(1.0, DoubleAttackScore / WEAK)
         
-            FS_mult[0] *= (1.05 - 0.12 * weak_factor)
+            FS_mult[3] *= 0.60
+            FS_mult[4] *= 0.40
+            FS_mult[5] *= 0.30
         
-            FS_mult[1] *= (1.00 + 0.20 * weak_factor)
-            FS_mult[2] *= (1.00 + 0.25 * weak_factor)
+            FS_mult[0] *= 1.12
         
-            FS_mult[3] *= 0.80
+            if CPI[1] >= CPI[0] - 0.08:
+                FS_mult[1] *= 1.15
+        
+            if Start[1] < Start[0] - 0.02:
+                FS_mult[1] *= 0.90
+            elif CPI[1] < CPI[0] - 0.08:
+                FS_mult[1] *= 0.92
+        
+            if CPI[2] < 0.45:
+                FS_mult[2] *= 0.92
+            elif Start[2] >= max(Start) - 0.005:
+                FS_mult[2] *= 0.90
+        
+            if CPI[3] < 0.40:
+                FS_mult[3] *= 0.80
+            elif Start[3] < Start[2] - 0.02:
+                FS_mult[3] *= 0.85
+        
             FS_mult[4] *= 0.65
-            FS_mult[5] *= 0.55
+            FS_mult[5] *= 0.50
         
         
         elif RaceZone == "weak":
         
-            FS_mult[0] *= 0.70
-            FS_mult[1] *= 1.10
-            FS_mult[2] *= 1.20
-        
+            FS_mult[0] *= 0.85
+            FS_mult[1] *= 0.95
+            FS_mult[2] *= 1.10
+            FS_mult[3] *= 1.08
+                
         
         else:  # attack
         
-            if DoubleAttackScore > 0.10:
+            if DoubleAttackScore > STRONG:
+
+                FS_mult[0] *= 0.85
+                FS_mult[1] *= 0.90
                 FS_mult[2] *= 1.10
-                FS_mult[3] *= 1.10
+                FS_mult[3] *= 1.12
         
-            elif DoubleAttackScore > 0.05:
+            elif DoubleAttackScore > MID:
+        
+                FS_mult[0] *= 0.88
+                FS_mult[1] *= 0.93
                 FS_mult[2] *= 1.05
-            
+                FS_mult[3] *= 1.06
+        
+            else:
+        
+                FS_mult[0] *= 0.92
+                FS_mult[1] *= 0.97
+                    
 
             
         # ===============================
@@ -1393,229 +1448,33 @@ if st.button("計算"):
             # CPI
             if CPI[i] > 0.28:
                 FS_mult[i] *= 1.05
+            
+        # イン性能
+        if Skill[0] >= 0.55 and Engine[0] >= 0.50:
+            FS_mult[0] *= 1.05
         
+        # 3攻め
+        if AttackIndex[2] >= AttackIndex[1] and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+            FS_mult[2] *= 1.08
         
-                
-        # ===============================
-        # ★ FS_mult統一ブロック（完成形）
-        # ===============================
-                
-        # 2差し強化補正
-        if (
-            NoAttackFlag == 0
-            and CPI[1] >= CPI[0] - 0.03
-            and Start[1] <= Start[0] + 0.03
-        ):
-        
-            LaneWin[1] += 0.07
-            LaneWin[0] -= 0.07
-        
-        elif (
-            NoAttackFlag == 0
-            and CPI[1] >= CPI[0] - 0.06
-            and Start[1] <= Start[0] + 0.05
-        ):
-        
-            LaneWin[1] += 0.04
-            LaneWin[0] -= 0.04
-        
-    
-        # ===============================
-        # ① レースタイプ分岐（修正版）
-        # ===============================
-        
-        
-        
-        # ★ レースタイプ決定
-        if NoAttackFlag == 1:
-            race_type = "no_attack"
-        
-        elif AttackSuccess == 1:
-        
-            if DoubleAttackScore > STRONG and AttackSuccess == 1:
-                race_type = "strong_attack"
-        
-            elif DoubleAttackScore > MID:
-                race_type = "mid_attack"
-        
-            else:
-                race_type = "weak_attack"
-        
-        else:
-            race_type = "normal"
-            
-        
-            
-        if False:
-            
-        
-            # ★ 展示だけ速い雑魚カット
-            
-            if (
-                ExST[3] <= 0.05
-                and Skill[3] < 0.45
-            ):
-                FS_mult[3] *= 0.85
-            
-        
-        
-            
-            # ===============================
-            # ② レースタイプごとの処理
-            # ===============================
-            
-            if race_type == "strong_attack":
-            
-                FS_mult[0] *= 0.85
-                FS_mult[1] *= 0.90
-                FS_mult[2] *= 1.10
-                FS_mult[3] *= 1.12
-            
-            elif race_type == "mid_attack":
-            
-                FS_mult[0] *= 0.88
-                FS_mult[1] *= 0.93
-                FS_mult[2] *= 1.05
-                FS_mult[3] *= 1.06
-            
-            elif race_type == "weak_attack":
-            
-                FS_mult[0] *= 0.92
-                FS_mult[1] *= 0.97
-            
-            elif race_type == "no_attack":
-                
-                # ★ 無風：外頭完全禁止（最優先で入れる）
-                FS_mult[3] *= 0.60   # 4コース
-                FS_mult[4] *= 0.40   # 5コース
-                FS_mult[5] *= 0.30   # 6コース
-    
-                FS_mult[0] *= 1.12
-    
-                # ★ 最初に外殺す（これが本質）
-                FS_mult[4] *= 0.65
-                FS_mult[5] *= 0.30
-            
-                # ★ 無風でも2頭を残す（最重要）
-                if CPI[1] >= CPI[0] - 0.08:
-                    FS_mult[1] *= 1.15
-                
-                    
-                
-            
-                # ===============================
-                # 2コース（条件型）
-                # ===============================
-                if Start[1] < Start[0] - 0.02:
-                    FS_mult[1] *= 0.90
-                elif CPI[1] < CPI[0] - 0.08:
-                    FS_mult[1] *= 0.92
-                # それ以外は触らない
-            
-                # ===============================
-                # 3コース（条件型）
-                # ===============================
-                # 3コース（修正版）
-                if CPI[2] < 0.45:
-                    FS_mult[2] *= 0.92
-                elif Start[2] >= max(Start) - 0.005:
-                    FS_mult[2] *= 0.90   # ←弱める
-                # それ以外は触らない0.92
-                
-            
-                # ===============================
-                # 4コース（条件型）
-                # ===============================
-                # 4コース（修正版）
-                if CPI[3] < 0.40:
-                    FS_mult[3] *= 0.80
-                elif Start[3] < Start[2] - 0.02:
-                    FS_mult[3] *= 0.85
-                # それ以外は触らない
-            
-                # ===============================
-                # 外（固定でOK）
-                # ===============================
-                FS_mult[4] *= 0.65
-                FS_mult[5] *= 0.50
-                    
-            # ===============================
-            # ★ 中間展開イン復活（正式版）
-            # ===============================
-            if (
-                0.04 < DoubleAttackScore < 0.09
-                and AttackSuccess == 1
-                and NoAttackFlag == 0
-            ):
-                FS_mult[0] *= 1.05
-            
-        
-            
-            
-            # ===============================
-            # ③ 個別性能補正（ここだけ許可）
-            # ===============================
-            
-            # イン強いなら少し上げる
-            if (
-                Skill[0] >= 0.55
-                and Engine[0] >= 0.50
-            ):
-                FS_mult[0] *= 1.05
-            
-            # 3が攻め役なら強化
-            if (
-                AttackIndex[2] >= AttackIndex[1]
-                and DoubleAttackScore > WEAK
-                and NoAttackFlag == 0
-            ):
-                FS_mult[2] *= 1.08
-            
-            # 4が明確に強いなら
-            if (
-                NoAttackFlag == 0
-                and AttackSuccess == 1
-                and DoubleAttackScore > MID
-                and Turn[3] >= max(Turn[1], Turn[2])
-                and Foot[3] >= max(Foot[1], Foot[2])
-            ):
+        # 4性能
+        if NoAttackFlag == 0 and AttackSuccess == 1 and DoubleAttackScore > MID:
+            if Turn[3] >= max(Turn[1], Turn[2]) and Foot[3] >= max(Foot[1], Foot[2]):
                 FS_mult[3] *= 1.05
-                
-            if OuterSlip and DoubleAttackScore > MID:
-    
-                for i in range(4,6):
-                    if Start[i] >= max(Start) - 0.005:
-                        FS_mult[i] *= 1.10
-            # ===============================
-            # ★ ズレ展開処理（最重要）
-            # ===============================
-            #if ZureFlag:
-            
-                ## イン崩れ
-                #FS_mult[0] *= 0.85
-                #FS_mult[1] *= 0.90
-            
-                ## 外浮上（ST上位だけ）
-                #for i in range(3,6):
-                    #if Start[i] >= max(Start[2:6]) - 0.02:
-                        #FS_mult[i] *= 1.15
-            
-                ## 攻め役は潰れる
-                #for atk in attackers:
-                    #FS_mult[atk] *= 0.85
-    
-            
-            
-            # ===============================
-            # ★ 主役取りこぼし（最重要）
-            # ===============================
-            if (
-                CLS[3] == "A1"
-                and DoubleAttackScore > WEAK
-                and NoAttackFlag == 0
-                and Start[3] <= Start[2] + 0.01
-            ):
+        
+        # OuterSlip
+        if OuterSlip and DoubleAttackScore > MID:
+            for i in range(4,6):
+                if Start[i] >= max(Start) - 0.005:
+                    FS_mult[i] *= 1.10
+        
+        # 主役取りこぼし
+        if CLS[3] == "A1" and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+            if Start[3] <= Start[2] + 0.01:
                 FS_mult[3] *= 0.90
+        
+        
+        
             
             
         # ===============================
@@ -2734,7 +2593,9 @@ if st.button("計算"):
                             ThirdAdj[i] *= 1.12
             
                         elif Foot[i] >= 0.48:
-                            ThirdAdj[i] *= 1.08 
+                            ThirdAdj[i] *= 1.08
+                            
+        
                             
         # ===============================
         # ★ weakゾーンのイン2着制御（ここ追加）
