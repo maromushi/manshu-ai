@@ -1272,6 +1272,23 @@ if st.button("計算"):
             FirstScore.append(val)
         
         FS_mult = [1.0]*6
+        
+        # ===============================
+        # ★ 0 レイヤー1（最重要・修正版）
+        # ===============================
+        
+        # ★ 展開ゾーン分類（追加）
+        if NoAttackFlag == 1:
+            RaceZone = "no_attack"
+        
+        elif (
+            0.05 <= DoubleAttackScore < 0.09
+            and AttackSuccess == 0
+        ):
+            RaceZone = "weak"
+        
+        else:
+            RaceZone = "attack"
 
         # ===============================
         # ★ 1 インST差（ここ）
@@ -1343,22 +1360,7 @@ if st.button("計算"):
                 FS_mult[i] *= 1.05
         
                     
-        # ===============================
-        # ★ レイヤー1（最重要・修正版）
-        # ===============================
         
-        # ★ 展開ゾーン分類（追加）
-        if NoAttackFlag == 1:
-            RaceZone = "no_attack"
-        
-        elif (
-            0.05 <= DoubleAttackScore < 0.09
-            and AttackSuccess == 0
-        ):
-            RaceZone = "weak"
-        
-        else:
-            RaceZone = "attack"
       
     
         
