@@ -1325,9 +1325,6 @@ if st.button("計算"):
         # ★ 2 展開補正
         # ===============================
         
-        if AttackWeak == 1 and AttackSuccess == 0:
-            FS_mult[WeakLeader] *= 1.10
-        
         if NoAttackFlag == 1:
             FS_mult[0] *= 1.05
         
@@ -1337,19 +1334,15 @@ if st.button("計算"):
         
         for i in range(6):
         
-            if Fcount[i] >= 1:
+            if Fcount[i] == 1:
+                FS_mult[i] *= 0.93
+            elif Fcount[i] >= 2:
                 FS_mult[i] *= 0.85
         
             if Class[i] == "A1":
                 FS_mult[i] *= 1.05
         
-        
-        
-        
-        
-        
-        
-                
+                    
         # ===============================
         # ★ レイヤー1（最重要・修正版）
         # ===============================
