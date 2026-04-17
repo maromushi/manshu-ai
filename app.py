@@ -2990,13 +2990,14 @@ if st.button("計算"):
                         ThirdAdj_local[i] *= 1.08
             
             # ===============================
-            # ★ 攻め連動
+            # ★ 攻め連動（修正版）
             # ===============================
             if attack_success and NoAttackFlag == 0:
-
+            
+                # 内は潰れる
                 for i in range(a):
             
-                    # ★ インだけは例外（これが本質）
+                    # インだけ例外
                     if i == 0 and (
                         0.06 < DoubleAttackScore < 0.16
                         and InsideSurvival[0] >= 0.45
@@ -3004,15 +3005,15 @@ if st.button("計算"):
                         continue
             
                     SecondAdj_local[i] *= 0.80
+                    ThirdAdj_local[i]  *= 0.85
             
-                # 攻め艇は少し残る
+                # 攻め艇は残る
                 SecondAdj_local[a] *= 1.05
             
-    
-                
-                    SecondAdj_local[i] *= 1.12
-                    ThirdAdj_local[i] *= 1.15
-            
+                # 外が浮上
+                for i in range(a+1, 6):
+                    SecondAdj_local[i] *= 1.10
+                    ThirdAdj_local[i]  *= 1.12
             # ===============================
             # ★ 1だけ飛ぶパターン
             # ===============================
