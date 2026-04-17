@@ -1288,7 +1288,26 @@ if st.button("計算"):
             LaneWin[1] += 0.04
             LaneWin[0] -= 0.04
             
+        # ===============================
+        # ★ 6の強さ分類（ここ！！）
+        # ===============================
+        Strong6 = (
+            CLS[5] == "A1"
+            and CPI[5] >= 0.52
+            and Start[5] >= Start[3] - 0.02
+        )
         
+        Normal6 = (
+            CPI[5] >= 0.45
+            and Foot[5] >= 0.48
+        )
+        
+        SemiStrong6 = (
+            CLS[5] == "A2"
+            and CPI[5] >= 0.55
+            and Start[5] >= Start[3] - 0.01
+            and DoubleAttackScore > MID
+        )
         
         FS_mult = [1.0]*6
         
@@ -1473,216 +1492,7 @@ if st.button("計算"):
             if Start[3] <= Start[2] + 0.01:
                 FS_mult[3] *= 0.90
         
-        
-        
-            
-            
-        # ===============================
-        # ★ 6の強さ分類（追加）
-        # ===============================
-        Strong6 = (
-            CLS[5] == "A1"
-            and CPI[5] >= 0.52
-            and Start[5] >= Start[3] - 0.02
-        )
-        
-        Normal6 = (
-            CPI[5] >= 0.45
-            and Foot[5] >= 0.48
-        )
-        
-        SemiStrong6 = (
-            CLS[5] == "A2"
-            and CPI[5] >= 0.55
-            and Start[5] >= Start[3] - 0.01
-            and DoubleAttackScore > MID
-        )
-        
-        if False:
-            # ===============================
-            # ★ 低性能カット（ここ）
-            # ===============================
-            for i in range(6):
-            
-                if Foot[i] < 0.45 and Engine[i] < 0.50:
-                    FS_mult[i] *= 0.80
-            
-                if Foot[i] < 0.40:
-                    FS_mult[i] *= 0.75
-    
-                # ★ ここに追加
-                if i == 5:
-                    if Start[5] < Start[3] - 0.02:
-                        FS_mult[5] *= 0.55
-            
-                    if RawST[5] > 0.20:
-                        FS_mult[5] *= 0.75
-                        
-    
-    
-    
-    
-            # ===============================
-            # ★ 弱イン分散（最重要）
-            # ===============================
-            # ★ 弱イン分散（修正版）
-            if (
-                NoAttackFlag == 1
-                and Skill[0] < 0.55
-            ):
-                FS_mult[0] *= 0.55
-                FS_mult[2] *= 1.05
-            
-                # ★4は条件付きにする
-                if DoubleAttackScore > 0.05:
-                    FS_mult[3] *= 1.05
-    
-    
-            # ===============================
-            # ★ 攻め競合（共倒れ）
-            # ===============================
-            if (
-                Turn[2] > 0.55
-                and Turn[3] > 0.55
-                and abs(Turn[2] - Turn[3]) < 0.04
-                and DoubleAttackScore > MID
-            ):
-                # 共倒れ
-                FS_mult[2] *= 0.90
-                FS_mult[3] *= 0.85
-            
-            
-            
-            # ===============================
-            # ★ イン安定補正（これが本命）
-            # ===============================
-            
-            if (
-                Skill[0] >= 0.50
-                and Start[0] >= 0.13
-                and InsideSurvival[0] >= 0.55
-            ):
-                FS_mult[0] *= 1.08
-                
-                
-            # ===============================
-            # ★ 攻め条件（←ここ！！！）
-            # ===============================
-            if (
-                Turn[2] == max(Turn)
-                and Foot[2] >= Foot[1]
-                and DoubleAttackScore > WEAK
-                and NoAttackFlag == 0
-            ):
-                FS_mult[2] *= 1.25
-                
-            # ★ 3の展示攻め補強（追加）
-            if (
-                ExST[2] <= 0.05
-                and Start[2] >= Start[1] + 0.02
-                and NoAttackFlag == 0
-            ):
-                FS_mult[2] *= 1.15
-                        
-            # ===============================
-            # ★ 3のまくり差し強化（超重要）
-            # ===============================
-            if (
-                Skill[2] >= 0.50
-                and Foot[2] >= max(Foot[0], Foot[1])
-                and Turn[2] >= max(Turn[0], Turn[1])
-                and DoubleAttackScore > WEAK
-                and NoAttackFlag == 0
-            ):
-                FS_mult[2] *= 1.20
-                
-            
-            # ===============================
-            # ★ 外A1複数 → 軸分散モード
-            # ===============================
-            
-            outer_a1 = 0
-    
-            for i in range(4,6):  # 5・6コース
-                if CLS[i] == "A1" and Engine[i] >= 0.55:
-                    outer_a1 += 1
-            
-            if outer_a1 >= 2 and NoAttackFlag == 0:
-            
-                for i in range(4,6):
-                    if CLS[i] == "A1":
-                        FS_mult[i] *= 1.15   # 外の頭を引き上げ
-            
-    
-            # ===== イン最低保証 =====
-            # イン最低保証（独立させる）
-            if Skill[0] >= 0.55 and Engine[0] >= 0.50:
-                FS_mult[0] *= 1.08
-            
-            # ②（メイン差し）
-            if (
-                CPI[1] >= CPI[0] - 0.06
-                and Start[1] <= Start[0] + 0.05
-                and DoubleAttackScore < 0.07
-                and NoAttackFlag == 0
-            ):
-                FS_mult[1] *= 1.01
-                FS_mult[0] *= 0.99
-            
-            # ③（弱い差し）
-            elif (
-                CPI[1] >= CPI[0] - 0.10
-                and Start[1] <= Start[0] + 0.07
-                and DoubleAttackScore < 0.06
-                and NoAttackFlag == 0
-            ):
-                FS_mult[1] *= 1.01
-                FS_mult[0] *= 0.99
-                
-            # ===============================
-            # ★ FS_tmp作成（←ここ追加）
-            # ===============================
-        
-                
-            # ★ 2の頭制限（修正版）
-            if DoubleAttackScore > STRONG:
-            
-                FS_mult[1] *= 0.88
-            
-            elif DoubleAttackScore > MID:
-            
-                FS_mult[1] *= 0.92
-            
-            elif DoubleAttackScore > WEAK:
-            
-                FS_mult[1] *= 0.96
-                
-            if NoAttackFlag == 1 and Start[1] < Start[0] - 0.02:
-                FS_mult[1] *= 0.92
-            
-            
-    
-                
-                
-            # ===============================
-            # ★ イン残り補正（A1＋A2）
-            # ===============================
-            if CLS[0] == "A1":
-                if Start[0] >= 0.13:
-                    FS_mult[0] *= 1.12
-            
-            elif CLS[0] == "A2":
-                if Start[0] >= 0.14 and InsideSurvival[0] >= 0.52:
-                    FS_mult[0] *= 1.08
-            
-            elif CLS[0] == "B1":
-                if (
-                    Start[0] >= 0.15
-                    and InsideSurvival[0] >= 0.55
-                    and DoubleAttackScore < 0.08
-                ):
-                    FS_mult[0] *= 1.05
-                
+                  
         # ===============================
         # ★ 会場補正（完成版）
         # ===============================
@@ -1729,8 +1539,8 @@ if st.button("計算"):
         
             # ■ 条件（ここが本体）
             if DoubleAttackScore > 0.04:
-                FS_mult[2] *= 1.08
-                FS_mult[3] *= 1.10
+                FS_mult[2] *= 1.04
+                FS_mult[3] *= 1.05
         
             if InsideSurvival[0] < 0.65:
                 FS_mult[0] *= 0.95
@@ -1781,8 +1591,8 @@ if st.button("計算"):
                 FS_mult[2] *= 1.05
         
             if DoubleAttackScore < 0.06:
-                FS_mult[4] *= 0.90
-                FS_mult[5] *= 0.88
+                FS_mult[4] *= 0.95
+                FS_mult[5] *= 0.94
         
         if False:
             # ===============================
