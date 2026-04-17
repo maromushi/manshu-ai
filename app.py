@@ -1194,6 +1194,13 @@ if st.button("計算"):
             )
             
             # ===============================
+            # ★ 4の突破判定（ここに入れる）
+            # ===============================
+            if i == 3:
+                if Start[3] >= max(Start[1:3]) + 0.00:
+                    val *= 1.05
+            
+            # ===============================
             # ★ 外の突破判定（1着用）
             # ===============================
             if i >= 3:  # 4,5,6号艇
@@ -1211,25 +1218,14 @@ if st.button("計算"):
                     val *= 1.15
             
             if i >= 4:
-
+            
                 if AttackSuccess == 0:
-                    val *= 0.35
+                    val *= 0.55   # ← 0.35→0.55に変更
             
                     if DoubleAttackScore < 0.12:
-                        val *= 0.5
+                        val *= 0.70   # ← 0.5→0.7
+                        # ←ここに追加！！！！
             
-            # ←ここに追加！！！！
-            if i >= 4:
-
-                can_break = (
-                    DoubleAttackScore > 0.12
-                    or AttackSuccess == 1
-                    or StartCollapse == 1
-                    or WallBreak == 1   # ←これ追加が本質
-                )
-            
-                if not can_break:
-                    val *= 0.60
             
                 outer_power = (
                     0.4 * CPI[i]
@@ -1336,6 +1332,40 @@ if st.button("計算"):
         if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
             FS_mult[WeakLeader] *= 1.12
             
+         # ===============================
+        # ★ 2 ゾーン別処理（整理版）
+        # ===============================
+        
+        if RaceZone == "no_attack":
+        
+            weak_factor = min(1.0, DoubleAttackScore / WEAK)
+        
+            FS_mult[0] *= (1.05 - 0.12 * weak_factor)
+        
+            FS_mult[1] *= (1.00 + 0.20 * weak_factor)
+            FS_mult[2] *= (1.00 + 0.25 * weak_factor)
+        
+            FS_mult[3] *= 0.80
+            FS_mult[4] *= 0.65
+            FS_mult[5] *= 0.55
+        
+        
+        elif RaceZone == "weak":
+        
+            FS_mult[0] *= 0.70
+            FS_mult[1] *= 1.10
+            FS_mult[2] *= 1.20
+        
+        
+        else:  # attack
+        
+            if DoubleAttackScore > 0.10:
+                FS_mult[2] *= 1.10
+                FS_mult[3] *= 1.10
+        
+            elif DoubleAttackScore > 0.05:
+                FS_mult[2] *= 1.05
+            
 
             
         # ===============================
@@ -1358,6 +1388,9 @@ if st.button("計算"):
         
             if Class[i] == "A1":
                 FS_mult[i] *= 1.05
+                
+            if CPI[i] > 0.28:
+                FS_mult[i] *= 1.05
         
                     
         
@@ -1365,57 +1398,7 @@ if st.button("計算"):
     
         
         
-        # ===============================
-        # ★ ゾーン別処理
-        # ===============================
-        
-        if RaceZone == "no_attack":
-        
-            weak_factor = min(1.0, DoubleAttackScore / WEAK)
-        
-            FS_mult[0] *= (1.05 - 0.12 * weak_factor)
-        
-            FS_mult[1] *= (1.00 + 0.20 * weak_factor)
-            FS_mult[2] *= (1.00 + 0.25 * weak_factor)
-        
-            FS_mult[3] *= 0.80
-            FS_mult[4] *= 0.65
-            FS_mult[5] *= 0.55
-        
-        
-        elif RaceZone == "weak":
-
-            # ★ 最重要：イン殺す（ベース）
-            FS_mult[0] *= 0.65
-            
-            # センター強化
-            FS_mult[1] *= 1.10
-            FS_mult[2] *= 1.25
-            
-            # 外もチャンス残す
-            if Start[3] >= max(Start[1:3]) - 0.01:
-                FS_mult[3] *= 1.08
-        
-            # ★ STドカ遅れ（追加ペナ）
-            if (
-                NoAttackFlag == 0
-                and DoubleAttackScore > 0.05
-                and Start[0] < max(Start[1:4]) - 0.03
-            ):
-                FS_mult[0] *= 0.80
-                
-            if CPI[2] > 0.28:
-                FS_mult[2] *= 1.10
-        
-        
-        else:  # attack
-        
-            if DoubleAttackScore > 0.10:
-                FS_mult[2] *= 1.10
-                FS_mult[3] *= 1.10
-        
-            elif DoubleAttackScore > 0.05:
-                FS_mult[2] *= 1.05
+       
         
         
         # ===============================
