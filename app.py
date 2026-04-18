@@ -336,30 +336,23 @@ if st.button("計算"):
         
         
         # ===============================
-        # ENGINE
+        # ENGINE（軽量版）
         # ===============================
-
-        EngineRaw=[M[i]/100 for i in range(6)]
-
+        
+        MotorScore = normalize(M)
+        
         Engine = []
-
+        
         Active_local = [Active[i] for i in order]
-
-        Engine = []
         
         for i in range(6):
         
-            if Active_local[i]==0:
+            if Active_local[i] == 0:
                 Engine.append(0)
                 continue
         
-            # Engineだけ補正
-            motor_ratio = M[i] / (avg_motor + 1e-6)
-            factor = 0.95 + 0.05 * motor_ratio
-         
-        
-            Engine.append(EngineRaw[i] * factor)
-
+            # ★ 弱めに使う（ここが重要）
+            Engine.append(0.6 * MotorScore[i] + 0.4 * Skill[i])
            
 
         # ===============================
@@ -433,12 +426,15 @@ if st.button("計算"):
         LapScore=normalize([AvgLap-x for x in LT])
         StraightScore=normalize([AvgStraight-x for x in STT])
 
-        RawFoot=[
-        0.42*TurnScore[i]+
-        0.28*LapScore[i]+
-        0.25*StraightScore[i]+
-        0.08*Exhibit[i]
-        for i in range(6)
+        MotorScore = normalize(M)
+
+        RawFoot = [
+            0.42*TurnScore[i]+
+            0.28*LapScore[i]+
+            0.25*StraightScore[i]+
+            0.08*Exhibit[i]+
+            0.05*MotorScore[i]   # ← 追加
+            for i in range(6)
         ]
 
         Foot=RawFoot
@@ -652,50 +648,72 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        AttackIndex=[
-        0.40*Start[i]+
-        0.30*Foot[i]+
-        0.20*Turn[i]+
-        0.10*Engine[i]
-        for i in range(6)
+        AttackIndex = [
+            0.45*Start[i]+
+            0.30*Foot[i]+
+            0.25*Turn[i]
+            for i in range(6)
         ]
         
-        for i in range(6):
-
-            if BadExST[i] == 1:
-                InsideSurvival[i] *= 0.92
+        MotorScore = normalize(M)
         
+        for i in range(6):
+        
+            # ★ モーターは「微加算」に変更
+            AttackIndex[i] += 0.02 * MotorScore[i]
+        
+            # ★ 展示スタート
             if GoodExST[i] == 1:
                 AttackIndex[i] *= 1.05
         
+            if BadExST[i] == 1:
+                InsideSurvival[i] *= 0.92
+        
         # ===============================
-        # ★ 攻め候補（複数化）
+        # ★ attackers決定（最終版）
         # ===============================
+        
+        sorted_idx = sorted(range(6), key=lambda i: AttackIndex[i], reverse=True)
+        
         attackers = []
         
-        for i in range(2,4):
-
-            normal_attack = (
-                Start[i] > Start[i-1] + 0.01
-                and AttackIndex[i] > AttackIndex[i-1]
-            )
+        attackers.append(sorted_idx[0])
         
-            class_attack = (
-                CLS[i] in ["A1","A2"]
-                and Start[i] >= Start[i-1] - 0.015
-                and AttackIndex[i] >= AttackIndex[i-1] - 0.02
-                and Turn[i] >= Turn[i-1] - 0.02
-            )
+        if AttackIndex[sorted_idx[1]] >= AttackIndex[sorted_idx[0]] - 0.05:
+            attackers.append(sorted_idx[1])
         
-            if (
-                (normal_attack or class_attack)
-                and (
-                    AttackIndex[i] >= max(AttackIndex[2:6]) - 0.05
-                    or Turn[i] >= max(Turn[2:6]) - 0.03
-                )
-            ):
-                attackers.append(i)
-                
+        if AttackIndex[sorted_idx[2]] >= AttackIndex[sorted_idx[0]] - 0.08:
+            attackers.append(sorted_idx[2])
+            
+        # ===============================
+        # ★ DoubleAttackScore（最終版）
+        # ===============================
+        
+        if len(attackers) == 0:
+            DoubleAttackScore = 0
+        
+        else:
+            main = attackers[0]
+        
+            # ■ 基本（主攻めの強さ）
+            base = AttackIndex[main]
+        
+            # ■ ST差（ここが本質）
+            st_adv = max(0, Start[main] - Start[max(0, main-1)])
+        
+            # ■ 2番手の存在（展開性）
+            if len(attackers) >= 2:
+                sub = attackers[1]
+                synergy = max(0, AttackIndex[sub] - AttackIndex[main] + 0.05)
+            else:
+                synergy = 0
+        
+            DoubleAttackScore = (
+                0.55 * base +
+                0.30 * st_adv +
+                0.15 * synergy
+            )
+                   
         attackers = sorted(
             attackers,
             key=lambda x: (
