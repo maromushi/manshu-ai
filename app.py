@@ -593,7 +593,7 @@ if st.button("計算"):
             or Start[1] < Start[0] - 0.02
             or Start[2] < Start[1] - 0.02
             or max(Start[1:4]) - Start[0] > 0.04
-)
+        )
     
         # ===============================
         # TURN
@@ -3483,27 +3483,6 @@ if st.button("計算"):
                     SecondAdj_local[0] *= 1.05
                     ThirdAdj_local[0] *= 1.03
                     
-            # ===============================
-            # ★ 最終バランスチェック
-            # ===============================
-            if a == 0:  # まず1パターンだけ見る（重要）
-            
-                print("=== CHECK START ===")
-            
-                print("SecondAdj_local:", [round(x,3) for x in SecondAdj_local])
-                print("ThirdAdj_local :", [round(x,3) for x in ThirdAdj_local])
-            
-                sum2 = sum(SecondAdj_local)
-                sum3 = sum(ThirdAdj_local)
-            
-                ratio = sum2 / sum3 if sum3 > 0 else 0
-            
-                print("sum Second:", round(sum2,3))
-                print("sum Third :", round(sum3,3))
-                print("ratio     :", round(ratio,3))
-            
-                print("=== CHECK END ===")
-                    
                     
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
 
@@ -3516,9 +3495,6 @@ if st.button("計算"):
             
             for b, P_second in zip(remain1, second_probs):
             
-                if boats[a] <= 0 or boats[b] <= 0:
-                    continue
-            
                 remain2 = [i for i in remain1 if i != b]
             
                 third_scores = [ThirdAdj_local[i] for i in remain2]
@@ -3530,79 +3506,62 @@ if st.button("計算"):
             
                 for c, P_third in zip(remain2, third_probs):
             
-                    if boats[c] <= 0:
-                        continue
-            
                     p = P_first * P_second * P_third
             
                     results.append((boats[a], boats[b], boats[c], p))
                 
-                        
-        if len(results) == 0:
-            return [], 0, [1/6]*6, 0, [0.5]*6, debug_log, [0]*6
-
-        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
-    
-    def calc_base(order):
-        return run_core(order, mode="no")
-    
-    def calc_ex(order):
-        return run_core(order, mode="attack")
-                
-                                        
     def run_zure_ai(order, NoAttackProb):
-        
+
         results, ChaosScore, P1, DAS, IS, debug, Start = run_attack(order)
-        
+    
         if NoAttackProb > 0.95 and IS[0] > 0.60:
             return []
-        
-        AttackWeak, AttackSuccess, NoAttackProb = detect_state(debug, DAS)
-        
+    
+        AttackWeak, AttackSuccess, NoAttackProb_new = detect_state(debug, DAS)
+    
         zure_results = []
-            
+    
         for a,b,c,p in results:
-            
+    
             head = a - 1
-            
-            if head >= 1:
-
+    
+            if head >= 0:
+    
                 if (
                     AttackSuccess == 0
-                    and NoAttackProb > 0.75
-                
-                    # イン弱すぎでも強すぎでもない
+                    and NoAttackProb_new > 0.75
+    
                     and 0.30 < P1[0] < 0.48
-                
-                    # イン耐久も中途半端（ここ重要）
                     and 0.45 < IS[0] < 0.65
-                
-                    # 2が近い（ズレ条件）
+    
                     and abs(P1[1] - P1[0]) < 0.15
-                
+    
                     and P1[head] > 0.15
                 ):
                     boost = 1.6
-                    
+    
                     zure_results.append((a,b,c,p * boost))
-            
+    
         return zure_results
             
     # =====================================
     # 進入パターン
     # =====================================
-
-    order_waku=[0,1,2,3,4,5]
-
-    order_ex=[x-1 for x in ExEntry if x>0]
-
-    if len(order_ex)!=6:
-        order_ex=[0,1,2,3,4,5]
-
+    
+    order_waku = [0,1,2,3,4,5]
+    
+    order_ex = [x-1 for x in ExEntry]
+    
+    if len(order_ex) != 6 or any(x < 0 or x > 5 for x in order_ex):
+        order_ex = [0,1,2,3,4,5]
+    
     try:
-        _, chaos1, P1_base, DAS_base, IS_base, debug_log_base, Start_base = calc_base(order_waku)
+        res_base, chaos1, P1_base, DAS_base, IS_base, debug_log_base, Start_base = calc_base(order_waku)
+    
         res_no, chaos_no, P1_no, DAS_no, IS_no, debug_no, _ = run_no_attack(order_ex)
+    
         res_weak, chaos_w, P1_w, DAS_w, IS_w, debug_w, _ = run_weak(order_ex)
+    
         res_attack, chaos_a, P1_a, DAS_a, IS_a, debug_a, Start_a = run_attack(order_ex)
     
     except Exception as e:
@@ -3633,7 +3592,7 @@ if st.button("計算"):
             if name == "AttackSuccess":
                 AttackSuccess = val
     
-        NoAttackProb = max(0, min(1, 1 - (DAS / 0.12)))
+        NoAttackProb = max(0, min(1, 1 - (DAS / MID)))
     
         return AttackWeak, AttackSuccess, NoAttackProb
     
@@ -3643,25 +3602,22 @@ if st.button("計算"):
     # 合成
     # =====================================
     final = {}
-
+    
     # 重み
     if NoAttackProb > 0.75:
-        # 無風レース（イン中心）
-        w_no = 0.65
-        w_weak = 0.25
+        w_no = 0.70
+        w_weak = 0.20
         w_at = 0.10
     
-    elif DoubleAttackScore < 0.08:
-        # 中間ゾーン（ズレ・一番むずい）
-        w_no = 0.45
-        w_weak = 0.40
-        w_at = 0.15
+    elif DoubleAttackScore < MID:
+        w_no = 0.40
+        w_weak = 0.35
+        w_at = 0.25
     
     else:
-        # 攻めレース
-        w_no = 0.30
+        w_no = 0.25
         w_weak = 0.30
-        w_at = 0.40
+        w_at = 0.45
     
     for a,b,c,p in res_no:
         final[(a,b,c)] = final.get((a,b,c),0) + w_no*p
@@ -3673,6 +3629,7 @@ if st.button("計算"):
         final[(a,b,c)] = final.get((a,b,c),0) + w_at*p
     
     results = [(a,b,c,p) for (a,b,c),p in final.items()]
+    results = sorted(results, key=lambda x: x[3], reverse=True)
     
     # ===============================
     # ★ シャープ化 & 正規化 & カット
@@ -3695,57 +3652,63 @@ if st.button("計算"):
             for (a,b,c,p) in results
         ]
     
+    # ③ カットライン（可変）
+    cut = 0.004 + 0.004 * (1 - ChaosScore)
+    
     filtered = []
-
-    for r in results:
     
-        p = r[3]
+    for (a,b,c,p) in results:
     
-        # 中穴ゾーン保護
+        # 中穴ブースト
         if 0.01 <= p <= 0.03:
-            filtered.append(r)
+            filtered.append((a,b,c, p * 1.10))
     
-        # 通常カット条件
-        elif p >= 0.006:
-            filtered.append(r)
+        elif p >= cut:
+            filtered.append((a,b,c,p))
     
     results = filtered
-
-    results.sort(key=lambda x:x[3],reverse=True)
     
-    # ★ 無風：外頭禁止（最終フィルター）
+    # ④ ソート
+    results.sort(key=lambda x:x[3], reverse=True)
+    
+    # ===============================
+    # ★ 外頭制限（先にやる）
+    # ===============================
     tmp = []
+    
     for a,b,c,p in results:
     
-        if NoAttackProb > 0.90 and a >= 5:
-            continue
-    
-        tmp.append((a,b,c,p))
-    
-    results = tmp
-
-    # ===============================
-    # ② 外頭制限（ここに追加）
-    # ===============================
-    
-    results.sort(key=lambda x: x[3], reverse=True)
-    
-    outer_count = 0
-    
-    tmp = []
-
-    for a,b,c,p in results:
-    
-        if a >= 4 and DoubleAttackScore < 0.08:
+        if a >= 4 and DoubleAttackScore < MID:
             p *= 0.5
     
         tmp.append((a,b,c,p))
     
     results = tmp
     
+    # ===============================
+    # ★ 再正規化（超重要）
+    # ===============================
+    total = sum(p for _,_,_,p in results)
+    
+    if total > 0:
+        results = [(a,b,c,p/total) for a,b,c,p in results]
     
     # ===============================
-    # ③ 同一展開カット（ここに追加）
+    # ★ 無風：外頭禁止
+    # ===============================
+    tmp = []
+    
+    for a,b,c,p in results:
+    
+        if NoAttackProb > 0.90 and a >= 4:
+            continue
+    
+        tmp.append((a,b,c,p))
+    
+    results = tmp
+    
+    # ===============================
+    # ★ 同一展開カット
     # ===============================
     seen = set()
     tmp = []
@@ -3762,23 +3725,15 @@ if st.button("計算"):
     
     results = tmp
     
+    # ===============================
+    # ★ ソート（最後）
+    # ===============================
+    results.sort(key=lambda x: x[3], reverse=True)
     
+    results = results[:max_bets]
 
     # ===============================
-    # 予想信頼度
-    # ===============================
-
-    if len(results) >= 2:
-        TopGap = results[0][3] - results[1][3]
-    else:
-        TopGap = 0
-        
-    Top1 = results[0][3] if len(results) > 0 else 0
-    Top3 = sum(r[3] for r in results[:3])
-    Top5 = sum(r[3] for r in results[:5])
-        
-    # ===============================
-    # ★ 購入ランク分類（NEW）
+    # ★ 購入ランク分類（修正版）
     # ===============================
     BuyRank = "strong"
     
@@ -3786,28 +3741,29 @@ if st.button("計算"):
     if (
         AttackSuccess == 0
         and NoAttackProb > 0.75
-        and any(a >= 4 for (a,b,c,p) in results[:5])
+        and results[0][0] >= 4
     ):
         BuyRank = "skip"
     
-    # 購入（微妙）
+    # 弱
     elif (
         NoAttackProb > 0.90
-        and ChaosScore < 0.50
+        and Top1 < 0.28
     ):
         BuyRank = "weak"
     
-    elif Top1 < 0.22:
+    elif Top1 < 0.22 and Top3 < 0.55:
         BuyRank = "weak"
-        
     
     
     # ===============================
-    # ★ レースタイプ判定（進化版）
+    # ★ レースタイプ判定（修正版）
     # ===============================
-    
     if Top1 >= 0.30 and Top3 >= 0.60:
         OddsType = "堅い"
+    
+    elif ChaosScore > 0.55:
+        OddsType = "荒れ（強）"
     
     elif Top1 >= 0.22:
         OddsType = "中穴"
@@ -3815,45 +3771,40 @@ if st.button("計算"):
     elif P1[0] >= 0.30:
         OddsType = "ヒモ荒れ"
     
-    elif ChaosScore > 0.55:
-        OddsType = "荒れ（強）"
-    
     else:
         OddsType = "万舟"
         
     # ===============================
-    # ★ 点数制御（追加）
+    # ★ 点数制御（修正版）
     # ===============================
     max_bets = 0
-
+    
     if BuyRank == "skip":
         max_bets = 0
     
     else:
     
-        if Top3 > 0.55:
-            max_bets = 3
+        if Top1 < 0.20:
+            max_bets = 10
     
         elif Top5 > 0.65:
+            max_bets = 3
+    
+        elif Top3 > 0.55:
             max_bets = 5
     
         elif Top5 > 0.55:
             max_bets = 7
     
-        elif Top1 < 0.20:
-            max_bets = 10
-    
         else:
             max_bets = 8
     
-        max_bets = int(max_bets * (0.9 + 0.6 * ChaosScore))
+        # Chaos連動
+        max_bets = int(max_bets * (0.8 + 0.8 * ChaosScore))
+    
+        # 最低保証（skip以外）
         max_bets = max(5, max_bets)
         
-        
-        
-    
-    
-
 
     # =====================================
     # OUTPUT
@@ -3869,12 +3820,12 @@ if st.button("計算"):
         Coverage += r[3]
         Final.append(r)
     
-        # カバレッジ条件
-        if Coverage >= target:
+        # 点数制限
+        if len(Final) >= max_bets:
             break
     
-        # ★ 点数制限（最重要）
-        if len(Final) >= max_bets:
+        # ★ カバレッジ条件
+        if Coverage >= target:
             break
 
     unique = {}
@@ -3936,8 +3887,10 @@ if st.button("計算"):
         # ===============================
         # ★ 保険（ここだけにする）
         # ===============================
+        head = a - 1
+        
         if (
-            a == 1
+            head == 0
             and mark in ["▲","△"]
             and 0.22 < P1[0] < 0.40
             and InsideSurvival[0] > 0.50
@@ -4048,6 +4001,21 @@ if st.button("計算"):
             "ThirdAdj_pre"
         ]:
             debug_text.append(f"{name}: {val}")
+            
+    if a == 0:
+    
+        debug_text.append("=== CHECK ===")
+        debug_text.append(f"Second: {[round(x,3) for x in SecondAdj_local]}")
+        debug_text.append(f"Third : {[round(x,3) for x in ThirdAdj_local]}")
+    
+        sum2 = sum(SecondAdj_local)
+        sum3 = sum(ThirdAdj_local)
+        ratio = sum2 / sum3 if sum3 > 0 else 0
+    
+        debug_text.append(f"sum2: {round(sum2,3)}")
+        debug_text.append(f"sum3: {round(sum3,3)}")
+        debug_text.append(f"ratio: {round(ratio,3)}")
+        debug_text.append("=============")
     
     debug_output = "\n".join(debug_text)
     
