@@ -3017,7 +3017,7 @@ if st.button("計算"):
             # ===============================
             if (
                 DoubleAttackScore > STRONG
-                Start[5] >= max(Start) - 0.005
+                and Start[5] >= max(Start) - 0.005
                 and CPI[5] > 0.45
                 and Foot[5] > 0.48
             ):
