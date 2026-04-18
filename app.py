@@ -2640,6 +2640,9 @@ if st.button("計算"):
             SecondAdj[0] *= 1.10
             ThirdAdj[0]  *= 1.06
             
+        SecondAdj_final = SecondAdj.copy()
+        ThirdAdj_final = ThirdAdj.copy()
+            
         # ===============================
         # ★ 非頭艇の残り補正（最重要）
         # ===============================
