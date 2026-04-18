@@ -2593,9 +2593,44 @@ if st.button("計算"):
         ):
             ThirdAdj[2] *= 1.08
             
+        # ===============================
+        # ★ F持ち最終補正（修正版・位置変更）
+        # ===============================
+        for i in range(6):
+        
+            if Fcount[i] >= 1:
+        
+                if Fcount[i] == 1:
+        
+                    if CLS[i] == "A1":
+                        factor = 0.98
+                    elif CLS[i] == "A2":
+                        factor = 0.96
+                    elif CLS[i] == "B1":
+                        factor = 0.94
+                    else:
+                        factor = 0.92
+        
+                elif Fcount[i] >= 2:
+        
+                    if CLS[i] == "A1":
+                        factor = 0.93
+                    elif CLS[i] == "A2":
+                        factor = 0.90
+                    elif CLS[i] == "B1":
+                        factor = 0.87
+                    else:
+                        factor = 0.85
+        
+                # 差し役は少しだけ追加ペナ
+                if i in [1,2]:
+                    factor *= 0.97
+        
+                SecondAdj[i] *= factor
+                ThirdAdj[i]  *= factor
+            
         SecondAdj_final = SecondAdj.copy()
         ThirdAdj_final = ThirdAdj.copy()
-        
         
             
         # ===============================
@@ -2635,14 +2670,14 @@ if st.button("計算"):
             # ★ 3着：位置ボーナス
             # ===============================
             for i in range(6):
-            
-                dist = i - a  # aは1着
+
+                dist = real_lane[i] - real_lane[a]
             
                 if dist == -1:
-                    ThirdAdj_local[i] *= 1.10  # 直内
+                    ThirdAdj_local[i] *= 1.08
                 elif dist == -2:
-                    ThirdAdj_local[i] *= 1.05  # さらに内
-            
+                    ThirdAdj_local[i] *= 1.04
+        
             # ===== 6の2着残り強化 =====
 
             SixSecondFlag = 0
@@ -2657,40 +2692,50 @@ if st.button("計算"):
                     or OuterClusterFlag == 1
                 )
             ):
+            
                 SixSecondFlag = 1
             
                 # 前削り
                 SecondAdj_local[0] *= 0.92
                 SecondAdj_local[1] *= 0.95
                 SecondAdj_local[2] *= 0.97
-                SecondAdj_local[5] *= 0.90
+            
+                # 6強化（修正）
+                SecondAdj_local[5] *= 1.08
             
             else:
                 if Foot[5] < 0.45:
                     SecondAdj_local[5] *= 0.90
             
             # ===============================
-            # ★ 3着強化
+            # ★ 3着強化（修正版）
             # ===============================
             
-            if FiveFlowFlag and DoubleAttackScore > WEAK and AttackSuccess == 1:
-                ThirdAdj_local[4] *= 1.15
+            if (
+                FiveFlowFlag
+                and DoubleAttackScore > WEAK
+                and AttackSuccess == 1
+            ):
+                ThirdAdj_local[4] *= 1.10
             
-            if NoAttackFlag == 0 and SixFlowFlag:
-                ThirdAdj_local[5] *= 1.20
-            
-            
-            
+            if (
+                SixFlowFlag
+                and DoubleAttackScore > WEAK
+                and AttackSuccess == 1
+                and NoAttackFlag == 0
+            ):
+                ThirdAdj_local[5] *= 1.12
+                
             # ===============================
             # ★ 6の特例（強展開のみ）
             # ===============================
             if (
                 DoubleAttackScore > STRONG
-                and Start[5] == max(Start)
+                Start[5] >= max(Start) - 0.005
                 and CPI[5] > 0.45
                 and Foot[5] > 0.48
             ):
-                SecondAdj_local[5] *= 1.15
+                SecondAdj_local[5] *= 1.10
                 
             # ===============================
             # ★ 展開6（性能じゃない6）
@@ -2698,39 +2743,53 @@ if st.button("計算"):
             if (
                 NoAttackFlag == 0
                 and DoubleAttackScore > MID
+                and AttackSuccess == 1
                 and Start[5] >= Start[3] - 0.02
                 and CLS[5] in ["A1","A2"]
             ):
-                ThirdAdj_local[5] *= 1.25
+                ThirdAdj_local[5] *= 1.12
                 
-                
-            
             # ===============================
-            # ★ 5・6の壁（ここに入れる）
+            # ★ 5・6の壁（条件分岐版）
             # ===============================
             for i in range(4,6):
             
                 if i == a:
                     continue
             
-                # ■ 5コース
+                # ===============================
+                # ■ 5コース（基本そのまま）
+                # ===============================
                 if i == 4:
+            
                     if (
                         max(CPI[2:4]) > CPI[4] - 0.02
                         and max(Turn[2:4]) >= Turn[4] - 0.02
                     ):
                         SecondAdj_local[4] *= 0.80
-                        ThirdAdj_local[4] *= 0.85
+                        ThirdAdj_local[4]  *= 0.85
             
-                # ■ 6コース
+                # ===============================
+                # ■ 6コース（条件分岐）
+                # ===============================
                 if i == 5:
-                    if (
+            
+                    wall_hit = (
                         max(CPI[2:5]) > CPI[5] - 0.03
                         and max(Turn[2:5]) >= Turn[5] - 0.02
-                    ):
-                        SecondAdj_local[5] *= 0.70
-                        ThirdAdj_local[5] *= 0.75
+                    )
             
+                    if wall_hit:
+            
+                        # ▼ 展開あり → 軽減
+                        if SixFlowFlag or AttackSuccess == 1:
+                            SecondAdj_local[5] *= 0.82
+                            ThirdAdj_local[5]  *= 0.88
+            
+                        # ▼ 展開なし → 強く削る
+                        else:
+                            SecondAdj_local[5] *= 0.70
+                            ThirdAdj_local[5]  *= 0.75
             
             # ===============================
             # ★ 頭別ロジック
@@ -2740,8 +2799,8 @@ if st.button("計算"):
                 SecondAdj_local[1] *= 1.10
                 SecondAdj_local[2] *= 1.05
                 for i in range(3,6):
-                    SecondAdj_local[i] *= 0.85
-                    ThirdAdj_local[i]  *= 0.90
+                    SecondAdj_local[i] *= 0.88
+                    ThirdAdj_local[i]  *= 0.92
         
             elif a == 1:
                 SecondAdj_local[0] *= 1.10
@@ -2759,84 +2818,78 @@ if st.button("計算"):
                 for i in range(0,2):
                     SecondAdj_local[i] *= 0.80
                 for i in range(4,6):
-                    SecondAdj_local[i] *= 1.10
-                    ThirdAdj_local[i]  *= 1.12
+                    SecondAdj_local[i] *= 1.06
+                    ThirdAdj_local[i]  *= 1.08
         
-            else:
+            elif a == 4:  # 5頭
+
                 for i in range(0,3):
-                    SecondAdj_local[i] *= 0.75
-                ThirdAdj_local[a] *= 1.10
-                
+                    SecondAdj_local[i] *= 0.78
+            
+                ThirdAdj_local[4] *= 1.08
+            
+            
+            elif a == 5:  # 6頭
+            
+                for i in range(0,3):
+                    SecondAdj_local[i] *= 0.70
+            
+                ThirdAdj_local[5] *= 1.10
+                            
             # ===============================
-            # ★ 外の進路制限（ここに入れる）
+            # ★ 外の進路制限（修正版）
             # ===============================
             for i in range(4,6):
             
                 if i == a:
                     continue
             
-                blockers = sum(1 for j in range(i) if j != a)
+                blockers = 0
+            
+                for j in range(i):
+            
+                    if j == a:
+                        continue
+            
+                    if (
+                        CPI[j] >= CPI[i] - 0.03
+                        and Turn[j] >= Turn[i] - 0.02
+                    ):
+                        blockers += 1
             
                 if blockers >= 2:
-                    SecondAdj_local[i] *= 0.65
+                    SecondAdj_local[i] *= 0.80
         
             
             # ===============================
-            # ★ 距離で最終決定（これが本体）
+            # ★ 距離で最終決定（整理版）
             # ===============================
             for i in range(6):
             
                 if i == a:
                     continue
             
-                dist = abs(i - a)
+                # ★ 実際の並びで距離判定（重要）
+                dist = abs(real_lane[i] - real_lane[a])
             
+                # ===============================
+                # ■ 直後（最重要）
+                # ===============================
                 if dist == 1:
-                    SecondAdj_local[i] *= 1.20
+                    SecondAdj_local[i] *= 1.12
             
+                # ===============================
+                # ■ 1艇挟み
+                # ===============================
                 elif dist == 2:
-                    SecondAdj_local[i] *= 1.05
+                    SecondAdj_local[i] *= 1.04
             
+                # ===============================
+                # ■ 遠い（軽く不利）
+                # ===============================
                 elif dist >= 3:
-                    SecondAdj_local[i] *= 0.70
+                    SecondAdj_local[i] *= 0.80
                     
-            # ===============================
-            # ★ F持ち最終補正（完全版）
-            # ===============================
-            for i in range(6):
-            
-                if Fcount[i] >= 1:
-            
-                    if Fcount[i] == 1:
-            
-                        if CLS[i] == "A1":
-                            factor = 0.97
-                        elif CLS[i] == "A2":
-                            factor = 0.95
-                        elif CLS[i] == "B1":
-                            factor = 0.93
-                        else:
-                            factor = 0.90
-            
-                    elif Fcount[i] >= 2:
-            
-                        if CLS[i] == "A1":
-                            factor = 0.92
-                        elif CLS[i] == "A2":
-                            factor = 0.88
-                        elif CLS[i] == "B1":
-                            factor = 0.85
-                        else:
-                            factor = 0.80
-            
-                    # 差し役は少しだけ追加ペナ（任意）
-                    if i in [1,2]:
-                        factor *= 0.97
-            
-                    SecondAdj[i] *= factor
-                    ThirdAdj[i]  *= factor
-        
-        
                     
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
         
