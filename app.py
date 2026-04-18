@@ -3742,12 +3742,17 @@ if st.button("計算"):
     results = tmp
     
     # ===============================
-    # ★ ソート（最後）
+    # ★ ソート（先にやる）
     # ===============================
     results.sort(key=lambda x: x[3], reverse=True)
     
-    results = results[:max_bets]
-
+    # ===============================
+    # ★ 上位指標（←ここ追加）
+    # ===============================
+    Top1 = results[0][3] if len(results) > 0 else 0
+    Top3 = sum(r[3] for r in results[:3])
+    Top5 = sum(r[3] for r in results[:5])
+    
     # ===============================
     # ★ 購入ランク分類（修正版）
     # ===============================
@@ -3771,9 +3776,8 @@ if st.button("計算"):
     elif Top1 < 0.22 and Top3 < 0.55:
         BuyRank = "weak"
     
-    
     # ===============================
-    # ★ レースタイプ判定（修正版）
+    # ★ レースタイプ判定（そのままでOK）
     # ===============================
     if Top1 >= 0.30 and Top3 >= 0.60:
         OddsType = "堅い"
@@ -3789,9 +3793,9 @@ if st.button("計算"):
     
     else:
         OddsType = "万舟"
-        
+    
     # ===============================
-    # ★ 点数制御（修正版）
+    # ★ 点数制御（順番修正だけ）
     # ===============================
     max_bets = 0
     
@@ -3800,17 +3804,17 @@ if st.button("計算"):
     
     else:
     
-        if Top1 < 0.20:
-            max_bets = 10
-    
-        elif Top5 > 0.65:
+        if Top3 > 0.55:
             max_bets = 3
     
-        elif Top3 > 0.55:
+        elif Top5 > 0.65:
             max_bets = 5
     
         elif Top5 > 0.55:
             max_bets = 7
+    
+        elif Top1 < 0.20:
+            max_bets = 10
     
         else:
             max_bets = 8
@@ -3818,8 +3822,19 @@ if st.button("計算"):
         # Chaos連動
         max_bets = int(max_bets * (0.8 + 0.8 * ChaosScore))
     
-        # 最低保証（skip以外）
+        # 最低保証
         max_bets = max(5, max_bets)
+    
+    # ===============================
+    # ★ weakだけ軽く制御（最小）
+    # ===============================
+    if BuyRank == "weak":
+        max_bets = min(max_bets, 6)
+    
+    # ===============================
+    # ★ 最後にカット（ここに移動）
+    # ===============================
+    results = results[:max_bets]
         
 
     # =====================================
