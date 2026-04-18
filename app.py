@@ -322,6 +322,8 @@ if st.button("計算"):
         WEAK = 0.06
         MID = 0.09
         STRONG = 0.13
+        
+        real_lane = order
 
         # ===============================
         # SKILL
