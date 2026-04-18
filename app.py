@@ -2648,10 +2648,35 @@ if st.button("計算"):
             P_first = P1[a]
     
             
-            
-            
+            # ===============================
+            # ★ local生成
+            # ===============================
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
+            
+            # ===============================
+            # ★ 攻め成立判定（ここに移動）
+            # ===============================
+            
+            attack_success = False
+            
+            for atk in attackers:
+            
+                if atk == 0:
+            
+                    continue
+            
+                if atk == a:
+            
+                    st_ok = Start[atk] >= Start[atk-1] - 0.02
+            
+                    turn_ok = Turn[atk] >= Turn[atk-1]
+            
+                    power_ok = CPI[atk] >= CPI[atk-1] - 0.03
+            
+                    if st_ok and (turn_ok or power_ok):
+            
+                        attack_success = True
             
             # ===============================
             # ★ 外の詰まり・抜け判定（3着用）
@@ -2923,18 +2948,7 @@ if st.button("計算"):
             
                     results.append((boats[a], boats[b], boats[c], p))
                     
-            # ===============================
-            # ★ 攻め成立判定
-            # ===============================
-            attack_success = False
-            
-            for atk in attackers:
-                if atk == a:
-                    if (
-                        Start[atk] >= Start[atk-1] - 0.03
-                        or Turn[atk] >= Turn[atk-1]
-                    ):
-                        attack_success = True
+    
                         
            # ===============================
             # ★ 展開拾い強化（汎用版）
