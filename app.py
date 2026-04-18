@@ -3892,10 +3892,10 @@ if st.button("計算"):
         if (
             head == 0
             and mark in ["▲","△"]
-            and 0.22 < P1[0] < 0.40
-            and InsideSurvival[0] > 0.50
-            and Start[0] >= max(Start[1:3]) - 0.03
-            and p < top_p * 0.55
+            and 0.25 < P1[0] < 0.38
+            and InsideSurvival[0] > 0.52
+            and Start[0] >= max(Start[1:3]) - 0.02
+            and p < top_p * 0.50
         ):
             insurance.append((a,b,c))
             continue
