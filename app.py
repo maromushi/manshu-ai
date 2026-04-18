@@ -2628,55 +2628,250 @@ if st.button("計算"):
         
                 SecondAdj[i] *= factor
                 ThirdAdj[i]  *= factor
-            
-        SecondAdj_final = SecondAdj.copy()
-        ThirdAdj_final = ThirdAdj.copy()
-        
+                
+        # ===============================
+        # ★ イン中間残り（移動版）
+        # ===============================
+        if (
+            FinalFirst[0] < max(FinalFirst) * 0.95
+            and FirstScore[0] > max(FirstScore) * 0.75
+            and InsideSurvival[0] >= 0.50
+        ):
+            SecondAdj[0] *= 1.10
+            ThirdAdj[0]  *= 1.06
             
         # ===============================
         # ★ 非頭艇の残り補正（最重要）
         # ===============================
-            
+        
         for a in range(6):
-
+        
             if Active[a] == 0:
                 continue
         
             if P1[a] < max(P1) * 0.90:
                 continue
         
-            P_first = P1[a]
-    
-            
+        
             # ===============================
             # ★ local生成
             # ===============================
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
-            
+        
+        
             # ===============================
-            # ★ 攻め成立判定（ここに移動）
+            # ★ 攻め成立判定
             # ===============================
-            
             attack_success = False
-            
+        
             for atk in attackers:
-            
+        
                 if atk == 0:
-            
                     continue
-            
+        
                 if atk == a:
-            
+        
                     st_ok = Start[atk] >= Start[atk-1] - 0.02
-            
                     turn_ok = Turn[atk] >= Turn[atk-1]
-            
                     power_ok = CPI[atk] >= CPI[atk-1] - 0.03
-            
+        
                     if st_ok and (turn_ok or power_ok):
-            
                         attack_success = True
+        
+        
+            # ===============================
+            # ★ 1着確率
+            # ===============================
+            P_first = P1[a]
+        
+        
+            # ===============================
+            # ★ 弱頭でも残り計算させる
+            # ===============================
+            if (
+                P1[a] < 0.12
+                and DoubleAttackScore > STRONG
+                and attack_success
+            ):
+                P_first *= 1.06
+        
+        
+            # ===============================
+            # ★ 展開拾い強化（最終版）
+            # ===============================
+            if attack_success and NoAttackFlag == 0:
+        
+                for i in range(a+1,6):
+        
+                    dist = i - a
+        
+                    # ■ 外は条件付き
+                    if i >= 4:
+                        can_pass = (
+                            Start[i] >= Start[i-1] - 0.01
+                            and Turn[i] >= Turn[i-1] - 0.02
+                        )
+                        if not can_pass:
+                            continue
+        
+                    # ■ 距離別補正
+                    if dist == 1:
+                        SecondAdj_local[i] *= 1.12
+                        ThirdAdj_local[i]  *= 1.08
+        
+                    elif dist == 2:
+                        SecondAdj_local[i] *= 1.08
+                        ThirdAdj_local[i]  *= 1.05
+        
+                    else:
+                        SecondAdj_local[i] *= 1.03
+                        
+            # ===============================
+            # ★ 攻め連動（最終版）
+            # ===============================
+            if attack_success and NoAttackFlag == 0:
+            
+                # ===============================
+                # ■ 内は潰れる（軽めに修正）
+                # ===============================
+                for i in range(a):
+            
+                    if i == 0 and (
+                        0.06 < DoubleAttackScore < 0.16
+                        and InsideSurvival[0] >= 0.45
+                    ):
+                        continue
+            
+                    SecondAdj_local[i] *= 0.88
+                    ThirdAdj_local[i]  *= 0.92
+            
+                # ===============================
+                # ■ 攻め艇はしっかり残す
+                # ===============================
+                SecondAdj_local[a] *= 1.08
+            
+                # ===============================
+                # ■ 外は“軽く”だけ浮上（被り防止）
+                # ===============================
+                for i in range(a+1, 6):
+            
+                    # 外は条件付きにする（重要）
+                    if i >= 4:
+                        if Start[i] < Start[i-1] - 0.02:
+                            continue
+            
+                    SecondAdj_local[i] *= 1.05
+                    
+            # ===============================
+            # ★ 共倒れ時の着順補正
+            # ===============================
+            if (
+                NoAttackFlag == 0
+                and DoubleAttackScore > MID
+                and Turn[2] > 0.55
+                and Turn[3] > 0.55
+                and abs(Turn[2] - Turn[3]) < 0.04
+            ):
+            
+                SecondAdj_local[2] *= 0.90
+                SecondAdj_local[3] *= 0.90
+            
+                ThirdAdj_local[2] *= 0.90
+                ThirdAdj_local[3] *= 0.90
+            
+                SecondAdj_local[5] *= 1.02
+                ThirdAdj_local[5] *= 1.05
+            
+                SecondAdj_local[0] *= 1.05
+                ThirdAdj_local[0] *= 1.05
+                        
+            # ===============================
+            # ★ 展開3着強化（修正版）
+            # ===============================
+            if attack_success and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+            
+                for i in range(6):
+            
+                    if i == a:
+                        continue
+            
+                    dist = abs(i - a)
+            
+                    # 近い艇だけ対象（重要）
+                    if dist > 2:
+                        continue
+            
+                    if (
+                        Turn[i] >= 0.50
+                        and Start[i] >= Start[a] - 0.03
+                    ):
+                        ThirdAdj_local[i] *= 1.06
+                        
+
+                    
+            # ===============================
+            # ★ 1だけ飛ぶパターン（修正版）
+            # ===============================
+            if attack_success and NoAttackFlag == 0:
+            
+                if (
+                    Start[0] < Start[a] - 0.02   # ←逆にする（重要）
+                    and Turn[0] < Turn[a]
+                ):
+                    SecondAdj_local[0] *= 0.70
+                    ThirdAdj_local[0]  *= 0.65
+            
+                    SecondAdj_local[1] *= 1.12
+                    ThirdAdj_local[1]  *= 1.06
+                    
+            # ===============================
+            # ★ 攻め共倒れ検知（最終版）
+            # ===============================
+            if len(attackers) >= 2:
+            
+                main = attackers[0]
+                sub  = attackers[1]
+            
+                if (
+                    DoubleAttackScore > MID
+                    and AttackIndex[main] > 0.45
+                    and AttackIndex[sub] > 0.45
+                ):
+            
+                    # ===============================
+                    # ■ 攻め役はしっかり削る
+                    # ===============================
+                    SecondAdj_local[main] *= 0.88
+                    SecondAdj_local[sub]  *= 0.88
+            
+                    ThirdAdj_local[main] *= 0.92
+                    ThirdAdj_local[sub]  *= 0.92
+            
+                    # ===============================
+                    # ■ 近い艇だけ恩恵（重要）
+                    # ===============================
+                    for i in range(6):
+            
+                        if i in [main, sub]:
+                            continue
+            
+                        # 攻めの近くのみ対象
+                        if min(abs(i-main), abs(i-sub)) <= 2:
+                            ThirdAdj_local[i] *= 1.08
+            
+                    # ===============================
+                    # ■ さらに近い場合だけ追加
+                    # ===============================
+                    if abs(main - sub) <= 2:
+            
+                        for i in range(6):
+            
+                            if i in [main, sub]:
+                                continue
+            
+                            if min(abs(i-main), abs(i-sub)) == 1:
+                                ThirdAdj_local[i] *= 1.04
             
             # ===============================
             # ★ 外の詰まり・抜け判定（3着用）
@@ -2750,6 +2945,8 @@ if st.button("計算"):
                 and NoAttackFlag == 0
             ):
                 ThirdAdj_local[5] *= 1.12
+                
+                
                 
             # ===============================
             # ★ 6の特例（強展開のみ）
@@ -2884,6 +3081,49 @@ if st.button("計算"):
             
                 if blockers >= 2:
                     SecondAdj_local[i] *= 0.80
+                    
+            # ===============================
+            # ★ 3頭時の2過剰抑制
+            # ===============================
+            if a == 2:  # 3号艇が1着
+                if Turn[2] > Turn[1] and NoAttackFlag == 0:
+                    SecondAdj_local[1] *= 0.92
+            
+            
+            # 残り艇
+            remain1 = [i for i in range(6) if i != a and Active[i] == 1]
+            
+            for i in range(6):
+                if i == a:
+                    continue
+            
+                # ★ 2号艇の遅れ残り（最小補正）
+                if (
+                    i == 1
+                    and Start[1] <= min(Start) + 0.002
+                    and CPI[1] >= 0.42
+                    and NoAttackFlag == 0
+                ):
+                    ThirdAdj_local[1] *= 1.08
+            
+                dist = i - a
+            
+                if dist < 0:
+                    SecondAdj_local[i] *= (1 - 0.04 * DoubleAttackScore)
+                    ThirdAdj_local[i]  *= (1 - 0.06 * DoubleAttackScore)
+            
+                elif dist == 1:
+                    SecondAdj_local[i] *= 1.12
+                    ThirdAdj_local[i]  *= 1.08
+            
+                elif dist >= 2:
+                    if NoAttackFlag == 0:
+            
+                        if i >= 4 and Start[i] < Start[i-1] - 0.01:
+                            continue
+            
+                        SecondAdj_local[i] *= 1.03
+                        ThirdAdj_local[i]  *= 1.00
         
             
             # ===============================
@@ -2914,6 +3154,96 @@ if st.button("計算"):
                 # ===============================
                 elif dist >= 3:
                     SecondAdj_local[i] *= 0.80
+                    
+            # ===============================
+            # ★ 差し込み勝ち
+            # ===============================
+            for i in range(1,4):
+
+                st_gap = Start[i] - Start[i-1]
+            
+                if attack_success and NoAttackFlag == 0:
+                
+                    attacker = i
+                
+                    candidates = []
+                
+                    for j in range(attacker):
+                
+                        if (
+                            Start[j] >= Start[attacker] - 0.02
+                            and Turn[j] >= 0.50
+                        ):
+                            candidates.append(j)
+                
+                    if len(candidates) > 0:
+                
+                        best = max(
+                            candidates,
+                            key=lambda x: (
+                                0.40 * Turn[x]
+                                + 0.30 * Start[x]
+                                + 0.20 * max(0, Start[x] - Start[attacker])
+                                + 0.10 * Foot[x]
+                            )
+                        )
+                
+                        SecondAdj_local[best] *= 1.15
+                        ThirdAdj_local[best]  *= 1.10
+                        
+            # ===============================
+            # ★ 壁崩壊（調整版）
+            # ===============================
+            for i in range(1,4):
+            
+                st_gap = Start[i] - Start[i-1]
+            
+                # ===============================
+                # ■ 強崩壊
+                # ===============================
+                if (
+                    abs(st_gap) >= 0.01
+                    and st_gap < -0.04
+                    and DoubleAttackScore > MID
+                    and NoAttackFlag == 0
+                ):
+            
+                    # 崩れた艇
+                    SecondAdj_local[i] *= 0.60
+                    ThirdAdj_local[i]  *= 0.65
+            
+                    # 外に流す（段階）
+                    for j in range(i+1,6):
+            
+                        if j == i+1:
+                            SecondAdj_local[j] *= 1.15
+                            ThirdAdj_local[j]  *= 1.10
+                        else:
+                            SecondAdj_local[j] *= 1.10
+                            ThirdAdj_local[j]  *= 1.05
+            
+                    # 内は軽く崩す
+                    for j in range(0,i):
+                        SecondAdj_local[j] *= 0.97
+                        ThirdAdj_local[j]  *= 0.98
+                # ===============================
+                # ■ 弱崩壊
+                # ===============================
+                elif st_gap < -0.02:
+                
+                    # 崩れた艇（軽め）
+                    SecondAdj_local[i] *= 0.85
+                    ThirdAdj_local[i]  *= 0.90
+                
+                    # 外に流れる
+                    for j in range(i+1,6):
+                        SecondAdj_local[j] *= 1.08
+                        ThirdAdj_local[j]  *= 1.05
+                
+                    # 内も少し影響
+                    for j in range(0,i):
+                        SecondAdj_local[j] *= 0.98
+                        ThirdAdj_local[j]  *= 0.99
                     
                     
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
@@ -2947,337 +3277,6 @@ if st.button("計算"):
                     p = P_first * P_second * P_third
             
                     results.append((boats[a], boats[b], boats[c], p))
-                    
-    
-                        
-           # ===============================
-            # ★ 展開拾い強化（汎用版）
-            # ===============================
-            if attack_success and NoAttackFlag == 0:
-                for i in range(a+1,6):
-            
-                    # ★ 追加（最重要）
-                    if i >= 4:
-                        can_pass = (
-                            Start[i] >= Start[i-1] - 0.01
-                            and Turn[i] >= Turn[i-1] - 0.02
-                        )
-                        if not can_pass:
-                            continue
-            
-                    SecondAdj_local[i] *= 1.10
-            # ===============================
-            # ★ 展開3着強化（汎用版）
-            # ===============================
-            if attack_success and DoubleAttackScore > WEAK and NoAttackFlag == 0:
-            
-                for i in range(2,5):
-            
-                    if (
-                        Turn[i] >= 0.48
-                        and Start[i] >= Start[a] - 0.04
-                    ):
-                        ThirdAdj_local[i] *= 1.08
-            
-            # ===============================
-            # ★ 攻め連動（修正版）
-            # ===============================
-            if attack_success and NoAttackFlag == 0:
-            
-                # 内は潰れる
-                for i in range(a):
-            
-                    # インだけ例外
-                    if i == 0 and (
-                        0.06 < DoubleAttackScore < 0.16
-                        and InsideSurvival[0] >= 0.45
-                    ):
-                        continue
-            
-                    SecondAdj_local[i] *= 0.80
-                    ThirdAdj_local[i]  *= 0.85
-            
-                # 攻め艇は残る
-                SecondAdj_local[a] *= 1.05
-            
-                # 外が浮上
-                for i in range(a+1, 6):
-                    SecondAdj_local[i] *= 1.10
-                    ThirdAdj_local[i]  *= 1.12
-            # ===============================
-            # ★ 1だけ飛ぶパターン
-            # ===============================
-            if attack_success and NoAttackFlag == 0:
-                if (
-                    Start[0] >= Start[a] - 0.01
-                    and Turn[0] < Turn[a]
-                    and NoAttackFlag == 0
-                ):
-                    SecondAdj_local[0] *= 0.65
-                    ThirdAdj_local[0] *= 0.60
-            
-                    SecondAdj_local[1] *= 1.15
-                    ThirdAdj_local[1] *= 1.08
-            
-            
-            
-                    
-            # ===============================
-            # ★ イン中間残り（精度用）
-            # ===============================
-            if (
-                FinalFirst[0] < max(FinalFirst) * 0.95   # 頭は弱い
-                and FirstScore[0] > max(FirstScore) * 0.75  # でも弱すぎない
-                and InsideSurvival[0] >= 0.50
-            ):
-                SecondAdj[0] *= 1.12
-                ThirdAdj[0] *= 1.08
-                    
-            
-        
-                        
-                        
-            # ===============================
-            # ★ 攻め共倒れ検知（汎用・最終版）
-            # ===============================
-            
-            if len(attackers) >= 2:
-
-                main = attackers[0]
-                sub  = attackers[1]
-            
-                if (
-                    DoubleAttackScore > MID
-                    and AttackIndex[main] > 0.45
-                    and AttackIndex[sub] > 0.45
-                ):
-            
-                    # 攻め役を少し削る
-                    SecondAdj_local[main] *= 0.92
-                    SecondAdj_local[sub]  *= 0.92
-                
-                    ThirdAdj_local[main] *= 0.95
-                    ThirdAdj_local[sub]  *= 0.95
-                
-                    # その他を底上げ（差し・待ち）
-                    for i in range(6):
-                        if i not in [main, sub]:
-                            ThirdAdj_local[i] *= 1.10
-                
-                    # 攻めが近いときはさらに崩れやすい
-                    if abs(main - sub) <= 2:
-                        for i in range(6):
-                            if i not in [main, sub]:
-                                ThirdAdj_local[i] *= 1.05
-                        
-            # ★ ズレ決着の許容（万舟用）
-            #if DoubleAttackScore > WEAK and NoAttackFlag == 0:
-                #for i in range(6):
-                    #if i >= 2:
-                        #ThirdAdj[i] *= 1.05
-                        
-            
-            
-            # ===============================
-            # ★ 弱頭でも残り計算させる（最重要）
-            # ===============================
-            if (
-                P1[a] < 0.15
-                and DoubleAttackScore > MID
-            ):
-                P_first *= 1.10
-            
-          
-                
-                            
-
-            # ===============================
-            # ★ 共倒れ時の着順補正
-            # ===============================
-            if (
-                Turn[2] > 0.55
-                and Turn[3] > 0.55
-                and abs(Turn[2] - Turn[3]) < 0.04
-            ):
-            
-                # 3・4の残りを削る
-                SecondAdj_local[2] *= 0.90
-                SecondAdj_local[3] *= 0.90
-            
-                ThirdAdj_local[2] *= 0.90
-                ThirdAdj_local[3] *= 0.90
-            
-                # 外と内に流す
-                SecondAdj_local[5] *= 1.02
-                ThirdAdj_local[5] *= 1.05
-            
-                SecondAdj_local[0] *= 1.05
-                ThirdAdj_local[0] *= 1.05
-
-            
-            # ===============================
-            # ★ 3頭時の2過剰抑制
-            # ===============================
-            if a == 2:  # 3号艇が1着
-                if Turn[2] > Turn[1] and NoAttackFlag == 0:
-                    SecondAdj_local[1] *= 0.92
-            
-            # 残り5艇（ここ追加）
-            remain1 = [i for i in range(6) if i != a and Active[i] == 1]
-    
-            for i in range(6):
-                if i == a:
-                    continue
-
-                # ★ 2号艇の遅れ残り（最小補正）
-                if (
-                    i == 1
-                    and Start[1] == min(Start)
-                    and CPI[1] >= 0.42
-                    and NoAttackFlag == 0
-                ):
-                    ThirdAdj_local[1] *= 1.08
-
-                dist = i - a
-            
-                if dist < 0:
-                    SecondAdj_local[i] *= (1 - 0.04*DoubleAttackScore)                  
-                    ThirdAdj_local[i] *= (1 - 0.06*DoubleAttackScore)
-            
-                elif dist == 1:
-                    SecondAdj_local[i] *= 1.12
-                    ThirdAdj_local[i] *= 1.08
-            
-                elif dist >= 2:
-                    if NoAttackFlag == 0:
-                
-                        if i >= 4:
-                            if Start[i] < Start[i-1] - 0.01:
-                                continue
-                
-                        SecondAdj_local[i] *= 1.03
-                        ThirdAdj_local[i] *= 1.00
-                                    
-            # ===============================
-            # ★ 壁崩壊（調整版）
-            # ===============================
-            for i in range(1,4):
-            
-                st_gap = Start[i] - Start[i-1]
-            
-                # ノイズ除去
-                if abs(st_gap) < 0.01:
-                    continue
-            
-                # ===============================
-                # ■ 強崩壊
-                # ===============================
-                if (
-                    st_gap < -0.04
-                    and DoubleAttackScore > MID
-                    and NoAttackFlag == 0
-                ):
-            
-                    # 崩れた艇を落とす（軽く）
-                    SecondAdj_local[i] *= 0.70
-                    ThirdAdj_local[i]  *= 0.75
-            
-                    # 外に流す（控えめ）
-                    for j in range(i+1,6):
-                        SecondAdj_local[j] *= 1.12
-                        ThirdAdj_local[j]  *= 1.08
-            
-                    # 内は微調整だけ
-                    for j in range(0,i):
-                        SecondAdj_local[j] *= 0.97
-                        ThirdAdj_local[j]  *= 0.98
-            
-                # ===============================
-                # ■ 弱崩壊
-                # ===============================
-                elif st_gap < -0.02:
-            
-                    SecondAdj_local[i] *= 0.85
-                    ThirdAdj_local[i]  *= 0.90
-            
-                    for j in range(i+1,6):
-                        SecondAdj_local[j] *= 1.05
-                        ThirdAdj_local[j]  *= 1.03    
-                
-            
-                # ===============================
-                # ★ 差し込み勝ち（ここに入れる）
-                # ===============================
-                attacker = i
-            
-                candidates = []
-            
-                for j in range(attacker):
-            
-                    if (
-                        Start[j] >= Start[attacker] - 0.03
-                        and Turn[j] >= 0.50
-                    ):
-                        candidates.append(j)
-            
-                if len(candidates) > 0:
-            
-                    best = max(
-                        candidates,
-                        key=lambda x: (
-                            0.40 * Turn[x]
-                            + 0.30 * Start[x]
-                            + 0.20 * max(0, Start[x] - Start[attacker])
-                            + 0.10 * Foot[x]
-                        )
-                    )
-            
-                    SecondAdj_local[best] *= 1.18
-                    ThirdAdj_local[best]  *= 1.12
-                        
-                        
-
-                if i >= 4:
-
-                    if i == 5:
-                        if not (Strong6 or Normal6):
-
-                            # ★ 展開6は殺さない
-                            if not (
-                                DoubleAttackScore > MID
-                                and Start[i] >= Start[3] - 0.02
-                            ):
-                                if not (
-                                    i == 5
-                                    and DoubleAttackScore > MID
-                                    and Start[i] >= Start[3] - 0.02
-                                ):
-                                    if Foot[i] < 0.50:
-                                        ThirdAdj_local[i] *= 0.95
-                    else:
-                        if Foot[i] < 0.55:
-                            SecondAdj_local[i] *= 0.90
-                            
-                    # ===== 外の残り再設計 =====
-                    if i == 4:
-                        if (
-                            DoubleAttackScore > MID
-                            and Start[i] >= Start[2] - 0.02
-                            and Foot[i] >= 0.50
-                            and CPI[i] >= 0.48
-                        ):
-                            SecondAdj_local[i] *= 1.08
-                            ThirdAdj_local[i] *= 1.04
-
-                    # ★ 6だけは条件付きにする
-                    if i == 5:
-                    
-                        if not (
-                            DoubleAttackScore > MID
-                            and Start[5] >= Start[3] - 0.02
-                        ):
-                            SecondAdj_local[5] *= 0.85
-                            ThirdAdj_local[5] *= 0.85
             
                 # ===============================
                 # 内残り（条件付きに変更）
