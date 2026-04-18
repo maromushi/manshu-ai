@@ -2480,12 +2480,6 @@ if st.button("計算"):
                 SecondAdj[3] *= 1.08
                 SecondAdj[4] *= 1.06
                 
-        
-        
-
-            
-         
-                
 
         ThirdScore=[
         0.28*Velocity[i]+
@@ -2522,47 +2516,53 @@ if st.button("計算"):
                 if CPI[i] >= 0.45:
                     ThirdAdj[i] *= 1.18
         
-        # ★ 攻め役の失敗残り（超重要）
-        for i in range(6):
-
-            if i in [2,3]:
-                if DoubleAttackScore > WEAK and NoAttackFlag == 0:
-                    ThirdAdj[i] *= 1.12
-                    
+        # ★ 攻め役の失敗残り（修正版）
+        if AttackWeak == 1 and AttackSuccess == 0:
+        
+            for i in [2,3]:
+                ThirdAdj[i] *= 1.08
         
     
         # ===============================
-        # ★ インの2着・3着粘り復活
+        # ★ インの2着・3着粘り復活（修正版）
         # ===============================
-        
         if (
             CLS[0] in ["A1","A2"]
             and Start[0] >= 0.13
+            and DoubleAttackScore < 0.10
         ):
-            SecondAdj[0] *= 1.12
-            ThirdAdj[0] *= 1.08
+        
+            SecondAdj[0] *= 1.08
+            ThirdAdj[0]  *= 1.05
         
         # ===============================
-        # ★ 展開艇の3着流入（最重要）
+        # ★ 展開艇の3着流入（修正版）
         # ===============================
-        for i in range(6):
+        if NoAttackFlag == 0 and DoubleAttackScore > WEAK:
         
-            if (
-                NoAttackFlag == 0
-                and ExST[i] <= 0.08
-                and DoubleAttackScore > 0.04
-            ):
-                ThirdAdj[i] *= 1.20
+            for i in range(6):
+        
+                # 攻めライン or その外
+                if i >= 2:
+        
+                    if (
+                        ExST[i] <= 0.08
+                        and Start[i] >= Start[2] - 0.02
+                    ):
+                        ThirdAdj[i] *= 1.10
         
         # ===============================
-        # ★ 3と4が完全に競ってる時だけ
+        # ★ 3と4が競合 → 両方少し削る
         # ===============================
         if (
-            DoubleAttackScore > 0.04
-            and DoubleAttackScore < 0.09
+            DoubleAttackScore > WEAK
+            and DoubleAttackScore < MID
             and abs(CPI[2] - CPI[3]) < 0.03
+            and abs(Start[2] - Start[3]) < 0.02
         ):
+        
             ThirdAdj[2] *= 0.95
+            ThirdAdj[3] *= 0.95
         
         # ===============================
         # ★ 1の過剰残り抑制（ここ）
@@ -2574,30 +2574,24 @@ if st.button("計算"):
             ThirdAdj[0] *= 0.90
         
         # ===============================
-        # ★ 2の残り復活（ここに入れる）
+        # ★ 2の残り復活（修正版）
         # ===============================
         if (
             NoAttackFlag == 0
             and DoubleAttackScore > WEAK
-            and NoAttackFlag == 0
             and Start[1] >= Start[0] - 0.02
-            and CPI[1] >= 0.45
+            and CPI[1] >= CPI[0] - 0.05
         ):
-            SecondAdj[1] *= 1.12
-            ThirdAdj[1] *= 1.08
-        
-                
-        
-        
-        
-
+            SecondAdj[1] *= 1.10
+            ThirdAdj[1] *= 1.06
+    
         # ===== 3号艇の自然流入 =====
 
         if (
             0.43 <= CPI[2] <= 0.62
             and NoAttackFlag == 0
         ):
-            ThirdAdj[2] *= 1.12
+            ThirdAdj[2] *= 1.08
             
         SecondAdj_final = SecondAdj.copy()
         ThirdAdj_final = ThirdAdj.copy()
