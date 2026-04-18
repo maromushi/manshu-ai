@@ -1318,16 +1318,16 @@ if st.button("計算"):
         # ===============================
         
         # ★ 展開ゾーン分類（追加）
-        if NoAttackFlag == 1:
+        if DoubleAttackScore < 0.01:
+
             RaceZone = "no_attack"
         
-        elif (
-            0.05 <= DoubleAttackScore < 0.09
-            and AttackSuccess == 0
-        ):
+        elif DoubleAttackScore < 0.06:
+        
             RaceZone = "weak"
         
         else:
+        
             RaceZone = "attack"
             
 
