@@ -2484,41 +2484,7 @@ if st.button("計算"):
         
 
             
-        # ===============================
-        # ★ F持ち最終補正（完全版）
-        # ===============================
-        for i in range(6):
-        
-            if Fcount[i] >= 1:
-        
-                if Fcount[i] == 1:
-        
-                    if CLS[i] == "A1":
-                        factor = 0.97
-                    elif CLS[i] == "A2":
-                        factor = 0.95
-                    elif CLS[i] == "B1":
-                        factor = 0.93
-                    else:
-                        factor = 0.90
-        
-                elif Fcount[i] >= 2:
-        
-                    if CLS[i] == "A1":
-                        factor = 0.92
-                    elif CLS[i] == "A2":
-                        factor = 0.88
-                    elif CLS[i] == "B1":
-                        factor = 0.85
-                    else:
-                        factor = 0.80
-        
-                # 差し役は少しだけ追加ペナ（任意）
-                if i in [1,2]:
-                    factor *= 0.97
-        
-                SecondAdj[i] *= factor
-                ThirdAdj[i]  *= factor 
+         
                 
 
         ThirdScore=[
@@ -2839,6 +2805,42 @@ if st.button("計算"):
             
                 elif dist >= 3:
                     SecondAdj_local[i] *= 0.70
+                    
+            # ===============================
+            # ★ F持ち最終補正（完全版）
+            # ===============================
+            for i in range(6):
+            
+                if Fcount[i] >= 1:
+            
+                    if Fcount[i] == 1:
+            
+                        if CLS[i] == "A1":
+                            factor = 0.97
+                        elif CLS[i] == "A2":
+                            factor = 0.95
+                        elif CLS[i] == "B1":
+                            factor = 0.93
+                        else:
+                            factor = 0.90
+            
+                    elif Fcount[i] >= 2:
+            
+                        if CLS[i] == "A1":
+                            factor = 0.92
+                        elif CLS[i] == "A2":
+                            factor = 0.88
+                        elif CLS[i] == "B1":
+                            factor = 0.85
+                        else:
+                            factor = 0.80
+            
+                    # 差し役は少しだけ追加ペナ（任意）
+                    if i in [1,2]:
+                        factor *= 0.97
+            
+                    SecondAdj[i] *= factor
+                    ThirdAdj[i]  *= factor
         
         
                     
