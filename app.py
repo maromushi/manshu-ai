@@ -322,8 +322,6 @@ if st.button("計算"):
         WEAK = 0.06
         MID = 0.09
         STRONG = 0.13
-        
-        real_lane = order
 
         # ===============================
         # SKILL
@@ -3514,6 +3512,15 @@ if st.button("計算"):
                     p = P_first * P_second * P_third
             
                     results.append((boats[a], boats[b], boats[c], p))
+                    
+            # ===============================
+            # ★ 最終return（絶対必要）
+            # ===============================
+            
+            if len(results) == 0:
+                return [], 0, [1/6]*6, 0, [0.5]*6, debug_log, [0]*6
+            
+            return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
                 
     def run_zure_ai(order, NoAttackProb):
 
