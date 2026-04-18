@@ -3244,6 +3244,59 @@ if st.button("計算"):
                     for j in range(0,i):
                         SecondAdj_local[j] *= 0.98
                         ThirdAdj_local[j]  *= 0.99
+                        
+            # ===============================
+            # ★ 外（5・6）最終制御（整理版）
+            # ===============================
+            for i in range(4,6):
+            
+                # ===============================
+                # ■ 生存条件（先に判定）
+                # ===============================
+                alive = False
+            
+                # 展開で生きる
+                if (
+                    DoubleAttackScore > MID
+                    and Start[i] >= Start[i-1] - 0.02
+                ):
+                    alive = True
+            
+                # 性能で生きる
+                if (
+                    Foot[i] >= 0.50
+                    and CPI[i] >= 0.48
+                ):
+                    alive = True
+            
+            
+                # ===============================
+                # ■ 5コース
+                # ===============================
+                if i == 4:
+            
+                    if alive:
+                        SecondAdj_local[i] *= 1.08
+                        ThirdAdj_local[i]  *= 1.04
+                    else:
+                        SecondAdj_local[i] *= 0.90
+            
+            
+                # ===============================
+                # ■ 6コース
+                # ===============================
+                if i == 5:
+            
+                    # 強い6は無条件で生かす
+                    if Strong6 or Normal6:
+                        continue
+            
+                    if alive:
+                        SecondAdj_local[i] *= 1.05
+                        ThirdAdj_local[i]  *= 1.08
+                    else:
+                        SecondAdj_local[i] *= 0.85
+                        ThirdAdj_local[i]  *= 0.85
                     
                     
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
