@@ -3556,8 +3556,8 @@ if st.button("計算"):
         order_ex = [0,1,2,3,4,5]
     
     try:
-        res_base, chaos1, P1_base, DAS_base, IS_base, debug_log_base, Start_base = calc_base(order_waku)
-    
+        res_base, chaos1, P1_base, DAS_base, IS_base, debug_log_base, Start_base = run_no_attack(order_waku)
+        
         res_no, chaos_no, P1_no, DAS_no, IS_no, debug_no, _ = run_no_attack(order_ex)
     
         res_weak, chaos_w, P1_w, DAS_w, IS_w, debug_w, _ = run_weak(order_ex)
