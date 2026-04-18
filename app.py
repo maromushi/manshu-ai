@@ -2764,6 +2764,55 @@ if st.button("計算"):
                     SecondAdj_local[i] *= 1.05
                     
             # ===============================
+            # ★ 3着バランス補正（最終微調整）
+            # ===============================
+            for i in range(6):
+            
+                # ===============================
+                # ■ センター優遇（軽め）
+                # ===============================
+                if i == 2:   # 3号艇
+                    ThirdAdj[i] *= 1.05
+            
+                elif i == 3: # 4号艇
+                    ThirdAdj[i] *= 1.04
+            
+            
+                # ===============================
+                # ■ 5コース（条件型）
+                # ===============================
+                elif i == 4:
+            
+                    if DoubleAttackScore > WEAK and NoAttackFlag == 0:
+                        ThirdAdj[i] *= 1.03
+                    else:
+                        ThirdAdj[i] *= 0.98
+            
+            
+                # ===============================
+                # ■ 6コース（整理版）
+                # ===============================
+                elif i == 5:
+            
+                    alive = (
+                        DoubleAttackScore > MID
+                        and Start[i] >= Start[3] - 0.02
+                        and Foot[i] >= 0.50
+                    )
+            
+                    if alive:
+                        ThirdAdj[i] *= 1.05
+                    else:
+                        ThirdAdj[i] *= 0.88
+            
+            
+                # ===============================
+                # ■ 弱すぎる艇カット
+                # ===============================
+                if Skill[i] < 0.30:
+                    ThirdAdj[i] *= 0.90
+                    
+            # ===============================
             # ★ 共倒れ時の着順補正
             # ===============================
             if (
@@ -2807,6 +2856,21 @@ if st.button("計算"):
                         and Start[i] >= Start[a] - 0.03
                     ):
                         ThirdAdj_local[i] *= 1.06
+                        
+            # ===============================
+            # ★ 内の3着残り（内全体）
+            # ===============================
+            for i in range(3):  # 1〜3コース
+            
+                if InsideSurvival[i] > 0.55:
+                    ThirdAdj[i] *= 1.05
+            
+            
+            # ===============================
+            # ★ インの粘り（1専用）
+            # ===============================
+            if InsideSurvival[0] > 0.55:
+                ThirdAdj[0] *= 1.03
                         
 
                     
@@ -3057,31 +3121,7 @@ if st.button("計算"):
                     SecondAdj_local[i] *= 0.70
             
                 ThirdAdj_local[5] *= 1.10
-                            
-            # ===============================
-            # ★ 外の進路制限（修正版）
-            # ===============================
-            for i in range(4,6):
-            
-                if i == a:
-                    continue
-            
-                blockers = 0
-            
-                for j in range(i):
-            
-                    if j == a:
-                        continue
-            
-                    if (
-                        CPI[j] >= CPI[i] - 0.03
-                        and Turn[j] >= Turn[i] - 0.02
-                    ):
-                        blockers += 1
-            
-                if blockers >= 2:
-                    SecondAdj_local[i] *= 0.80
-                    
+                
             # ===============================
             # ★ 3頭時の2過剰抑制
             # ===============================
@@ -3124,7 +3164,74 @@ if st.button("計算"):
             
                         SecondAdj_local[i] *= 1.03
                         ThirdAdj_local[i]  *= 1.00
-        
+     
+                            
+            # ===============================
+            # ★ 外の進路制限（修正版）
+            # ===============================
+            for i in range(4,6):
+            
+                if i == a:
+                    continue
+            
+                blockers = 0
+            
+                for j in range(i):
+            
+                    if j == a:
+                        continue
+            
+                    if (
+                        CPI[j] >= CPI[i] - 0.03
+                        and Turn[j] >= Turn[i] - 0.02
+                    ):
+                        blockers += 1
+            
+                if blockers >= 2:
+                    SecondAdj_local[i] *= 0.80
+                    
+            # ===============================
+            # ★ 4頭時の6流入（修正版）
+            # ===============================
+            if a == 3 and Strong6:
+            
+                # 2着寄りに流入
+                SecondAdj_local[5] *= 1.12
+            
+                # 3着も少し拾う
+                ThirdAdj_local[5] *= 1.08
+                
+            # ===============================
+            # ★ 2着の構造（軽量版）
+            # ===============================
+            if DoubleAttackScore < 0.15:
+            
+                for i in range(6):
+            
+                    if i == a:
+                        continue
+            
+                    dist = abs(i - a)
+            
+                    # ===============================
+                    # ■ 隣（最重要）
+                    # ===============================
+                    if dist == 1:
+                        SecondAdj_local[i] *= 1.15
+            
+                    # ===============================
+                    # ■ 内（軽め）
+                    # ===============================
+                    elif i < a:
+                        SecondAdj_local[i] *= 1.05
+            
+                    # ===============================
+                    # ■ 外（削りすぎない）
+                    # ===============================
+                    elif i > a:
+                        SecondAdj_local[i] *= 0.85
+                    
+               
             
             # ===============================
             # ★ 距離で最終決定（整理版）
@@ -3297,6 +3404,105 @@ if st.button("計算"):
                     else:
                         SecondAdj_local[i] *= 0.85
                         ThirdAdj_local[i]  *= 0.85
+                        
+            # ===============================
+            # ★ 6の最終制御（整理版）
+            # ===============================
+            # 無風は無条件で殺す
+            if NoAttackFlag == 1:
+            
+                SecondAdj_local[5] *= 0.70
+                ThirdAdj_local[5]  *= 0.75
+            
+            else:
+            
+                # ===============================
+                # ■ 生存条件
+                # ===============================
+                alive = False
+            
+                if SixFlowFlag:
+                    alive = True
+            
+                if (
+                    DoubleAttackScore > MID
+                    and Start[5] >= Start[3] - 0.02
+                    and Foot[5] >= 0.50
+                ):
+                    alive = True
+            
+            
+                # ===============================
+                # ■ 分岐
+                # ===============================
+                if alive:
+            
+                    SecondAdj_local[5] *= 1.08
+                    ThirdAdj_local[5]  *= 1.10
+            
+                else:
+            
+                    # 性能不足なら強く削る
+                    if CPI[5] < 0.50:
+                        SecondAdj_local[5] *= 0.60
+                        ThirdAdj_local[5]  *= 0.65
+                    else:
+                        SecondAdj_local[5] *= 0.80
+                        ThirdAdj_local[5]  *= 0.85
+                        
+            # ===============================
+            # ★ 1の残り補正（頭負け時のみ）
+            # ===============================
+            if a != 0:
+            
+                weak_head = FirstScore[0] < max(FirstScore) * 0.92
+                has_resist = InsideSurvival[0] >= 0.48
+            
+                weak_sashi = (
+                    Start[1] < Start[0] - 0.02
+                    or Turn[1] < Turn[2]
+                )
+            
+                if weak_head and has_resist:
+            
+                    if weak_sashi:
+                        SecondAdj_local[0] *= 1.12
+                        ThirdAdj_local[0] *= 1.08
+            
+                    else:
+                        SecondAdj_local[0] *= 1.06
+                        ThirdAdj_local[0] *= 1.04
+            
+                # 軽い保険（弱める）
+                ratio = FirstScore[0] / max(FirstScore)
+            
+                if (
+                    0.88 <= ratio <= 0.96
+                    and InsideSurvival[0] >= 0.45
+                ):
+                    SecondAdj_local[0] *= 1.05
+                    ThirdAdj_local[0] *= 1.03
+                    
+            # ===============================
+            # ★ 最終バランスチェック
+            # ===============================
+            if a == 0:  # まず1パターンだけ見る（重要）
+            
+                print("=== CHECK START ===")
+            
+                print("SecondAdj_local:", [round(x,3) for x in SecondAdj_local])
+                print("ThirdAdj_local :", [round(x,3) for x in ThirdAdj_local])
+            
+                sum2 = sum(SecondAdj_local)
+                sum3 = sum(ThirdAdj_local)
+            
+                ratio = sum2 / sum3 if sum3 > 0 else 0
+            
+                print("sum Second:", round(sum2,3))
+                print("sum Third :", round(sum3,3))
+                print("ratio     :", round(ratio,3))
+            
+                print("=== CHECK END ===")
                     
                     
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
@@ -3330,132 +3536,7 @@ if st.button("計算"):
                     p = P_first * P_second * P_third
             
                     results.append((boats[a], boats[b], boats[c], p))
-            
-                # ===============================
-                # 内残り（条件付きに変更）
-                # ===============================
-                if i <= 2 and InsideSurvival[i] > 0.55:
-                    ThirdAdj[i] *= 1.03
-            
-                # インのしぶとさ（少し弱め）
-                if i == 0:
-                    ThirdAdj[i] *= 1.02
-            
-                # ===============================
-                # 3着バランス補正（シンプル版）
-                # ===============================
-
-                # 基本位置
-                if i == 2:   # 3号艇
-                    ThirdAdj[i] *= 1.10
-                elif i == 3: # 4号艇
-                    ThirdAdj[i] *= 1.08
-                elif i == 4:
                 
-                    if DoubleAttackScore > WEAK and NoAttackFlag == 0:
-                        ThirdAdj[i] *= 1.05
-                    else:
-                        ThirdAdj[i] *= 0.98
-                        
-                elif i == 5: # 6号艇
-
-                    if Foot[i] < 0.50:
-                        ThirdAdj[i] *= 0.90   # 弱いときだけ削る
-                
-                    else:
-                        ThirdAdj[i] *= 1.00   # 基本はあまり削らない
-
-                # 展開ある時だけ6を少し戻す
-                if (
-                    i == 5
-                    and DoubleAttackScore > 0.16
-                    and Start[i] >= Start[3] - 0.01
-                    and Foot[i] >= 0.50
-                ):
-                    ThirdAdj[i] *= 1.08
-                # 弱すぎる艇だけ削る
-                if Skill[i] < 0.30:
-                    ThirdAdj[i] *= 0.90  
-                    
-            # ===============================
-            # ★ 4頭時の6流入（ここに入れる）
-            # ===============================
-            
-                
-            if (
-                a == 3
-                and Strong6
-            ):
-                SecondAdj[5] *= 1.10
-                
-            # ===============================
-            # ★ 1の2着・3着残り補正（改良版）
-            # ===============================
-            weak_head = FirstScore[0] < max(FirstScore) * 0.92
-            
-            has_resist = InsideSurvival[0] >= 0.48
-            
-            weak_sashi = (
-                Start[1] < Start[0] - 0.02
-                or Turn[1] < Turn[2]
-            )
-            
-            if weak_head and has_resist:
-            
-                if weak_sashi:
-                    SecondAdj[0] *= 1.15
-                    ThirdAdj[0] *= 1.10
-            
-                else:
-                    SecondAdj[0] *= 1.08
-                    ThirdAdj[0] *= 1.05
-                        
-            if (
-                0.85 <= FirstScore[0] / max(FirstScore) <= 0.98
-                and InsideSurvival[0] >= 0.45
-            ):
-                SecondAdj[0] *= 1.10
-                ThirdAdj[0] *= 1.05
-                
-            # ===============================
-            # ★ 6の最終制御（統一版）
-            # ===============================
-            
-            # ★ 6の最終制御
-            if NoAttackFlag == 1:
-                SecondAdj_local[5] *= 0.70
-                ThirdAdj_local[5] *= 0.75
-            else:
-                if NoAttackFlag == 0:
-
-                    if SixFlowFlag:
-                        SecondAdj_local[5] *= 1.08
-                        ThirdAdj_local[5] *= 1.12
-                
-                    if CPI[5] < 0.50:
-                        SecondAdj_local[5] *= 0.60
-                        
-            # ===============================
-            # ★ 2着の構造（強化版）
-            # ===============================
-            if DoubleAttackScore < 0.15:
-            
-                for i in range(6):
-            
-                    if i == a:
-                        continue
-            
-                    # 同格（最重要）
-                    if abs(i - a) == 1:
-                        SecondAdj_local[i] *= 1.20
-            
-                    # 内（残り）
-                    elif i < a:
-                        SecondAdj_local[i] *= 1.10
-            
-                    # 外（ここを強く落とす）
-                    elif i > a:
-                        SecondAdj_local[i] *= 0.70
                         
         if len(results) == 0:
             return [], 0, [1/6]*6, 0, [0.5]*6, debug_log, [0]*6
