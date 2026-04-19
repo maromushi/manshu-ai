@@ -1410,25 +1410,24 @@ if st.button("計算"):
             FirstScore[0] *= 0.97
             
         # ===============================
-        # ★ 6の強さ分類（ここ！！）
+        # ★ 6の強さ分類（整理版）
         # ===============================
+        
         Strong6 = (
             CLS[5] == "A1"
             and CPI[5] >= 0.52
             and Start[5] >= Start[3] - 0.02
         )
         
-        Normal6 = (
-            CPI[5] >= 0.45
-            and Foot[5] >= 0.48
-        )
-        
         SemiStrong6 = (
-            CLS[5] == "A2"
-            and CPI[5] >= 0.55
-            and Start[5] >= Start[3] - 0.01
+            CLS[5] in ["A1","A2"]
+            and CPI[5] >= 0.50
+            and Foot[5] >= 0.50
+            and Start[5] >= Start[3] - 0.02
             and DoubleAttackScore > MID
         )
+        
+        Weak6 = not (Strong6 or SemiStrong6)
         
         FS_mult = [1.0]*6
         
