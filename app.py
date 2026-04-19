@@ -1831,33 +1831,6 @@ if st.button("計算"):
             total = 1e-6
         
         P1 = [x / total for x in FinalFirst]
-        
-        
-        # ===============================
-        # ★ 頭許可ロジック
-        # ===============================
-        FinalFirst_adj = FinalFirst.copy()
-        
-        for i in range(1, 4):
-        
-            ratio = P1[i] / (P1[0] + 1e-6)
-        
-            if ratio >= 0.75:
-                FinalFirst_adj[i] *= 1.08
-        
-            elif ratio >= 0.65:
-                FinalFirst_adj[i] *= 1.04
-        
-        
-        # ===============================
-        # ★ 再正規化
-        # ===============================
-        total = sum(FinalFirst_adj)
-        
-        if total <= 0:
-            total = 1e-6
-        
-        P1 = [x / total for x in FinalFirst_adj]
 
         # ===============================
         # ATTACK BOOST
@@ -3868,6 +3841,47 @@ if st.button("計算"):
     
     results = [(a,b,c,p) for (a,b,c),p in final.items()]
     results = sorted(results, key=lambda x: x[3], reverse=True)
+
+    # ===============================
+    # ★ セカンド軸生成（ここに入れる）
+    # ===============================
+    
+    SecondHead = None
+    
+    candidates = sorted(
+    
+        range(6),
+        key=lambda i: P1[i],
+        reverse=True
+    )
+    
+    for i in candidates:
+        if i != 0:
+            SecondHead = i
+            break
+    
+    SecondAxisResults = []
+    if (
+        SecondHead is not None
+        and P1[SecondHead] >= P1[0] * 0.75
+        and AttackWeak == 1
+    ):
+    
+        for (a,b,c,p) in results:
+            if a == 1:
+                new_head = SecondHead + 1
+    
+    
+                if b == new_head:
+                    continue
+
+    
+                new = (new_head, 1, c, p * 0.6)
+                SecondAxisResults.append(new)
+            elif a == SecondHead + 1:
+                SecondAxisResults.append((a,b,c,p * 1.1))
+    # 合成
+    results += SecondAxisResults
     
     # ===============================
     # ★ シャープ化 & 正規化 & カット
