@@ -407,62 +407,37 @@ if st.button("計算"):
         # ===============================
         # EXHIBIT
         # ===============================
-
-        AvgEx=sum(ET)/6
-
-        TimeScore=normalize([AvgEx-x for x in ET])
+        
+        AvgEx = sum(ET)/6
+        
+        TimeScore = normalize([AvgEx-x for x in ET])
         ExSTScore = normalize([
             0.25 - x if x > 0 else 0.0
             for x in EST
         ])
-
-        ExhibitRaw=[0.80*TimeScore[i]+0.20*ExSTScore[i] for i in range(6)]
-
-        Exhibit=[]
-
+        
+        ExhibitRaw = [
+            0.80*TimeScore[i] + 0.20*ExSTScore[i]
+            for i in range(6)
+        ]
+        
+        Exhibit = []
+        
         for i in range(6):
-
+        
             cls = CLS[i]
-
+        
             if cls == "A1":
                 factor = 1.00
             elif cls == "A2":
                 factor = 0.92
             elif cls == "B1":
                 factor = 0.80
-            else:  
+            else:
                 factor = 0.65
-
+        
             Exhibit.append(ExhibitRaw[i]*factor)
-            
-        def convert_exst(x):
-
-            if x <= 0.06:
-                return 0.10 + (x * 0.5)
-        
-            elif x <= 0.18:
-                return x
-        
-            elif x <= 0.25:
-                return 0.18 + (x - 0.18) * 0.5
-        
-            else:
-                return 0.20
-                
-        def exst_weight(x):
-
-            if 0.08 <= x <= 0.18:
-                return 0.45
-        
-            elif x < 0.08:
-                return 0.30
-        
-            elif x <= 0.25:
-                return 0.25
-        
-            else:
-                return 0.10
-
+    
         # ===============================
         # FOOT
         # ===============================
@@ -474,8 +449,6 @@ if st.button("計算"):
         TurnScore=normalize([AvgTurn-x for x in TT])
         LapScore=normalize([AvgLap-x for x in LT])
         StraightScore=normalize([AvgStraight-x for x in STT])
-
-        MotorScore = normalize(M)
 
         RawFoot = [
             0.42*TurnScore[i]+
