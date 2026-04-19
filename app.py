@@ -1424,21 +1424,6 @@ if st.button("計算"):
                     val *= 0.60   # ← 0.70→0.60
                 else:
                     val *= 0.30   # ← 0.25→少し緩和
-                        
-            # ===============================
-            # ★ 頭候補補正（改良版）
-            # ===============================
-            if i in HeadCandidates:
-                
-                    #基本ブースト
-                val *= 1.05
-                
-                # 展開で上乗せ
-                if AttackSuccess == 1:
-                    val *= 1.05
-                
-                elif AttackWeak == 1:
-                    val *= 1.02
             
             FirstScore.append(val)
             
@@ -1835,6 +1820,21 @@ if st.button("計算"):
         TotalFirst = sum(FS_tmp) if sum(FS_tmp) > 0 else 1e-6
 
         P1 = [FS_tmp[i]/TotalFirst for i in range(6)]
+        
+        # ===============================
+        # ★ 頭候補補正（改良版）
+        # ===============================
+        if i in HeadCandidates:
+                
+            #基本ブースト
+            val *= 1.05
+                
+            # 展開で上乗せ
+            if AttackSuccess == 1:
+                val *= 1.05
+                
+            elif AttackWeak == 1:
+                val *= 1.02
 
         # ===============================
         # ATTACK BOOST
