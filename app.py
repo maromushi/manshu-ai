@@ -661,8 +661,8 @@ if st.button("計算"):
         InsideSurvival=[
             0.40*Skill[i]+
             0.25*Engine[i]+
-            0.25*Start[i]+
-            0.10*Foot[i]
+            0.22*Start[i]+
+            0.13*Foot[i]
             for i in range(6)
         ]
         
@@ -1308,7 +1308,7 @@ if st.button("計算"):
 
         LaneWin=[
 
-            0.58*DynamicInsideFactor*(1-0.25*ChaosScore),
+            0.55*DynamicInsideFactor*(1-0.25*ChaosScore),
         
             0.19+(0.45*(1-DynamicInsideFactor)*0.40)*(1+0.20*ChaosScore),
         
@@ -1373,17 +1373,17 @@ if st.button("計算"):
             # ★ 外の基本抑制（修正）
             # ===============================
             if i >= 4:
-                
-                if AttackSuccess == 0:
-                
-                    if DoubleAttackScore < 0.08:
-                        val *= 0.65   # ← 0.55→0.65（殺しすぎ防止）
-                
-                    elif DoubleAttackScore < 0.12:
-                        val *= 0.80   # ← 0.55×0.70を統合
-                
-                    else:
-                        val *= 0.90   # ← 強展開はほぼ殺さない
+
+                outer_power = 0.4*CPI[i] + 0.3*Start[i] + 0.3*Foot[i]
+            
+                if DoubleAttackScore < 0.08:
+                    val *= (0.75 + 0.2 * outer_power)
+            
+                elif DoubleAttackScore < 0.12:
+                    val *= (0.85 + 0.15 * outer_power)
+            
+                else:
+                    val *= (0.92 + 0.10 * outer_power)
                 
                 
                 # ===============================
@@ -1504,7 +1504,7 @@ if st.button("計算"):
         elif diff > 0.04:
             FS_mult[0] *= 0.70
         elif diff > 0.02:
-            FS_mult[0] *= 0.85
+            FS_mult[0] *= 0.80
             
             
         
