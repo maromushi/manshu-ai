@@ -363,13 +363,13 @@ if st.button("計算"):
         # ===============================
         # ★ 展示F補正（最重要）
         # ===============================
-        BadExST = [0]*6
+        BadST = [0]*6
         
         for i in range(6):
         
             if ExF[i] == 1 or EST[i] <= 0.02:
         
-                BadExST[i] = 1
+                BadST[i] = 1
         
                 base = 0.20
         
@@ -517,7 +517,7 @@ if st.button("計算"):
                 t *= 0.8
         
             # ★ ここに入れる（これが正解）
-            if BadExST[i] == 1:
+            if BadST[i] == 1:
         
                 if CLS[i] == "A1":
                     t *= 0.7
@@ -728,7 +728,7 @@ if st.button("計算"):
                 AttackIndex[i] += 0.03
         
             # 展示スタート
-            if GoodExST[i] == 1:
+            if GoodST[i] == 1:
                 AttackIndex[i] *= 1.05
         
         # ===============================
