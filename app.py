@@ -2324,8 +2324,8 @@ if st.button("計算"):
                 ThirdAdj[atk]  *= 0.80
         
             # 内が繰り上がる
-            SecondAdj[1] *= 1.04
-            ThirdAdj[1]  *= 1.03
+            SecondAdj[1] *= 1.08
+            ThirdAdj[1]  *= 1.05
         
             SecondAdj[2] *= 1.10
             ThirdAdj[2]  *= 1.08
@@ -2361,7 +2361,7 @@ if st.button("計算"):
                     SecondAdj[i-1] *= 0.75
         
                 elif diff > 0.02:
-                    SecondAdj[i] *= 1.08
+                    SecondAdj[i] *= 1.03
                     SecondAdj[i-1] *= 0.85
         
             # 2 vs センター
@@ -2415,7 +2415,7 @@ if st.button("計算"):
             perf_ok = CPI[1] >= (sum(CPI)/6) - 0.05
         
             if st_good and perf_ok:
-                SecondAdj[1] *= 1.04# ←少しだけ弱めた
+                SecondAdj[1] *= 1.10   # ←少しだけ弱めた
         
             # --- イン2着制御 ---
             st_loss = Start[0] < Start[2]
@@ -2486,22 +2486,31 @@ if st.button("計算"):
                 # ----------------------
                 # ② 流入判定
                 # ----------------------
-                if i == 4:
-                    front_ref = Start[2]
-                else:
-                    front_ref = max(Start[2:4])
-        
-                is_fast = Start[i] >= front_ref - 0.02
-                has_power = (Foot[i] >= 0.50 or CPI[i] >= 0.48)
-        
                 if is_fast and has_power:
+
                     if DoubleAttackScore > STRONG:
-                        SecondAdj[i] *= 1.08 if i == 4 else 1.12
+                    
+                        if i == 4:
+                            SecondAdj[i] *= 1.05
+                        else:  # 6
+                            SecondAdj[i] *= 1.07
+                    
+                    elif DoubleAttackScore > MID:
+                    
+                        if i == 4:
+                            SecondAdj[i] *= 1.03
+                        else:
+                            SecondAdj[i] *= 1.04
+                    
                     else:
-                        SecondAdj[i] *= 1.02
+                        SecondAdj[i] *= 1.00
+                
                 else:
-                    SecondAdj[i] *= 0.88 if i == 4 else 0.80
-        
+                
+                    if i == 4:
+                        SecondAdj[i] *= 0.92
+                    else:
+                        SecondAdj[i] *= 0.85
                 # ----------------------
                 # ③ 壁チェック（最重要）
                 # ----------------------
@@ -2575,6 +2584,18 @@ if st.button("計算"):
             elif strong_attack and Skill[0] >= 0.45:
                 SecondAdj[0] *= 0.95
                 ThirdAdj[0] *= 1.08
+                
+        # ===============================
+        # ★ 2の差し残り強化（整理版）
+        # ===============================
+        if (
+            NoAttackFlag == 0
+            and DoubleAttackScore > WEAK
+            and Fcount[1] == 0
+            and CPI[1] >= CPI[0] - 0.04
+            and Start[1] >= Start[0] - 0.03
+        ):
+            SecondAdj[1] *= 1.12
                 
         # ===============================
         # ★ 展開拾い（複数攻め・整理版）
@@ -2741,6 +2762,7 @@ if st.button("計算"):
             and Start[1] >= Start[0] - 0.02
             and CPI[1] >= CPI[0] - 0.05
         ):
+            SecondAdj[1] *= 1.10
             ThirdAdj[1] *= 1.06
     
         # ===== 3号艇の自然流入 =====
