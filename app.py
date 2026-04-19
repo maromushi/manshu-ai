@@ -1829,8 +1829,6 @@ if st.button("計算"):
         if total <= 0:
             total = 1e-6
         
-        P1 = [x / total for x in FirstScore]
-        
         
         # ===============================
         # ★ 頭許可ロジック（追加）
@@ -1856,7 +1854,7 @@ if st.button("計算"):
         if total <= 0:
             total = 1e-6
         
-        P1 = [x / total for x in FirstScore_adj]
+        P1 = [x / total for x in FinalFirst_adj]
         # ===============================
         # ATTACK BOOST
         # ===============================
@@ -2090,12 +2088,6 @@ if st.button("計算"):
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
-        
-        P1 = [
-            (FinalFirst[i]/TotalFirst) if Active[i]==1 else 0
-            for i in range(6)
-        ]
-        
         
         
         # 再正規化（絶対必要）
