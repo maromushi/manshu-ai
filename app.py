@@ -2811,6 +2811,13 @@ if st.button("計算"):
             SecondAdj[0] *= 1.10
             ThirdAdj[0]  *= 1.06
             
+        # ===============================
+        # ★ P1連動補正（ここに入れる）
+        # ===============================
+        for i in range(6):
+            SecondAdj[i] *= (0.7 + 0.6 * P1[i])
+            
+        
         SecondAdj_final = SecondAdj.copy()
         ThirdAdj_final = ThirdAdj.copy()
             
