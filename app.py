@@ -1,5 +1,9 @@
 import streamlit as st
 
+WEAK = 0.06
+MID = 0.09
+STRONG = 0.13
+
 st.title("万舟AI")
 
 # ====================================
@@ -353,10 +357,6 @@ if st.button("計算"):
         TT=[TurnTime[i] for i in order]
         LT=[LapTime[i] for i in order]
         STT=[StraightTime[i] for i in order]
-        
-        WEAK = 0.06
-        MID = 0.09
-        STRONG = 0.13
         
         real_lane = order
         
