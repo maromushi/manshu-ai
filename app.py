@@ -454,8 +454,7 @@ if st.button("計算"):
             0.42*TurnScore[i]+
             0.28*LapScore[i]+
             0.25*StraightScore[i]+
-            0.08*Exhibit[i]+
-            0.05*MotorScore[i]   # ← 追加
+            0.08*Exhibit[i]
             for i in range(6)
         ]
 
@@ -463,11 +462,6 @@ if st.button("計算"):
 
         Active_local = [Active[i] for i in order]
 
-
-        # 外は展示過信を少し下げる
-        for i in range(6):
-            if i >= 4:
-                Foot[i] *= 0.95
 
         # ===============================
         # START（精度版）
