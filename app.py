@@ -1412,18 +1412,33 @@ if st.button("計算"):
                 else:
                     val *= 1.00   # ← 0.95→消さない
                 
+            # ===============================
+            # ★ グレーゾーンだけ外を少し許可
                 # ===============================
-                # ★ グレーゾーンだけ外を少し許可
-                # ===============================
-                if (
-                    NoAttackFlag == 0
-                    and DoubleAttackScore < WEAK
-                    and i >= 3
-                ):
-                    if Start[i] >= max(Start[2:6]) - 0.01:
-                        val *= 0.60   # ← 0.70→0.60
-                    else:
-                        val *= 0.30   # ← 0.25→少し緩和
+            if (
+                NoAttackFlag == 0
+                and DoubleAttackScore < WEAK
+                and i >= 3
+            ):
+                if Start[i] >= max(Start[2:6]) - 0.01:
+                    val *= 0.60   # ← 0.70→0.60
+                else:
+                    val *= 0.30   # ← 0.25→少し緩和
+                        
+            # ===============================
+            # ★ 頭候補補正（改良版）
+            # ===============================
+            if i in HeadCandidates:
+                
+                    #基本ブースト
+                val *= 1.05
+                
+                # 展開で上乗せ
+                if AttackSuccess == 1:
+                    val *= 1.05
+                
+                elif AttackWeak == 1:
+                    val *= 1.02
             
             FirstScore.append(val)
             
