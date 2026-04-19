@@ -1426,7 +1426,7 @@ if st.button("計算"):
                     else:
                         val *= 0.30   # ← 0.25→少し緩和
             
-                FirstScore.append(val)
+            FirstScore.append(val)
             
         # ===============================
         # ★ 2差し強化（修正）
