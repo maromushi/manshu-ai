@@ -1822,32 +1822,41 @@ if st.button("計算"):
         P1 = [FS_tmp[i]/TotalFirst for i in range(6)]
         
         # ===============================
-        # ★ 頭候補（P1ベース）
+        # FirstScore → P1（最初）
         # ===============================
-        HeadCandidates = []
+        total = sum(FirstScore)
         
-        max_p1 = max(P1)
+        if total <= 0:
+            total = 1e-6
         
-        for i in range(6):
-            if P1[i] >= max_p1 - 0.10:
-                HeadCandidates.append(i)
+        P1 = [x / total for x in FirstScore]
         
         
         # ===============================
-        # ★ FirstScore最終補正（本体）
+        # ★ 頭許可ロジック（追加）
         # ===============================
-        for i in range(6):
+        FirstScore_adj = FirstScore.copy()
         
-            if i in HeadCandidates:
+        for i in range(1, 4):
         
-                FirstScore[i] *= 1.05
+            ratio = P1[i] / (P1[0] + 1e-6)
         
-                if AttackSuccess == 1:
-                    FirstScore[i] *= 1.05
+            if ratio >= 0.75:
+                FirstScore_adj[i] *= 1.08
         
-                elif AttackWeak == 1:
-                    FirstScore[i] *= 1.02
-
+            elif ratio >= 0.65:
+                FirstScore_adj[i] *= 1.04
+        
+        
+        # ===============================
+        # ★ 再正規化（←これ）
+        # ===============================
+        total = sum(FirstScore_adj)
+        
+        if total <= 0:
+            total = 1e-6
+        
+        P1 = [x / total for x in FirstScore_adj]
         # ===============================
         # ATTACK BOOST
         # ===============================
