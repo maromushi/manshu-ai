@@ -274,6 +274,16 @@ if st.button("計算"):
     ExEntry = ExEntry[:6]
 
     ExhibitionF=[0,0,0,0,0,0]
+    
+    # ===============================
+    # ★ 勝率0ペナルティ
+    # ===============================
+    for i in range(6):
+    
+        if WinRate[i] == 0 and Active[i] == 1:
+            WinRate[i] = avg_win * 0.6   # ←弱め補正
+    
+    
 
     # =====================================
     # AI CORE
@@ -329,14 +339,21 @@ if st.button("計算"):
         # SKILL
         # ===============================
 
-        WinScore=normalize(WR)
-        PlaceScore=normalize(PR)
+        Skill = []
 
-        Skill=[0.7*WinScore[i] + 0.3*PlaceScore[i] for i in range(6)]
+        for i in range(6):
+        
+            base = 0.7*WinScore[i] + 0.3*PlaceScore[i]
+        
+            # ★ 欠損だけ軽く落とす
+            if WR[i] == 0 and PR[i] == 0:
+                base *= 0.7
+        
+            Skill.append(base)
         
         
         # ===============================
-        # ENGINE（軽量版）
+        # ENGINE（修正版）
         # ===============================
         
         MotorScore = normalize(M)
@@ -351,8 +368,13 @@ if st.button("計算"):
                 Engine.append(0)
                 continue
         
-            # ★ 弱めに使う（ここが重要）
-            Engine.append(0.6 * MotorScore[i] + 0.4 * Skill[i])
+            val = 0.6 * MotorScore[i] + 0.4 * Skill[i]
+        
+            # ★ モーター弱すぎは削る（重要）
+            if MotorScore[i] < 0.35:
+                val *= 0.85
+        
+            Engine.append(val)
            
 
         # ===============================
