@@ -181,6 +181,24 @@ if st.button("計算"):
             return [1,2,3,4,5,6]
 
         return arr
+        
+    def convert_exst(x):
+        # 展示ST → 実戦STに寄せる変換
+    
+        if x <= 0:
+            return 0.18
+    
+        # 速い展示は少し割引（過信防止）
+        if x < 0.10:
+            return x * 0.85 + 0.015
+    
+        # 普通帯
+        elif x < 0.20:
+            return x * 0.90 + 0.01
+    
+        # 遅い展示はそのまま寄せる
+        else:
+            return x * 0.95
 
     # =====================================
     # SANITIZE INPUT
