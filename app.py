@@ -554,24 +554,6 @@ if st.button("計算"):
             Start.append(val)
             
         # ===============================
-        # ★ モード初期制御（ここ重要）
-        # ===============================
-        if mode == "no":
-            DoubleAttackScore = 0
-            AttackSuccess = 0
-            AttackWeak = 0
-        
-        elif mode == "weak":
-            AttackWeak = 1
-            AttackSuccess = 0
-        
-            # ★ 攻めスコアを少し抑える
-            DoubleAttackScore *= 0.7
-        
-        elif mode == "attack":
-            pass
-            
-        # ===============================
         # ★ 疑似攻め
         # ===============================
         PseudoAttackFlag = (
@@ -824,6 +806,24 @@ if st.button("計算"):
                     and AttackIndex[atk] > AttackIndex[atk-1] + 0.03
                 ):
                     AttackSuccess = 1
+                    
+        # ===============================
+        # ★ モード初期制御（ここ重要）
+        # ===============================
+        if mode == "no":
+            DoubleAttackScore = 0
+            AttackSuccess = 0
+            AttackWeak = 0
+        
+        elif mode == "weak":
+            AttackWeak = 1
+            AttackSuccess = 0
+        
+            # ★ 攻めスコアを少し抑える
+            DoubleAttackScore *= 0.7
+        
+        elif mode == "attack":
+            pass
                     
         # ===============================
         # ★ 弱攻め判定（追加）
