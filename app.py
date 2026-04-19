@@ -1820,6 +1820,33 @@ if st.button("計算"):
         TotalFirst = sum(FS_tmp) if sum(FS_tmp) > 0 else 1e-6
 
         P1 = [FS_tmp[i]/TotalFirst for i in range(6)]
+        
+        # ===============================
+        # ★ 頭候補（P1ベース）
+        # ===============================
+        HeadCandidates = []
+        
+        max_p1 = max(P1)
+        
+        for i in range(6):
+            if P1[i] >= max_p1 - 0.10:
+                HeadCandidates.append(i)
+        
+        
+        # ===============================
+        # ★ FirstScore最終補正（本体）
+        # ===============================
+        for i in range(6):
+        
+            if i in HeadCandidates:
+        
+                FirstScore[i] *= 1.05
+        
+                if AttackSuccess == 1:
+                    FirstScore[i] *= 1.05
+        
+                elif AttackWeak == 1:
+                    FirstScore[i] *= 1.02
 
         # ===============================
         # ATTACK BOOST
