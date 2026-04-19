@@ -1822,39 +1822,43 @@ if st.button("計算"):
         P1 = [FS_tmp[i]/TotalFirst for i in range(6)]
         
         # ===============================
-        # FirstScore → P1（最初）
+        # ★ 最終FirstScore
         # ===============================
-        total = sum(FirstScore)
+        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
         
+        total = sum(FinalFirst)
         if total <= 0:
             total = 1e-6
         
+        P1 = [x / total for x in FinalFirst]
+        
         
         # ===============================
-        # ★ 頭許可ロジック（追加）
+        # ★ 頭許可ロジック
         # ===============================
-        FirstScore_adj = FirstScore.copy()
+        FinalFirst_adj = FinalFirst.copy()
         
         for i in range(1, 4):
         
             ratio = P1[i] / (P1[0] + 1e-6)
         
             if ratio >= 0.75:
-                FirstScore_adj[i] *= 1.08
+                FinalFirst_adj[i] *= 1.08
         
             elif ratio >= 0.65:
-                FirstScore_adj[i] *= 1.04
+                FinalFirst_adj[i] *= 1.04
         
         
         # ===============================
-        # ★ 再正規化（←これ）
+        # ★ 再正規化
         # ===============================
-        total = sum(FirstScore_adj)
+        total = sum(FinalFirst_adj)
         
         if total <= 0:
             total = 1e-6
         
         P1 = [x / total for x in FinalFirst_adj]
+
         # ===============================
         # ATTACK BOOST
         # ===============================
