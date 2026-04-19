@@ -650,7 +650,6 @@ if st.button("計算"):
             or WallBreak == 1
             or (
                 max(Start[1:4]) - Start[0] > 0.05
-                and DoubleAttackScore > WEAK
             )
         )
     
