@@ -720,9 +720,9 @@ if st.button("計算"):
             if can_attack and strong:
                 attackers.append(i)
                 
-            # fallback（誰もいないとき）
-            if len(attackers) == 0:
-                attackers.append(max(range(6), key=lambda i: AttackIndex[i]))
+        # fallback（誰もいないとき）
+        if len(attackers) == 0:
+            attackers.append(max(range(6), key=lambda i: AttackIndex[i]))
                     
         # ===============================
         # ★ DoubleAttackScore（最終版）
@@ -1290,15 +1290,18 @@ if st.button("計算"):
         # ★ FirstScoreフラグ箱
         # ===============================
         
-        val = (
-            0.24*Start[i]
-            +0.16*Skill[i]
-            +0.10*Engine[i]
-            +0.14*Foot[i]
-            +0.18*Turn[i]
-            +0.18*LaneWin[i]
-        )
-                
+        FirstScore = []
+
+        for i in range(6):
+        
+            val = (
+                0.24*Start[i]
+                +0.16*Skill[i]
+                +0.14*Foot[i]
+                +0.18*Turn[i]
+                +0.18*LaneWin[i]
+            )
+                        
         # ★ 4の突破
         if i == 3:
             if Start[3] >= max(Start[1:3]) + 0.015:
@@ -1312,66 +1315,66 @@ if st.button("計算"):
         if StartCollapse == 1 and i >= 2:
             val *= 1.05
             
-            # ===============================
-            # ★ 外の突破判定（1着用）
-            # ===============================
-            if i >= 3:
+        # ===============================
+        # ★ 外の突破判定（1着用）
+        # ===============================
+        if i >= 3:
             
-                front_break = (
-                    Start[0] < Start[2] - 0.04
-                    or Start[1] < Start[2] - 0.03
-                )
+            front_break = (
+                Start[0] < Start[2] - 0.04
+                or Start[1] < Start[2] - 0.03
+            )
             
-                outer_fast = (
-                    Start[i] > max(Start[1:4]) + 0.02
-                )
+            outer_fast = (
+                Start[i] > max(Start[1:4]) + 0.02
+            )
             
-                if front_break and outer_fast:
-                    val *= 1.12   # ← 少し弱める（1.15→1.12）
-            
-            
-            # ===============================
-            # ★ 外の基本抑制（修正）
-            # ===============================
-            if i >= 4:
-            
-                if AttackSuccess == 0:
-            
-                    if DoubleAttackScore < 0.08:
-                        val *= 0.65   # ← 0.55→0.65（殺しすぎ防止）
-            
-                    elif DoubleAttackScore < 0.12:
-                        val *= 0.80   # ← 0.55×0.70を統合
-            
-                    else:
-                        val *= 0.90   # ← 強展開はほぼ殺さない
+            if front_break and outer_fast:
+                val *= 1.12   # ← 少し弱める（1.15→1.12）
             
             
-                # ===============================
-                # ★ 外パワー判定（軽量化）
-                # ===============================
-                outer_power = (
-                    0.4 * CPI[i]
-                    + 0.3 * Start[i]
-                    + 0.3 * Foot[i]
-                )
+        # ===============================
+        # ★ 外の基本抑制（修正）
+        # ===============================
+        if i >= 4:
+            
+            if AttackSuccess == 0:
             
                 if DoubleAttackScore < 0.08:
-            
-                    if outer_power < 0.52:
-                        val *= 0.75   # ← 0.55→緩和
-                    else:
-                        val *= 0.90
+                    val *= 0.65   # ← 0.55→0.65（殺しすぎ防止）
             
                 elif DoubleAttackScore < 0.12:
-            
-                    if outer_power < 0.50:
-                        val *= 0.85
-                    else:
-                        val *= 0.95
+                    val *= 0.80   # ← 0.55×0.70を統合
             
                 else:
-                    val *= 1.00   # ← 0.95→消さない
+                    val *= 0.90   # ← 強展開はほぼ殺さない
+            
+            
+            # ===============================
+            # ★ 外パワー判定（軽量化）
+            # ===============================
+            outer_power = (
+                0.4 * CPI[i]
+                + 0.3 * Start[i]
+                + 0.3 * Foot[i]
+            )
+            
+            if DoubleAttackScore < 0.08:
+            
+                if outer_power < 0.52:
+                    val *= 0.75   # ← 0.55→緩和
+                else:
+                    val *= 0.90
+            
+            elif DoubleAttackScore < 0.12:
+            
+                if outer_power < 0.50:
+                    val *= 0.85
+                else:
+                    val *= 0.95
+            
+            else:
+                val *= 1.00   # ← 0.95→消さない
             
             # ===============================
             # ★ グレーゾーンだけ外を少し許可
