@@ -2324,8 +2324,8 @@ if st.button("計算"):
                 ThirdAdj[atk]  *= 0.80
         
             # 内が繰り上がる
-            SecondAdj[1] *= 1.08
-            ThirdAdj[1]  *= 1.05
+            SecondAdj[1] *= 1.04
+            ThirdAdj[1]  *= 1.03
         
             SecondAdj[2] *= 1.10
             ThirdAdj[2]  *= 1.08
@@ -2415,7 +2415,7 @@ if st.button("計算"):
             perf_ok = CPI[1] >= (sum(CPI)/6) - 0.05
         
             if st_good and perf_ok:
-                SecondAdj[1] *= 1.10   # ←少しだけ弱めた
+                SecondAdj[1] *= 1.04# ←少しだけ弱めた
         
             # --- イン2着制御 ---
             st_loss = Start[0] < Start[2]
@@ -2575,18 +2575,6 @@ if st.button("計算"):
             elif strong_attack and Skill[0] >= 0.45:
                 SecondAdj[0] *= 0.95
                 ThirdAdj[0] *= 1.08
-                
-        # ===============================
-        # ★ 2の差し残り強化（整理版）
-        # ===============================
-        if (
-            NoAttackFlag == 0
-            and DoubleAttackScore > WEAK
-            and Fcount[1] == 0
-            and CPI[1] >= CPI[0] - 0.04
-            and Start[1] >= Start[0] - 0.03
-        ):
-            SecondAdj[1] *= 1.12
                 
         # ===============================
         # ★ 展開拾い（複数攻め・整理版）
@@ -2753,7 +2741,6 @@ if st.button("計算"):
             and Start[1] >= Start[0] - 0.02
             and CPI[1] >= CPI[0] - 0.05
         ):
-            SecondAdj[1] *= 1.10
             ThirdAdj[1] *= 1.06
     
         # ===== 3号艇の自然流入 =====
