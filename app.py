@@ -342,25 +342,18 @@ if st.button("計算"):
         
         for i in range(6):
         
-            # ★ ExhibitionFベース（正規）
-            if BadExST[i] == 1:
-
+            if ExF[i] == 1 or EST[i] <= 0.02:
+        
+                BadExST[i] = 1
+        
+                base = 0.20
+        
                 if CLS[i] == "A1":
-                    t *= 0.7
-            
+                    base = 0.16
                 elif CLS[i] == "A2":
-                    t *= 0.6
-            
-                elif CLS[i] == "B1":
-            
-                    # ★ 攻めるB1判定（ここが本質）
-                    if Start[i] >= max(Start) - 0.02 and Foot[i] >= 0.45:
-                        t *= 0.7   # 攻めるB1
-                    else:
-                        t *= 0.5   # ビビるB1
-            
-                else:  # B2
-                    t *= 0.45
+                    base = 0.18
+        
+                EST[i] = 0.7 * base + 0.3 * max(EST[i], 0.05)
 
         # ===============================
         # SKILL
@@ -475,7 +468,7 @@ if st.button("計算"):
         trust = []
         
         for i in range(6):
-        
+
             diff = abs(EST[i] - ST[i])
         
             t = 1.0
@@ -490,14 +483,32 @@ if st.button("計算"):
                 t *= 0.4
         
             elif EST[i] <= 0.10:
-                t *= 1.1
+                t *= 1.05
         
-            # B級は崩れやすい
             if CLS[i] in ["B1","B2"] and EST[i] >= 0.25:
                 t *= 0.8
         
-            trust.append(t)
+            # ★ ここに入れる（これが正解）
+            if BadExST[i] == 1:
         
+                if CLS[i] == "A1":
+                    t *= 0.7
+        
+                elif CLS[i] == "A2":
+                    t *= 0.6
+        
+                elif CLS[i] == "B1":
+        
+                    if Start[i] >= max(Start) - 0.02 and Foot[i] >= 0.45:
+                        t *= 0.7
+                    else:
+                        t *= 0.5
+        
+                else:
+                    t *= 0.45
+        
+            trust.append(t)
+                
         # ===============================
         # ② Start計算
         # ===============================
@@ -523,90 +534,87 @@ if st.button("計算"):
             AttackWeak = 0
         
         elif mode == "weak":
-            pass  # ここは後で効かせる
+            AttackWeak = 1
+            AttackSuccess = 0
+        
+            # ★ 攻めスコアを少し抑える
+            DoubleAttackScore *= 0.7
         
         elif mode == "attack":
             pass
             
         # ===============================
-        # ★ 疑似攻め（ここに入れる）
+        # ★ 疑似攻め
         # ===============================
         PseudoAttackFlag = (
             max(Start[2] - Start[1], Start[3] - Start[2]) > 0.015
         )
-            
-        # ★ 異常展示フラグ
-        BadExST = [1 if x >= 0.30 else 0 for x in EST]
-        GoodExST = [1 if x <= 0.10 else 0 for x in EST]
-        # F補正（階級 + 展示ST）
-
-        F_TABLE = {
-        "A1":{"F1":0.96,"F2":0.92},
-        "A2":{"F1":0.94,"F2":0.88},
-        "B1":{"F1":0.92,"F2":0.84},
-        "B2":{"F1":0.88,"F2":0.78}
-        }
-
+        
+        # ===============================
+        # ★ 展示STフラグ（分離）
+        # ===============================
+        BadST = [1 if x >= 0.30 else 0 for x in EST]
+        GoodST = [1 if x <= 0.10 else 0 for x in EST]
+        
+        # ===============================
+        # ★ Start補正（軽量）
+        # ===============================
         for i in range(6):
-
+        
             cls = CLS[i]
-
-            factor = 1
-
+        
+            factor = 1.0
+        
             if FC[i] == 1:
                 factor = F_TABLE[cls]["F1"]
-
+        
             elif FC[i] >= 2:
                 factor = F_TABLE[cls]["F2"]
-
-            # 展示ST補正
+        
+            # ★ 弱く効かせる（重要）
+            Start[i] *= (0.9 + 0.1 * factor)
+        
+            # 展示STは別処理
             if EST[i] <= 0.10:
-                factor *= 1.10
-
+                Start[i] *= 1.03
+        
             elif EST[i] <= 0.13:
-                factor *= 1.05
-
+                Start[i] *= 1.02
+        
             elif EST[i] >= 0.20:
-                factor *= 0.90
-
-            Start[i] *= factor
-            
+                Start[i] *= 0.95   
+                
         # ===============================
-        # ★ スタート崩壊検知（これが本質）
+        # ★ スタート崩壊検知
         # ===============================
         StartCollapse = 0
         
-        if (
-            Start[0] < max(Start[1:4]) - 0.03
-        ):
+        if Start[0] < max(Start[1:4]) - 0.03:
             StartCollapse = 1
-            
+        
+        
         # ===============================
-        # ★ 壁崩れ検知（超重要）
+        # ★ 壁崩れ検知
         # ===============================
         WallBreak = 0
         
         if (
-            Start[1] > Start[0] + 0.03   # 2が1より遅い（イン孤立）
-            or Start[1] > Start[2] + 0.01  # 2が3より遅い（差し開く）
+            Start[1] > Start[0] + 0.03
+            or Start[1] > Start[2] + 0.01
         ):
             WallBreak = 1
         
         
         # ===============================
-        # ★ FrontBreak（ここに追加）
+        # ★ FrontBreak（最終）
         # ===============================
-        
-        
-        
         FrontBreak = (
             StartCollapse == 1
             or WallBreak == 1
-            or Start[0] == min(Start)
-        
-            or Start[1] < Start[0] - 0.02
-            or Start[2] < Start[1] - 0.02
-            or max(Start[1:4]) - Start[0] > 0.04
+            or (
+                max(Start[1:4]) - Start[0] > 0.05
+                and DoubleAttackScore > WEAK
+            )
         )
     
         # ===============================
@@ -624,36 +632,39 @@ if st.button("計算"):
         Velocity=VelocityRaw
 
         for i in range(6):
-            if i >= 4 and Engine[i] > 0.60:
-                Velocity[i] *= 1.05
+            if i >= 4:
+                if Engine[i] > 0.60 and Foot[i] > 0.50:
+                    Velocity[i] *= 1.08
 
         # ===============================
         # INSIDE SURVIVAL
         # ===============================
 
         InsideSurvival=[
-        0.40*Skill[i]+
-        0.30*Engine[i]+
-        0.20*Start[i]+
-        0.10*Foot[i]
-        for i in range(6)
+            0.40*Skill[i]+
+            0.25*Engine[i]+
+            0.25*Start[i]+
+            0.10*Foot[i]
+            for i in range(6)
         ]
         
+        for i in range(6):
+
+            if BadST[i] == 1:
         
-        
-        
+                InsideSurvival[i] *= 0.90
 
         # ===============================
         # CPI
         # ===============================
 
         CPI=[
-        0.20*Skill[i]+
-        0.20*Engine[i]+
-        0.22*Foot[i]+
-        0.18*Turn[i]+
-        0.20*Velocity[i]
-        for i in range(6)
+            0.18*Skill[i]+
+            0.20*Engine[i]+
+            0.22*Foot[i]+
+            0.22*Turn[i]+
+            0.18*Velocity[i]
+            for i in range(6)
         ]
 
         AttackCPI=[
@@ -675,32 +686,44 @@ if st.button("計算"):
         
         for i in range(6):
         
-            # ★ モーターは「微加算」に変更
-            AttackIndex[i] += 0.02 * MotorScore[i]
+            # モーターは強い時だけ
+            if MotorScore[i] > 0.55:
+                AttackIndex[i] += 0.03
         
-            # ★ 展示スタート
+            # 展示スタート
             if GoodExST[i] == 1:
                 AttackIndex[i] *= 1.05
-        
-            if BadExST[i] == 1:
-                InsideSurvival[i] *= 0.92
         
         # ===============================
         # ★ attackers決定（最終版）
         # ===============================
         
-        sorted_idx = sorted(range(6), key=lambda i: AttackIndex[i], reverse=True)
-        
         attackers = []
         
-        attackers.append(sorted_idx[0])
+        for i in range(1,6):
         
-        if AttackIndex[sorted_idx[1]] >= AttackIndex[sorted_idx[0]] - 0.05:
-            attackers.append(sorted_idx[1])
+            # 前より攻められる条件
+            can_attack = (
+                Start[i] >= Start[i-1] - 0.02
+                and (
+                    AttackIndex[i] >= AttackIndex[i-1] - 0.03
+                    or Turn[i] >= Turn[i-1]
+                )
+            )
         
-        if AttackIndex[sorted_idx[2]] >= AttackIndex[sorted_idx[0]] - 0.08:
-            attackers.append(sorted_idx[2])
-            
+            # 強さ条件
+            strong = (
+                AttackIndex[i] >= max(AttackIndex) - 0.05
+                or Turn[i] >= max(Turn) - 0.03
+            )
+        
+            if can_attack and strong:
+                attackers.append(i)
+                
+            # fallback（誰もいないとき）
+            if len(attackers) == 0:
+                attackers.append(max(range(6), key=lambda i: AttackIndex[i]))
+                    
         # ===============================
         # ★ DoubleAttackScore（最終版）
         # ===============================
@@ -711,18 +734,25 @@ if st.button("計算"):
         else:
             main = attackers[0]
         
-            # ■ 基本（主攻めの強さ）
+            # 基本
             base = AttackIndex[main]
         
-            # ■ ST差（ここが本質）
-            st_adv = max(0, Start[main] - Start[max(0, main-1)])
+            # ST差
+            st_adv = 0
+            if main > 0:
+                st_adv = max(0, Start[main] - Start[main-1])
         
-            # ■ 2番手の存在（展開性）
+            # synergy（修正版）
+            synergy = 0
+        
             if len(attackers) >= 2:
                 sub = attackers[1]
-                synergy = max(0, AttackIndex[sub] - AttackIndex[main] + 0.05)
-            else:
-                synergy = 0
+        
+                synergy = max(
+                    0,
+                    (Start[sub] - Start[sub-1]) * 0.6 +
+                    (AttackIndex[sub] - 0.5) * 0.4
+                )
         
             DoubleAttackScore = (
                 0.55 * base +
@@ -734,11 +764,11 @@ if st.button("計算"):
             attackers,
             key=lambda x: (
                 0.35 * AttackIndex[x]
-                + 0.25 * Start[x]      # ←追加（超重要）
+                + 0.25 * Start[x]
                 + 0.20 * Turn[x]
                 + 0.15 * Foot[x]
-                + 0.05 * Engine[x] 
-                + 0.05 * max(0, Start[x] - Start[x-1])
+                + 0.05 * Engine[x]
+                + (0.05 * max(0, Start[x] - Start[x-1]) if x > 0 else 0)
             ),
             reverse=True
         )
@@ -750,8 +780,7 @@ if st.button("計算"):
         
             atk = attackers[0]
         
-            # ★ 外は攻め成功に含めない（これが本質）
-            if atk <= 3:
+            if atk <= 3 and atk > 0:
         
                 if (
                     Start[atk] > Start[atk-1] + 0.01
@@ -763,37 +792,53 @@ if st.button("計算"):
         # ===============================
         # ★ 弱攻め判定（追加）
         # ===============================
-        AttackWeak = 0
-            
-        if len(attackers) > 0:
-            
-            atk = attackers[0]
-            
-            if (
-                Start[atk] > Start[atk-1] + 0.005
-                or Turn[atk] > Turn[atk-1] + 0.01
-            ):
-                AttackWeak = 1
+        if atk > 0:
+
+            st_cond = Start[atk] > Start[atk-1] + 0.005
+            turn_cond = Turn[atk] > Turn[atk-1] + 0.01
+        
+            if st_cond or turn_cond:
+        
+                # ★ 弱すぎる攻めは除外
+                if AttackIndex[atk] > AttackIndex[atk-1] - 0.05:
+                    AttackWeak = 1
                 
         # ===============================
         # ★ 疑似主役（弱攻め）
         # ===============================
         WeakLeader = None
         
-        if AttackWeak == 1 and AttackSuccess == 0:
-            WeakLeader = max(range(2,5), key=lambda i: AttackIndex[i])
-                    
-            
-
+        if (
+            AttackWeak == 1
+            and AttackSuccess == 0
+            and DoubleAttackScore > WEAK
+        ):
+            WeakLeader = max(
+                range(2,5),
+                key=lambda i: (
+                    0.40 * AttackIndex[i]
+                    + 0.30 * Start[i]
+                    + 0.20 * Turn[i]
+                    + 0.10 * Foot[i]
+                )
+            )
+        
+        
+        # ===============================
+        # ★ 外クラスタ
+        # ===============================
         OuterCluster = max(CPI[3:6]) - min(CPI[3:6])
         OuterClusterFlag = 1 if OuterCluster <= 0.06 else 0
-
-        # ===== 6頭検知フラグ =====
-
+        
+        
+        # ===============================
+        # ★ 6頭検知フラグ
+        # ===============================
         SixHeadFlag = 0
-
+        
         if (
-            CPI[5] >= max(CPI[3:6]) - 0.02
+            CPI[5] >= max(CPI[3:6]) - 0.01
+            and AttackIndex[5] >= max(AttackIndex[3:6]) - 0.03
             and Start[5] >= Start[3] - 0.01
             and Engine[5] >= 0.58
             and (
@@ -806,51 +851,61 @@ if st.button("計算"):
         # ===============================
         # MID CLUSTER
         # ===============================
-
-        MidCluster=max(CPI[1:4])-min(CPI[1:4])
-        MidClusterFlag=1 if MidCluster<=0.05 else 0
-
-        PerformanceSpread=max(CPI)-min(CPI)
-
-        StartSpread=max(Start)-min(Start)
-
-        InsideCollapse = 1 if (StartSpread > 0.10 and OuterClusterFlag == 1) else 0
-
+        
+        MidCluster = max(CPI[1:4]) - min(CPI[1:4])
+        MidClusterFlag = 1 if MidCluster <= 0.05 else 0
+        
+        PerformanceSpread = max(CPI) - min(CPI)
+        StartSpread = max(Start) - min(Start)
+        
+        InsideCollapse = 1 if (
+            Start[0] < max(Start[1:4]) - 0.04
+            and OuterClusterFlag == 1
+        ) else 0
+        
+        
         # ===============================
         # EXHIBIT LEADER
         # ===============================
-
+        
         min_exst = min(EST)
-
+        
         ExhibitLeader = [0]*6
-
+        
         for i in range(6):
-            if EST[i] == min_exst:
+            if EST[i] <= min_exst + 0.01:
                 ExhibitLeader[i] = 1
-
+        
+        
         # ===============================
         # SASHI CHANCE
         # ===============================
-
-        SashiGap=[0]*6
-
+        
+        SashiGap = [0]*6
+        SashiFlag = [0]*6
+        
         for i in range(1,6):
-            SashiGap[i]=max(0,Start[i]-Start[i-1])
-    
+            SashiGap[i] = max(0, Start[i] - Start[i-1])
+        
+            if SashiGap[i] > 0.02 and Turn[i] >= Turn[i-1] - 0.01:
+                SashiFlag[i] = 1    
         # ===============================
         # ATTACK FLAG
         # ===============================
 
         TwoLaneAttackFlag = 1 if (
-        Start[1] <= Start[0] + 0.05
+            Start[1] >= Start[0] - 0.01
+            and Turn[1] >= Turn[0] - 0.02
         ) else 0
-
+        
         ThreeLaneAttackFlag = 1 if (
-        Start[2] <= Start[1] + 0.04
+            Start[2] >= Start[1] - 0.01
+            and Turn[2] >= Turn[1] - 0.02
         ) else 0
-
+        
         FourLaneAttackFlag = 1 if (
-        Start[3] <= min(Start[1],Start[2]) + 0.02
+            Start[3] >= max(Start[1], Start[2]) - 0.02
+            and Turn[3] >= max(Turn[1], Turn[2]) - 0.02
         ) else 0
 
         # ===============================
@@ -858,61 +913,62 @@ if st.button("計算"):
         # ===============================
 
         TwoLaneAttackScore = (
-        0.22 * TwoLaneAttackFlag +
-        0.28 * max(0, Start[1] - Start[0]) +
-        0.22 * max(0, AttackCPI[1] - AttackCPI[0]) +
-        0.15 * max(0, Engine[1] - Engine[0]) +
-        0.13 * max(0, Turn[1] - Turn[0])
+            0.22 * TwoLaneAttackFlag +
+            0.28 * max(0, Start[1] - Start[0]) +
+            0.22 * max(0, AttackCPI[1] - AttackCPI[0]) +
+            0.15 * max(0, Engine[1] - Engine[0]) +
+            0.13 * max(0, Turn[1] - Turn[0])
         )
-
+        
         ThreeLaneAttackScore = (
-        0.22 * ThreeLaneAttackFlag +
-        0.28 * max(0, Start[2] - Start[1]) +
-        0.22 * max(0, AttackCPI[2] - AttackCPI[0]) +
-        0.15 * max(0, Engine[2] - Engine[0]) +
-        0.13 * max(0, Turn[2] - Turn[0])
+            0.22 * ThreeLaneAttackFlag +
+            0.28 * max(0, Start[2] - Start[1]) +
+            0.22 * max(0, AttackCPI[2] - AttackCPI[1]) +
+            0.15 * max(0, Engine[2] - Engine[1]) +
+            0.13 * max(0, Turn[2] - Turn[1])
         )
-
+        
         FourLaneAttackScore = (
-        0.22 * FourLaneAttackFlag +
-        0.28 * max(0, Start[3] - Start[2]) +
-        0.22 * max(0, AttackCPI[3] - AttackCPI[0]) +
-        0.15 * max(0, Engine[3] - Engine[0]) +
-        0.13 * max(0, Turn[3] - Turn[0])
+            0.22 * FourLaneAttackFlag +
+            0.28 * max(0, Start[3] - Start[2]) +
+            0.22 * max(0, AttackCPI[3] - AttackCPI[2]) +
+            0.15 * max(0, Engine[3] - Engine[2]) +
+            0.13 * max(0, Turn[3] - Turn[2])
         )
-
+        
         OutsideFlow = (
-        0.6*ThreeLaneAttackScore +
-        0.8*FourLaneAttackScore
+            0.6 * ThreeLaneAttackScore +
+            0.8 * FourLaneAttackScore
         )
         
-
         DoubleAttackScore = (
-            (ThreeLaneAttackScore * FourLaneAttackScore)
+            0.6 * max(ThreeLaneAttackScore, FourLaneAttackScore)
             +
-            0.5 * (TwoLaneAttackScore * ThreeLaneAttackScore)
+            0.4 * (ThreeLaneAttackScore * FourLaneAttackScore)
+            +
+            0.3 * (TwoLaneAttackScore * ThreeLaneAttackScore)
         )
         
-        # ★ ここに追加（これが正解位置）
         if AttackSuccess == 0:
-            DoubleAttackScore *= 0.55
+            DoubleAttackScore *= 0.70
         
         # ===============================
-        # ★ 崩れは攻め扱いにする（最重要）
+        # ★ 崩れは攻め扱い（主トリガー）
         # ===============================
         if StartCollapse == 1:
             AttackWeak = 1
-            DoubleAttackScore += 0.04
+            DoubleAttackScore = max(DoubleAttackScore, 0.08)  # ←加算じゃなく底上げ
         
-        
-        
-        # 展開に加算（ここが本体）
-        if WallBreak == 1:
-            DoubleAttackScore += 0.03
-    
         
         # ===============================
-        # ★ 疑似攻め判定（ここに入れる）
+        # ★ 壁崩れ（補助）
+        # ===============================
+        if WallBreak == 1:
+            DoubleAttackScore += 0.02   # ←弱める
+        
+        
+        # ===============================
+        # ★ 疑似攻め（微調整）
         # ===============================
         PseudoAttack = max([
             max(0, Start[2] - Start[1]),
@@ -920,28 +976,23 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        DoubleAttackScore += PseudoAttack * 0.07
-                
+        DoubleAttackScore += PseudoAttack * 0.05  
+        
         # ===============================
         # ★ attackers救済（正しい位置）
         # ===============================
         if len(attackers) == 0 and DoubleAttackScore > 0.09:
 
-            atk = max(range(2,5), key=lambda i: Start[i])  # 3〜5コース
+            atk = max(
+                range(2,5),
+                key=lambda i: (
+                    0.6 * Start[i] +
+                    0.25 * Turn[i] +
+                    0.15 * Foot[i]
+                )
+            )
         
             attackers.append(atk)
-
-            
-                
-        # ===============================
-        # ★ 壁崩壊フラグ（追加）
-        # ===============================
-        collapse_flags = [0]*6
-
-        for i in range(1,6):
-            if Start[i] < Start[i-1] - 0.02:
-                collapse_flags[i] = 1
-            
         
         # ===============================
         # ★ ズレ展開フラグ（NEW）
@@ -949,13 +1000,13 @@ if st.button("計算"):
         ZureWeak = (
             AttackWeak == 1
             and AttackSuccess == 0
-            and Start[1] >= max(Start[0:3]) - 0.01
+            and Start[1] >= Start[0] - 0.01
             and max(Start[3:6]) >= Start[2] - 0.01
         )
         
         ZureSilent = (
             AttackSuccess == 0
-            and DoubleAttackScore < 0.05
+            and DoubleAttackScore < 0.06
             and max(Start) - min(Start) > 0.05
             and InsideSurvival[0] < 0.65
         )
@@ -987,7 +1038,7 @@ if st.button("計算"):
             StartCollapse = 1
         
         # ===============================
-        # ★ 疑似展開（攻め無しでも展開扱い）
+        # ★ 疑似展開（補助だけ）
         # ===============================
         PseudoAttack2 = max([
             max(0, Start[2] - Start[1]),
@@ -995,9 +1046,9 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        # スタート崩壊してたら展開を強制発生
+        # ★ 崩壊時は軽く補助だけ
         if StartCollapse == 1:
-            DoubleAttackScore += 0.03 + PseudoAttack2 * 0.10
+            DoubleAttackScore += PseudoAttack2 * 0.05
         
         # ===============================
         # ★ 無風判定（シンプル版）
@@ -1006,9 +1057,8 @@ if st.button("計算"):
         
         if (
             AttackSuccess == 1
-            or len(attackers) > 0
-            or DoubleAttackScore >= WEAK
-            or max(Start) - min(Start) >= 0.04
+            or DoubleAttackScore > WEAK
+            or max(Start) - min(Start) >= 0.06
             or WeakInside
             or StartCollapse == 1
         ):
@@ -1027,20 +1077,17 @@ if st.button("計算"):
         OuterSlip = (
             AttackWeak == 1
             and AttackSuccess == 0
-            and DoubleAttackScore < 0.07
+            and DoubleAttackScore < MID
             and max(Start[4:6]) >= max(Start[2:6]) - 0.01
         )
             
         # ===============================
-        # ★ レースモード分類（追加）
+        # ★ レースモード（最終版）
         # ===============================
-        # ===============================
-        # ★ レースモード（完全版）
-        # ===============================
+        
         has_attack = (
-            len(attackers) > 0
-            or DoubleAttackScore >= 0.04
-            or PseudoAttackFlag
+            DoubleAttackScore > WEAK
+            or AttackSuccess == 1
         )
         
         if NoAttackFlag == 1:
@@ -1050,14 +1097,16 @@ if st.button("計算"):
             RaceMode = "attack_success"
         
         elif has_attack and AttackSuccess == 0:
-
-            if AttackWeak == 1:
+        
+            if AttackWeak == 1 and DoubleAttackScore < MID:
                 RaceMode = "attack_weak"
         
             else:
                 crash_flag = any(
-                    Start[atk] < Start[atk-1] - 0.02
-                    or Turn[atk] < Turn[atk-1]
+                    (
+                        Start[atk] < Start[atk-1] - 0.02
+                        and Turn[atk] < Turn[atk-1] - 0.02
+                    )
                     for atk in attackers
                 )
         
@@ -1068,39 +1117,40 @@ if st.button("計算"):
         
         else:
             RaceMode = "no_attack"
-        
-
+                
         # ===============================
         # 攻め主体判定（改良版）
         # ===============================
 
         Attack2 = 1 if (
-            Start[1] > Start[0] + 0.02
+            Start[1] >= Start[0] - 0.01
             and AttackIndex[1] > AttackIndex[0]
             and (Foot[1] >= Foot[0] or Engine[1] >= Engine[0])
         ) else 0
-
-
+        
+        
         Attack3 = 1 if (
-            Start[2] > Start[1] + 0.02
+            Start[2] >= Start[1] - 0.01
             and AttackIndex[2] > AttackIndex[1]
             and (Foot[2] >= Foot[1] or Engine[2] >= Engine[1])
             and (
                 CLS[2] in ["A1","A2"]
                 or (
-                    ExST[2] <= 0.05
-                    and Start[2] >= Start[1]   # ★これ追加（ブレーキ）
+                    ExST[2] <= 0.08
                 )
             )
         ) else 0
-
+        
+        
         Attack3Power = (
-            max(0, Start[2] - Start[1]) +
-            max(0, AttackIndex[2] - AttackIndex[1])
+            0.5 * max(0, Start[2] - Start[1]) +
+            0.3 * max(0, AttackIndex[2] - AttackIndex[1]) +
+            0.2 * max(0, Turn[2] - Turn[1])
         )
-
+        
+        
         InsideBreak = 1 if (
-            Start[0] < Start[1] - 0.03
+            Start[0] < Start[1] - 0.02
             and Attack3 == 1
         ) else 0
         
@@ -1108,58 +1158,81 @@ if st.button("計算"):
         # CHAOS CORE
         # ===============================
 
-        OuterPower=(
-        0.5*max(CPI[3:6])+
-        0.3*sorted(CPI[3:6])[-2]+
-        0.2*(sum(CPI[3:6])/3)
+        OuterPower = (
+            0.4 * max(CPI[3:6]) +
+            0.3 * sorted(CPI[3:6])[-2] +
+            0.3 * (sum(CPI[3:6]) / 3)
         )
-
-        InsideWeak=1-InsideSurvival[0]
-
-        ChaosScore=(
-        0.20*OuterPower+
-        0.25*InsideWeak+
-        0.25*StartSpread+
-        0.16*PerformanceSpread+
-        0.05*TwoLaneAttackFlag+
-        0.08*ThreeLaneAttackFlag+
-        0.05*FourLaneAttackFlag+
-        0.06*MidClusterFlag
+        
+        InsideWeak = 1 - InsideSurvival[0]
+        
+        ChaosScore = (
+            0.20 * OuterPower +
+            0.25 * InsideWeak +
+            0.18 * StartSpread +
+            0.14 * PerformanceSpread +
+            0.07 * TwoLaneAttackFlag +
+            0.10 * ThreeLaneAttackFlag +
+            0.07 * FourLaneAttackFlag +
+            0.06 * MidClusterFlag
         )
-
-        ChaosScore=max(0,min(1,ChaosScore))
+        
+        ChaosScore = max(0, min(1, ChaosScore))
 
         if ChaosScore < 0.45:
-            chaos_weight = 0.7   # 安定レース
+            chaos_weight = 0.75
         elif ChaosScore < 0.65:
-            chaos_weight = 1.0   # 通常
+            chaos_weight = 1.0
         else:
-            chaos_weight = 1.3   # 荒れ
+            chaos_weight = 1.25
             
         # ===============================
         # AUTO MODE 判定
         # ===============================
         
         race_score = 0
+
+        # ===============================
+        # イン弱さ（強め）
+        # ===============================
+        if Skill[0] < 0.48:
+            race_score += 1.2
         
-        # イン弱い
-        if Skill[0] < 0.45:
-            race_score += 1
+        if Start[0] < max(Start[1:3]) - 0.02:
+            race_score += 1.0
         
+        if InsideSurvival[0] < 0.55:
+            race_score += 1.0
+        
+        
+        # ===============================
         # スタートばらつき
-        if max(Start) - min(Start) > 0.08:
-            race_score += 1
+        # ===============================
+        if max(Start) - min(Start) > 0.06:
+            race_score += 0.8
         
-        # 外強い
+        
+        # ===============================
+        # 外の強さ
+        # ===============================
         if max(CPI[3:6]) > CPI[0]:
-            race_score += 1
+            race_score += 1.0
         
-        # 展開あり
-        if DoubleAttackScore > 0.13:
-            race_score += 1
         
-        # 判定
-        use_mode = "ana" if race_score >= 2 else "safe"
+        # ===============================
+        # 展開（ここ重要）
+        # ===============================
+        if DoubleAttackScore > MID:
+            race_score += 1.2
+        
+        elif DoubleAttackScore > WEAK:
+            race_score += 0.6
+        
+        
+        # ===============================
+        # 最終判定
+        # ===============================
+        use_mode = "ana" if race_score >= 2.2 else "safe"
 
         
         # ===============================
@@ -1172,18 +1245,18 @@ if st.button("計算"):
 
         for i in range(6):
 
-            value=1+(0.25+0.35*ChaosScore)*(Start[i]-AvgStart)
+            value = 1 + (0.18 + 0.25*ChaosScore) * (Start[i] - AvgStart)
 
-            value=max(0.75,value)
+            value=max(0.80,value)
 
             StartBoost.append(value)
 
         DynamicInsideFactor=1
 
-        if StartSpread>=0.12:
-            DynamicInsideFactor=0.70
-        elif StartSpread>=0.08:
-            DynamicInsideFactor=0.82
+        if StartSpread >= 0.12:
+            DynamicInsideFactor = 0.78
+        elif StartSpread >= 0.08:
+            DynamicInsideFactor = 0.88
 
         DynamicInsideFactor=max(0.60,DynamicInsideFactor)
 
@@ -1195,51 +1268,54 @@ if st.button("計算"):
             and CPI[1] >= CPI[0] - 0.05
             and Start[1] <= Start[0] + 0.04
         ):
-            DynamicInsideFactor *= 0.88
+            DynamicInsideFactor *= 0.92
 
         LaneWin=[
 
-        0.58*DynamicInsideFactor*(1-0.25*ChaosScore),
-        0.19+(0.45*(1-DynamicInsideFactor)*0.40)*(1+0.20*ChaosScore),
-        0.16+(0.45*(1-DynamicInsideFactor)*0.30)*(1+0.25*ChaosScore),
-        0.14+(0.45*(1-DynamicInsideFactor)*0.20)*(1+0.30*ChaosScore),
-        0.07+(0.45*(1-DynamicInsideFactor)*0.07)*(1+0.35*ChaosScore),
-        0.04+(0.45*(1-DynamicInsideFactor)*0.03)*(1+0.40*ChaosScore)
-
+            0.58*DynamicInsideFactor*(1-0.25*ChaosScore),
+        
+            0.19+(0.45*(1-DynamicInsideFactor)*0.40)*(1+0.20*ChaosScore),
+        
+            0.18+(0.45*(1-DynamicInsideFactor)*0.32)*(1+0.25*ChaosScore),  # ←UP
+        
+            0.15+(0.45*(1-DynamicInsideFactor)*0.22)*(1+0.30*ChaosScore),  # ←UP
+        
+            0.08+(0.45*(1-DynamicInsideFactor)*0.08)*(1+0.35*ChaosScore),
+        
+            0.05+(0.45*(1-DynamicInsideFactor)*0.04)*(1+0.40*ChaosScore)
+        
         ]
 
-        
-            
         # ===============================
         # ★ FirstScoreフラグ箱
         # ===============================
         
+        val = (
+            0.24*Start[i]
+            +0.16*Skill[i]
+            +0.10*Engine[i]
+            +0.14*Foot[i]
+            +0.18*Turn[i]
+            +0.18*LaneWin[i]
+        )
+                
+        # ★ 4の突破
+        if i == 3:
+            if Start[3] >= max(Start[1:3]) + 0.015:
+                val *= 1.07
         
-
-        FirstScore=[]
-
-        for i in range(6):
+        # ★ 攻め勝ち
+        if i in attackers and AttackSuccess == 1:
+            val *= 1.10
         
-            val = (
-                0.30*Start[i]
-                +0.22*Skill[i]
-                +0.13*Engine[i]
-                +0.13*Foot[i]
-                +0.12*Turn[i]
-                +0.10*LaneWin[i]
-            )
-            
-            # ===============================
-            # ★ 4の突破判定（ここに入れる）
-            # ===============================
-            if i == 3:
-                if Start[3] >= max(Start[1:3]) + 0.00:
-                    val *= 1.05
+        # ★ 崩れ展開
+        if StartCollapse == 1 and i >= 2:
+            val *= 1.05
             
             # ===============================
             # ★ 外の突破判定（1着用）
             # ===============================
-            if i >= 3:  # 4,5,6号艇
+            if i >= 3:
             
                 front_break = (
                     Start[0] < Start[2] - 0.04
@@ -1251,18 +1327,29 @@ if st.button("計算"):
                 )
             
                 if front_break and outer_fast:
-                    val *= 1.15
+                    val *= 1.12   # ← 少し弱める（1.15→1.12）
             
+            
+            # ===============================
+            # ★ 外の基本抑制（修正）
+            # ===============================
             if i >= 4:
             
                 if AttackSuccess == 0:
-                    val *= 0.55   # ← 0.35→0.55に変更
             
-                    if DoubleAttackScore < 0.12:
-                        val *= 0.70   # ← 0.5→0.7
-                        # ←ここに追加！！！！
+                    if DoubleAttackScore < 0.08:
+                        val *= 0.65   # ← 0.55→0.65（殺しすぎ防止）
+            
+                    elif DoubleAttackScore < 0.12:
+                        val *= 0.80   # ← 0.55×0.70を統合
+            
+                    else:
+                        val *= 0.90   # ← 強展開はほぼ殺さない
             
             
+                # ===============================
+                # ★ 外パワー判定（軽量化）
+                # ===============================
                 outer_power = (
                     0.4 * CPI[i]
                     + 0.3 * Start[i]
@@ -1272,21 +1359,19 @@ if st.button("計算"):
                 if DoubleAttackScore < 0.08:
             
                     if outer_power < 0.52:
-                        val *= 0.55
+                        val *= 0.75   # ← 0.55→緩和
                     else:
-                        val *= 0.75
+                        val *= 0.90
             
                 elif DoubleAttackScore < 0.12:
             
                     if outer_power < 0.50:
-                        val *= 0.70
+                        val *= 0.85
                     else:
-                        val *= 0.90
+                        val *= 0.95
             
                 else:
-                    val *= 0.95
-
-            
+                    val *= 1.00   # ← 0.95→消さない
             
             # ===============================
             # ★ グレーゾーンだけ外を少し許可
@@ -1297,14 +1382,14 @@ if st.button("計算"):
                 and i >= 3
             ):
                 if Start[i] >= max(Start[2:6]) - 0.01:
-                    val *= 0.70   # STだけ良いなら少し残す
+                    val *= 0.60   # ← 0.70→0.60
                 else:
-                    val *= 0.25
+                    val *= 0.30   # ← 0.25→少し緩和
         
             FirstScore.append(val)
             
         # ===============================
-        # ★ 2差し強化（ここ）
+        # ★ 2差し強化（修正）
         # ===============================
         if (
             NoAttackFlag == 0
@@ -1312,8 +1397,8 @@ if st.button("計算"):
             and Start[1] <= Start[0] + 0.03
         ):
         
-            LaneWin[1] += 0.07
-            LaneWin[0] -= 0.07
+            FirstScore[1] *= 1.12
+            FirstScore[0] *= 0.95
         
         elif (
             NoAttackFlag == 0
@@ -1321,8 +1406,8 @@ if st.button("計算"):
             and Start[1] <= Start[0] + 0.05
         ):
         
-            LaneWin[1] += 0.04
-            LaneWin[0] -= 0.04
+            FirstScore[1] *= 1.06
+            FirstScore[0] *= 0.97
             
         # ===============================
         # ★ 6の強さ分類（ここ！！）
@@ -2525,6 +2610,7 @@ if st.button("計算"):
         0.10*InsideSurvival[i]
         for i in range(6)
         ]
+        
         
         # ===============================
         # ★ ST遅れでも3着残り（ここ）
