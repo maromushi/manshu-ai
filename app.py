@@ -358,6 +358,9 @@ if st.button("計算"):
         # ===============================
         # SKILL
         # ===============================
+        
+        WinScore = normalize(WR)
+        PlaceScore = normalize(PR)
 
         Skill = []
 
