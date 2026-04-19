@@ -305,8 +305,8 @@ if st.button("計算"):
         results = []
 
         FC=[Fcount[i] for i in order]
-        
         CLS=[Class[i] for i in order]
+        ExF = [ExhibitionF[i] for i in order]
         
         boats = [
             Boat[i] if Active[i]==1 else -1
@@ -334,6 +334,33 @@ if st.button("計算"):
         STRONG = 0.13
         
         real_lane = order
+        
+        # ===============================
+        # ★ 展示F補正（最重要）
+        # ===============================
+        BadExST = [0]*6
+        
+        for i in range(6):
+        
+            # ★ ExhibitionFベース（正規）
+            if BadExST[i] == 1:
+
+                if CLS[i] == "A1":
+                    t *= 0.7
+            
+                elif CLS[i] == "A2":
+                    t *= 0.6
+            
+                elif CLS[i] == "B1":
+            
+                    # ★ 攻めるB1判定（ここが本質）
+                    if Start[i] >= max(Start) - 0.02 and Foot[i] >= 0.45:
+                        t *= 0.7   # 攻めるB1
+                    else:
+                        t *= 0.5   # ビビるB1
+            
+                else:  # B2
+                    t *= 0.45
 
         # ===============================
         # SKILL
