@@ -3027,6 +3027,32 @@ if st.button("計算"):
                         ThirdAdj_local[i] *= 1.06
                         
             # ===============================
+            # ★ 攻め弱い時の残り補正
+            # ===============================
+            
+            if AttackWeak == 1 and AttackSuccess == 0:
+            
+                for i in attackers:
+            
+                    if i == 2:
+            
+                        SecondAdj_local[i] *= 1.10
+            
+                        ThirdAdj_local[i]  *= 1.15
+            
+                    elif i == 3:
+            
+                        SecondAdj_local[i] *= 1.07
+            
+                        ThirdAdj_local[i]  *= 1.10
+            
+                    else:
+            
+                        SecondAdj_local[i] *= 1.03
+            
+                        ThirdAdj_local[i]  *= 1.05
+                        
+            # ===============================
             # ★ 内の3着残り（内全体）
             # ===============================
             for i in range(3):  # 1〜3コース
