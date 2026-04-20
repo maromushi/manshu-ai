@@ -2963,10 +2963,18 @@ if st.button("計算"):
             
                     # 外は条件付きにする（重要）
                     if i >= 4:
-                        if Start[i] < Start[i-1] - 0.02:
+                        if (
+                            Start[i] < Start[i-1] - 0.02
+                            or CPI[i] < CPI[i-1] - 0.03
+                        ):
                             continue
-            
-                    SecondAdj_local[i] *= 1.05
+                                
+                    if i >= 4:
+                        SecondAdj_local[i] *= (1.05 * wall_penalty[i])
+                        ThirdAdj_local[i]  *= (1.03 * wall_penalty[i])  # ←追加
+                    else:
+                        SecondAdj_local[i] *= 1.05
+                        ThirdAdj_local[i]  *= 1.03
                     
             # ===============================
             # ★ 3着バランス補正（最終微調整）
@@ -3034,8 +3042,8 @@ if st.button("計算"):
                 ThirdAdj_local[2] *= 0.90
                 ThirdAdj_local[3] *= 0.90
             
-                SecondAdj_local[5] *= 1.02
-                ThirdAdj_local[5] *= 1.05
+                SecondAdj_local[5] *= (1.02 * wall_penalty[5])
+                ThirdAdj_local[5]  *= (1.05 * wall_penalty[5])
             
                 SecondAdj_local[0] *= 1.05
                 ThirdAdj_local[0] *= 1.05
@@ -3056,12 +3064,10 @@ if st.button("計算"):
                     if dist > 2:
                         continue
             
-                    if (
-                        Turn[i] >= 0.50
-                        and Start[i] >= Start[a] - 0.03
-                    ):
+                    if i >= 4:
+                        ThirdAdj_local[i] *= (1.06 * wall_penalty[i])
+                    else:
                         ThirdAdj_local[i] *= 1.06
-                        
             # ===============================
             # ★ 攻め弱い時の残り補正
             # ===============================
@@ -3216,7 +3222,7 @@ if st.button("計算"):
                 SecondAdj_local[2] *= 0.97
             
                 # 6強化（修正）
-                SecondAdj_local[5] *= 1.08
+                SecondAdj_local[5] *= (1.08 * wall_penalty[5])
             
             else:
                 if Foot[5] < 0.45:
@@ -3252,7 +3258,7 @@ if st.button("計算"):
                 and CPI[5] > 0.45
                 and Foot[5] > 0.48
             ):
-                SecondAdj_local[5] *= 1.10
+                SecondAdj_local[5] *= (1.10 * wall_penalty[5])
                 
             # ===============================
             # ★ 展開6（性能じゃない6）
@@ -3477,8 +3483,10 @@ if st.button("計算"):
                 # ■ 直後（最重要）
                 # ===============================
                 if dist == 1:
-                    SecondAdj_local[i] *= 1.12
-            
+                    if i >= 4:
+                        SecondAdj_local[i] *= (1.12 * wall_penalty[i])
+                    else:
+                        SecondAdj_local[i] *= 1.12
                 # ===============================
                 # ■ 1艇挟み
                 # ===============================
@@ -3625,11 +3633,13 @@ if st.button("計算"):
             
                     # 強い6は無条件で生かす
                     if Strong6 or Normal6:
+                        SecondAdj_local[i] *= wall_penalty[i]
+                        ThirdAdj_local[i]  *= wall_penalty[i]
                         continue
             
                     if alive:
-                        SecondAdj_local[i] *= 1.05
-                        ThirdAdj_local[i]  *= 1.08
+                        SecondAdj_local[i] *= (1.05 * wall_penalty[i])
+                        ThirdAdj_local[i]  *= (1.08 * wall_penalty[i])
                     else:
                         SecondAdj_local[i] *= 0.85
                         ThirdAdj_local[i]  *= 0.85
