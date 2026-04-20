@@ -1868,14 +1868,23 @@ if st.button("計算"):
         
         P1 = [x / total for x in FinalFirst]
         
+        # ===============================
+        # ★ P1圧縮ガード（完成版）
+        # ===============================
         P1_pre = P1.copy()
-
-        # 上位拮抗なら中間艇を守る
+        
         top = sorted(P1_pre, reverse=True)
         
+        # 上位拮抗なら上位3艇を少し持ち上げる
         if top[0] - top[2] < 0.07:
-            idx = P1_pre.index(top[2])
-            P1[idx] *= 1.10
+        
+            for val in top[:3]:
+                idx = P1_pre.index(val)
+                P1[idx] *= 1.08
+        
+        # 再正規化（絶対必要）
+        total = sum(P1)
+        P1 = [p / total for p in P1]
         
         
         SecondCore = None
@@ -3919,7 +3928,7 @@ if st.button("計算"):
     results = sorted(results, key=lambda x: x[3], reverse=True)
 
     # ===============================
-    # ★ セカンド軸生成（修正版）
+    # ★ セカンド軸生成（最終版）
     # ===============================
     
     SecondHead = None
@@ -3935,62 +3944,102 @@ if st.button("計算"):
             SecondHead = i
             break
     
-    # ★ 追加：P1拮抗判定
+    # ===============================
+    # ★ 判定ロジック
+    # ===============================
     top = sorted(P1, reverse=True)
+    
     is_close = (top[0] - top[1] < 0.05)
+    
+    can_break = (
+        AttackSuccess == 1
+        or DAS > 0.13
+        or StartCollapse == 1
+    )
+    
+    allow_outer = (
+        SecondHead < 4
+        or can_break
+    )
     
     SecondAxisResults = []
     
     if (
         SecondHead is not None
         and P1[SecondHead] >= P1[0] * 0.75
-        and (AttackWeak == 1 or is_close)   # ←ここ変更
+        and (AttackWeak == 1 or is_close)
+        and allow_outer
     ):
     
         for (a,b,c,p) in results:
     
-            # 1頭パターンを崩す
-            if a == 1:   # ←ここ重要（0じゃない）
+            # 1頭を崩す
+            if a == 1:
                 new_head = SecondHead + 1
     
-                new = (new_head, b, c, p * 0.6)
+                new = (new_head, b, c, p * 0.75, "sec")
                 SecondAxisResults.append(new)
     
-            # セカンド頭を少し強化
+            # セカンド頭強化
             elif a == SecondHead + 1:
-                SecondAxisResults.append((a,b,c,p * 1.1))
+                SecondAxisResults.append((a,b,c,p * 1.10, "sec"))
     
     # 合成
     results += SecondAxisResults
     # ===============================
-    # ★ シャープ化 & 正規化 & カット
+    # ★ シャープ化 & 正規化 & カット（完成版）
     # ===============================
     
     # ① シャープ化
     power = 1.25 + 0.25 * ChaosScore
     
-    results = [
-        (a,b,c, p**power)
-        for (a,b,c,p) in results
-    ]
+    new_results = []
     
-    # ② 正規化
+    for r in results:
+    
+        if len(r) == 5:
+            a,b,c,p,_ = r
+            new_results.append((a,b,c,p,"sec"))
+    
+        else:
+            a,b,c,p = r
+            new_results.append((a,b,c,p**power))
+    
+    results = new_results
+    
+    
+    # ② 正規化（secも維持）
     total = sum(r[3] for r in results)
     
     if total > 0:
-        results = [
-            (a,b,c, p/total)
-            for (a,b,c,p) in results
-        ]
+        new_results = []
     
-    # ③ カットライン（可変）
+        for r in results:
+    
+            if len(r) == 5:
+                a,b,c,p,_ = r
+                new_results.append((a,b,c,p/total,"sec"))
+            else:
+                a,b,c,p = r
+                new_results.append((a,b,c,p/total))
+    
+        results = new_results
+    
+    
+    # ③ カット（secは保護）
     cut = 0.004 + 0.004 * (1 - ChaosScore)
     
     filtered = []
     
-    for (a,b,c,p) in results:
+    for r in results:
     
-        # 中穴ブースト
+        if len(r) == 5:
+            a,b,c,p,_ = r
+            filtered.append((a,b,c,p))
+            continue
+    
+        a,b,c,p = r
+    
         if 0.01 <= p <= 0.03:
             filtered.append((a,b,c, p * 1.10))
     
@@ -3999,9 +4048,9 @@ if st.button("計算"):
     
     results = filtered
     
+    
     # ④ ソート
     results.sort(key=lambda x:x[3], reverse=True)
-    
     # ===============================
     # ★ 外頭制限（先にやる）
     # ===============================
