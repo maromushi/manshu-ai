@@ -964,7 +964,7 @@ if st.button("計算"):
             0.8 * FourLaneAttackScore
         )
         
-        DoubleAttackScore = (
+        DAS = (
             0.6 * max(ThreeLaneAttackScore, FourLaneAttackScore)
             +
             0.4 * (ThreeLaneAttackScore * FourLaneAttackScore)
@@ -973,7 +973,7 @@ if st.button("計算"):
         )
         
         if AttackSuccess == 0:
-            DoubleAttackScore *= 0.70
+            DAS *= 0.70
         
         # ===============================
         # ★ 崩れは攻め扱い（主トリガー）
@@ -986,7 +986,7 @@ if st.button("計算"):
         # ★ 壁崩れ（補助）
         # ===============================
         if WallBreak == 1:
-            DoubleAttackScore += 0.02   # ←弱める
+            DAS += 0.02   # ←弱める
         
         # ===============================
         # ★ 疑似攻め（微調整）
@@ -997,7 +997,7 @@ if st.button("計算"):
             max(0, Start[4] - Start[3])
         ])
         
-        DoubleAttackScore += PseudoAttack * 0.05  
+        DAS += PseudoAttack * 0.05  
         
         # ===============================
         # ★ attackers救済（正しい位置）
@@ -1069,7 +1069,7 @@ if st.button("計算"):
         
         # ★ 崩壊時は軽く補助だけ
         if StartCollapse == 1:
-            DoubleAttackScore += PseudoAttack2 * 0.05
+            DAS += PseudoAttack2 * 0.05
         
         # ===============================
         # ★ 無風判定（シンプル版）
@@ -3818,6 +3818,8 @@ if st.button("計算"):
                 AttackSuccess = val
     
         NoAttackProb = max(0, min(1, 1 - (DAS / MID)))
+        
+        DoubleAttackScore = DAS
     
         return AttackWeak, AttackSuccess, NoAttackProb
     
