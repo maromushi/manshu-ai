@@ -1038,7 +1038,7 @@ if st.button("計算"):
         debug_log.append(("attackers", attackers))
         debug_log.append(("AttackWeak", AttackWeak))
         debug_log.append(("AttackSuccess", AttackSuccess))
-        debug_log.append(("DAS", round(DoubleAttackScore,4)))
+        debug_log.append(("DAS", round(DAS,4)))
         debug_log.append(("WEAK/MID/STRONG", (WEAK, MID, STRONG)))
         
         # ===============================
