@@ -1528,6 +1528,7 @@ if st.button("計算"):
             FS_mult[3] *= 1.10
             FS_mult[4] *= 1.10
             FS_mult[5] *= 1.08
+        
             
         # ===============================
         # ★ 壁判定（FS後に入れる）
@@ -1831,6 +1832,13 @@ if st.button("計算"):
             total = 1e-6
         
         P1 = [x / total for x in FinalFirst]
+        
+        SecondCore = None
+
+        for i in range(6):
+            if i != 0 and P1[i] >= P1[0] * 0.75:
+                SecondCore = i
+                break
 
         # ===============================
         # ATTACK BOOST
@@ -2842,7 +2850,15 @@ if st.button("計算"):
             # ===============================
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
-        
+            
+            if SecondCore is not None and NoAttackFlag == 0:
+
+                SecondAdj_local[0] *= 0.88
+                ThirdAdj_local[0]  *= 0.90
+            
+                SecondAdj_local[SecondCore] *= 1.10
+                ThirdAdj_local[SecondCore]  *= 1.08
+                    
         
             # ===============================
             # ★ 攻め成立判定
@@ -2868,7 +2884,11 @@ if st.button("計算"):
             # ★ 1着確率
             # ===============================
             P_first = P1[a]
-        
+            
+            if SecondCore is not None and a == 0 and NoAttackFlag == 0:
+
+                if P1[SecondCore] > 0.25:
+                    P_first *= 0.90            
         
             # ===============================
             # ★ 弱頭でも残り計算させる
@@ -2895,6 +2915,7 @@ if st.button("計算"):
                         can_pass = (
                             Start[i] >= Start[i-1] - 0.01
                             and Turn[i] >= Turn[i-1] - 0.02
+                            and CPI[i] >= CPI[i-1] - 0.03
                         )
                         if not can_pass:
                             continue
@@ -3248,6 +3269,8 @@ if st.button("計算"):
             # ===============================
             # ★ 5・6の壁（条件分岐版）
             # ===============================
+            wall_penalty = [1.0]*6
+            
             for i in range(4,6):
             
                 if i == a:
@@ -3269,23 +3292,19 @@ if st.button("計算"):
                 # ■ 6コース（条件分岐）
                 # ===============================
                 if i == 5:
-            
+
                     wall_hit = (
                         max(CPI[2:5]) > CPI[5] - 0.03
                         and max(Turn[2:5]) >= Turn[5] - 0.02
                     )
-            
+                
                     if wall_hit:
-            
-                        # ▼ 展開あり → 軽減
-                        if SixFlowFlag or AttackSuccess == 1:
-                            SecondAdj_local[5] *= 0.82
-                            ThirdAdj_local[5]  *= 0.88
-            
-                        # ▼ 展開なし → 強く削る
-                        else:
-                            SecondAdj_local[5] *= 0.70
-                            ThirdAdj_local[5]  *= 0.75
+
+                        # ★減衰に変更
+                        wall_penalty[5] = 0.75
+                    
+                        SecondAdj_local[5] *= 0.70
+                        ThirdAdj_local[5]  *= 0.75
             
             # ===============================
             # ★ 頭別ロジック
@@ -3878,12 +3897,9 @@ if st.button("計算"):
     ):
     
         for (a,b,c,p) in results:
-            if a == 1:
+            if a == 0:
                 new_head = SecondHead + 1
-    
-    
-                if b == new_head:
-                    continue
+
 
     
                 new = (new_head, 1, c, p * 0.6)
