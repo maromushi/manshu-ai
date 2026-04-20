@@ -334,10 +334,11 @@ if st.button("計算"):
             print(f"{i+1}号艇  ExST={ExST[i]}  F={ExhibitionF[i]}")
         print("========================")
         
+        AttackWeak = 0
+        AttackSuccess = 0
         DoubleAttackScore = 0.0
-        
         DAS = 0.0
-        
+
         debug_log = []
         
         results = []
