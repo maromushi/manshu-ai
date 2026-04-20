@@ -3978,7 +3978,7 @@ if st.button("計算"):
             if a == 1:
                 new_head = SecondHead + 1
     
-                new = (new_head, b, c, p * 0.75, "sec")
+                new = (new_head, b, c, p * 0.95, "sec")
                 SecondAxisResults.append(new)
     
             # セカンド頭強化
