@@ -328,6 +328,10 @@ if st.button("計算"):
         return run_core(order, mode="attack")
         
     def run_core(order, mode):
+        print("=== CHECK ExhibitionF ===")
+        for i in range(6):
+            print(f"{i+1}号艇  ExST={ExST[i]}  F={ExhibitionF[i]}")
+        print("========================")
         
         DoubleAttackScore = 0.0
         
@@ -556,6 +560,16 @@ if st.button("計算"):
             val = (1 - t)*avg + t*ex
         
             Start.append(val)
+            
+        for i in range(6):
+
+            if ExhibitionF[i] == 1:
+        
+                # STは信用しない（遅れる方向）
+                Start[i] *= 0.75
+        
+                # 攻め気は少し残す
+                AttackIndex[i] *= 1.03
             
         # ===============================
         # ★ 疑似攻め
