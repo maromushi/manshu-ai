@@ -3730,6 +3730,8 @@ if st.button("計算"):
             
             if len(results) == 0:
                 return [], 0, [1/6]*6, 0, [0.5]*6, debug_log, [0]*6
+                
+            DoubleAttackScore = DAS
             
             return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
                 
@@ -3818,8 +3820,6 @@ if st.button("計算"):
                 AttackSuccess = val
     
         NoAttackProb = max(0, min(1, 1 - (DAS / MID)))
-        
-        DoubleAttackScore = DAS
     
         return AttackWeak, AttackSuccess, NoAttackProb
     
