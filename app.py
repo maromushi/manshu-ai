@@ -834,7 +834,7 @@ if st.button("計算"):
         if (
             AttackWeak == 1
             and AttackSuccess == 0
-            and DoubleAttackScore > WEAK
+            and DAS > WEAK
         ):
             WeakLeader = max(
                 range(2,5),
@@ -1002,7 +1002,7 @@ if st.button("計算"):
         # ===============================
         # ★ attackers救済（正しい位置）
         # ===============================
-        if len(attackers) == 0 and DoubleAttackScore > 0.09:
+        if len(attackers) == 0 and DAS > 0.09:
 
             atk = max(
                 range(2,5),
@@ -1027,7 +1027,7 @@ if st.button("計算"):
         
         ZureSilent = (
             AttackSuccess == 0
-            and DoubleAttackScore < 0.06
+            and DAS < 0.06
             and max(Start) - min(Start) > 0.05
             and InsideSurvival[0] < 0.65
         )
@@ -1078,7 +1078,7 @@ if st.button("計算"):
         
         if (
             AttackSuccess == 1
-            or DoubleAttackScore > WEAK
+            or DAS > WEAK
             or max(Start) - min(Start) >= 0.06
             or WeakInside
             or StartCollapse == 1
@@ -1089,7 +1089,7 @@ if st.button("計算"):
         # ★ 無風時のズレ制御（ここに入れる）
         if NoAttackFlag == 1:
             ZureFlag = ZureWeak or ZureSilent
-        elif DoubleAttackScore > 0.04:
+        elif DAS > 0.04:
             ZureFlag = True
             
         # ===============================
@@ -1098,7 +1098,7 @@ if st.button("計算"):
         OuterSlip = (
             AttackWeak == 1
             and AttackSuccess == 0
-            and DoubleAttackScore < MID
+            and DAS < MID
             and max(Start[4:6]) >= max(Start[2:6]) - 0.01
         )
             
@@ -1107,7 +1107,7 @@ if st.button("計算"):
         # ===============================
         
         has_attack = (
-            DoubleAttackScore > WEAK
+            DAS > WEAK
             or AttackSuccess == 1
         )
         
@@ -1119,7 +1119,7 @@ if st.button("計算"):
         
         elif has_attack and AttackSuccess == 0:
         
-            if AttackWeak == 1 and DoubleAttackScore < MID:
+            if AttackWeak == 1 and DAS < MID:
                 RaceMode = "attack_weak"
         
             else:
@@ -1243,10 +1243,10 @@ if st.button("計算"):
         # ===============================
         # 展開（ここ重要）
         # ===============================
-        if DoubleAttackScore > MID:
+        if DAS > MID:
             race_score += 1.2
         
-        elif DoubleAttackScore > WEAK:
+        elif DAS > WEAK:
             race_score += 0.6
         
         
@@ -1361,10 +1361,10 @@ if st.button("計算"):
 
                 outer_power = 0.4*CPI[i] + 0.3*Start[i] + 0.3*Foot[i]
             
-                if DoubleAttackScore < 0.08:
+                if DAS < 0.08:
                     val *= (0.75 + 0.2 * outer_power)
             
-                elif DoubleAttackScore < 0.12:
+                elif DAS < 0.12:
                     val *= (0.85 + 0.15 * outer_power)
             
                 else:
@@ -1380,14 +1380,14 @@ if st.button("計算"):
                     + 0.3 * Foot[i]
                 )
                 
-                if DoubleAttackScore < 0.08:
+                if DAS < 0.08:
                 
                     if outer_power < 0.52:
                         val *= 0.75   # ← 0.55→緩和
                     else:
                         val *= 0.90
                 
-                elif DoubleAttackScore < 0.12:
+                elif DAS < 0.12:
                 
                     if outer_power < 0.50:
                         val *= 0.85
@@ -1402,7 +1402,7 @@ if st.button("計算"):
                 # ===============================
             if (
                 NoAttackFlag == 0
-                and DoubleAttackScore < WEAK
+                and DAS < WEAK
                 and i >= 3
             ):
                 if Start[i] >= max(Start[2:6]) - 0.01:
@@ -1449,7 +1449,7 @@ if st.button("計算"):
             and CPI[5] >= 0.50
             and Foot[5] >= 0.50
             and Start[5] >= Start[3] - 0.02
-            and DoubleAttackScore > MID
+            and DAS > MID
         )
         
         Normal6 = (
@@ -1466,11 +1466,11 @@ if st.button("計算"):
         # ===============================
         
         # ★ 展開ゾーン分類（追加）
-        if DoubleAttackScore < 0.01:
+        if DAS < 0.01:
 
             RaceZone = "no_attack"
         
-        elif DoubleAttackScore < 0.06:
+        elif DAS < 0.06:
         
             RaceZone = "weak"
         
@@ -1562,7 +1562,7 @@ if st.button("計算"):
         
         if RaceZone == "no_attack":
         
-            weak_factor = min(1.0, DoubleAttackScore / WEAK)
+            weak_factor = min(1.0, DAS / WEAK)
         
             FS_mult[3] *= 0.60
             FS_mult[4] *= 0.40
@@ -1602,14 +1602,14 @@ if st.button("計算"):
         
         else:  # attack
         
-            if DoubleAttackScore > STRONG:
+            if DAS > STRONG:
 
                 FS_mult[0] *= 0.85
                 FS_mult[1] *= 0.90
                 FS_mult[2] *= 1.10
                 FS_mult[3] *= 1.12
         
-            elif DoubleAttackScore > MID:
+            elif DAS > MID:
         
                 FS_mult[0] *= 0.88
                 FS_mult[1] *= 0.93
@@ -1654,22 +1654,22 @@ if st.button("計算"):
             FS_mult[0] *= 1.05
         
         # 3攻め
-        if AttackIndex[2] >= AttackIndex[1] and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+        if AttackIndex[2] >= AttackIndex[1] and DAS > WEAK and NoAttackFlag == 0:
             FS_mult[2] *= 1.08
         
         # 4性能
-        if NoAttackFlag == 0 and AttackSuccess == 1 and DoubleAttackScore > MID:
+        if NoAttackFlag == 0 and AttackSuccess == 1 and DAS > MID:
             if Turn[3] >= max(Turn[1], Turn[2]) and Foot[3] >= max(Foot[1], Foot[2]):
                 FS_mult[3] *= 1.05
         
         # OuterSlip
-        if OuterSlip and DoubleAttackScore > MID:
+        if OuterSlip and DAS > MID:
             for i in range(4,6):
                 if Start[i] >= max(Start) - 0.005:
                     FS_mult[i] *= 1.10
         
         # 主役取りこぼし
-        if CLS[3] == "A1" and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+        if CLS[3] == "A1" and DAS > WEAK and NoAttackFlag == 0:
             if Start[3] <= Start[2] + 0.01:
                 FS_mult[3] *= 0.90
                 
@@ -1712,7 +1712,7 @@ if st.button("計算"):
             FS_mult[0] *= 1.05
         
             # ■ 条件
-            if DoubleAttackScore < 0.05:
+            if DAS < 0.05:
                 FS_mult[4] *= 0.92
                 FS_mult[5] *= 0.90
         
@@ -1723,7 +1723,7 @@ if st.button("計算"):
         
             # ■ 条件
         
-            if DoubleAttackScore > WEAK and AttackSuccess == 1:
+            if DAS > WEAK and AttackSuccess == 1:
                 FS_mult[2] *= 1.05
                 FS_mult[3] *= 1.06
         
@@ -1734,7 +1734,7 @@ if st.button("計算"):
             FS_mult[0] *= 0.97
         
             # ■ 条件
-            if DoubleAttackScore > WEAK and AttackSuccess == 1:
+            if DAS > WEAK and AttackSuccess == 1:
                 FS_mult[2] *= 1.07
                 FS_mult[3] *= 1.08
         
@@ -1745,7 +1745,7 @@ if st.button("計算"):
             FS_mult[1] *= 0.95
         
             # ■ 条件（ここが本体）
-            if DoubleAttackScore > 0.04:
+            if DAS > 0.04:
                 FS_mult[2] *= 1.04
                 FS_mult[3] *= 1.05
         
@@ -1758,7 +1758,7 @@ if st.button("計算"):
             # ■ 常時なし
         
             # ■ 条件（ヒモ荒れ）
-            if 0.04 < DoubleAttackScore < 0.10:
+            if 0.04 < DAS < 0.10:
                 FS_mult[2] *= 1.05
                 FS_mult[3] *= 1.05
                 FS_mult[4] *= 1.03
@@ -1769,7 +1769,7 @@ if st.button("計算"):
             # ■ 常時なし
         
             # ■ 条件（軽微）
-            if DoubleAttackScore > WEAK and AttackSuccess == 1:
+            if DAS > WEAK and AttackSuccess == 1:
                 FS_mult[2] *= 1.04
                 FS_mult[3] *= 1.05
         
@@ -1780,11 +1780,11 @@ if st.button("計算"):
             FS_mult[0] *= 1.04
         
             # ■ 条件（差し水面）
-            if DoubleAttackScore < 0.06:
+            if DAS < 0.06:
                 FS_mult[1] *= 1.05
                 FS_mult[2] *= 1.05
         
-            if DoubleAttackScore > 0.04:
+            if DAS > 0.04:
                 FS_mult[3] *= 1.03
         
         
@@ -1794,10 +1794,10 @@ if st.button("計算"):
             FS_mult[1] *= 0.96
         
             # ■ 条件
-            if DoubleAttackScore > 0.04:
+            if DAS > 0.04:
                 FS_mult[2] *= 1.05
         
-            if DoubleAttackScore < 0.06:
+            if DAS < 0.06:
                 FS_mult[4] *= 0.95
                 FS_mult[5] *= 0.94
 
@@ -1844,8 +1844,8 @@ if st.button("計算"):
         AttackBoost3 = 1 + 0.30 * ThreeLaneAttackScore
         AttackBoost4 = 1 + 0.25 * FourLaneAttackScore
         if AttackSuccess == 1:
-            AttackBoost5 = 1 + 0.35 * DoubleAttackScore
-            AttackBoost6 = 1 + 0.25 * DoubleAttackScore
+            AttackBoost5 = 1 + 0.35 * DAS
+            AttackBoost6 = 1 + 0.25 * DAS
         else:
             AttackBoost5 = 1.0
             AttackBoost6 = 1.0
@@ -1899,7 +1899,7 @@ if st.button("計算"):
 
         if main_attacker is not None:
 
-            attack_power = DoubleAttackScore
+            attack_power = DAS
 
             # 前潰れ
             for j in range(main_attacker):
@@ -2024,13 +2024,13 @@ if st.button("計算"):
             if main_attacker is not None:
 
                 if i == main_attacker:
-                    value = value*(1+0.20*DoubleAttackScore)
+                    value = value*(1+0.20*DAS)
 
                 elif i > main_attacker:
-                    value = value*(1+0.08*DoubleAttackScore)
+                    value = value*(1+0.08*DAS)
 
                 elif i == main_attacker - 1:
-                    value *= (1+0.06*DoubleAttackScore)
+                    value *= (1+0.06*DAS)
 
             LaneCPI.append(value)
             
@@ -2070,7 +2070,7 @@ if st.button("計算"):
         # ===============================
         for i in range(4,6):
         
-            if DoubleAttackScore < 0.12:
+            if DAS < 0.12:
         
                 # 能力だけで1位になってる場合
                 if P1[i] == max(P1):
@@ -2100,7 +2100,7 @@ if st.button("計算"):
                 P1[i] *= 0.40
         
             can_break = (
-                DoubleAttackScore > 0.12
+                DAS > 0.12
                 or AttackSuccess == 1
                 or StartCollapse == 1
                 or WallBreak == 1
@@ -2112,10 +2112,10 @@ if st.button("計算"):
         
             if i >= 4:
 
-                if DoubleAttackScore < 0.12:
+                if DAS < 0.12:
                     P1[i] *= 0.20   # ←強化
             
-                if DoubleAttackScore < 0.08:
+                if DAS < 0.08:
                     P1[i] *= 0.10   # ←さらに強化
 
         # ===============================
@@ -2176,17 +2176,17 @@ if st.button("計算"):
         # ★ 攻め強度分類（整理版）
         # ===============================
         weak_attack = (
-            0.06 < DoubleAttackScore <= 0.09
+            0.06 < DAS <= 0.09
             and NoAttackFlag == 0
         )
         
         mid_attack = (
-            0.09 < DoubleAttackScore <= 0.13
+            0.09 < DAS <= 0.13
             and NoAttackFlag == 0
         )
         
         strong_attack = (
-            DoubleAttackScore > 0.13
+            DAS > 0.13
             and NoAttackFlag == 0
         )
         
@@ -2195,7 +2195,7 @@ if st.button("計算"):
         # ===============================
         
         FlowOuter = (
-            DoubleAttackScore > MID
+            DAS > MID
             or OuterClusterFlag == 1
         )
         
@@ -2218,7 +2218,7 @@ if st.button("計算"):
         # ===============================
         
         MidAttack = (
-            0.07 < DoubleAttackScore <= 0.13
+            0.07 < DAS <= 0.13
         )
         
         
@@ -2236,7 +2236,7 @@ if st.button("計算"):
         
         elif mode == "weak":
             for i in range(4,6):
-                if DoubleAttackScore < 0.10:
+                if DAS < 0.10:
                     SecondAdj[i] *= 0.85
         
         elif mode == "attack":
@@ -2267,7 +2267,7 @@ if st.button("計算"):
         
         elif mode == "weak":
             for i in range(4,6):
-                if DoubleAttackScore < 0.10:
+                if DAS < 0.10:
                     ThirdAdj[i] *= 0.90
         
         elif mode == "attack":
@@ -2401,7 +2401,7 @@ if st.button("計算"):
         # ===============================
         # ★ 攻め成功時の内側構造（統合版）
         # ===============================
-        if AttackSuccess == 1 and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+        if AttackSuccess == 1 and DAS > WEAK and NoAttackFlag == 0:
         
             # --- 2コース復活 ---
             st_good = Start[1] >= max(Start[0], Start[2]) - 0.01
@@ -2414,13 +2414,13 @@ if st.button("計算"):
             st_loss = Start[0] < Start[2]
             weak_inside = InsideSurvival[0] < 0.55
         
-            if DoubleAttackScore > STRONG:
+            if DAS > STRONG:
                 if st_loss:
                     SecondAdj[0] *= 0.80
                 else:
                     SecondAdj[0] *= 0.88
         
-            elif DoubleAttackScore > MID:
+            elif DAS > MID:
                 if st_loss and weak_inside:
                     SecondAdj[0] *= 0.84
                 elif st_loss:
@@ -2435,18 +2435,18 @@ if st.button("計算"):
         # ===============================
         # ★ 攻め成功時のイン残り（3着）
         # ===============================
-        if AttackSuccess == 1 and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+        if AttackSuccess == 1 and DAS > WEAK and NoAttackFlag == 0:
         
             st_loss = Start[0] < Start[2]
             weak_inside = InsideSurvival[0] < 0.55
         
-            if DoubleAttackScore > STRONG:
+            if DAS > STRONG:
                 if st_loss:
                     ThirdAdj[0] *= 0.88
                 else:
                     ThirdAdj[0] *= 0.92
         
-            elif DoubleAttackScore > MID:
+            elif DAS > MID:
                 if st_loss and weak_inside:
                     ThirdAdj[0] *= 0.90
                 elif st_loss:
@@ -2468,11 +2468,11 @@ if st.button("計算"):
                 # ----------------------
                 # ① 弱展開は強制カット
                 # ----------------------
-                if DoubleAttackScore < 0.06:
+                if DAS < 0.06:
                     SecondAdj[i] *= 0.60
                     continue
         
-                elif DoubleAttackScore < 0.09:
+                elif DAS < 0.09:
                     SecondAdj[i] *= 0.70
                     continue
         
@@ -2481,14 +2481,14 @@ if st.button("計算"):
                 # ----------------------
                 if is_fast and has_power:
 
-                    if DoubleAttackScore > STRONG:
+                    if DAS > STRONG:
                     
                         if i == 4:
                             SecondAdj[i] *= 1.05
                         else:  # 6
                             SecondAdj[i] *= 1.07
                     
-                    elif DoubleAttackScore > MID:
+                    elif DAS > MID:
                     
                         if i == 4:
                             SecondAdj[i] *= 1.03
@@ -2526,7 +2526,7 @@ if st.button("計算"):
         # ===============================
         # ★ 攻め成立時の前削り（整理版）
         # ===============================
-        if AttackSuccess == 1 and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+        if AttackSuccess == 1 and DAS > WEAK and NoAttackFlag == 0:
         
             for i in range(0,2):  # 1・2コース
         
@@ -2583,7 +2583,7 @@ if st.button("計算"):
         # ===============================
         if (
             NoAttackFlag == 0
-            and DoubleAttackScore > WEAK
+            and DAS > WEAK
             and Fcount[1] == 0
             and CPI[1] >= CPI[0] - 0.04
             and Start[1] >= Start[0] - 0.03
@@ -2593,7 +2593,7 @@ if st.button("計算"):
         # ===============================
         # ★ 展開拾い（複数攻め・整理版）
         # ===============================
-        if DoubleAttackScore > MID and NoAttackFlag == 0 and len(attackers) > 0:
+        if DAS > MID and NoAttackFlag == 0 and len(attackers) > 0:
         
             # 一番強い攻めを選ぶ
             main_atk = max(attackers, key=lambda x: AttackIndex[x])
@@ -2648,7 +2648,7 @@ if st.button("計算"):
             SecondAdj[1] *= 1.04
         
         elif venue == "住之江":
-            if DoubleAttackScore > MID:
+            if DAS > MID:
                 SecondAdj[3] *= 1.08
                 SecondAdj[4] *= 1.06
                 
@@ -2702,7 +2702,7 @@ if st.button("計算"):
         if (
             CLS[0] in ["A1","A2"]
             and Start[0] >= 0.13
-            and DoubleAttackScore < 0.10
+            and DAS < 0.10
         ):
         
             SecondAdj[0] *= 1.08
@@ -2711,7 +2711,7 @@ if st.button("計算"):
         # ===============================
         # ★ 展開艇の3着流入（修正版）
         # ===============================
-        if NoAttackFlag == 0 and DoubleAttackScore > WEAK:
+        if NoAttackFlag == 0 and DAS > WEAK:
         
             for i in range(6):
         
@@ -2728,8 +2728,8 @@ if st.button("計算"):
         # ★ 3と4が競合 → 両方少し削る
         # ===============================
         if (
-            DoubleAttackScore > WEAK
-            and DoubleAttackScore < MID
+            DAS > WEAK
+            and DAS < MID
             and abs(CPI[2] - CPI[3]) < 0.03
             and abs(Start[2] - Start[3]) < 0.02
         ):
@@ -2741,7 +2741,7 @@ if st.button("計算"):
         # ★ 1の過剰残り抑制（ここ）
         # ===============================
         if (
-            DoubleAttackScore > MID
+            DAS > MID
             and Start[0] < Start[2] - 0.02
         ):
             ThirdAdj[0] *= 0.90
@@ -2751,7 +2751,7 @@ if st.button("計算"):
         # ===============================
         if (
             NoAttackFlag == 0
-            and DoubleAttackScore > WEAK
+            and DAS > WEAK
             and Start[1] >= Start[0] - 0.02
             and CPI[1] >= CPI[0] - 0.05
         ):
@@ -2880,7 +2880,7 @@ if st.button("計算"):
             # ===============================
             if (
                 P1[a] < 0.12
-                and DoubleAttackScore > STRONG
+                and DAS > STRONG
                 and attack_success
             ):
                 P_first *= 1.06
@@ -2928,7 +2928,7 @@ if st.button("計算"):
                 for i in range(a):
             
                     if i == 0 and (
-                        0.06 < DoubleAttackScore < 0.16
+                        0.06 < DAS < 0.16
                         and InsideSurvival[0] >= 0.45
                     ):
                         continue
@@ -2982,7 +2982,7 @@ if st.button("計算"):
                 # ===============================
                 elif i == 4:
             
-                    if DoubleAttackScore > WEAK and NoAttackFlag == 0:
+                    if DAS > WEAK and NoAttackFlag == 0:
                         ThirdAdj[i] *= 1.03
                     else:
                         ThirdAdj[i] *= 0.98
@@ -2994,7 +2994,7 @@ if st.button("計算"):
                 elif i == 5:
             
                     alive = (
-                        DoubleAttackScore > MID
+                        DAS > MID
                         and Start[i] >= Start[3] - 0.02
                         and Foot[i] >= 0.50
                     )
@@ -3016,7 +3016,7 @@ if st.button("計算"):
             # ===============================
             if (
                 NoAttackFlag == 0
-                and DoubleAttackScore > MID
+                and DAS > MID
                 and Turn[2] > 0.55
                 and Turn[3] > 0.55
                 and abs(Turn[2] - Turn[3]) < 0.04
@@ -3037,7 +3037,7 @@ if st.button("計算"):
             # ===============================
             # ★ 展開3着強化（修正版）
             # ===============================
-            if attack_success and DoubleAttackScore > WEAK and NoAttackFlag == 0:
+            if attack_success and DAS > WEAK and NoAttackFlag == 0:
             
                 for i in range(6):
             
@@ -3121,7 +3121,7 @@ if st.button("計算"):
                 sub  = attackers[1]
             
                 if (
-                    DoubleAttackScore > MID
+                    DAS > MID
                     and AttackIndex[main] > 0.45
                     and AttackIndex[sub] > 0.45
                 ):
@@ -3192,10 +3192,10 @@ if st.button("計算"):
             if (
                 CPI[5] >= 0.55
                 and Foot[5] >= 0.55
-                and DoubleAttackScore > 0.15
+                and DAS > 0.15
                 and NoAttackFlag == 0
                 and (
-                    DoubleAttackScore > WEAK
+                    DAS > WEAK
                     or OuterClusterFlag == 1
                 )
             ):
@@ -3220,14 +3220,14 @@ if st.button("計算"):
             
             if (
                 FiveFlowFlag
-                and DoubleAttackScore > WEAK
+                and DAS > WEAK
                 and AttackSuccess == 1
             ):
                 ThirdAdj_local[4] *= 1.10
             
             if (
                 SixFlowFlag
-                and DoubleAttackScore > WEAK
+                and DAS > WEAK
                 and AttackSuccess == 1
                 and NoAttackFlag == 0
             ):
@@ -3239,7 +3239,7 @@ if st.button("計算"):
             # ★ 6の特例（強展開のみ）
             # ===============================
             if (
-                DoubleAttackScore > STRONG
+                DAS > STRONG
                 and Start[5] >= max(Start) - 0.005
                 and CPI[5] > 0.45
                 and Foot[5] > 0.48
@@ -3251,7 +3251,7 @@ if st.button("計算"):
             # ===============================
             if (
                 NoAttackFlag == 0
-                and DoubleAttackScore > MID
+                and DAS > MID
                 and AttackSuccess == 1
                 and Start[5] >= Start[3] - 0.02
                 and CLS[5] in ["A1","A2"]
@@ -3359,8 +3359,8 @@ if st.button("計算"):
                 dist = i - a
             
                 if dist < 0:
-                    SecondAdj_local[i] *= (1 - 0.04 * DoubleAttackScore)
-                    ThirdAdj_local[i]  *= (1 - 0.06 * DoubleAttackScore)
+                    SecondAdj_local[i] *= (1 - 0.04 * DAS)
+                    ThirdAdj_local[i]  *= (1 - 0.06 * DAS)
             
                 elif dist == 1:
                     SecondAdj_local[i] *= 1.12
@@ -3414,7 +3414,7 @@ if st.button("計算"):
             # ===============================
             # ★ 2着の構造（軽量版）
             # ===============================
-            if DoubleAttackScore < 0.15:
+            if DAS < 0.15:
             
                 for i in range(6):
             
@@ -3523,7 +3523,7 @@ if st.button("計算"):
                 if (
                     abs(st_gap) >= 0.01
                     and st_gap < -0.04
-                    and DoubleAttackScore > MID
+                    and DAS > MID
                     and NoAttackFlag == 0
                 ):
             
@@ -3576,7 +3576,7 @@ if st.button("計算"):
             
                 # 展開で生きる
                 if (
-                    DoubleAttackScore > MID
+                    DAS > MID
                     and Start[i] >= Start[i-1] - 0.02
                 ):
                     alive = True
@@ -3639,7 +3639,7 @@ if st.button("計算"):
                     alive = True
             
                 if (
-                    DoubleAttackScore > MID
+                    DAS > MID
                     and Start[5] >= Start[3] - 0.02
                     and Foot[5] >= 0.50
                 ):
