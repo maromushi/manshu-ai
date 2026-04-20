@@ -2100,8 +2100,8 @@ if st.button("計算"):
         # ★ 外の頭禁止（最重要）
         # ===============================
         for i in range(4,6):
-            if not FrontBreak:
-                P1[i] *= 0.40
+            if not FrontBreak and DAS < 0.10:
+                P1[i] *= 0.50
         
             can_break = (
                 DAS > 0.12
@@ -2116,7 +2116,7 @@ if st.button("計算"):
         
             if i >= 4:
 
-                if DAS < 0.12:
+                if DAS < 0.09:
                     P1[i] *= 0.20   # ←強化
             
                 if DAS < 0.08:
@@ -3841,9 +3841,9 @@ if st.button("計算"):
         w_at = 0.10
     
     elif DoubleAttackScore < MID:
-        w_no = 0.40
-        w_weak = 0.35
-        w_at = 0.25
+        w_no = 0.30
+        w_weak = 0.30
+        w_at = 0.40
     
     else:
         w_no = 0.25
