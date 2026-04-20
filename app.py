@@ -1385,7 +1385,7 @@ if st.button("計算"):
                 and Start[i] < Start[i-1] - 0.02
             ):
         
-                val *= 0.85
+                val *= 0.92
                         
             # ★ 4の突破
             if i == 3:
@@ -2231,6 +2231,19 @@ if st.button("計算"):
 
         if total_p1 > 0:
             P1 = [p / total_p1 for p in P1]
+            
+        for i in range(4,6):
+
+            if (
+                AttackSuccess == 0
+                and DAS < 0.12
+                and Start[i] < Start[i-1] - 0.02
+            ):
+                # 既存ロジックと競合しないように弱〜中で調整
+                if DAS < 0.08:
+                    P1[i] *= 0.5   # ←ここは0.1じゃなくて緩める
+                else:
+                    P1[i] *= 0.7
             
         # ===============================
         # ★ 1位保護（条件付き）
