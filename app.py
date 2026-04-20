@@ -331,6 +331,8 @@ if st.button("計算"):
         
         DoubleAttackScore = 0.0
         
+        DAS = 0.0
+        
         debug_log = []
         
         results = []
