@@ -329,6 +329,8 @@ if st.button("計算"):
         
     def run_core(order, mode):
         
+        DoubleAttackScore = 0.0
+        
         debug_log = []
         
         results = []
