@@ -590,10 +590,8 @@ if st.button("計算"):
         
                 # STは信用しない（遅れる方向）
                 Start[i] *= 0.75
-        
-                # 攻め気は少し残す
-                AttackIndex[i] *= 1.03
             
+        
         # ===============================
         # ★ 疑似攻め
         # ===============================
@@ -604,7 +602,10 @@ if st.button("計算"):
         # ===============================
         # ★ 展示STフラグ（分離）
         # ===============================
-        BadST = [1 if x >= 0.30 else 0 for x in EST]
+        BadST = [
+            1 if (BadST[i] == 1 or EST[i] >= 0.30) else 0
+            for i in range(6)
+        ]
         GoodST = [1 if x <= 0.10 else 0 for x in EST]
         
         # ===============================
@@ -634,15 +635,6 @@ if st.button("計算"):
         
             elif EST[i] >= 0.20:
                 Start[i] *= 0.95   
-                
-        # ===============================
-        # ★ 展示F補正（ここに追加）
-        # ===============================
-        for i in range(6):
-        
-            if ExF[i] == 1:
-                Start[i] *= 0.88
-                AttackIndex[i] *= 0.92
                 
         # ===============================
         # ★ スタート崩壊検知
@@ -741,16 +733,32 @@ if st.button("計算"):
             for i in range(6)
         ]
         
-        MotorScore = normalize(M)
+        for i in range(6):
+
+            if ExhibitionF[i] == 1:
         
+                # STは信用しない（遅れる方向）
+                Start[i] *= 0.75
+            
+        
+        MotorScore = normalize(M)
+
         for i in range(6):
         
             # モーターは強い時だけ
             if MotorScore[i] > 0.55:
                 AttackIndex[i] += 0.03
         
-            # 展示スタート
-            if GoodST[i] == 1:
+            # ===============================
+            # ★ 展示ST系（統合）
+            # ===============================
+        
+            if ExF[i] == 1:
+                # F → 攻め抑制
+                AttackIndex[i] *= 0.92
+        
+            elif GoodST[i] == 1:
+                # 良ST → 攻め強化
                 AttackIndex[i] *= 1.05
         
         #外壁用
