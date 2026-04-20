@@ -844,7 +844,6 @@ if st.button("計算"):
                 ):
                     AttackSuccess = 1
                     
-        DAS = DoubleAttackScore
                     
         # ===============================
         # ★ モード初期制御（ここ重要）
