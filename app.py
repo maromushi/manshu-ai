@@ -1381,9 +1381,12 @@ if st.button("計算"):
                     val *= 1.07
             
             # ★ 攻め勝ち
-            if i in attackers and AttackSuccess == 1:
-                val *= 1.10
-            
+            if i in attackers:
+                if AttackSuccess == 1:
+                    val *= 1.10
+                elif DAS > 0.10:
+                    val *= 1.06
+                        
             # ★ 崩れ展開
             if StartCollapse == 1 and i >= 2:
                 val *= 1.05
