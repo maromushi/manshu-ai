@@ -3955,7 +3955,7 @@ if st.button("計算"):
     
     can_break = (
         AttackSuccess == 1
-        or DAS > 0.13
+        or DoubleAttackScore > 0.13
         or StartCollapse == 1
     )
     
