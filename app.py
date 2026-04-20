@@ -763,36 +763,7 @@ if st.button("計算"):
         # ===============================
         
         if len(attackers) == 0:
-            DoubleAttackScore = 0
-        
-        else:
-            main = attackers[0]
-        
-            # 基本
-            base = AttackIndex[main]
-        
-            # ST差
-            st_adv = 0
-            if main > 0:
-                st_adv = max(0, Start[main] - Start[main-1])
-        
-            # synergy（修正版）
-            synergy = 0
-        
-            if len(attackers) >= 2:
-                sub = attackers[1]
-        
-                synergy = max(
-                    0,
-                    (Start[sub] - Start[sub-1]) * 0.6 +
-                    (AttackIndex[sub] - 0.5) * 0.4
-                )
-        
-            DoubleAttackScore = (
-                0.55 * base +
-                0.30 * st_adv +
-                0.15 * synergy
-            )
+            DAS = 0
                    
         attackers = sorted(
             attackers,
@@ -827,7 +798,7 @@ if st.button("計算"):
         # ★ モード初期制御（ここ重要）
         # ===============================
         if mode == "no":
-            DoubleAttackScore = 0
+            DAS = 0
             AttackSuccess = 0
             AttackWeak = 0
         
@@ -836,7 +807,7 @@ if st.button("計算"):
             AttackSuccess = 0
         
             # ★ 攻めスコアを少し抑える
-            DoubleAttackScore *= 0.7
+            DAS *= 0.7
         
         elif mode == "attack":
             pass
@@ -1009,15 +980,13 @@ if st.button("計算"):
         # ===============================
         if StartCollapse == 1:
             AttackWeak = 1
-            DoubleAttackScore = max(DoubleAttackScore, 0.08)  # ←加算じゃなく底上げ
-        
+            DAS = max(DAS, 0.08)
         
         # ===============================
         # ★ 壁崩れ（補助）
         # ===============================
         if WallBreak == 1:
             DoubleAttackScore += 0.02   # ←弱める
-        
         
         # ===============================
         # ★ 疑似攻め（微調整）
