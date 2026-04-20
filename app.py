@@ -558,12 +558,12 @@ if st.button("計算"):
                     t *= 0.6
         
                 elif CLS[i] == "B1":
-        
-                    if Start[i] >= max(Start) - 0.02 and Foot[i] >= 0.45:
+
+                    if Foot[i] >= 0.45:
                         t *= 0.7
                     else:
                         t *= 0.5
-        
+                        
                 else:
                     t *= 0.45
         
