@@ -1868,6 +1868,16 @@ if st.button("計算"):
         
         P1 = [x / total for x in FinalFirst]
         
+        P1_pre = P1.copy()
+
+        # 上位拮抗なら中間艇を守る
+        top = sorted(P1_pre, reverse=True)
+        
+        if top[0] - top[2] < 0.07:
+            idx = P1_pre.index(top[2])
+            P1[idx] *= 1.10
+        
+        
         SecondCore = None
 
         for i in range(6):
@@ -3909,13 +3919,12 @@ if st.button("計算"):
     results = sorted(results, key=lambda x: x[3], reverse=True)
 
     # ===============================
-    # ★ セカンド軸生成（ここに入れる）
+    # ★ セカンド軸生成（修正版）
     # ===============================
     
     SecondHead = None
     
     candidates = sorted(
-    
         range(6),
         key=lambda i: P1[i],
         reverse=True
@@ -3926,26 +3935,33 @@ if st.button("計算"):
             SecondHead = i
             break
     
+    # ★ 追加：P1拮抗判定
+    top = sorted(P1, reverse=True)
+    is_close = (top[0] - top[1] < 0.05)
+    
     SecondAxisResults = []
+    
     if (
         SecondHead is not None
         and P1[SecondHead] >= P1[0] * 0.75
-        and AttackWeak == 1
+        and (AttackWeak == 1 or is_close)   # ←ここ変更
     ):
     
         for (a,b,c,p) in results:
-            if a == 0:
-                new_head = SecondHead + 1
-
-
     
-                new = (new_head, 1, c, p * 0.6)
+            # 1頭パターンを崩す
+            if a == 1:   # ←ここ重要（0じゃない）
+                new_head = SecondHead + 1
+    
+                new = (new_head, b, c, p * 0.6)
                 SecondAxisResults.append(new)
+    
+            # セカンド頭を少し強化
             elif a == SecondHead + 1:
                 SecondAxisResults.append((a,b,c,p * 1.1))
+    
     # 合成
     results += SecondAxisResults
-    
     # ===============================
     # ★ シャープ化 & 正規化 & カット
     # ===============================
