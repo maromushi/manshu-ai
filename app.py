@@ -2909,7 +2909,7 @@ if st.button("計算"):
             if Active[a] == 0:
                 continue
         
-            if P1[a] < max(P1) * 0.70:
+            if P1[a] < max(P1) * (0.65 + 0.15*(1-ChaosScore)):
                 continue
         
         
