@@ -1873,6 +1873,15 @@ if st.button("計算"):
         
         P1 = [x / total for x in FinalFirst]
         
+        # ★ 頭分散（最重要）
+        top = sorted(P1, reverse=True)
+        
+        if top[0] - top[2] < 0.06:
+        
+            for i in range(6):
+                if P1[i] >= top[2]:
+                    P1[i] *= 1.05
+        
         # ===============================
         # ★ P1圧縮ガード（完成版）
         # ===============================
