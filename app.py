@@ -302,7 +302,8 @@ if st.button("計算"):
     # 念のため6に揃える
     ExEntry = ExEntry[:6]
 
-    ExhibitionF=[0,0,0,0,0,0]
+    ExhibitionF = local_vars.get("ExhibitionF",[0]*6)
+    ExhibitionF = to_int_list(fix_length(ExhibitionF))
     
     # ===============================
     # ★ 勝率0ペナルティ
