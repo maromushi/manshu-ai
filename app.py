@@ -2080,20 +2080,16 @@ if st.button("計算"):
         for i in range(6):
             print(f"\n{i+1}号艇")
             
-            if 'BaseFirst' in locals():
+            'BaseFirst' in locals():
                 print("base:", round(BaseFirst[i],4))
-            if 'AttackIndex' in locals():
+            'AttackIndex' in locals():
                 print("attack:", round(AttackIndex[i],4))
-            if 'Start' in locals():
+            'Start' in locals():
                 print("start:", round(Start[i],4))
-            if 'TurnTime' in locals():
+            'TurnTime' in locals():
                 print("turn:", round(TurnTime[i],4))
-            if 'StraightTime' in locals():
+            'StraightTime' in locals():
                 print("straight:", round(StraightTime[i],4))
-            if 'AttackIndex' in locals():
-                print("attack:", round(AttackIndex[i],4))
-            if 'Start' in locals():
-                print("start:", round(Start[i],4))
             
             print("TOTAL:", round(P1_pre[i],4))
             
@@ -2533,20 +2529,16 @@ if st.button("計算"):
         for i in range(6):
             print(f"\n{i+1}号艇")
             
-            if 'BaseSecond' in locals():
+            'BaseSecond' in locals():
                 print("base:", round(BaseSecond[i],4))
-            if 'AttackIndex' in locals():
+            'AttackIndex' in locals():
                 print("attack:", round(AttackIndex[i],4))
-            if 'Start' in locals():
+            'Start' in locals():
                 print("start:", round(Start[i],4))
-            if 'TurnTime' in locals():
+            'TurnTime' in locals():
                 print("turn:", round(TurnTime[i],4))
-            if 'StraightTime' in locals():
+            'StraightTime' in locals():
                 print("straight:", round(StraightTime[i],4))
-            if 'AttackIndex' in locals():
-                print("attack:", round(AttackIndex[i],4))
-            if 'Start' in locals():
-                print("start:", round(Start[i],4))
             
             print("TOTAL:", round(SecondAdj[i],4))
         
