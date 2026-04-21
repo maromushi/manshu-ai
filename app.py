@@ -748,7 +748,7 @@ if st.button("計算"):
             for k in range(p):
                 j = entry_order[k]
         
-                st_diff = Start[j] - Start[i]
+                st_diff = Start[i] - Start[j]
                 f_factor = 1 - FPenalty[j]
                 foot_diff = Foot[i] - Foot[j]
         
@@ -1597,7 +1597,7 @@ if st.button("計算"):
                 i >= 4
                 and AttackSuccess == 0
                 and DAS < 0.12
-                and Start[i] > Start[i-1] - 0.02
+                Start[i] > Start[i-1] + 0.01
             ):
         
                 val *= 0.92
@@ -1629,7 +1629,7 @@ if st.button("計算"):
                 )
                 
                 outer_fast = (
-                    Start[i] > max(Start[1:4]) + 0.02
+                    and Start[i] > Start[i-1] + 0.01
                 )
                 
                 if front_break and outer_fast:
