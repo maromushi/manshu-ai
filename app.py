@@ -4154,8 +4154,7 @@ if st.button("計算"):
     
     for a,b,c,p in res_attack:
         results.append((a,b,c,p * w_at, "attack"))
-    
-    results = [(a,b,c,p) for (a,b,c),p in final.items()]
+
     results = sorted(results, key=lambda x: x[3], reverse=True)
 
     # ===============================
@@ -4254,16 +4253,6 @@ if st.button("計算"):
                 new_results.append((a,b,c,p/total))
     
         results = new_results
-    
-        a,b,c,p = r
-    
-        if 0.01 <= p <= 0.03:
-            filtered.append((a,b,c, p * 1.10))
-    
-        elif p >= cut:
-            filtered.append((a,b,c,p))
-    
-    results = filtered
     
     
     # ④ ソート
