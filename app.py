@@ -436,8 +436,6 @@ if st.button("計算"):
         # ENGINE（修正版）
         # ===============================
         
-        MotorScore = normalize(M)
-        
         Engine = []
         
         Active_local = [Active[i] for i in order]
@@ -595,19 +593,6 @@ if st.button("計算"):
         
             Start.append(val)
             
-        for i in range(6):
-
-            # ① ST補正（事実）
-            if ExhibitionF[i] == 1:
-                x = max(0.12, x + 0.06)
-            
-            # ② 攻め判断（意思）
-            if attack_f:
-                AttackIndex ↑
-            elif bad_f:
-                AttackIndex ↓
-            
-        
         # ===============================
         # ★ 疑似攻め
         # ===============================
@@ -618,7 +603,7 @@ if st.button("計算"):
         # ===============================
         # ★ 展示STフラグ（分離）
         # ===============================
-        BadST = [
+        BadST_flag = [
             1 if (BadST[i] == 1 or EST[i] >= 0.30) else 0
             for i in range(6)
         ]
@@ -752,46 +737,29 @@ if st.button("計算"):
         
         MotorScore = normalize(M)
         
+        # ===============================
+        # ★ AttackIndex補正（統合）
+        # ===============================
         for i in range(6):
+        
+            # モーター（条件付きで強化）
             if MotorScore[i] > 0.60 and Foot[i] > 0.50:
                 AttackIndex[i] += 0.02
-                
-                
         
-        for i in range(6):
-
-            if ExhibitionF[i] == 1:
-        
-                # STは信用しない（遅れる方向）
-                Start[i] *= 0.75
-            
-        
-        MotorScore = normalize(M)
-
-        for i in range(6):
-        
-            # モーターは強い時だけ
-            if MotorScore[i] > 0.55:
+            elif MotorScore[i] > 0.55:
                 AttackIndex[i] += 0.03
         
-            # ===============================
-            # ★ 展示ST系（統合）
-            # ===============================
-        
+            # 展示F
             if ExF[i] == 1:
-
+        
                 if Foot[i] > 0.50 and Turn[i] > 0.50:
-            
                     AttackIndex[i] *= 1.02
-            
                 else:
-            
                     AttackIndex[i] *= 0.90
         
+            # 良ST
             elif GoodST[i] == 1:
-                # 良ST → 攻め強化
                 AttackIndex[i] *= 1.05
-        
         #外壁用
                 
         wall_penalty = [1.0]*6
@@ -1228,7 +1196,7 @@ if st.button("計算"):
         debug_log.append(("AttackSuccess", AttackSuccess))
         debug_log.append(("DAS", round(DAS,4)))
         debug_log.append(("WEAK/MID/STRONG", (WEAK, MID, STRONG)))
-        debug_log.append(("DAS", round(DoubleAttackScore,4)))
+        debug_log.append(("DAS", round(DAS,4)))
         
         # ===============================
         # ★ 弱イン判定（追加）
@@ -2724,6 +2692,10 @@ if st.button("計算"):
                 # ----------------------
                 # ② 流入判定
                 # ----------------------
+                
+                is_fast = Start[i] >= Start[i-1] - 0.01
+                has_power = Foot[i] >= 0.50 or CPI[i] >= 0.48
+                
                 if is_fast and has_power:
 
                     if DAS > STRONG:
@@ -3978,7 +3950,7 @@ if st.button("計算"):
                 
             DoubleAttackScore = DAS
             
-            return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
+        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
                 
     def run_zure_ai(order, NoAttackProb):
 
