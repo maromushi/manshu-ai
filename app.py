@@ -691,6 +691,24 @@ if st.button("計算"):
                 FPenalty.append(0.88)
             else:
                 FPenalty.append(1.0)
+                
+        # ===============================
+        # ★ 外統一判定（追加）
+        # ===============================
+        outer_ok = [False]*6
+        
+        for i in range(1,6):
+        
+            is_fast = Start[i] > Start[i-1] + 0.01
+        
+            outer_ok[i] = (
+                is_fast
+                and (
+                    DAS < 0.12
+                    or AttackSuccess == 1
+                    or AttackWeak == 1
+                )
+            )
         
         
         # --- 壁強度（進入順ベース）---
@@ -1593,14 +1611,8 @@ if st.button("計算"):
             # ===============================
             # ★ 外の事前カット（超重要）
             # ===============================
-            if (
-                i >= 4
-                and AttackSuccess == 0
-                and DAS < 0.12
-                and Start[i] > Start[i-1] + 0.01
-            ):
-        
-                val *= 0.92
+            if i >= 4 and not outer_ok[i]:
+                val *= 0.7
                         
             # ★ 4の突破
             if i == 3:
@@ -1629,17 +1641,8 @@ if st.button("計算"):
                     or Start[1] < Start[2] - 0.03
                 )
             
-                # --- 外が本当にスタート勝ってるか ---
-                is_fast = Start[i] > Start[i-1] + 0.01
-            
-                # --- 外は基本弱いのでDAS条件も維持 ---
-                outer_fast = (
-                    DAS < 0.12
-                    and is_fast
-                )
-            
                 # --- 条件成立時のみ強化 ---
-                if front_break and outer_fast:
+                if front_break and outer_ok[i]:
                     val *= 1.12
                 
             # ===============================
@@ -2400,14 +2403,10 @@ if st.button("計算"):
             
         for i in range(4,6):
 
-            if (
-                AttackSuccess == 0
-                and DAS < 0.12
-                and Start[i] > Start[i-1] - 0.02
-            ):
-                # 既存ロジックと競合しないように弱〜中で調整
+            if not outer_ok[i]:
+        
                 if DAS < 0.08:
-                    P1[i] *= 0.5   # ←ここは0.1じゃなくて緩める
+                    P1[i] *= 0.5
                 else:
                     P1[i] *= 0.7
             
@@ -2754,10 +2753,7 @@ if st.button("計算"):
                 # ② 流入判定
                 # ----------------------
                 
-                is_fast = Start[i] >= Start[i-1] + 0.01
-                has_power = Foot[i] >= 0.50 or CPI[i] >= 0.48
-                
-                if is_fast and has_power:
+                if outer_ok[i]:
 
                     if DAS > STRONG:
                     
@@ -3251,16 +3247,12 @@ if st.button("計算"):
                 # ■ 外は“軽く”だけ浮上（被り防止）
                 # ===============================
                 for i in range(a+1, 6):
-            
-                    # 外は条件付きにする（重要）
+                
                     if i >= 4:
-                        if (
-                            Start[i] > Start[i-1] - 0.02
-                            or CPI[i] < CPI[i-1] - 0.03
-                        ):
+                
+                        if not outer_ok[i]:
                             continue
-                                
-                    if i >= 4:
+                
                         SecondAdj_local[i] *= 1.05
                         ThirdAdj_local[i]  *= 1.03
                    
@@ -3465,14 +3457,20 @@ if st.button("計算"):
             # ★ 外の詰まり・抜け判定（3着用）
             # ===============================
             for i in range(3,6):
-            
-                # 前より速い → 抜けてこれる
+
                 if Start[i] > Start[i-1] + 0.02:
                     ThirdAdj_local[i] *= 1.10
             
-                # 前より遅い → 詰まる
-                elif Start[i] > Start[i-1] - 0.02:
+                elif Start[i] < Start[i-1] - 0.02:
                     ThirdAdj_local[i] *= 0.80
+            
+                else:
+                    ThirdAdj_local[i] *= 0.95
+                    
+                if outer_ok[i]:
+                    ThirdAdj_local[i] *= 1.08
+                else:
+                    ThirdAdj_local[i] *= 0.85
             
             # ===============================
             # ★ 3着：位置ボーナス
@@ -3660,7 +3658,7 @@ if st.button("計算"):
                 elif dist >= 2:
                     if NoAttackFlag == 0:
             
-                        if i >= 4 and Start[i] > Start[i-1] - 0.01:
+                        if i >= 4 and not outer_ok[i]:
                             continue
             
                         SecondAdj_local[i] *= 1.03
