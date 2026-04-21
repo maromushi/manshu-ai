@@ -436,6 +436,8 @@ if st.button("計算"):
         # ENGINE（修正版）
         # ===============================
         
+        MotorScore = normalize(M)
+        
         Engine = []
         
         Active_local = [Active[i] for i in order]
@@ -738,7 +740,6 @@ if st.button("計算"):
             for i in range(6)
         ]
         
-        MotorScore = normalize(M)
         
         # ===============================
         # ★ AttackIndex補正（統合）
@@ -752,7 +753,7 @@ if st.button("計算"):
                 AttackIndex[i] += 0.02
         
             # 展示F
-            if ExF[i] == 1:
+            if BadST[i] == 1:
         
                 if Foot[i] > 0.50 and Turn[i] > 0.50:
                     AttackIndex[i] *= 1.02
