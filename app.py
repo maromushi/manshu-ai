@@ -2075,6 +2075,24 @@ if st.button("計算"):
         # ===============================
         P1_pre = P1.copy()
         
+        print("\n=== FIRST BREAKDOWN ===")
+
+        for i in range(6):
+            print(f"\n{i+1}号艇")
+            
+            if 'BaseFirst' in locals():
+                print("base:", round(BaseFirst[i],4))
+            if 'AttackIndex' in locals():
+                print("attack:", round(AttackIndex[i],4))
+            if 'Start' in locals():
+                print("start:", round(Start[i],4))
+            if 'TurnTime' in locals():
+                print("turn:", round(TurnTime[i],4))
+            if 'StraightTime' in locals():
+                print("straight:", round(StraightTime[i],4))
+            
+            print("TOTAL:", round(P1_pre[i],4))
+        
         top = sorted(P1_pre, reverse=True)
         
         # 上位拮抗なら上位3艇を少し持ち上げる
@@ -2504,6 +2522,23 @@ if st.button("計算"):
         SecondAdj = SecondScore.copy()
         # ★ デバッグ（ここが正解）
         debug_log.append(("SecondAdj_pre", [round(x,4) for x in SecondAdj]))
+        print("\n=== SECOND BREAKDOWN ===")
+
+        for i in range(6):
+            print(f"\n{i+1}号艇")
+            
+            if 'BaseSecond' in locals():
+                print("base:", round(BaseSecond[i],4))
+            if 'AttackIndex' in locals():
+                print("attack:", round(AttackIndex[i],4))
+            if 'Start' in locals():
+                print("start:", round(Start[i],4))
+            if 'TurnTime' in locals():
+                print("turn:", round(TurnTime[i],4))
+            if 'StraightTime' in locals():
+                print("straight:", round(StraightTime[i],4))
+            
+            print("TOTAL:", round(SecondAdj_pre[i],4))
         
         # ===============================
         # ★ 2着モード制御（ここ重要）
@@ -2535,6 +2570,23 @@ if st.button("計算"):
         ]
         
         debug_log.append(("ThirdAdj_pre", [round(x,4) for x in ThirdAdj]))
+        print("\n=== THIRD BREAKDOWN ===")
+
+        for i in range(6):
+            print(f"\n{i+1}号艇")
+            
+            if 'BaseThird' in locals():
+                print("base:", round(BaseThird[i],4))
+            if 'AttackIndex' in locals():
+                print("attack:", round(AttackIndex[i],4))
+            if 'Start' in locals():
+                print("start:", round(Start[i],4))
+            if 'TurnTime' in locals():
+                print("turn:", round(TurnTime[i],4))
+            if 'StraightTime' in locals():
+                print("straight:", round(StraightTime[i],4))
+            
+            print("TOTAL:", round(ThirdAdj_pre[i],4))
         
         # ===============================
         # ★ 3着モード制御
