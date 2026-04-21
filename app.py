@@ -4036,7 +4036,12 @@ if st.button("計算"):
     
         zure_results = []
     
-        for a,b,c,p in results:
+        for r in results:
+
+        a = r[0]
+        b = r[1]
+        c = r[2]
+        p = r[3]
     
             head = a - 1
     
@@ -4262,7 +4267,12 @@ if st.button("計算"):
     # ===============================
     tmp = []
     
-    for a,b,c,p in results:
+    for r in results:
+
+        a = r[0]
+        b = r[1]
+        c = r[2]
+        p = r[3]
     
         if a >= 4 and DoubleAttackScore < MID:
             p *= 0.5
@@ -4284,7 +4294,12 @@ if st.button("計算"):
     # ===============================
     tmp = []
     
-    for a,b,c,p in results:
+    for r in results:
+
+        a = r[0]
+        b = r[1]
+        c = r[2]
+        p = r[3]
     
         if NoAttackProb > 0.90 and a >= 4:
             continue
@@ -4299,7 +4314,12 @@ if st.button("計算"):
     seen = set()
     tmp = []
     
-    for a,b,c,p in results:
+    for r in results:
+
+        a = r[0]
+        b = r[1]
+        c = r[2]
+        p = r[3]
     
         key = (a,b,c)
     
