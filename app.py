@@ -22,7 +22,10 @@ def normalize(values):
 
     # ★ 同値処理（最重要）
     if mx - mn < 1e-6:
-        return [0.5] * len(values)
+        if mx == 0:
+            return [0.0]*len(values)   # 全部0なら0
+        else:
+            return [0.5]*len(values)   # 同値だけど0じゃないなら中間
 
     return [
         ((v - mn) / (mx - mn)) if v is not None else 0
