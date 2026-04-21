@@ -4580,9 +4580,9 @@ if st.button("計算"):
         
     
     debug_output = "\n".join(
-        f"{k}: {v}" for (k,v) in debug_log
+        f"{k}: {v}" for (k,v) in debug_log_ex
     )
-        
+            
     
     
         # 出目テキスト
