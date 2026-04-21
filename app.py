@@ -765,8 +765,8 @@ if st.button("計算"):
         # 壁制約＆緩和のあと
 
         Foot = [
-            0.42*TurnScore[i]+
-            0.28*LapScore[i]+
+            0.42*Turn[i]+
+            0.28*Lap[i]+
             0.25*StraightScore[i]+
             0.08*Exhibit[i]
             for i in range(6)
@@ -3330,8 +3330,8 @@ if st.button("計算"):
                 ThirdAdj_local[2] *= 0.90
                 ThirdAdj_local[3] *= 0.90
             
-                SecondAdj_local[5] *= (1.02 * wall_penalty[5])
-                ThirdAdj_local[5]  *= (1.05 * wall_penalty[5])
+                SecondAdj_local[5] *= 1.02
+                ThirdAdj_local[5]  *= 1.05
             
                 SecondAdj_local[0] *= 1.05
                 ThirdAdj_local[0] *= 1.05
@@ -3508,7 +3508,7 @@ if st.button("計算"):
                 SecondAdj_local[2] *= 0.97
             
                 # 6強化（修正）
-                SecondAdj_local[5] *= (1.08 * wall_penalty[5])
+                SecondAdj_local[5] *= 1.08
             
             else:
                 if Foot[5] < 0.45:
@@ -3544,7 +3544,7 @@ if st.button("計算"):
                 and CPI[5] > 0.45
                 and Foot[5] > 0.48
             ):
-                SecondAdj_local[5] *= (1.10 * wall_penalty[5])
+                SecondAdj_local[5] *= 1.10
                 
             # ===============================
             # ★ 展開6（性能じゃない6）
@@ -3576,17 +3576,7 @@ if st.button("計算"):
                         SecondAdj_local[4] *= 0.80
                         ThirdAdj_local[4]  *= 0.85
             
-                # ■ 6コース
-                if i == 5:
-            
-                    # ←ここ削除（wall_hit & wall_penalty代入）
-                    # wall_hit = ...
-                    # wall_penalty[5] = ...
-            
-                    # ★減衰は残す（重要）
-                    if wall_penalty[5] < 1.0:
-                        SecondAdj_local[5] *= 0.70
-                        ThirdAdj_local[5]  *= 0.75
+        
             # ===============================
             # ★ 頭別ロジック
             # ===============================
