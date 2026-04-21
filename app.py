@@ -4534,12 +4534,11 @@ if st.button("計算"):
     # ===============================
     # 状態（最重要）
     # ===============================
-    debug_log.append("")
-    debug_log.append("RaceState:")
-    debug_log.append(f"NoAttackProb: {round(NoAttackProb,4)}")
-    debug_log.append(f"DAS: {round(DoubleAttackScore,4)}")
-    debug_log.append(f"ChaosScore: {round(ChaosScore,4)}")
-    
+    debug_log.append(("RaceState", ""))
+
+    debug_log.append(("NoAttackProb", round(NoAttackProb,4)))
+    debug_log.append(("DAS", round(DoubleAttackScore,4)))
+    debug_log.append(("ChaosScore", round(ChaosScore,4)))
     # ===============================
     # 重み（今回の核心）
     # ===============================
