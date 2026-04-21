@@ -2538,7 +2538,7 @@ if st.button("計算"):
             if 'StraightTime' in locals():
                 print("straight:", round(StraightTime[i],4))
             
-            print("TOTAL:", round(SecondAdj_pre[i],4))
+            print("TOTAL:", round(SecondAdj[i],4))
         
         # ===============================
         # ★ 2着モード制御（ここ重要）
@@ -2586,7 +2586,7 @@ if st.button("計算"):
             if 'StraightTime' in locals():
                 print("straight:", round(StraightTime[i],4))
             
-            print("TOTAL:", round(ThirdAdj_pre[i],4))
+            print("TOTAL:", round(ThirdAdj[i],4))
         
         # ===============================
         # ★ 3着モード制御
