@@ -3981,7 +3981,7 @@ if st.button("計算"):
                 
             DoubleAttackScore = DAS
             
-        return results, ChaosScore, P1, DoubleAttackScore, InsideSurvival, debug_log, Start
+        return results, ChaosScore, P1, DAS, InsideSurvival, debug_log, Start
                 
     def run_zure_ai(order, NoAttackProb):
 
