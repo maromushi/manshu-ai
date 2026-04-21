@@ -4542,34 +4542,30 @@ if st.button("計算"):
     # ===============================
     # 重み（今回の核心）
     # ===============================
-    debug_log.append("")
-    debug_log.append("Weights:")
-    debug_log.append(f"w_no: {round(w_no,3)}")
-    debug_log.append(f"w_weak: {round(w_weak,3)}")
-    debug_log.append(f"w_at: {round(w_at,3)}")
-    
+    debug_log.append(("Weights", ""))
+    debug_log.append(("w_no", round(w_no,3)))
+    debug_log.append(("w_weak", round(w_weak,3)))
+    debug_log.append(("w_at", round(w_at,3)))
     # ===============================
     # モード比較
     # ===============================
-    debug_log.append("")
-    debug_log.append("ModeScores:")
-    debug_log.append(f"P1_no_top: {round(max(P1_no),3)}")
-    debug_log.append(f"P1_weak_top: {round(max(P1_w),3)}")
-    debug_log.append(f"P1_attack_top: {round(max(P1_a),3)}")
-    
+    debug_log.append(("ModeScores", ""))
+    debug_log.append(("P1_no_top", round(max(P1_no),3)))
+    debug_log.append(("P1_weak_top", round(max(P1_w),3)))
+    debug_log.append(("P1_attack_top", round(max(P1_a),3)))
     # ===============================
     # 最終P1
     # ===============================
     debug_log.append("")
-    debug_log.append("P1:")
+    debug_log.append(("P1", ""))
     for i,p in enumerate(P1):
-        debug_log.append(f"{i+1}: {round(p,4)}")
-    
+        debug_log.append((f"{i+1}", round(p,4)))
     # ===============================
     # 内部ログ（必要最低限）
     # ===============================
     debug_log.append("")
-    debug_log.append("CoreDebug:")
+    debug_log.append(("CoreDebug", ""))
+
     for name, val in debug_log_ex:
         if name in [
             "AttackWeak",
@@ -4579,22 +4575,19 @@ if st.button("計算"):
             "SecondAdj_pre",
             "ThirdAdj_pre"
         ]:
-            debug_log.append(f"{name}: {val}")
-    
+            debug_log.append((name, val))
+        
         debug_log.append("=== CHECK ===")
-    
-        sum2 = sum(SecondAdj_local)
-        sum3 = sum(ThirdAdj_local)
-        ratio = sum2 / sum3 if sum3 > 0 else 0
-    
+
         debug_log.append(f"sum2: {round(sum2,3)}")
         debug_log.append(f"sum3: {round(sum3,3)}")
         debug_log.append(f"ratio: {round(ratio,3)}")
         debug_log.append("=============")
     
-    debug_output = "\n".join(str(x) for x in debug_log)
-    
-    
+    debug_output = "\n".join(
+        f"{k}: {v}" for (k,v) in debug_log
+    )
+        
     
     
         # 出目テキスト
