@@ -2055,14 +2055,20 @@ if st.button("計算"):
         
         P1 = [x / total for x in FinalFirst]
         
-        # ★ 頭分散（最重要）
-        top = sorted(P1, reverse=True)
+        # ===============================
+        # ★ 強制2頭分岐
+        # ===============================
+        heads = sorted(range(6), key=lambda i: P1[i], reverse=True)
         
-        if top[0] - top[2] < 0.06:
+        main_head = heads[0]
+        second_head = heads[1]
         
-            for i in range(6):
-                if P1[i] >= top[2]:
-                    P1[i] *= 1.05
+        force_heads = [main_head]
+        
+        # 差がそこまで大きくないなら2頭採用
+        if P1[second_head] > P1[main_head] * 0.7:
+            force_heads.append(second_head)
+
         
         # ===============================
         # ★ P1圧縮ガード（完成版）
@@ -3096,6 +3102,9 @@ if st.button("計算"):
         # ===============================
         
         for a in range(6):
+            
+            if a not in force_heads:
+                continue
         
             if Active[a] == 0:
                 continue
@@ -4134,14 +4143,17 @@ if st.button("計算"):
         w_weak = 0.30
         w_at = 0.45
     
+    results = []
+
+    # 各世界からそのまま入れる（重みだけかける）
     for a,b,c,p in res_no:
-        final[(a,b,c)] = final.get((a,b,c),0) + w_no*p
+        results.append((a,b,c,p * w_no, "no"))
     
     for a,b,c,p in res_weak:
-        final[(a,b,c)] = final.get((a,b,c),0) + w_weak*p
+        results.append((a,b,c,p * w_weak, "weak"))
     
     for a,b,c,p in res_attack:
-        final[(a,b,c)] = final.get((a,b,c),0) + w_at*p
+        results.append((a,b,c,p * w_at, "attack"))
     
     results = [(a,b,c,p) for (a,b,c),p in final.items()]
     results = sorted(results, key=lambda x: x[3], reverse=True)
@@ -4209,7 +4221,7 @@ if st.button("計算"):
     # ===============================
     
     # ① シャープ化
-    power = 1.25 + 0.25 * ChaosScore
+    power = 1.05 + 0.15 * ChaosScore
     
     new_results = []
     
@@ -4242,19 +4254,6 @@ if st.button("計算"):
                 new_results.append((a,b,c,p/total))
     
         results = new_results
-    
-    
-    # ③ カット（secは保護）
-    cut = 0.004 + 0.004 * (1 - ChaosScore)
-    
-    filtered = []
-    
-    for r in results:
-    
-        if len(r) == 5:
-            a,b,c,p,_ = r
-            filtered.append((a,b,c,p))
-            continue
     
         a,b,c,p = r
     
@@ -4417,6 +4416,17 @@ if st.button("計算"):
     # ★ 最後にカット（ここに移動）
     # ===============================
     results = results[:max_bets]
+    
+    # ===== 最後の最後 =====
+    cut = 0.002
+    
+    filtered = []
+    
+    for a,b,c,p in results:
+        if p >= cut:
+            filtered.append((a,b,c,p))
+    
+    results = filtered
         
 
     # =====================================
