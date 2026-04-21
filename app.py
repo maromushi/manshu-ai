@@ -1597,7 +1597,7 @@ if st.button("計算"):
                 i >= 4
                 and AttackSuccess == 0
                 and DAS < 0.12
-                Start[i] > Start[i-1] + 0.01
+                and Start[i] > Start[i-1] + 0.01
             ):
         
                 val *= 0.92
@@ -1622,21 +1622,25 @@ if st.button("計算"):
             # ★ 外の突破判定（1着用）
             # ===============================
             if i >= 3:
-                
+            
+                # --- 前が崩れてるか（進入ベースにすべきだが簡易版） ---
                 front_break = (
                     Start[0] < Start[2] - 0.04
                     or Start[1] < Start[2] - 0.03
                 )
-                
+            
+                # --- 外が本当にスタート勝ってるか ---
+                is_fast = Start[i] > Start[i-1] + 0.01
+            
+                # --- 外は基本弱いのでDAS条件も維持 ---
                 outer_fast = (
                     DAS < 0.12
-                    and Start[i] > Start[i-1] + 0.01
-                    and i >= 4
+                    and is_fast
                 )
-                
+            
+                # --- 条件成立時のみ強化 ---
                 if front_break and outer_fast:
-                    val *= 1.12   # ← 少し弱める（1.15→1.12）
-                
+                    val *= 1.12
                 
             # ===============================
             # ★ 外の基本抑制（修正）
