@@ -516,15 +516,6 @@ if st.button("計算"):
         ]
 
         Foot=RawFoot
-        
-        # 壁のあとに再計算（これを追加）
-        Foot = [
-            0.42*TurnScore[i]+
-            0.28*LapScore[i]+
-            0.25*StraightScore[i]+
-            0.08*Exhibit[i]
-            for i in range(6)
-        ]
 
         Active_local = [Active[i] for i in order]
 
@@ -671,7 +662,7 @@ if st.button("計算"):
         
         # 逆引き（どの艇が何番目か）
         pos = [0]*6
-        for i, boat in enumerate(order):
+        for i, boat in enumerate(entry_order):
             pos[boat] = i
         
         
@@ -770,6 +761,16 @@ if st.button("計算"):
         
                 Turn[i] *= relax
                 Lap[i]  *= relax
+                
+        # 壁制約＆緩和のあと
+
+        Foot = [
+            0.42*TurnScore[i]+
+            0.28*LapScore[i]+
+            0.25*StraightScore[i]+
+            0.08*Exhibit[i]
+            for i in range(6)
+        ]
         
         
         # ===============================
@@ -3259,11 +3260,9 @@ if st.button("計算"):
                             continue
                                 
                     if i >= 4:
-                        SecondAdj_local[i] *= (1.05 * wall_penalty[i])
-                        ThirdAdj_local[i]  *= (1.03 * wall_penalty[i])  # ←追加
-                    else:
                         SecondAdj_local[i] *= 1.05
                         ThirdAdj_local[i]  *= 1.03
+                   
                     
             # ===============================
             # ★ 3着バランス補正（最終微調整）
@@ -3354,8 +3353,6 @@ if st.button("計算"):
                         continue
             
                     if i >= 4:
-                        ThirdAdj_local[i] *= (1.06 * wall_penalty[i])
-                    else:
                         ThirdAdj_local[i] *= 1.06
             # ===============================
             # ★ 攻め弱い時の残り補正
@@ -3762,8 +3759,6 @@ if st.button("計算"):
                 # ===============================
                 if dist == 1:
                     if i >= 4:
-                        SecondAdj_local[i] *= (1.12 * wall_penalty[i])
-                    else:
                         SecondAdj_local[i] *= 1.12
                 # ===============================
                 # ■ 1艇挟み
@@ -3916,8 +3911,8 @@ if st.button("計算"):
                         continue
             
                     if alive:
-                        SecondAdj_local[i] *= (1.05 * wall_penalty[i])
-                        ThirdAdj_local[i]  *= (1.08 * wall_penalty[i])
+                        SecondAdj_local[i] *= 1.05
+                        ThirdAdj_local[i]  *= 1.08
                     else:
                         SecondAdj_local[i] *= 0.85
                         ThirdAdj_local[i]  *= 0.85
