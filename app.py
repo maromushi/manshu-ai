@@ -4416,28 +4416,28 @@ if st.button("計算"):
     # ★ 最後にカット（ここに移動）
     # ===============================
     results = results[:max_bets]
-    
+
     # ===============================
-    # ★ 最後の最後にカット（安全版）
+    # ★ 最後の最後にカット（確定版）
     # ===============================
-    
     cut = 0.002
+    
     filtered = []
+    
     for r in results:
     
-        # 念のため安全に展開
-        if len(r) == 4:
-            a,b,c,p = r
-        elif len(r) == 5:
-            a,b,c,p,_ = r
-        else:
+        if len(r) < 4:
             continue
-        if p >= cut:
     
+        a = r[0]
+        b = r[1]
+        c = r[2]
+        p = r[3]
+    
+        if p >= cut:
             filtered.append((a,b,c,p))
     
-    # 空防止（重要）
-    
+    # ★ filteredが空でも絶対エラーにしない
     if len(filtered) > 0:
         results = filtered
         
