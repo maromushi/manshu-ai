@@ -914,7 +914,7 @@ if st.button("計算"):
                 )
         
                 weak_start = (
-                    Start[i] < Start[i-1] + 0.01
+                    Start[i] > Start[i-1] + 0.01
                 )
         
                 if wall_block and weak_start:
@@ -1533,7 +1533,7 @@ if st.button("計算"):
 
         for i in range(6):
 
-            value = 1 + (0.18 + 0.25*ChaosScore) * (Start[i] - AvgStart)
+            value = 1 + (0.12 + 0.18*ChaosScore) * (Start[i] - AvgStart)
 
             value=max(0.80,value)
 
@@ -1597,7 +1597,7 @@ if st.button("計算"):
                 i >= 4
                 and AttackSuccess == 0
                 and DAS < 0.12
-                and Start[i] < Start[i-1] - 0.02
+                and Start[i] > Start[i-1] - 0.02
             ):
         
                 val *= 0.92
@@ -1641,7 +1641,7 @@ if st.button("計算"):
             # ===============================
             if i >= 4:
 
-                outer_power = 0.4*CPI[i] + 0.3*Start[i] + 0.3*Foot[i]
+                outer_power = 0.5*CPI[i] + 0.2*Start[i] + 0.3*Foot[i]
             
                 if DAS < 0.08:
                     val *= (0.80 + 0.2 * outer_power)
@@ -2301,10 +2301,9 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
-        start_rank = sorted(range(6), key=lambda i: Start[i])
+        start_rank = sorted(range(6), key=lambda i: Start[i], reverse=True)
         debug_log.append(("StartRank", start_rank))
-        start_rank = sorted(range(6), key=lambda i: Start[i])
-        debug_log.append(("StartRank", start_rank))
+        
         # ★ デバッグ追加（ここ！！）
         if len(debug_log) > 50:
             debug_log = debug_log[-50:]
@@ -2398,7 +2397,7 @@ if st.button("計算"):
             if (
                 AttackSuccess == 0
                 and DAS < 0.12
-                and Start[i] < Start[i-1] - 0.02
+                and Start[i] > Start[i-1] - 0.02
             ):
                 # 既存ロジックと競合しないように弱〜中で調整
                 if DAS < 0.08:
@@ -2749,7 +2748,7 @@ if st.button("計算"):
                 # ② 流入判定
                 # ----------------------
                 
-                is_fast = Start[i] >= Start[i-1] - 0.01
+                is_fast = Start[i] >= Start[i-1] + 0.01
                 has_power = Foot[i] >= 0.50 or CPI[i] >= 0.48
                 
                 if is_fast and has_power:
@@ -3250,7 +3249,7 @@ if st.button("計算"):
                     # 外は条件付きにする（重要）
                     if i >= 4:
                         if (
-                            Start[i] < Start[i-1] - 0.02
+                            Start[i] > Start[i-1] - 0.02
                             or CPI[i] < CPI[i-1] - 0.03
                         ):
                             continue
@@ -3466,7 +3465,7 @@ if st.button("計算"):
                     ThirdAdj_local[i] *= 1.10
             
                 # 前より遅い → 詰まる
-                elif Start[i] < Start[i-1] - 0.02:
+                elif Start[i] > Start[i-1] - 0.02:
                     ThirdAdj_local[i] *= 0.80
             
             # ===============================
@@ -3655,7 +3654,7 @@ if st.button("計算"):
                 elif dist >= 2:
                     if NoAttackFlag == 0:
             
-                        if i >= 4 and Start[i] < Start[i-1] - 0.01:
+                        if i >= 4 and Start[i] > Start[i-1] - 0.01:
                             continue
             
                         SecondAdj_local[i] *= 1.03
