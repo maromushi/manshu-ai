@@ -518,6 +518,9 @@ if st.button("計算"):
         Foot=RawFoot
 
         Active_local = [Active[i] for i in order]
+        
+        Turn = TurnScore[:]
+        Lap  = LapScore[:]
 
 
         # ===============================
@@ -783,13 +786,6 @@ if st.button("計算"):
                 max(Start[1:4]) - Start[0] > 0.05
             )
         )
-    
-        # ===============================
-        # TURN
-        # ===============================
-
-        TurnRaw=[0.30*Skill[i]+0.55*Foot[i]+0.15*Engine[i] for i in range(6)]
-        Turn=TurnRaw
 
         # ===============================
         # VELOCITY
@@ -3893,12 +3889,6 @@ if st.button("計算"):
                 # ■ 6コース
                 # ===============================
                 if i == 5:
-            
-                    # 強い6は無条件で生かす
-                    if Strong6 or Normal6:
-                        SecondAdj_local[i] *= wall_penalty[i]
-                        ThirdAdj_local[i]  *= wall_penalty[i]
-                        continue
             
                     if alive:
                         SecondAdj_local[i] *= 1.05
