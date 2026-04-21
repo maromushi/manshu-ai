@@ -3056,14 +3056,38 @@ if st.button("計算"):
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
             
+            # ===============================
+            # ★ ① 攻め結果補正（←先に入れる）
+            # ===============================
+            if len(attackers) > 0:
+            
+                atk = attackers[0]
+            
+                if atk > 0:
+            
+                    if AttackSuccess == 1:
+                        SecondAdj_local[atk-1] *= 0.90
+                        SecondAdj_local[atk]   *= 1.10
+            
+                    elif AttackWeak == 1:
+                        SecondAdj_local[atk]   *= 1.15
+                        SecondAdj_local[atk-1] *= 0.95
+            
+                    elif AttackFail == 1:
+                        SecondAdj_local[atk]   *= 0.85
+                        SecondAdj_local[atk-1] *= 1.05
+            
+            
+            # ===============================
+            # ★ ② 既存SecondCore（後に回す）
+            # ===============================
             if SecondCore is not None and NoAttackFlag == 0:
-
+            
                 SecondAdj_local[0] *= 0.88
                 ThirdAdj_local[0]  *= 0.90
             
                 SecondAdj_local[SecondCore] *= 1.10
                 ThirdAdj_local[SecondCore]  *= 1.08
-                    
         
             # ===============================
             # ★ 攻め成立判定
