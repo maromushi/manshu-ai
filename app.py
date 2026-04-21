@@ -2090,8 +2090,14 @@ if st.button("計算"):
                 print("turn:", round(TurnTime[i],4))
             if 'StraightTime' in locals():
                 print("straight:", round(StraightTime[i],4))
+            if 'AttackIndex' in locals():
+                print("attack:", round(AttackIndex[i],4))
+            if 'Start' in locals():
+                print("start:", round(Start[i],4))
             
             print("TOTAL:", round(P1_pre[i],4))
+            
+        
         
         top = sorted(P1_pre, reverse=True)
         
@@ -2537,6 +2543,10 @@ if st.button("計算"):
                 print("turn:", round(TurnTime[i],4))
             if 'StraightTime' in locals():
                 print("straight:", round(StraightTime[i],4))
+            if 'AttackIndex' in locals():
+                print("attack:", round(AttackIndex[i],4))
+            if 'Start' in locals():
+                print("start:", round(Start[i],4))
             
             print("TOTAL:", round(SecondAdj[i],4))
         
