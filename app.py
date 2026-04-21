@@ -3058,7 +3058,7 @@ if st.button("計算"):
             ThirdAdj_local  = ThirdAdj_final.copy()
             
             if 'SecondAdj_local' in locals():
-                debug_text.append(f"Second: {[round(x,3) for x in SecondAdj_local]}")
+                debug_log.append(f"Second: {[round(x,3) for x in SecondAdj_local]}")
             
             # ===============================
             # ★ ① 攻め結果補正（←先に入れる）
@@ -4522,48 +4522,48 @@ if st.button("計算"):
     # デバッグテキスト
     debug_text = []
     
-    debug_text.append("===== DEBUG =====")
+    debug_log.append("===== DEBUG =====")
     
     # ===============================
     # 状態（最重要）
     # ===============================
-    debug_text.append("")
-    debug_text.append("RaceState:")
-    debug_text.append(f"NoAttackProb: {round(NoAttackProb,4)}")
-    debug_text.append(f"DAS: {round(DoubleAttackScore,4)}")
-    debug_text.append(f"ChaosScore: {round(ChaosScore,4)}")
+    debug_log.append("")
+    debug_log.append("RaceState:")
+    debug_log.append(f"NoAttackProb: {round(NoAttackProb,4)}")
+    debug_log.append(f"DAS: {round(DoubleAttackScore,4)}")
+    debug_log.append(f"ChaosScore: {round(ChaosScore,4)}")
     
     # ===============================
     # 重み（今回の核心）
     # ===============================
-    debug_text.append("")
-    debug_text.append("Weights:")
-    debug_text.append(f"w_no: {round(w_no,3)}")
-    debug_text.append(f"w_weak: {round(w_weak,3)}")
-    debug_text.append(f"w_at: {round(w_at,3)}")
+    debug_log.append("")
+    debug_log.append("Weights:")
+    debug_log.append(f"w_no: {round(w_no,3)}")
+    debug_log.append(f"w_weak: {round(w_weak,3)}")
+    debug_log.append(f"w_at: {round(w_at,3)}")
     
     # ===============================
     # モード比較
     # ===============================
-    debug_text.append("")
-    debug_text.append("ModeScores:")
-    debug_text.append(f"P1_no_top: {round(max(P1_no),3)}")
-    debug_text.append(f"P1_weak_top: {round(max(P1_w),3)}")
-    debug_text.append(f"P1_attack_top: {round(max(P1_a),3)}")
+    debug_log.append("")
+    debug_log.append("ModeScores:")
+    debug_log.append(f"P1_no_top: {round(max(P1_no),3)}")
+    debug_log.append(f"P1_weak_top: {round(max(P1_w),3)}")
+    debug_log.append(f"P1_attack_top: {round(max(P1_a),3)}")
     
     # ===============================
     # 最終P1
     # ===============================
-    debug_text.append("")
-    debug_text.append("P1:")
+    debug_log.append("")
+    debug_log.append("P1:")
     for i,p in enumerate(P1):
-        debug_text.append(f"{i+1}: {round(p,4)}")
+        debug_log.append(f"{i+1}: {round(p,4)}")
     
     # ===============================
     # 内部ログ（必要最低限）
     # ===============================
-    debug_text.append("")
-    debug_text.append("CoreDebug:")
+    debug_log.append("")
+    debug_log.append("CoreDebug:")
     for name, val in debug_log_ex:
         if name in [
             "AttackWeak",
@@ -4573,20 +4573,20 @@ if st.button("計算"):
             "SecondAdj_pre",
             "ThirdAdj_pre"
         ]:
-            debug_text.append(f"{name}: {val}")
+            debug_log.append(f"{name}: {val}")
     
-        debug_text.append("=== CHECK ===")
+        debug_log.append("=== CHECK ===")
         
-        debug_text.append(f"Third : {[round(x,3) for x in ThirdAdj_local]}")
+        debug_log.append(f"Third : {[round(x,3) for x in ThirdAdj_local]}")
     
         sum2 = sum(SecondAdj_local)
         sum3 = sum(ThirdAdj_local)
         ratio = sum2 / sum3 if sum3 > 0 else 0
     
-        debug_text.append(f"sum2: {round(sum2,3)}")
-        debug_text.append(f"sum3: {round(sum3,3)}")
-        debug_text.append(f"ratio: {round(ratio,3)}")
-        debug_text.append("=============")
+        debug_log.append(f"sum2: {round(sum2,3)}")
+        debug_log.append(f"sum3: {round(sum3,3)}")
+        debug_log.append(f"ratio: {round(ratio,3)}")
+        debug_log.append("=============")
     
     debug_output = "\n".join(debug_text)
     
