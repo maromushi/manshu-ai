@@ -810,15 +810,34 @@ if st.button("計算"):
                 or Turn[i] >= max(Turn) - 0.03
             )
         
-            # ★ ここだけにする（重要）
+            # ===============================
+            # 外の壁チェック（ここに入れる）
+            # ===============================
+            if i >= 4:
+        
+                wall_block = (
+                    CPI[i] < CPI[i-1] - 0.02
+                    or Turn[i] < Turn[i-1] - 0.01
+                )
+        
+                weak_start = (
+                    Start[i] < Start[i-1] + 0.01
+                )
+        
+                if wall_block and weak_start:
+                    continue
+        
+            # ===============================
+            # 攻め判定
+            # ===============================
             if (
                 can_attack
-                or start_attack
+                or (start_attack and strong)
                 or (chance_flag and strong)
             ):
                 attackers.append(i)
         
-        # 重複削除（これも重要）
+        # 重複削除
         attackers = list(set(attackers))
                     
         # ===============================
