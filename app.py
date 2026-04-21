@@ -728,11 +728,20 @@ if st.button("計算"):
         ]
 
         AttackIndex = [
-            0.45*Start[i]+
-            0.30*Foot[i]+
-            0.25*Turn[i]
+            0.20*Start[i] +
+            0.45*Foot[i] +
+            0.25*Turn[i] +
+            0.10*Engine[i]
             for i in range(6)
         ]
+        
+        MotorScore = normalize(M)
+        
+        for i in range(6):
+            if MotorScore[i] > 0.60 and Foot[i] > 0.50:
+                AttackIndex[i] += 0.02
+                
+                
         
         for i in range(6):
 
@@ -755,8 +764,14 @@ if st.button("計算"):
             # ===============================
         
             if ExF[i] == 1:
-                # F → 攻め抑制
-                AttackIndex[i] *= 0.92
+
+                if Foot[i] > 0.50 and Turn[i] > 0.50:
+            
+                    AttackIndex[i] *= 1.02
+            
+                else:
+            
+                    AttackIndex[i] *= 0.90
         
             elif GoodST[i] == 1:
                 # 良ST → 攻め強化
@@ -783,30 +798,44 @@ if st.button("計算"):
         # ===============================
         
         attackers = []
-        
+
         for i in range(1,6):
         
-            # 前より攻められる条件
+            start_attack = (
+                Start[i] > Start[i-1] + 0.015
+            )
+        
             can_attack = (
-                Start[i] >= Start[i-1] - 0.02
+                AttackIndex[i] >= AttackIndex[i-1] - 0.02
                 and (
-                    AttackIndex[i] >= AttackIndex[i-1] - 0.03
-                    or Turn[i] >= Turn[i-1]
+                    Foot[i] >= Foot[i-1] - 0.03
+                    or Turn[i] >= Turn[i-1] - 0.02
                 )
             )
         
-            # 強さ条件
+            chance_flag = (
+                CPI[i] >= CPI[i-1] - 0.04
+                and (
+                    Foot[i] > Foot[i-1]
+                    or Engine[i] > Engine[i-1]
+                )
+            )
+        
             strong = (
                 AttackIndex[i] >= max(AttackIndex) - 0.05
                 or Turn[i] >= max(Turn) - 0.03
             )
         
-            if can_attack and strong:
+            # ★ ここだけにする（重要）
+            if (
+                can_attack
+                or start_attack
+                or (chance_flag and strong)
+            ):
                 attackers.append(i)
-                
-        # fallback（誰もいないとき）
-        if len(attackers) == 0:
-            attackers.append(max(range(6), key=lambda i: AttackIndex[i]))
+        
+        # 重複削除（これも重要）
+        attackers = list(set(attackers))
                     
         # ===============================
         # ★ DoubleAttackScore（最終版）
@@ -830,19 +859,69 @@ if st.button("計算"):
         
                 
         AttackSuccess = 0
-
+        AttackFail = 0
+        
         if len(attackers) > 0:
         
             atk = attackers[0]
         
-            if atk <= 3 and atk > 0:
+            if atk > 0:
         
+                # ===============================
+                # ① スタート勝ち（まくり）
+                # ===============================
+                st_win = (
+                    Start[atk] > Start[atk-1] + 0.015
+                )
+        
+                # ===============================
+                # ② ターン勝ち（差し）
+                # ===============================
+                turn_win = (
+                    Turn[atk] > Turn[atk-1] + 0.03
+                    and Start[atk] >= Start[atk-1] - 0.02
+                )
+        
+                # ===============================
+                # ③ 展開勝ち
+                # ===============================
+                flow_win = (
+                    Start[atk-1] < min(Start) + 0.01
+                    or StartCollapse == 1
+                )
+        
+                # ===============================
+                # ④ 攻めの強さ（追加部分）
+                # ===============================
+                power = AttackIndex[atk] - AttackIndex[atk-1]
+                
+                power_win = (
+                    power > 0.04
+                    and (
+                        Foot[atk] > Foot[atk-1]
+                        or Turn[atk] > Turn[atk-1]
+                    )
+                )
+                        
+                # ===============================
+                # ★ 成功判定
+                # ===============================
                 if (
-                    Start[atk] > Start[atk-1] + 0.01
-                    and Turn[atk] > Turn[atk-1] + 0.02
-                    and AttackIndex[atk] > AttackIndex[atk-1] + 0.03
+                    st_win
+                    or turn_win
+                    or flow_win
+                    or power_win
                 ):
                     AttackSuccess = 1
+        
+                # ===============================
+                # ★ 失敗判定
+                # ===============================
+                if (
+                    Start[atk] < Start[atk-1] - 0.02
+                    and Turn[atk] < Turn[atk-1] - 0.02
+                ):
+                    AttackFail = 1
                     
                     
         # ===============================
