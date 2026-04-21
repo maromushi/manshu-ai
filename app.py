@@ -524,12 +524,15 @@ if st.button("計算"):
         
             x = EST[i]
         
-            # ★ 展示Fはここで処理（最重要）
-            if ExhibitionF[i] == 1:
+            # ★ ここだけにする（唯一のF処理）
+            if BadST[i] == 1:
                 x = max(0.12, x + 0.06)
         
-            adj_exst.append(convert_exst(x))
+            x = convert_exst(x)
         
+            adj_exst.append(x)
+        
+
         # ===============================
         # ① 展示信頼度
         # ===============================
@@ -744,10 +747,9 @@ if st.button("計算"):
         
             # モーター（条件付きで強化）
             if MotorScore[i] > 0.60 and Foot[i] > 0.50:
-                AttackIndex[i] += 0.02
-        
-            elif MotorScore[i] > 0.55:
                 AttackIndex[i] += 0.03
+            elif MotorScore[i] > 0.55:
+                AttackIndex[i] += 0.02
         
             # 展示F
             if ExF[i] == 1:
@@ -772,9 +774,6 @@ if st.button("計算"):
                     max(CPI[2:5]) > CPI[5] - 0.03
                     and max(Turn[2:5]) >= Turn[5] - 0.02
                 )
-        
-                if wall_hit:
-                    wall_penalty[5] = 0.75
         
         # ===============================
         # ★ attackers決定（最終版）
@@ -971,6 +970,9 @@ if st.button("計算"):
         # ===============================
         # ★ 弱攻め判定（追加）
         # ===============================
+        
+        atk = attackers[0] if len(attackers) > 0 else 0
+        
         if atk > 0:
 
             st_cond = Start[atk] > Start[atk-1] + 0.005
@@ -4543,8 +4545,6 @@ if st.button("計算"):
             "ThirdAdj_pre"
         ]:
             debug_text.append(f"{name}: {val}")
-            
-    if a == 0:
     
         debug_text.append("=== CHECK ===")
         debug_text.append(f"Second: {[round(x,3) for x in SecondAdj_local]}")
