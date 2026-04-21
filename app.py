@@ -520,7 +520,17 @@ if st.button("計算"):
         # START（精度版）
         # ===============================
         
-        adj_exst = [convert_exst(x) for x in EST]
+        adj_exst = []
+
+        for i in range(6):
+        
+            x = EST[i]
+        
+            # ★ 展示Fはここで処理（最重要）
+            if ExhibitionF[i] == 1:
+                x = max(0.12, x + 0.06)
+        
+            adj_exst.append(convert_exst(x))
         
         # ===============================
         # ① 展示信頼度
@@ -587,10 +597,15 @@ if st.button("計算"):
             
         for i in range(6):
 
+            # ① ST補正（事実）
             if ExhibitionF[i] == 1:
-        
-                # STは信用しない（遅れる方向）
-                Start[i] *= 0.75
+                x = max(0.12, x + 0.06)
+            
+            # ② 攻め判断（意思）
+            if attack_f:
+                AttackIndex ↑
+            elif bad_f:
+                AttackIndex ↓
             
         
         # ===============================
