@@ -1629,7 +1629,9 @@ if st.button("計算"):
                 )
                 
                 outer_fast = (
+                    DAS < 0.12
                     and Start[i] > Start[i-1] + 0.01
+                    and i >= 4
                 )
                 
                 if front_break and outer_fast:
