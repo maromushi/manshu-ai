@@ -923,6 +923,49 @@ if st.button("計算"):
                 ):
                     AttackFail = 1
                     
+        AttackWeak = 0
+
+        if len(attackers) > 0:
+        
+            atk = attackers[0]
+        
+            if atk > 0:
+        
+                # ===============================
+                # ■ 攻めてるか
+                # ===============================
+                attack_try = (
+                    Start[atk] >= Start[atk-1] - 0.02
+                    or Turn[atk] >= Turn[atk-1] - 0.02
+                )
+        
+                # ===============================
+                # ■ 勝ち切れてない
+                # ===============================
+                not_win = (AttackSuccess == 0)
+        
+                # ===============================
+                # ■ 完全失敗ではない
+                # ===============================
+                not_fail = not (
+                    Start[atk] < Start[atk-1] - 0.03
+                    and Turn[atk] < Turn[atk-1] - 0.03
+                )
+        
+                # ===============================
+                # ★ 弱攻め成立
+                # ===============================
+                if attack_try and not_win and not_fail:
+                    AttackWeak = 1
+                    
+        # ★ 弱攻めフィルター（ここに入れる）
+        if AttackWeak == 1:
+        
+            if (
+                AttackIndex[atk] < AttackIndex[atk-1] - 0.07
+                and Foot[atk] < Foot[atk-1] - 0.05
+            ):
+                AttackWeak = 0
                     
         # ===============================
         # ★ モード初期制御（ここ重要）
