@@ -516,6 +516,15 @@ if st.button("計算"):
         ]
 
         Foot=RawFoot
+        
+        # 壁のあとに再計算（これを追加）
+        Foot = [
+            0.42*TurnScore[i]+
+            0.28*LapScore[i]+
+            0.25*StraightScore[i]+
+            0.08*Exhibit[i]
+            for i in range(6)
+        ]
 
         Active_local = [Active[i] for i in order]
 
@@ -653,18 +662,114 @@ if st.button("計算"):
         
         if Start[0] < max(Start[1:4]) - 0.03:
             StartCollapse = 1
+            
+            
         
+            
+        # --- 並び順作成（0-index）---
+        entry_order = [x-1 for x in ExEntry]
+        
+        # 逆引き（どの艇が何番目か）
+        pos = [0]*6
+        for i, boat in enumerate(order):
+            pos[boat] = i
+        
+        
+        # --- Class係数 ---
+        ClassCoef = []
+        for c in Class:
+            if c == "A1":
+                ClassCoef.append(1.15)
+            elif c == "A2":
+                ClassCoef.append(1.05)
+            elif c == "B1":
+                ClassCoef.append(0.95)
+            else:
+                ClassCoef.append(0.85)
+        
+        
+        # --- Fペナルティ ---
+        FPenalty = []
+        for f in Fcount:
+            if f >= 2:
+                FPenalty.append(0.75)
+            elif f == 1:
+                FPenalty.append(0.88)
+            else:
+                FPenalty.append(1.0)
+        
+        
+        # --- 壁強度（進入順ベース）---
+        Wall = [0]*6
+        
+        for i in range(6):
+            p = pos[i]
+        
+            if p == 0:
+                Wall[i] = 0
+            else:
+                w = 0
+                for k in range(p):
+                    j = entry_order[k]
+        
+                    base = (0.6*Start[j] + 0.4*Foot[j])
+                    base *= ClassCoef[j]
+                    base *= FPenalty[j]
+        
+                    w += base
+        
+                Wall[i] = w / p
+        
+        
+        # --- 壁制約 ---
+        for i in range(6):
+            if pos[i] >= 3:
+                penalty = 1 - (0.35 * Wall[i])
+        
+                Turn[i] *= penalty
+                Lap[i]  *= penalty
+        
+                Start[i] += 0.015 * Wall[i]
+        
+        
+        # --- 外上限 ---
+        for i in range(6):
+            if pos[i] >= 4:
+                Foot[i] = min(Foot[i], 0.55)
         
         # ===============================
         # ★ 壁崩れ検知
         # ===============================
-        WallBreak = 0
+        # --- 壁崩れ ---
+        WallBreak = [0]*6
         
-        if (
-            Start[1] > Start[0] + 0.03
-            or Start[1] > Start[2] + 0.01
-        ):
-            WallBreak = 1
+        for i in range(6):
+            p = pos[i]
+        
+            if p == 0:
+                continue
+        
+            score = 0
+        
+            for k in range(p):
+                j = entry_order[k]
+        
+                st_diff = Start[j] - Start[i]
+                f_factor = 1 - FPenalty[j]
+                foot_diff = Foot[i] - Foot[j]
+        
+                score += 0.5*st_diff + 0.3*f_factor + 0.2*foot_diff
+        
+            WallBreak[i] = max(0, score)
+        
+        
+        # --- 壁緩和 ---
+        for i in range(6):
+            if pos[i] >= 3:
+                relax = 1 + 0.5 * WallBreak[i]
+        
+                Turn[i] *= relax
+                Lap[i]  *= relax
         
         
         # ===============================
@@ -672,7 +777,7 @@ if st.button("計算"):
         # ===============================
         FrontBreak = (
             StartCollapse == 1
-            or WallBreak == 1
+            or max(WallBreak) > 0.25
             or (
                 max(Start[1:4]) - Start[0] > 0.05
             )
@@ -767,19 +872,7 @@ if st.button("計算"):
             # 良ST
             elif GoodST[i] == 1:
                 AttackIndex[i] *= 1.05
-        #外壁用
-                
-        wall_penalty = [1.0]*6
-
-        for i in range(4,6):
-        
-            if i == 5:
-        
-                wall_hit = (
-                    max(CPI[2:5]) > CPI[5] - 0.03
-                    and max(Turn[2:5]) >= Turn[5] - 0.02
-                )
-        
+    
         # ===============================
         # ★ attackers決定（最終版）
         # ===============================
@@ -1163,12 +1256,6 @@ if st.button("計算"):
         if StartCollapse == 1:
             AttackWeak = 1
             DAS = max(DAS, 0.08)
-        
-        # ===============================
-        # ★ 壁崩れ（補助）
-        # ===============================
-        if WallBreak == 1:
-            DAS += 0.02   # ←弱める
         
         # ===============================
         # ★ 疑似攻め（微調整）
@@ -1560,7 +1647,7 @@ if st.button("計算"):
                 outer_power = 0.4*CPI[i] + 0.3*Start[i] + 0.3*Foot[i]
             
                 if DAS < 0.08:
-                    val *= (0.75 + 0.2 * outer_power)
+                    val *= (0.80 + 0.2 * outer_power)
             
                 elif DAS < 0.12:
                     val *= (0.85 + 0.15 * outer_power)
@@ -1568,33 +1655,7 @@ if st.button("計算"):
                 else:
                     val *= (0.92 + 0.10 * outer_power)
                 
-                
-                # ===============================
-                # ★ 外パワー判定（軽量化）
-                # ===============================
-                outer_power = (
-                    0.4 * CPI[i]
-                    + 0.3 * Start[i]
-                    + 0.3 * Foot[i]
-                )
-                
-                if DAS < 0.08:
-                
-                    if outer_power < 0.52:
-                        val *= 0.75   # ← 0.55→緩和
-                    else:
-                        val *= 0.90
-                
-                elif DAS < 0.12:
-                
-                    if outer_power < 0.50:
-                        val *= 0.85
-                    else:
-                        val *= 0.95
-                
-                else:
-                    val *= 1.00   # ← 0.95→消さない
-                
+    
             # ===============================
             # ★ グレーゾーンだけ外を少し許可
                 # ===============================
@@ -1714,45 +1775,17 @@ if st.button("計算"):
         
             
         # ===============================
-        # ★ 壁判定（FS後に入れる）
-        # ===============================
-        CLASS_WALL = {
-            "A1": 1.10,
-            "A2": 1.05,
-            "B1": 0.95,
-            "B2": 0.90
-        }
-        
-        for i in range(1,6):
-        
-            prev = i - 1
-        
-            wall = (
-                0.5 * Turn[prev] +
-                0.3 * Skill[prev] +
-                0.2 * Engine[prev]
-            ) * CLASS_WALL[CLS[prev]]
-        
-            attack = (
-                0.4 * Start[i] +
-                0.3 * Turn[i] +
-                0.3 * Foot[i]
-            )
-        
-            if attack > wall + 0.02:
-                FS_mult[i] *= 1.08
-                FS_mult[prev] *= 0.94
-            
-        # ===============================
         # ★ 2 壁崩れ → 3優遇（ここに移動）
         # ===============================
-        if WallBreak == 1:
+        wb = max(WallBreak)
+
+        if wb > 0.25:
+            DAS += 0.02
             FS_mult[2] *= 1.12
             FS_mult[3] *= 1.05
-
-            
-        if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
-            FS_mult[WeakLeader] *= 1.10
+        
+            if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
+                FS_mult[WeakLeader] *= 1.10
             
          # ===============================
         # ★ 2 ゾーン別処理（整理版）
@@ -2329,7 +2362,7 @@ if st.button("計算"):
                 DAS > 0.12
                 or AttackSuccess == 1
                 or StartCollapse == 1
-                or WallBreak == 1
+                or max(WallBreak) > 0.25
                 or Start[1] < Start[0] - 0.02
                 or Start[2] < Start[1] - 0.02
                 or max(Start[1:4]) - Start[0] > 0.04
