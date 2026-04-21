@@ -4038,10 +4038,10 @@ if st.button("計算"):
     
         for r in results:
 
-        a = r[0]
-        b = r[1]
-        c = r[2]
-        p = r[3]
+            a = r[0]
+            b = r[1]
+            c = r[2]
+            p = r[3]
     
             head = a - 1
     
