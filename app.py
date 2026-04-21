@@ -4542,29 +4542,32 @@ if st.button("計算"):
     # ===============================
     # 重み（今回の核心）
     # ===============================
-    debug_log.append(("Weights", ""))
-    debug_log.append(("w_no", round(w_no,3)))
-    debug_log.append(("w_weak", round(w_weak,3)))
-    debug_log.append(("w_at", round(w_at,3)))
+    debug_log_ex.append(("Weights", ""))
+    debug_log_ex.append(("w_no", round(w_no,3)))
+    debug_log_ex.append(("w_weak", round(w_weak,3)))
+    debug_log_ex.append(("w_at", round(w_at,3)))
+    
     # ===============================
     # モード比較
     # ===============================
-    debug_log.append(("ModeScores", ""))
-    debug_log.append(("P1_no_top", round(max(P1_no),3)))
-    debug_log.append(("P1_weak_top", round(max(P1_w),3)))
-    debug_log.append(("P1_attack_top", round(max(P1_a),3)))
+    debug_log_ex.append(("ModeScores", ""))
+    debug_log_ex.append(("P1_no_top", round(max(P1_no),3)))
+    debug_log_ex.append(("P1_weak_top", round(max(P1_w),3)))
+    debug_log_ex.append(("P1_attack_top", round(max(P1_a),3)))
+    
     # ===============================
     # 最終P1
     # ===============================
-    debug_log.append(("P1", ""))
+    debug_log_ex.append(("P1", ""))
     for i,p in enumerate(P1):
-        debug_log.append((f"{i+1}", round(p,4)))
+        debug_log_ex.append((f"{i+1}", round(p,4)))
+    
     # ===============================
     # 内部ログ（必要最低限）
     # ===============================
-    debug_log.append(("CoreDebug", ""))
-
-    for name, val in debug_log_ex:
+    debug_log_ex.append(("CoreDebug", ""))
+    
+    for name, val in list(debug_log_ex):
         if name in [
             "AttackWeak",
             "AttackSuccess",
@@ -4573,7 +4576,7 @@ if st.button("計算"):
             "SecondAdj_pre",
             "ThirdAdj_pre"
         ]:
-            debug_log.append((name, val))
+            debug_log_ex.append((name, val))
         
     
     debug_output = "\n".join(
