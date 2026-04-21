@@ -3056,6 +3056,9 @@ if st.button("計算"):
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
             
+            if 'SecondAdj_local' in locals():
+                debug_text.append(f"Second: {[round(x,3) for x in SecondAdj_local]}")
+            
             # ===============================
             # ★ ① 攻め結果補正（←先に入れる）
             # ===============================
@@ -4572,7 +4575,7 @@ if st.button("計算"):
             debug_text.append(f"{name}: {val}")
     
         debug_text.append("=== CHECK ===")
-        debug_text.append(f"Second: {[round(x,3) for x in SecondAdj_local]}")
+        
         debug_text.append(f"Third : {[round(x,3) for x in ThirdAdj_local]}")
     
         sum2 = sum(SecondAdj_local)
