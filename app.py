@@ -3058,7 +3058,7 @@ if st.button("計算"):
             ThirdAdj_local  = ThirdAdj_final.copy()
             
             if 'SecondAdj_local' in locals():
-                debug_log.append(f"Second: {[round(x,3) for x in SecondAdj_local]}")
+                debug_log.append(("Second", [round(x,3) for x in SecondAdj_local]))
             
             # ===============================
             # ★ ① 攻め結果補正（←先に入れる）
@@ -4055,13 +4055,20 @@ if st.button("計算"):
     
     
     def detect_state(debug_log, DAS):
-        
+    
         MID = 0.09 
-
+    
         AttackWeak = 0
         AttackSuccess = 0
     
-        for name, val in debug_log:
+        for item in debug_log:
+    
+            # ★ これ追加
+            if not isinstance(item, tuple) or len(item) != 2:
+                continue
+    
+            name, val = item
+    
             if name == "AttackWeak":
                 AttackWeak = val
             if name == "AttackSuccess":
@@ -4071,8 +4078,8 @@ if st.button("計算"):
     
         return AttackWeak, AttackSuccess, NoAttackProb
     
-    AttackWeak, AttackSuccess, NoAttackProb = detect_state(debug_log_ex, DoubleAttackScore)
     
+    AttackWeak, AttackSuccess, NoAttackProb = detect_state(debug_log_ex, DoubleAttackScore)
     # =====================================
     # 合成
     # =====================================
@@ -4522,7 +4529,7 @@ if st.button("計算"):
     # デバッグテキスト
     debug_text = []
     
-    debug_log.append("===== DEBUG =====")
+    debug_text.append("===== DEBUG =====")
     
     # ===============================
     # 状態（最重要）
@@ -4576,8 +4583,6 @@ if st.button("計算"):
             debug_log.append(f"{name}: {val}")
     
         debug_log.append("=== CHECK ===")
-        
-        debug_log.append(f"Third : {[round(x,3) for x in ThirdAdj_local]}")
     
         sum2 = sum(SecondAdj_local)
         sum3 = sum(ThirdAdj_local)
@@ -4588,7 +4593,7 @@ if st.button("計算"):
         debug_log.append(f"ratio: {round(ratio,3)}")
         debug_log.append("=============")
     
-    debug_output = "\n".join(debug_text)
+    debug_output = "\n".join(str(x) for x in debug_log)
     
     
     
