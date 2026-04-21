@@ -4534,11 +4534,11 @@ if st.button("計算"):
     # ===============================
     # 状態（最重要）
     # ===============================
-    debug_log.append(("RaceState", ""))
+    debug_log_ex.append(("RaceState", ""))
 
-    debug_log.append(("NoAttackProb", round(NoAttackProb,4)))
-    debug_log.append(("DAS", round(DoubleAttackScore,4)))
-    debug_log.append(("ChaosScore", round(ChaosScore,4)))
+    debug_log_ex.append(("NoAttackProb", round(NoAttackProb,4)))
+    debug_log_ex.append(("DAS", round(DoubleAttackScore,4)))
+    debug_log_ex.append(("ChaosScore", round(ChaosScore,4)))
     # ===============================
     # 重み（今回の核心）
     # ===============================
@@ -4556,14 +4556,12 @@ if st.button("計算"):
     # ===============================
     # 最終P1
     # ===============================
-    debug_log.append("")
     debug_log.append(("P1", ""))
     for i,p in enumerate(P1):
         debug_log.append((f"{i+1}", round(p,4)))
     # ===============================
     # 内部ログ（必要最低限）
     # ===============================
-    debug_log.append("")
     debug_log.append(("CoreDebug", ""))
 
     for name, val in debug_log_ex:
@@ -4577,12 +4575,6 @@ if st.button("計算"):
         ]:
             debug_log.append((name, val))
         
-        debug_log.append("=== CHECK ===")
-
-        debug_log.append(f"sum2: {round(sum2,3)}")
-        debug_log.append(f"sum3: {round(sum3,3)}")
-        debug_log.append(f"ratio: {round(ratio,3)}")
-        debug_log.append("=============")
     
     debug_output = "\n".join(
         f"{k}: {v}" for (k,v) in debug_log
