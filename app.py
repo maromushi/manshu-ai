@@ -340,6 +340,7 @@ if st.button("計算"):
         DAS = 0.0
 
         debug_log = []
+        debug_text = []
         
         results = []
 
