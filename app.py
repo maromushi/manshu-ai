@@ -4196,13 +4196,13 @@ if st.button("計算"):
 
     # 各世界からそのまま入れる（重みだけかける）
     for a,b,c,p in res_no:
-        results.append((a,b,c,p * w_no, "no"))
+        results.append((a,b,c,p * w_no))
     
     for a,b,c,p in res_weak:
-        results.append((a,b,c,p * w_weak, "weak"))
+        results.append((a,b,c,p * w_weak))
     
     for a,b,c,p in res_attack:
-        results.append((a,b,c,p * w_at, "attack"))
+        results.append((a,b,c,p * w_at))
 
     results = sorted(results, key=lambda x: x[3], reverse=True)
 
@@ -4289,19 +4289,7 @@ if st.button("計算"):
     # ② 正規化（secも維持）
     total = sum(r[3] for r in results)
     
-    if total > 0:
-        new_results = []
     
-        for r in results:
-    
-            if len(r) == 5:
-                a,b,c,p,_ = r
-                new_results.append((a,b,c,p/total,))
-            else:
-                a,b,c,p = r
-                new_results.append((a,b,c,p/total))
-    
-        results = new_results
     
     
     # ④ ソート
