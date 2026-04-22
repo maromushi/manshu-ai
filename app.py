@@ -1596,22 +1596,22 @@ if st.button("計算"):
         # ★ FirstScoreフラグ箱
         # ===============================
         
-    def norm(arr):
-        mn = min(arr)
-        mx = max(arr)
-        return [(x - mn) / (mx - mn + 1e-6) for x in arr]
-        
+        def norm(arr):
+            mn = min(arr)
+            mx = max(arr)
+            return [(x - mn) / (mx - mn + 1e-6) for x in arr]
             
-            # ←ここ（forの前）
+                
+                # ←ここ（forの前）
         Start_n = norm(Start)
         Turn_n = norm(Turn)
         Foot_n = norm(Foot)
-            
-            
+                
+                
         FirstScore = []
-            
+                
         for i in range(6):
-            
+                
             val = (
                 0.45*Start_n[i]
                 +0.16*Skill[i]
