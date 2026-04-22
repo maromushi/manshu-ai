@@ -2526,6 +2526,7 @@ if st.button("計算"):
         
         
         SecondAdj = SecondScore.copy()
+        SecondAdj_base = SecondAdj.copy()
         # ★ デバッグ（ここが正解）
         debug_log.append(("SecondAdj_pre", [round(x,4) for x in SecondAdj]))
         debug_log.append(("=== SECOND ===", ""))
@@ -4033,6 +4034,26 @@ if st.button("計算"):
                     
                     
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
+            SecondAdj = SecondAdj_base.copy()
+            
+            #セカンド補正再開
+            
+            for i in range(6):
+                bonus = 0.0
+            
+                if i in attackers:
+                    if AttackSuccess == 1:
+                        bonus += 0.08
+                    elif DAS > 0.10:
+                        bonus += 0.04
+            
+                if i >= 4:
+                    bonus -= 0.10
+            
+                if StartCollapse == 1 and i >= 3:
+                    bonus += 0.05
+            
+                SecondAdj[i] *= (1 + bonus)
 
             second_scores = [SecondAdj_local[i] for i in remain1]
             total2 = sum(second_scores)
