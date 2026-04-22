@@ -3899,14 +3899,12 @@ if st.button("計算"):
     clean_results = []
 
     for r in results:
-        if len(r) >= 4:
-            clean_results.append((r[0], r[1], r[2], r[3]))
+        if isinstance(r, (list, tuple)) and len(r) >= 4:
+            a, b, c, p = r[:4]
+            clean_results.append((a,b,c,p))
     
-    results = [
-        (a,b,c,p)
-        for (a,b,c,p,*_) in results
-        if len((a,b,c,p,*_)) >= 4
-    ]
+    results = clean_results
+    
         
     
     
