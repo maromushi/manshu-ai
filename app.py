@@ -1628,7 +1628,7 @@ if st.button("計算"):
                         
             # ★ 4の突破
             if i == 3:
-                if Start[3] >= max(Start[1:3]) + 0.015:
+                if Start[3] >= max(Start[1:3]) + 0.02:
                     val *= 1.07
             
             # ★ 攻め勝ち
@@ -1639,7 +1639,7 @@ if st.button("計算"):
                     val *= 1.06
                         
             # ★ 崩れ展開
-            if StartCollapse == 1 and i >= 2:
+            if StartCollapse == 1 and i >= 3:
                 val *= 1.05
                 
             # ===============================
