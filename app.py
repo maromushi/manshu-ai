@@ -1596,29 +1596,29 @@ if st.button("計算"):
         # ★ FirstScoreフラグ箱
         # ===============================
         
-        def norm(arr):
-            mn = min(arr)
-            mx = max(arr)
-            return [(x - mn) / (mx - mn + 1e-6) for x in arr]
+    def norm(arr):
+        mn = min(arr)
+        mx = max(arr)
+        return [(x - mn) / (mx - mn + 1e-6) for x in arr]
         
             
             # ←ここ（forの前）
-            Start_n = norm(Start)
-            Turn_n = norm(Turn)
-            Foot_n = norm(Foot)
+        Start_n = norm(Start)
+        Turn_n = norm(Turn)
+        Foot_n = norm(Foot)
             
             
-            FirstScore = []
+        FirstScore = []
             
-            for i in range(6):
+        for i in range(6):
             
-                val = (
-                    0.45*Start_n[i]
-                    +0.16*Skill[i]
-                    +0.14*Foot_n[i]
-                    +0.18*Turn_n[i]
-                    +0.25*LaneWin[i]
-                )
+            val = (
+                0.45*Start_n[i]
+                +0.16*Skill[i]
+                +0.14*Foot_n[i]
+                +0.18*Turn_n[i]
+                +0.25*LaneWin[i]
+            )
                 
             # ===============================
             # ★ 外の事前カット（超重要）
@@ -1687,7 +1687,7 @@ if st.button("計算"):
                 else:
                     val *= 0.30   # ← 0.25→少し緩和
             
-            FirstScore.append(val)
+        FirstScore.append(val)
             
         # ===============================
         # ★ 2差し強化（修正）
