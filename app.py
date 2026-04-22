@@ -2075,14 +2075,17 @@ if st.button("計算"):
         # ===============================
         P1_pre = P1.copy()
         
-        print("\n=== FIRST ===")
+        debug_log.append(("=== FIRST ===", ""))
+
         for i in range(6):
-            print(i+1,
-                  "attack:", round(AttackIndex[i],4),
-                  "start:", round(Start[i],4),
-                  "P1:", round(P1_pre[i],4))
-                    
-        
+            debug_log.append((
+                f"{i+1}",
+                {
+                    "attack": round(AttackIndex[i],4),
+                    "start": round(Start[i],4),
+                    "P1": round(P1_pre[i],4)
+                }
+            ))
         
         top = sorted(P1_pre, reverse=True)
         
@@ -2513,12 +2516,17 @@ if st.button("計算"):
         SecondAdj = SecondScore.copy()
         # ★ デバッグ（ここが正解）
         debug_log.append(("SecondAdj_pre", [round(x,4) for x in SecondAdj]))
-        print("\n=== SECOND ===")
+        debug_log.append(("=== SECOND ===", ""))
+
         for i in range(6):
-            print(i+1,
-                  "attack:", round(AttackIndex[i],4),
-                  "start:", round(Start[i],4),
-                  "Second:", round(SecondAdj[i],4))
+            debug_log.append((
+                f"{i+1}",
+                {
+                    "attack": round(AttackIndex[i],4),
+                    "start": round(Start[i],4),
+                    "Second": round(SecondAdj[i],4)
+                }
+            ))
         # ===============================
         # ★ 2着モード制御（ここ重要）
         # ===============================
@@ -2549,12 +2557,17 @@ if st.button("計算"):
         ]
         
         debug_log.append(("ThirdAdj_pre", [round(x,4) for x in ThirdAdj]))
-        print("\n=== THIRD ===")
+        debug_log.append(("=== THIRD ===", ""))
+
         for i in range(6):
-            print(i+1,
-                  "attack:", round(AttackIndex[i],4),
-                  "start:", round(Start[i],4),
-                  "Third:", round(ThirdAdj[i],4))
+            debug_log.append((
+                f"{i+1}",
+                {
+                    "attack": round(AttackIndex[i],4),
+                    "start": round(Start[i],4),
+                    "Third": round(ThirdAdj[i],4)
+                }
+            ))
         # ===============================
         # ★ 3着モード制御
         # ===============================
