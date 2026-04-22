@@ -2293,7 +2293,7 @@ if st.button("計算"):
         # ===============================
         # ★ weakゾーンのイン2着制御（ここ追加）
         # ===============================
-        if RaceZone == "weak":
+        if RaceMode == "attack_weak":
         
             st_loss = Start[0] < max(Start[1:3]) - 0.02
             weak_inside = InsideSurvival[0] < 0.55
