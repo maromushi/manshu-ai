@@ -1603,7 +1603,7 @@ if st.button("計算"):
             
                 
                 # ←ここ（forの前）
-        Start_n = norm(Start)
+        Start_n = 0.45*Start[i]
         Turn_n = norm(Turn)
         Foot_n = norm(Foot)
                 
