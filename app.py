@@ -10,27 +10,23 @@ st.title("万舟AI")
 # NORMALIZE
 # =====================================
 
-def normalize(values):
-
+def normalize_minmax(values):
     valid = [v for v in values if v is not None]
-
-    if len(valid) == 0:
+    if not valid:
         return [0]*len(values)
 
     mn = min(valid)
     mx = max(valid)
 
-    # ★ 同値処理（最重要）
     if mx - mn < 1e-6:
-        if mx == 0:
-            return [0.0]*len(values)   # 全部0なら0
-        else:
-            return [0.5]*len(values)   # 同値だけど0じゃないなら中間
+        return [0.5]*len(values)
 
-    return [
-        ((v - mn) / (mx - mn)) if v is not None else 0
-        for v in values
-    ]
+    return [(v - mn)/(mx - mn) if v is not None else 0 for v in values]
+
+
+def normalize_sum(arr):
+    s = sum(arr) + 1e-6
+    return [x/s for x in arr]
 
 data = st.text_area("抽出データを貼り付け")
 
@@ -424,9 +420,9 @@ if st.button("計算"):
         # SKILL
         # ===============================
         
-        WinScore = normalize(WR)
-        PlaceScore = normalize(PR)
-
+        WinScore = normalize_minmax(WR)
+        PlaceScore = normalize_minmax(PR)
+        
         Skill = []
 
         for i in range(6):
@@ -444,7 +440,7 @@ if st.button("計算"):
         # ENGINE（修正版）
         # ===============================
         
-        MotorScore = normalize(M)
+        MotorScore = normalize_minmax(M)
         
         Engine = []
         
@@ -503,28 +499,44 @@ if st.button("計算"):
         # FOOT
         # ===============================
 
-        AvgTurn=sum(TT)/6
-        AvgLap=sum(LT)/6
-        AvgStraight=sum(STT)/6
-
-        TurnScore=normalize([AvgTurn-x for x in TT])
-        LapScore=normalize([AvgLap-x for x in LT])
-        StraightScore=normalize([AvgStraight-x for x in STT])
-
+        # Exhibit処理
+        ExhibitRaw = Exhibit[:]
+        min_val = min(ExhibitRaw)
+        if min_val < 0:
+            ExhibitRaw = [x - min_val + 1e-6 for x in ExhibitRaw]
+        ExhibitScore = normalize_sum(ExhibitRaw)
+        
+        # Foot合成
         RawFoot = [
             0.42*TurnScore[i]+
             0.28*LapScore[i]+
             0.25*StraightScore[i]+
-            0.08*Exhibit[i]
+            0.08*ExhibitScore[i]
             for i in range(6)
         ]
-
-        Foot=RawFoot
-
-        Active_local = [Active[i] for i in order]
         
-        Turn = TurnScore[:]
-        Lap  = LapScore[:]
+        # マイナス対策
+        min_val = min(RawFoot)
+        if min_val < 0:
+            RawFoot = [x - min_val + 1e-6 for x in RawFoot]
+        
+        Foot = normalize_sum(RawFoot)
+        
+        # TimeScore
+        TimeScore = [
+            0.4*TurnScore[i] +
+            0.3*LapScore[i] +
+            0.3*StraightScore[i]
+            for i in range(6)
+        ]
+        TimeScore = normalize_sum(TimeScore)
+        
+        # order適用（全部揃える）
+        Foot = [Foot[i] for i in order]
+        TimeScore = [TimeScore[i] for i in order]
+        Turn = [TurnScore[i] for i in order]
+        Lap  = [LapScore[i] for i in order]
+        Active_local = [Active[i] for i in order]
 
 
         # ===============================
@@ -1638,8 +1650,8 @@ if st.button("計算"):
             FirstScore_attack.append(val_at)
         
         
-        P1_no = normalize(FirstScore_no)
-        P1_at = normalize(FirstScore_attack)
+        P1_no = normalize_sum(FirstScore_no)
+        P1_at = normalize_sum(FirstScore_attack)
         
         w_no = 0.4
         w_at = 0.6
@@ -1648,6 +1660,9 @@ if st.button("計算"):
             w_no * P1_no[i] + w_at * P1_at[i]
             for i in range(6)
         ]
+        
+        # 最後にもう一回正規化
+        P1 = normalize_sum(P1)
                 
         # ===============================
         # ★ 強制2頭分岐
