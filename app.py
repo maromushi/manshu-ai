@@ -1915,7 +1915,12 @@ if st.button("計算"):
         
             
         #デバック
-        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
+        FirstScore = [
+            w_no * FirstScore_no[i] + w_at * FirstScore_attack[i]
+            for i in range(6)
+        ]
+        
+        FinalFirst = [FirstScore[i] for i in range(6)]
 
         
         debug_log.append(("FirstScore", [round(x,3) for x in FinalFirst]))
