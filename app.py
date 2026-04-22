@@ -2340,7 +2340,7 @@ if st.button("計算"):
         debug_log.append(("順位", sorted(range(6), key=lambda i: FinalFirst[i], reverse=True)))
         debug_log.append(("CPI", [round(x,3) for x in CPI]))
         debug_log.append(("Start", [round(x,3) for x in Start]))
-        start_rank = sorted(range(6), key=lambda i: Start[i], reverse=True)
+        start_rank = sorted(range(6), key=lambda i: (-Start[i], i))
         debug_log.append(("StartRank", start_rank))
         
         # ★ デバッグ追加（ここ！！）
