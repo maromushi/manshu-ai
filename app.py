@@ -4255,12 +4255,12 @@ if st.button("計算"):
             if a == 1:
                 new_head = SecondHead + 1
     
-                new = (new_head, b, c, p * 0.95, "sec")
+                new = (new_head, b, c, p * 0.95,)
                 SecondAxisResults.append(new)
     
             # セカンド頭強化
             elif a == SecondHead + 1:
-                SecondAxisResults.append((a,b,c,p * 1.10, "sec"))
+                SecondAxisResults.append((a,b,c,p * 1.10,))
     
     # 合成
     results += SecondAxisResults
