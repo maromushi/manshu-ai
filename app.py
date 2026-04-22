@@ -4277,7 +4277,7 @@ if st.button("計算"):
     
         if len(r) == 5:
             a,b,c,p,_ = r
-            new_results.append((a,b,c,p,"sec"))
+            new_results.append((a,b,c,p,))
     
         else:
             a,b,c,p = r
@@ -4296,7 +4296,7 @@ if st.button("計算"):
     
             if len(r) == 5:
                 a,b,c,p,_ = r
-                new_results.append((a,b,c,p/total,"sec"))
+                new_results.append((a,b,c,p/total,))
             else:
                 a,b,c,p = r
                 new_results.append((a,b,c,p/total))
