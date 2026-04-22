@@ -3913,6 +3913,16 @@ if st.button("計算"):
     
     
     # ④ ソート
+    # ←ここに追加
+    fixed = []
+    
+    for r in results:
+        if isinstance(r, (list, tuple)) and len(r) >= 4:
+            fixed.append((r[0], r[1], r[2], r[3]))
+    
+    results = fixed
+    
+    # ←そのまま既存
     results.sort(key=lambda x: x[3], reverse=True)
     # ===============================
     # ★ 外頭制限（先にやる）
@@ -3986,6 +3996,16 @@ if st.button("計算"):
     # ===============================
     # ★ ソート（先にやる）
     # ===============================
+    # ←ここに追加
+    fixed = []
+    
+    for r in results:
+        if isinstance(r, (list, tuple)) and len(r) >= 4:
+            fixed.append((r[0], r[1], r[2], r[3]))
+    
+    results = fixed
+    
+    # ←そのまま既存
     results.sort(key=lambda x: x[3], reverse=True)
     
     # ===============================
