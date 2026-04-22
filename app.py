@@ -2346,7 +2346,7 @@ if st.button("計算"):
         # ★ デバッグ追加（ここ！！）
         if len(debug_log) > 50:
             debug_log = debug_log[-50:]
-        debug_log.append(("P1_pre", [round(x,4) for x in FinalFirst]))
+        debug_log.append(("First_final", [round(x,4) for x in FinalFirst]))
         
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
@@ -3164,8 +3164,25 @@ if st.button("計算"):
             SecondAdj_local = SecondAdj_final.copy()
             ThirdAdj_local  = ThirdAdj_final.copy()
             
-            if 'SecondAdj_local' in locals():
-                debug_log.append(("Second", [round(x,3) for x in SecondAdj_local]))
+            debug_log.append(("Second_local_pre", [round(x,4) for x in SecondAdj_local]))
+            #セカンド補正再開
+            
+            for i in range(6):
+                bonus = 0.0
+            
+                if i in attackers:
+                    if AttackSuccess == 1:
+                        bonus += 0.08
+                    elif DAS > 0.10:
+                        bonus += 0.04
+            
+                if i >= 4:
+                    bonus -= 0.10
+            
+                if StartCollapse == 1 and i >= 3:
+                    bonus += 0.03
+            
+                SecondAdj_local[i] *= (1 + bonus)
             
             # ===============================
             # ★ ① 攻め結果補正（←先に入れる）
@@ -4034,26 +4051,8 @@ if st.button("計算"):
                     
                     
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
-            SecondAdj = SecondAdj_base.copy()
+                 
             
-            #セカンド補正再開
-            
-            for i in range(6):
-                bonus = 0.0
-            
-                if i in attackers:
-                    if AttackSuccess == 1:
-                        bonus += 0.08
-                    elif DAS > 0.10:
-                        bonus += 0.04
-            
-                if i >= 4:
-                    bonus -= 0.10
-            
-                if StartCollapse == 1 and i >= 3:
-                    bonus += 0.05
-            
-                SecondAdj[i] *= (1 + bonus)
 
             second_scores = [SecondAdj_local[i] for i in remain1]
             total2 = sum(second_scores)
