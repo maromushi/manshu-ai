@@ -3905,6 +3905,9 @@ if st.button("計算"):
     
     results = clean_results
     
+    if not results:
+        st.write("結果なし")
+        st.stop()
         
     
     
