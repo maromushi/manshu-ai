@@ -3915,10 +3915,22 @@ if st.button("計算"):
     # ④ ソート
     # ←ここに追加
     fixed = []
-    
+
     for r in results:
-        if isinstance(r, (list, tuple)) and len(r) >= 4:
-            fixed.append((r[0], r[1], r[2], r[3]))
+    
+        try:
+    
+            a, b, c, p = r[:4]
+    
+            fixed.append((int(a), int(b), int(c), float(p)))
+    
+        except:
+    
+            continue
+            
+    if not results:
+        st.write("results空")
+        st.stop()
     
     results = fixed
     
@@ -3998,13 +4010,19 @@ if st.button("計算"):
     # ===============================
     # ←ここに追加
     fixed = []
-    
+
     for r in results:
-        if isinstance(r, (list, tuple)) and len(r) >= 4:
-            fixed.append((r[0], r[1], r[2], r[3]))
+        try:
+            a, b, c, p = r[:4]
+            fixed.append((int(a), int(b), int(c), float(p)))
+        except:
+            continue
     
     results = fixed
     
+    if not results:
+        st.write("results空")
+        st.stop()
     # ←そのまま既存
     results.sort(key=lambda x: x[3], reverse=True)
     
