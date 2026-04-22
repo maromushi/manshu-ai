@@ -1638,10 +1638,6 @@ if st.button("計算"):
             FirstScore_attack.append(val_at)
         
         
-        def normalize(arr):
-            s = sum(arr) + 1e-6
-            return [x/s for x in arr]
-        
         P1_no = normalize(FirstScore_no)
         P1_at = normalize(FirstScore_attack)
         
