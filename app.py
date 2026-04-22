@@ -2080,16 +2080,11 @@ if st.button("計算"):
         for i in range(6):
             print(f"\n{i+1}号艇")
             
-            'BaseFirst' in locals():
-                print("base:", round(BaseFirst[i],4))
-            'AttackIndex' in locals():
-                print("attack:", round(AttackIndex[i],4))
-            'Start' in locals():
-                print("start:", round(Start[i],4))
-            'TurnTime' in locals():
-                print("turn:", round(TurnTime[i],4))
-            'StraightTime' in locals():
-                print("straight:", round(StraightTime[i],4))
+            print("base:", round(BaseFirst[i],4))
+            print("attack:", round(AttackIndex[i],4))
+            print("start:", round(Start[i],4))
+            print("turn:", round(TurnTime[i],4))
+            print("straight:", round(StraightTime[i],4))
             
             print("TOTAL:", round(P1_pre[i],4))
             
@@ -2529,16 +2524,11 @@ if st.button("計算"):
         for i in range(6):
             print(f"\n{i+1}号艇")
             
-            'BaseSecond' in locals():
-                print("base:", round(BaseSecond[i],4))
-            'AttackIndex' in locals():
-                print("attack:", round(AttackIndex[i],4))
-            'Start' in locals():
-                print("start:", round(Start[i],4))
-            'TurnTime' in locals():
-                print("turn:", round(TurnTime[i],4))
-            'StraightTime' in locals():
-                print("straight:", round(StraightTime[i],4))
+            print("base:", round(BaseSecond[i],4))
+            print("attack:", round(AttackIndex[i],4))
+            print("start:", round(Start[i],4))
+            print("turn:", round(TurnTime[i],4))
+            print("straight:", round(StraightTime[i],4))
             
             print("TOTAL:", round(SecondAdj[i],4))
         
