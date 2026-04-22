@@ -2293,7 +2293,7 @@ if st.button("計算"):
         # ===============================
         # ★ weakゾーンのイン2着制御（ここ追加）
         # ===============================
-        if RaceMode == "attack_weak":
+        if RaceZone == "weak":
         
             st_loss = Start[0] < max(Start[1:3]) - 0.02
             weak_inside = InsideSurvival[0] < 0.55
@@ -3896,11 +3896,23 @@ if st.button("計算"):
     # ② 正規化（secも維持）
     total = sum(r[3] for r in results)
     
+    clean_results = []
+
+    for r in results:
+        if len(r) >= 4:
+            clean_results.append((r[0], r[1], r[2], r[3]))
+    
+    results = [
+        (a,b,c,p)
+        for (a,b,c,p,*_) in results
+        if len((a,b,c,p,*_)) >= 4
+    ]
+        
     
     
     
     # ④ ソート
-    results.sort(key=lambda x:x[3], reverse=True)
+    results.sort(key=lambda x: x[3], reverse=True)
     # ===============================
     # ★ 外頭制限（先にやる）
     # ===============================
