@@ -1600,18 +1600,15 @@ if st.button("計算"):
             mn = min(arr)
             mx = max(arr)
             return [(x - mn) / (mx - mn + 1e-6) for x in arr]
-            
-                
-                # ←ここ（forの前）
-
+        
         Turn_n = norm(Turn)
         Foot_n = norm(Foot)
-                
-                
-        FirstScore = []
-                
+        
+        FirstScore_no = []
+        FirstScore_attack = []
+        
         for i in range(6):
-                
+        
             val = (
                 0.45*Start[i]
                 +0.16*Skill[i]
@@ -1619,454 +1616,39 @@ if st.button("計算"):
                 +0.18*Turn_n[i]
                 +0.25*LaneWin[i]
             )
-                
-            # ===============================
-            # ★ 外の事前カット（超重要）
-            # ===============================
-            if i >= 4 and not outer_ok[i]:
-                val *= 0.7
-                        
-            # ★ 4の突破
-            if i == 3:
-                if Start[3] >= max(Start[1:3]) + 0.02:
-                    val *= 1.07
-            
-            # ★ 攻め勝ち
-            if i in attackers:
-                if AttackSuccess == 1:
-                    val *= 1.10
-                elif DAS > 0.10:
-                    val *= 1.06
-                        
-            # ★ 崩れ展開
-            if StartCollapse == 1 and i >= 3:
-                val *= 1.05
-                
-            # ===============================
-            # ★ 外の突破判定（1着用）
-            # ===============================
-            if i >= 3:
-            
-                # --- 前が崩れてるか（進入ベースにすべきだが簡易版） ---
-                front_break = (
-                    Start[0] < Start[2] - 0.04
-                    or Start[1] < Start[2] - 0.03
-                )
-            
-                # --- 条件成立時のみ強化 ---
-                if front_break and outer_ok[i]:
-                    val *= 1.12
-                
-            # ===============================
-            # ★ 外の基本抑制（修正）
-            # ===============================
+        
+            # ノーアタック世界
+            val_no = val
             if i >= 4:
-
-                outer_power = 0.5*CPI[i] + 0.2*Start[i] + 0.3*Foot[i]
-            
-                if DAS < 0.08:
-                    val *= (0.80 + 0.2 * outer_power)
-            
-                elif DAS < 0.12:
-                    val *= (0.85 + 0.15 * outer_power)
-            
+                val_no *= 0.05
+        
+            # アタック世界
+            val_at = val
+            if i >= 4:
+                if outer_ok[i]:
+                    val_at *= 1.05
                 else:
-                    val *= (0.92 + 0.10 * outer_power)
+                    val_at *= 0.3
+        
+            FirstScore_no.append(val_no)
+            FirstScore_attack.append(val_at)
+        
+        
+        def normalize(arr):
+            s = sum(arr) + 1e-6
+            return [x/s for x in arr]
+        
+        P1_no = normalize(FirstScore_no)
+        P1_at = normalize(FirstScore_attack)
+        
+        w_no = 0.4
+        w_at = 0.6
+        
+        P1 = [
+            w_no * P1_no[i] + w_at * P1_at[i]
+            for i in range(6)
+        ]
                 
-    
-            # ===============================
-            # ★ グレーゾーンだけ外を少し許可
-                # ===============================
-            if (
-                NoAttackFlag == 0
-                and DAS < WEAK
-                and i >= 3
-            ):
-                if Start[i] >= max(Start[2:6]) - 0.01:
-                    val *= 0.60   # ← 0.70→0.60
-                else:
-                    val *= 0.30   # ← 0.25→少し緩和
-            
-            FirstScore.append(val)
-            
-        # ===============================
-        # ★ 2差し強化（修正）
-        # ===============================
-        if (
-            NoAttackFlag == 0
-            and CPI[1] >= CPI[0] - 0.03
-            and Start[1] <= Start[0] + 0.03
-        ):
-        
-            FirstScore[1] *= 1.12
-            FirstScore[0] *= 0.95
-        
-        elif (
-            NoAttackFlag == 0
-            and CPI[1] >= CPI[0] - 0.06
-            and Start[1] <= Start[0] + 0.05
-        ):
-        
-            FirstScore[1] *= 1.06
-            FirstScore[0] *= 0.97
-        
-        # ===============================
-        # ★ 6の強さ分類（最終版）
-        # ===============================
-        
-        Strong6 = (
-            CLS[5] == "A1"
-            and CPI[5] >= 0.53
-            and Foot[5] >= 0.52
-            and Start[5] >= Start[3] - 0.015
-        )
-        
-        SemiStrong6 = (
-            CLS[5] in ["A1","A2"]
-            and CPI[5] >= 0.50
-            and Foot[5] >= 0.50
-            and Start[5] >= Start[3] - 0.02
-            and DAS > MID
-        )
-        
-        Normal6 = (
-            CPI[5] >= 0.46
-            and Foot[5] >= 0.48
-        )
-        
-        Weak6 = not (Strong6 or SemiStrong6)
-        
-        FS_mult = [1.0]*6
-        
-        # ===============================
-        # ★ 0 レイヤー1（最重要・修正版）
-        # ===============================
-        
-        # ★ 展開ゾーン分類（追加）
-        if DAS < 0.01:
-
-            RaceZone = "no_attack"
-        
-        elif DAS < 0.06:
-        
-            RaceZone = "weak"
-        
-        else:
-        
-            RaceZone = "attack"
-            
-
-        # ===============================
-        # ★ 1 インST差（ここ）
-        # ===============================
-        diff = max(Start[1:4]) - Start[0]
-        
-        if diff > 0.06:
-            FS_mult[0] *= 0.50
-        elif diff > 0.04:
-            FS_mult[0] *= 0.70
-        elif diff > 0.02:
-            FS_mult[0] *= 0.80
-            
-            
-        
-            
-        # ===============================
-        # ★ 2 モード別 性格付け（最重要）
-        # ===============================
-        
-        if mode == "no":
-            FS_mult[0] *= 1.15
-            for i in range(4,6):
-                FS_mult[i] *= 0.60
-        
-        elif mode == "weak":
-            FS_mult[0] *= 0.85
-            FS_mult[2] *= 1.15
-            FS_mult[3] *= 1.10
-        
-        elif mode == "attack":
-            FS_mult[0] *= 0.75
-            FS_mult[3] *= 1.10
-            FS_mult[4] *= 1.10
-            FS_mult[5] *= 1.08
-        
-            
-        # ===============================
-        # ★ 2 壁崩れ → 3優遇（ここに移動）
-        # ===============================
-        wb = max(WallBreak)
-
-        if wb > 0.25:
-            DAS += 0.02
-            FS_mult[2] *= 1.12
-            FS_mult[3] *= 1.05
-        
-            if WeakLeader is not None and AttackWeak == 1 and AttackSuccess == 0:
-                FS_mult[WeakLeader] *= 1.10
-            
-         # ===============================
-        # ★ 2 ゾーン別処理（整理版）
-        # ===============================
-        
-        if RaceZone == "no_attack":
-        
-            weak_factor = min(1.0, DAS / WEAK)
-        
-            FS_mult[3] *= 0.60
-            FS_mult[4] *= 0.40
-            FS_mult[5] *= 0.30
-        
-            FS_mult[0] *= 1.12
-        
-            if CPI[1] >= CPI[0] - 0.08:
-                FS_mult[1] *= 1.15
-        
-            if Start[1] < Start[0] - 0.02:
-                FS_mult[1] *= 0.90
-            elif CPI[1] < CPI[0] - 0.08:
-                FS_mult[1] *= 0.92
-        
-            if CPI[2] < 0.45:
-                FS_mult[2] *= 0.92
-            elif Start[2] >= max(Start) - 0.005:
-                FS_mult[2] *= 0.90
-        
-            if CPI[3] < 0.40:
-                FS_mult[3] *= 0.80
-            elif Start[3] < Start[2] - 0.02:
-                FS_mult[3] *= 0.85
-        
-            FS_mult[4] *= 0.65
-            FS_mult[5] *= 0.50
-        
-        
-        elif RaceZone == "weak":
-        
-            FS_mult[0] *= 0.85
-            FS_mult[1] *= 0.95
-            FS_mult[2] *= 1.10
-            FS_mult[3] *= 1.08
-                
-        
-        else:  # attack
-        
-            if DAS > STRONG:
-
-                FS_mult[0] *= 0.85
-                FS_mult[1] *= 0.90
-                FS_mult[2] *= 1.10
-                FS_mult[3] *= 1.12
-        
-            elif DAS > MID:
-        
-                FS_mult[0] *= 0.88
-                FS_mult[1] *= 0.93
-                FS_mult[2] *= 1.05
-                FS_mult[3] *= 1.06
-        
-            else:
-        
-                FS_mult[0] *= 0.92
-                FS_mult[1] *= 0.97
-                    
-
-            
-        # ===============================
-        # ★ 2 展開補正
-        # ===============================
-        
-        if NoAttackFlag == 1:
-            FS_mult[0] *= 1.05
-        
-        # ===============================
-        # ★ 3 個別補正（統一）
-        # ===============================
-        for i in range(6):
-        
-            # F
-            if Fcount[i] == 1:
-                FS_mult[i] *= 0.92
-            elif Fcount[i] >= 2:
-                FS_mult[i] *= 0.85
-        
-            # 級別
-            if Class[i] == "A1":
-                FS_mult[i] *= 1.05
-        
-            # CPI
-            if CPI[i] > 0.28:
-                FS_mult[i] *= 1.05
-            
-        # イン性能
-        if Skill[0] >= 0.55 and Engine[0] >= 0.50:
-            FS_mult[0] *= 1.05
-        
-        # 3攻め
-        if AttackIndex[2] >= AttackIndex[1] and DAS > WEAK and NoAttackFlag == 0:
-            FS_mult[2] *= 1.08
-        
-        # 4性能
-        if NoAttackFlag == 0 and AttackSuccess == 1 and DAS > MID:
-            if Turn[3] >= max(Turn[1], Turn[2]) and Foot[3] >= max(Foot[1], Foot[2]):
-                FS_mult[3] *= 1.05
-        
-        # OuterSlip
-        if OuterSlip and DAS > MID:
-            for i in range(4,6):
-                if Start[i] >= max(Start) - 0.005:
-                    FS_mult[i] *= 1.10
-        
-        # 主役取りこぼし
-        if CLS[3] == "A1" and DAS > WEAK and NoAttackFlag == 0:
-            if Start[3] <= Start[2] + 0.01:
-                FS_mult[3] *= 0.90
-                
-        # ===============================
-        # ★ 3 能力逆転（軽量版）
-        # ===============================
-        
-        for i in range(1,6):
-        
-            gap = CPI[i] - CPI[0]
-        
-            if (
-                gap > 0.06
-                and Start[i] >= Start[0] - 0.02
-            ):
-                # 軽く上げる
-                FS_mult[i] *= 1.06
-        
-                # イン少し削る
-                FS_mult[0] *= 0.95
-        
-                # ターン優位なら少し追加
-                if Turn[i] > Turn[0]:
-                    FS_mult[i] *= 1.03
-        
-                # 足優位なら追加
-                if Foot[i] > Foot[0]:
-                    FS_mult[i] *= 1.02
-                        
-                
-        
-                  
-        # ===============================
-        # ★ 会場補正（完成版）
-        # ===============================
-        
-        if venue == "多摩川":
-        
-            # ■ 常時（弱）
-            FS_mult[0] *= 1.05
-        
-            # ■ 条件
-            if DAS < 0.05:
-                FS_mult[4] *= 0.92
-                FS_mult[5] *= 0.90
-        
-        
-        elif venue == "びわこ":
-        
-            # ■ 常時（ほぼ無し）
-        
-            # ■ 条件
-        
-            if DAS > WEAK and AttackSuccess == 1:
-                FS_mult[2] *= 1.05
-                FS_mult[3] *= 1.06
-        
-        
-        elif venue == "桐生":
-        
-            # ■ 常時（弱）
-            FS_mult[0] *= 0.97
-        
-            # ■ 条件
-            if DAS > WEAK and AttackSuccess == 1:
-                FS_mult[2] *= 1.07
-                FS_mult[3] *= 1.08
-        
-        
-        elif venue == "住之江":
-        
-            # ■ 常時（弱）
-            FS_mult[1] *= 0.95
-        
-            # ■ 条件（ここが本体）
-            if DAS > 0.04:
-                FS_mult[2] *= 1.04
-                FS_mult[3] *= 1.05
-        
-            if InsideSurvival[0] < 0.65:
-                FS_mult[0] *= 0.95
-        
-        
-        elif venue == "丸亀":
-        
-            # ■ 常時なし
-        
-            # ■ 条件（ヒモ荒れ）
-            if 0.04 < DAS < 0.10:
-                FS_mult[2] *= 1.05
-                FS_mult[3] *= 1.05
-                FS_mult[4] *= 1.03
-        
-        
-        elif venue == "蒲郡":
-        
-            # ■ 常時なし
-        
-            # ■ 条件（軽微）
-            if DAS > WEAK and AttackSuccess == 1:
-                FS_mult[2] *= 1.04
-                FS_mult[3] *= 1.05
-        
-        
-        elif venue == "三国":
-        
-            # ■ 常時（弱）
-            FS_mult[0] *= 1.04
-        
-            # ■ 条件（差し水面）
-            if DAS < 0.06:
-                FS_mult[1] *= 1.05
-                FS_mult[2] *= 1.05
-        
-            if DAS > 0.04:
-                FS_mult[3] *= 1.03
-        
-        
-        elif venue == "常滑":
-        
-            # ■ 常時（弱）
-            FS_mult[1] *= 0.96
-        
-            # ■ 条件
-            if DAS > 0.04:
-                FS_mult[2] *= 1.05
-        
-            if DAS < 0.06:
-                FS_mult[4] *= 0.95
-                FS_mult[5] *= 0.94
-
-        FS_tmp = [FirstScore[i]*FS_mult[i] for i in range(6)]
-        
-        TotalFirst = sum(FS_tmp) if sum(FS_tmp) > 0 else 1e-6
-
-        P1 = [FS_tmp[i]/TotalFirst for i in range(6)]
-        
-        # ===============================
-        # ★ 最終FirstScore
-        # ===============================
-        FinalFirst = [FirstScore[i]*FS_mult[i] for i in range(6)]
-        
-        total = sum(FinalFirst)
-        if total <= 0:
-            total = 1e-6
-        
-        P1 = [x / total for x in FinalFirst]
-        
         # ===============================
         # ★ 強制2頭分岐
         # ===============================
@@ -2104,9 +1686,9 @@ if st.button("計算"):
         # 上位拮抗なら上位3艇を少し持ち上げる
         if top[0] - top[2] < 0.07:
         
-            for val in top[:3]:
-                idx = P1_pre.index(val)
-                P1[idx] *= 1.08
+            for i in range(6):
+                if P1_pre[i] in top[:3]:
+                    P1[i] *= 1.08
         
         # 再正規化（絶対必要）
         total = sum(P1)
