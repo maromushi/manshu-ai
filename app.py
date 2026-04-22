@@ -331,6 +331,10 @@ if st.button("計算"):
     def run_attack(order):
         return run_core(order, mode="attack")
         
+    def normalize(arr):
+        s = sum(arr) + 1e-6
+        return [x/s for x in arr]
+            
     def run_core(order, mode):
         print("=== CHECK ExhibitionF ===")
         for i in range(6):
