@@ -417,71 +417,148 @@ if st.button("計算"):
                 else:
                     EST[i] = max(0.13, EST[i] * 0.5 + 0.09)
         # ===============================
-        # SKILL
+        # SKILL（修正版）
         # ===============================
         
-        WinScore = normalize_minmax(WR)
-        PlaceScore = normalize_minmax(PR)
+        # --- Win ---
+        WinRaw = WR[:]
+        min_val = min(WinRaw)
+        if min_val < 0:
+            WinRaw = [x - min_val + 1e-6 for x in WinRaw]
         
-        Skill = []
-
+        WinScore = normalize_sum(WinRaw)
+        
+        
+        # --- Place ---
+        PlaceRaw = PR[:]
+        min_val = min(PlaceRaw)
+        if min_val < 0:
+            PlaceRaw = [x - min_val + 1e-6 for x in PlaceRaw]
+        
+        PlaceScore = normalize_sum(PlaceRaw)
+        
+        
+        # --- 合成
+        SkillRaw = []
+        
         for i in range(6):
         
             base = 0.7*WinScore[i] + 0.3*PlaceScore[i]
         
-            # ★ 欠損だけ軽く落とす
+            # 欠損軽減
             if WR[i] == 0 and PR[i] == 0:
                 base *= 0.7
         
-            Skill.append(base)
+            SkillRaw.append(base)
         
+        
+        # --- マイナス対策
+        min_val = min(SkillRaw)
+        if min_val < 0:
+            SkillRaw = [x - min_val + 1e-6 for x in SkillRaw]
+        
+        
+        # ★ 最後これ必須
+        Skill = normalize_sum(SkillRaw)
+                
         
         # ===============================
         # ENGINE（修正版）
         # ===============================
         
-        MotorScore = normalize_minmax(M)
+        # --- Motor ---
+        MotorRaw = M[:]
         
-        Engine = []
+        min_val = min(MotorRaw)
+        if min_val < 0:
+            MotorRaw = [x - min_val + 1e-6 for x in MotorRaw]
         
-        Active_local = [Active[i] for i in order]
+        MotorScore = normalize_sum(MotorRaw)
+        
+        
+        # --- Skillも一応揃える（重要）
+        SkillRaw = Skill[:]
+        
+        min_val = min(SkillRaw)
+        if min_val < 0:
+            SkillRaw = [x - min_val + 1e-6 for x in SkillRaw]
+        
+        SkillScore = normalize_sum(SkillRaw)
+        
+        
+        # --- order揃え
+        Active_local = [1 if boats[i] != -1 else 0 for i in range(6)]
+        
+        
+        # --- Engine合成
+        EngineRaw = []
         
         for i in range(6):
         
             if Active_local[i] == 0:
-                Engine.append(0)
+                EngineRaw.append(0)
                 continue
         
-            val = 0.6 * MotorScore[i] + 0.4 * Skill[i]
+            val = 0.6 * MotorScore[i] + 0.4 * SkillScore[i]
         
-            # ★ モーター弱すぎは削る（重要）
-            if MotorScore[i] < 0.35:
+            # 弱モーター補正
+            if MotorScore[i] < 0.10:
                 val *= 0.85
         
-            Engine.append(val)
-           
+            EngineRaw.append(val)
+        
+        
+        # --- マイナス対策
+        min_val = min(EngineRaw)
+        if min_val < 0:
+            EngineRaw = [x - min_val + 1e-6 for x in EngineRaw]
+        
+        
+        # ★ 最後これ必須
+        Engine = normalize_sum(EngineRaw)
 
         # ===============================
         # EXHIBIT
         # ===============================
         
+        # --- Time（展示タイム） ---
         AvgEx = sum(ET)/6
+        TimeRaw = [AvgEx - x for x in ET]
         
-        TimeScore = normalize([AvgEx-x for x in ET])
-        ExSTScore = normalize([
-            0.25 - x if x > 0 else 0.0
-            for x in EST
-        ])
+        min_val = min(TimeRaw)
+        if min_val < 0:
+            TimeRaw = [x - min_val + 1e-6 for x in TimeRaw]
         
+        TimeScore = normalize_sum(TimeRaw)
+        
+        
+        # --- ExST（展示ST） ---
+        # 速いほど良い＝小さいほど良い → 逆転＋クランプ
+        ExSTRaw = [max(0.0, 0.25 - x) for x in EST]
+        
+        min_val = min(ExSTRaw)
+        if min_val < 0:
+            ExSTRaw = [x - min_val + 1e-6 for x in ExSTRaw]
+        
+        ExSTScore = normalize_sum(ExSTRaw)
+        
+        
+        # --- Exhibit合成 ---
         ExhibitRaw = [
             0.80*TimeScore[i] + 0.20*ExSTScore[i]
             for i in range(6)
         ]
         
-        Exhibit = []
+        # マイナス対策
+        min_val = min(ExhibitRaw)
+        if min_val < 0:
+            ExhibitRaw = [x - min_val + 1e-6 for x in ExhibitRaw]
+        
+        
+        # --- クラス補正 ---
+        ExhibitAdj = []
         
         for i in range(6):
-        
             cls = CLS[i]
         
             if cls == "A1":
@@ -493,8 +570,15 @@ if st.button("計算"):
             else:
                 factor = 0.65
         
-            Exhibit.append(ExhibitRaw[i]*factor)
-    
+            ExhibitAdj.append(ExhibitRaw[i] * factor)
+        
+        
+        # ★ 最後これ必須
+        min_val = min(ExhibitAdj)
+        if min_val < 0:
+            ExhibitAdj = [x - min_val + 1e-6 for x in ExhibitAdj]
+        
+        Exhibit = normalize_sum(ExhibitAdj)
         # ===============================
         # FOOT
         # ===============================
