@@ -2185,12 +2185,19 @@ if st.button("計算"):
             if P1[i] >= top * 0.7:
                 P1[i] += 0.03   # ←ここがミソ（倍率じゃなく加算）
         
-        # ★ イン過剰抑制（追加）
-        if P1[0] > 0.40 and NoAttackFlag == 0:
-            P1[0] *= 0.85
-            
-        if P1[0] > 0.35 and DAS > 0.08:
-            P1[0] *= 0.90
+        # ★ イン過剰抑制（統合版）
+        if NoAttackFlag == 0:
+        
+            if (
+                P1[0] > 0.35
+                and DAS > 0.08
+                and InsideSurvival[0] < 0.65
+            ):
+                factor = 0.92 if InsideSurvival[0] > 0.55 else 0.88
+                P1[0] *= factor
+        
+            elif P1[0] > 0.40:
+                P1[0] *= 0.90
         
         # ③ 最後に1回だけ正規化
         P1 = normalize_sum(P1)
