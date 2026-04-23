@@ -1416,6 +1416,15 @@ if st.button("計算"):
         
         if AttackSuccess == 0:
             DAS *= 0.70
+            
+        AttackFlag = 1 if DAS > 0.08 else 0
+
+            if DAS <= 0.08:
+                AttackLevel = 0
+            elif DAS <= 0.13:
+                AttackLevel = 1
+            else:
+                AttackLevel = 2
         
         # ===============================
         # ★ 崩れは攻め扱い（主トリガー）
@@ -1803,12 +1812,12 @@ if st.button("計算"):
         
         # ★ここに入れる
         if NoAttackFlag == 0 and DAS > 0.08:
-        
-            reduction = 0.90 - 0.25 * (DAS - 0.08)
-            reduction = max(0.80, reduction)
+
+            reduction = 0.95 - 0.15 * (DAS - 0.08)   # ←弱くする
+            reduction = max(0.88, reduction)         # ←底上げ
         
             if InsideSurvival[0] > 0.55:
-                reduction += 0.03
+                reduction += 0.02   # ←少し弱く
         
             P1[0] *= reduction
         
@@ -1922,7 +1931,7 @@ if st.button("計算"):
         # ★ 無風時は展開を完全停止（これが本質）
         # ===============================
         if NoAttackFlag == 1:
-            AttackBoost = [1.0]*6
+            AttackBoost = [1.0 + 0.05*(Start[i] - avg(Start)) for i in range(6)]
 
         # ===============================
         # 展開モデル
@@ -2144,13 +2153,6 @@ if st.button("計算"):
 
             )
         
-            if i >= 4:
-
-                if DAS < 0.09:
-                    P1[i] *= 0.20   # ←強化
-            
-                if DAS < 0.08:
-                    P1[i] *= 0.10   # ←さらに強化
 
         # ===============================
         # トップ集中ブースト
@@ -2191,33 +2193,13 @@ if st.button("計算"):
         
         # ① 強制（2頭に寄せる）
         for i in force_heads:
-            P1[i] += 0.02   # ←効かなければ1.4〜1.5までOK
+            P1[i] += 0.01 #効かなければ1.4〜1.5までOK
         
         # ② 差分分散（これが効く）
         top = max(P1)
         for i in range(6):
             if P1[i] >= top * 0.7:
-                P1[i] += 0.03   # ←ここがミソ（倍率じゃなく加算）
-        
-        # ★ イン過剰抑制（統合版）
-        if NoAttackFlag == 0:
-
-            if (
-                P1[0] > 0.35
-                and DAS > 0.08
-                and InsideSurvival[0] < 0.65
-            ):
-                reduction = 0.90 - 0.25 * (DAS - 0.08)
-                reduction = max(0.80, reduction)
-        
-                # 内残り補正（生存率で少し戻す）
-                if InsideSurvival[0] > 0.55:
-                    reduction += 0.03
-        
-                P1[0] *= reduction
-        
-            elif P1[0] > 0.40:
-                P1[0] *= 0.90
+                P1[i] *= 1.05   
         
         # ③ 最後に1回だけ正規化
         P1 = normalize_sum(P1)
@@ -3837,7 +3819,13 @@ if st.button("計算"):
                     
             remain1 = [i for i in range(6) if i != a and Active[i]==1]
                  
+            # ★ 最後に1回だけ入れる（ここ超重要）
+            avg = sum(SecondAdj_local) / 6
             
+            SecondAdj_local = [
+                0.7 * x + 0.3 * avg
+                for x in SecondAdj_local
+            ]
 
             second_scores = [SecondAdj_local[i] for i in remain1]
             
