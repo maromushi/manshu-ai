@@ -2238,18 +2238,6 @@ if st.button("計算"):
             and Turn[0] < Turn[2]   # ←これ追加すると神精度
         ):
             P1[0] *= 0.88
-            
-        # ===============================
-        # ★ 互角イン崩し
-        # ===============================
-        if AttackSuccess == 1 and DAS > 0.12:
-        
-            equal_start = abs(Start[0] - Start[2]) < 0.01
-            equal_power = abs(CPI[0] - CPI[2]) < 0.04
-        
-            if equal_start and equal_power:
-                P1[0] *= 0.82
-                P1[2] *= 1.12
         
         
         # ===============================
@@ -2262,6 +2250,33 @@ if st.button("計算"):
                 and max(CPI[1:4]) >= CPI[0] - 0.03
             ):
                 P1[0] *= 0.80
+                
+        # ===============================
+        # ★ 展開判定軸（新設）
+        # ===============================
+        EqualFlag = False
+        
+        if AttackSuccess == 1 and DAS > 0.12:
+        
+            equal_start = abs(Start[0] - Start[2]) < 0.012
+        
+            equal_power = (
+                CPI[2] >= CPI[0] - 0.05
+            )
+        
+            center_pressure = (
+                max(Start[1:4]) >= Start[0] - 0.005
+            )
+        
+            if equal_start and equal_power and center_pressure:
+                EqualFlag = True
+                
+        # ===============================
+        # ★ Equal補正（ここで使う）
+        # ===============================
+        if EqualFlag:
+            P1[0] *= 0.80
+            P1[2] *= 1.15
         
         
         # ===============================
@@ -2284,32 +2299,7 @@ if st.button("計算"):
         
         # ③ normalize
         P1 = normalize_sum(P1)
-                
-        # ===============================
-        # ★ 1位保護（条件付き）
-        # ===============================
-        top_idx = P1.index(max(P1))
         
-        if (
-            top_idx == 0
-            and NoAttackFlag == 1
-            and InsideSurvival[0] >= 0.55
-            and Start[1] >= Start[0] - 0.02
-        ):
-        
-            if P1[1] > P1[0] * 0.90:
-                P1[1] *= 0.85
-        
-            if P1[2] > P1[0] * 0.95:
-                P1[2] *= 0.90
-                
-                
-            for i in force_heads:
-                P1[i] *= 1.4
-            # 再正規化
-            total = sum(P1)
-            P1 = [p / total for p in P1]
-                
 
         LaneBonus=[0.08,0.075,0.07,0.065,0.06,0.055]
 
