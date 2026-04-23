@@ -1840,20 +1840,41 @@ if st.button("計算"):
             for i in range(6)
         ]
         
-        # ★ここに入れる
+        # =========================
+        # ★ 中DAS補正（イン弱体）
+        # =========================
         if NoAttackFlag == 0 and DAS > 0.08:
-
-            reduction = 0.95 - 0.15 * (DAS - 0.08)   # ←弱くする
-            reduction = max(0.88, reduction)         # ←底上げ
+        
+            reduction = 0.95 - 0.15 * (DAS - 0.08)
+            reduction = max(0.88, reduction)
         
             if InsideSurvival[0] > 0.55:
-                reduction += 0.02   # ←少し弱く
+                reduction += 0.02
         
             P1[0] *= reduction
         
-        # 最後に正規化（これ必須）
+        # =========================
+        # ★ DAS強補正（まとめて）
+        # =========================
+        if DAS > 0.13:
+        
+            # イン減衰
+            reduction = 0.95 - 0.1 * (DAS - 0.13)
+            reduction = max(0.90, reduction)
+            P1[0] *= reduction
+        
+            # 差しライン
+            for i in [1, 2]:
+                cond = (
+                    Start[i] <= Start[0] + 0.02
+                    and Turn[i] <= Turn[0] + 0.05
+                )
+                if cond:
+                    P1[i] *= 1.06
+        
+        # ★ 最後に1回だけ正規化
         P1 = normalize_sum(P1)
-                
+        
         # ===============================
         # ★ 強制2頭分岐
         # ===============================
@@ -1864,11 +1885,12 @@ if st.button("計算"):
         
         force_heads = [main_head]
         
-        # 差がそこまで大きくないなら2頭採用
-        if P1[second_head] > P1[main_head] * 0.7:
-            force_heads.append(second_head)
-
+        threshold = 0.7
+        if DAS > 0.13:
+            threshold = 0.5
         
+        if P1[second_head] > P1[main_head] * threshold:
+            force_heads.append(second_head)
         # ===============================
         # ★ P1圧縮ガード（完成版）
         # ===============================
