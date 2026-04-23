@@ -1911,7 +1911,7 @@ if st.button("計算"):
         top = sorted(P1_pre, reverse=True)
         
         # 上位拮抗なら上位3艇を少し持ち上げる
-        if top[0] - top[1] < 0.12:
+        if top[0] - top[1] < 0.08:
         
             for i in range(6):
                 if P1_pre[i] in top[:3]:
@@ -2213,10 +2213,10 @@ if st.button("計算"):
 
         for i in range(6):
             if P1[i] == top:
-                if ChaosScore < 0.45:
-                    P1[i] *= 1.05   # ←弱める
+                if i == 0 and DAS > 0.08:
+                    pass
                 else:
-                    P1[i] *= 1.02   # ←ほぼ消す
+                    P1[i] *= 1.05 # ←ほぼ消す
             
         # ===== 内繰り上がり補正（ここに入れる）=====
         inner_mode = (
@@ -2245,13 +2245,15 @@ if st.button("計算"):
         
         # ① 強制（2頭に寄せる）
         for i in force_heads:
-            P1[i] += 0.01 #効かなければ1.4〜1.5までOK
+            if i != 0:
+                P1[i] += 0.01 #効かなければ1.4〜1.5までOK
         
         # ② 差分分散（これが効く）
         top = max(P1)
         for i in range(6):
             if P1[i] >= top * 0.7:
-                P1[i] *= 1.05   
+                if i != 0 or NoAttackFlag == 1:
+                    P1[i] *= 1.05   
         
         # ③ 最後に1回だけ正規化
         P1 = normalize_sum(P1)
@@ -2950,8 +2952,8 @@ if st.button("計算"):
         # ★ イン中間残り（移動版）
         # ===============================
         if (
-            FinalFirst[0] < max(FinalFirst) * 0.95
-            and FirstScore[0] > max(FirstScore) * 0.75
+            P1[0] < max(P1) * 0.95
+            and P1[0] > max(P1) * 0.75
             and InsideSurvival[0] >= 0.50
         ):
             SecondAdj[0] *= 1.10
