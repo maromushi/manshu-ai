@@ -2190,14 +2190,20 @@ if st.button("計算"):
         
         # ★ イン過剰抑制（統合版）
         if NoAttackFlag == 0:
-        
+
             if (
                 P1[0] > 0.35
                 and DAS > 0.08
                 and InsideSurvival[0] < 0.65
             ):
-                factor = 0.92 if InsideSurvival[0] > 0.55 else 0.88
-                P1[0] *= factor
+                reduction = 0.90 - 0.25 * (DAS - 0.08)
+                reduction = max(0.80, reduction)
+        
+                # 内残り補正（生存率で少し戻す）
+                if InsideSurvival[0] > 0.55:
+                    reduction += 0.03
+        
+                P1[0] *= reduction
         
             elif P1[0] > 0.40:
                 P1[0] *= 0.90
