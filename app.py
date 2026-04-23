@@ -1763,11 +1763,11 @@ if st.button("計算"):
         for i in range(6):
         
             val = (
-                0.45*Start[i]
+                0.32*Start[i]
                 +0.16*Skill[i]
                 +0.14*Foot_n[i]
                 +0.18*Turn_n[i]
-                +0.25*LaneWin[i]
+                +0.12*LaneWin[i]
             )
         
             # ノーアタック世界
@@ -1836,7 +1836,7 @@ if st.button("計算"):
         top = sorted(P1_pre, reverse=True)
         
         # 上位拮抗なら上位3艇を少し持ち上げる
-        if top[0] - top[2] < 0.07:
+        if top[0] - top[1] < 0.12:
         
             for i in range(6):
                 if P1_pre[i] in top[:3]:
@@ -2177,13 +2177,17 @@ if st.button("計算"):
         
         # ① 強制（2頭に寄せる）
         for i in force_heads:
-            P1[i] *= 1.35   # ←効かなければ1.4〜1.5までOK
+            P1[i] += 0.02   # ←効かなければ1.4〜1.5までOK
         
         # ② 差分分散（これが効く）
         top = max(P1)
         for i in range(6):
             if P1[i] >= top * 0.7:
                 P1[i] += 0.03   # ←ここがミソ（倍率じゃなく加算）
+        
+        # ★ イン過剰抑制（追加）
+        if P1[0] > 0.40 and NoAttackFlag == 0:
+            P1[0] *= 0.85
         
         # ③ 最後に1回だけ正規化
         P1 = normalize_sum(P1)
