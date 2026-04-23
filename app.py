@@ -1419,12 +1419,12 @@ if st.button("計算"):
             
         AttackFlag = 1 if DAS > 0.08 else 0
 
-            if DAS <= 0.08:
-                AttackLevel = 0
-            elif DAS <= 0.13:
-                AttackLevel = 1
-            else:
-                AttackLevel = 2
+        if DAS <= 0.08:
+            AttackLevel = 0
+        elif DAS <= 0.13:
+            AttackLevel = 1
+        else:
+            AttackLevel = 2
         
         # ===============================
         # ★ 崩れは攻め扱い（主トリガー）
