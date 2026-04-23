@@ -579,6 +579,58 @@ if st.button("計算"):
             ExhibitAdj = [x - min_val + 1e-6 for x in ExhibitAdj]
         
         Exhibit = normalize_sum(ExhibitAdj)
+        
+        # ===============================
+        # TIME SCORE（安定＋展開ハイブリッド）
+        # ===============================
+        
+        # Turn
+        avg_tt = sum(TT)/6
+        max_tt = max(TT)
+        
+        TurnRaw = [
+            0.7*(avg_tt - x) + 0.3*(max_tt - x)
+            for x in TT
+        ]
+        
+        min_val = min(TurnRaw)
+        if min_val < 0:
+            TurnRaw = [x - min_val + 1e-6 for x in TurnRaw]
+        
+        TurnScore = normalize_sum(TurnRaw)
+        
+        
+        # Lap
+        avg_lt = sum(LT)/6
+        max_lt = max(LT)
+        
+        LapRaw = [
+            0.7*(avg_lt - x) + 0.3*(max_lt - x)
+            for x in LT
+        ]
+        
+        min_val = min(LapRaw)
+        if min_val < 0:
+            LapRaw = [x - min_val + 1e-6 for x in LapRaw]
+        
+        LapScore = normalize_sum(LapRaw)
+        
+        
+        # Straight
+        avg_st = sum(STT)/6
+        max_st = max(STT)
+        
+        StraightRaw = [
+            0.7*(avg_st - x) + 0.3*(max_st - x)
+            for x in STT
+        ]
+        
+        min_val = min(StraightRaw)
+        if min_val < 0:
+            StraightRaw = [x - min_val + 1e-6 for x in StraightRaw]
+        
+        StraightScore = normalize_sum(StraightRaw)
+        
         # ===============================
         # FOOT
         # ===============================
