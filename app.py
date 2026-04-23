@@ -1796,6 +1796,18 @@ if st.button("計算"):
         w_no = 0.4
         w_at = 0.6
         
+        if NoAttackFlag == 0 and DAS > 0.08:
+
+            reduction = 0.90 - 0.25 * (DAS - 0.08)
+            reduction = max(0.80, reduction)
+        
+            if InsideSurvival[0] > 0.55:
+                reduction += 0.03
+        
+            P1_no[0] *= reduction
+            P1_weak[0] *= reduction
+            P1_attack[0] *= reduction
+        
         P1 = [
             w_no * P1_no[i] + w_at * P1_at[i]
             for i in range(6)
