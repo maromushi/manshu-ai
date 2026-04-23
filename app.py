@@ -2188,6 +2188,9 @@ if st.button("計算"):
         # ★ イン過剰抑制（追加）
         if P1[0] > 0.40 and NoAttackFlag == 0:
             P1[0] *= 0.85
+            
+        if P1[0] > 0.35 and DAS > 0.08:
+            P1[0] *= 0.90
         
         # ③ 最後に1回だけ正規化
         P1 = normalize_sum(P1)
