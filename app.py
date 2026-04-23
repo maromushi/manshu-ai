@@ -1689,10 +1689,10 @@ if st.button("計算"):
         # ===============================
         # 展開（ここ重要）
         # ===============================
-        if DAS > MID:
+        if AttackLevel == 2:
             race_score += 1.2
         
-        elif DAS > WEAK:
+        elif AttackLevel == 1:
             race_score += 0.6
         
         
@@ -1779,7 +1779,7 @@ if st.button("計算"):
                 +0.12*LaneWin[i]
             )
             
-            if DAS > 0.08:
+            if AttackFlag:
                 boost = max(0, AttackIndex[i] - AttackIndex[1])  # ←2基準
                 val *= (1 + 0.10 * boost)
             # ノーアタック世界
@@ -2511,7 +2511,7 @@ if st.button("計算"):
                 else:
                     SecondAdj[0] *= 0.88
         
-            elif DAS > MID:
+            elif AttackLevel == 2:
                 if st_loss and weak_inside:
                     SecondAdj[0] *= 0.84
                 elif st_loss:
@@ -2537,7 +2537,7 @@ if st.button("計算"):
                 else:
                     ThirdAdj[0] *= 0.92
         
-            elif DAS > MID:
+            elif AttackLevel == 2:
                 if st_loss and weak_inside:
                     ThirdAdj[0] *= 0.90
                 elif st_loss:
@@ -2580,7 +2580,7 @@ if st.button("計算"):
                         else:  # 6
                             SecondAdj[i] *= 1.07
                     
-                    elif DAS > MID:
+                    elif AttackLevel == 2:
                     
                         if i == 4:
                             SecondAdj[i] *= 1.03
@@ -2740,7 +2740,7 @@ if st.button("計算"):
             SecondAdj[1] *= 1.04
         
         elif venue == "住之江":
-            if DAS > MID:
+            if AttackLevel == 2:
                 SecondAdj[3] *= 1.08
                 SecondAdj[4] *= 1.06
                 
