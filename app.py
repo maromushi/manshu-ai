@@ -1910,13 +1910,6 @@ if st.button("計算"):
         
         top = sorted(P1_pre, reverse=True)
         
-        # 上位拮抗なら上位3艇を少し持ち上げる
-        if top[0] - top[1] < 0.08:
-        
-            for i in range(6):
-                if P1_pre[i] in top[:3]:
-                    P1[i] *= 1.08
-        
         
         SecondCore = None
 
@@ -2176,7 +2169,7 @@ if st.button("計算"):
                     P1[i] *= 0.55
         
         # ★ 無風時：イン優先ロック（修正版）
-        if NoAttackFlag == 1:
+        if NoAttackFlag == 1 and DAS < 0.05:
         
             if InsideSurvival[0] >= 0.55:
         
@@ -2205,18 +2198,6 @@ if st.button("計算"):
 
             )
         
-
-        # ===============================
-        # トップ集中ブースト
-        # ===============================
-        top = max(P1)
-
-        for i in range(6):
-            if P1[i] == top:
-                if i == 0 and DAS > 0.08:
-                    pass
-                else:
-                    P1[i] *= 1.05 # ←ほぼ消す
             
         # ===== 内繰り上がり補正（ここに入れる）=====
         inner_mode = (
@@ -2282,11 +2263,6 @@ if st.button("計算"):
         # ===============================
         # ★ FINAL P1
         # ===============================
-        
-        # ① 強制（※1除外）
-        for i in force_heads:
-            if i != 0:
-                P1[i] += 0.01
         
         
         # ② 差分分散
