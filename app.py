@@ -1804,10 +1804,8 @@ if st.button("計算"):
             if InsideSurvival[0] > 0.55:
                 reduction += 0.03
         
-            P1_no[0] *= reduction
-            P1_weak[0] *= reduction
-            P1_attack[0] *= reduction
-        
+            P1[0] *= reduction
+    
         P1 = [
             w_no * P1_no[i] + w_at * P1_at[i]
             for i in range(6)
