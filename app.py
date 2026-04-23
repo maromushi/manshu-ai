@@ -1771,8 +1771,8 @@ if st.button("計算"):
             )
             
             if DAS > 0.08:
-                val *= (1 + 0.12 * (AttackIndex[i] - AttackIndex[0]))
-        
+                boost = max(0, AttackIndex[i] - AttackIndex[1])  # ←2基準
+                val *= (1 + 0.10 * boost)
             # ノーアタック世界
             val_no = val
             if i >= 4:
