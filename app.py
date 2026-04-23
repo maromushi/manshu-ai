@@ -1842,10 +1842,6 @@ if st.button("計算"):
                 if P1_pre[i] in top[:3]:
                     P1[i] *= 1.08
         
-        # 再正規化（絶対必要）
-        total = sum(P1)
-        P1 = [p / total for p in P1]
-        
         
         SecondCore = None
 
@@ -2091,12 +2087,7 @@ if st.button("計算"):
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
         
         TotalFirst = sum([FinalFirst[i] for i in range(6) if Active[i]==1])
-        
-        
-        # 再正規化（絶対必要）
-        total = sum(P1)
-        if total > 0:
-            P1 = [p / total for p in P1]
+    
             
         # ===============================
         # ★ 外の能力ゴリ押し禁止
@@ -2120,10 +2111,6 @@ if st.button("計算"):
         
                 if P1[2] > P1[0] * 0.85:
                     P1[2] *= 0.75
-        
-                # 再正規化
-                total = sum(P1)
-                P1 = [p / total for p in P1]
                 
         # ===============================
         # ★ 外の頭禁止（最重要）
@@ -2224,6 +2211,9 @@ if st.button("計算"):
         
             if P1[2] > P1[0] * 0.95:
                 P1[2] *= 0.90
+                
+            for i in force_heads:
+                P1[i] *= 1.2
         
             # 再正規化
             total = sum(P1)
