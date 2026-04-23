@@ -1753,6 +1753,36 @@ if st.button("計算"):
             0.05+(0.45*(1-DynamicInsideFactor)*0.04)*(1+0.40*ChaosScore)
         
         ]
+        
+        # =========================
+        # ★ 通過率（壁考慮） ←追加
+        # =========================
+        PassRate = [1.0] * 6
+        
+        for i in range(6):
+        
+            p = pos[i]   # 進入位置
+        
+            if p == 0:
+                continue
+        
+            blockers = 0
+        
+            for k in range(p):
+                j = entry_order[k]
+        
+                if (
+                    CPI[j] >= CPI[i] - 0.02
+                    and Turn[j] >= Turn[i] - 0.02
+                ):
+                    blockers += 1
+        
+            if blockers >= 2:
+                PassRate[i] = 0.5
+            elif blockers == 1:
+                PassRate[i] = 0.75
+            else:
+                PassRate[i] = 1.0
 
         # ===============================
         # ★ FirstScoreフラグ箱
@@ -1795,8 +1825,8 @@ if st.button("計算"):
                 else:
                     val_at *= 0.3
         
-            FirstScore_no.append(val_no)
-            FirstScore_attack.append(val_at)
+            FirstScore_no.append(val_no * PassRate[i])
+            FirstScore_attack.append(val_at * PassRate[i])
         
         
         P1_no = normalize_sum(FirstScore_no)
