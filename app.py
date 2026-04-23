@@ -2212,9 +2212,9 @@ if st.button("計算"):
             if P1[2] > P1[0] * 0.95:
                 P1[2] *= 0.90
                 
+                
             for i in force_heads:
-                P1[i] *= 1.2
-        
+                P1[i] *= 1.4
             # 再正規化
             total = sum(P1)
             P1 = [p / total for p in P1]
