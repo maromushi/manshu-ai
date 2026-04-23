@@ -1769,6 +1769,9 @@ if st.button("計算"):
                 +0.18*Turn_n[i]
                 +0.12*LaneWin[i]
             )
+            
+            if DAS > 0.08:
+                val *= (1 + 0.12 * (AttackIndex[i] - AttackIndex[0]))
         
             # ノーアタック世界
             val_no = val
