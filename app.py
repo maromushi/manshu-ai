@@ -2166,6 +2166,23 @@ if st.button("計算"):
         total_p1 = sum(P1)
         if total_p1 > 0:
             P1 = [p / total_p1 for p in P1]
+            
+        # ===== 内繰り上がり補正（ここに入れる）=====
+        inner_mode = (
+            AttackSuccess == 1
+            and DAS > 0.12
+            and StraightTime[5] >= 7.9
+        )
+        
+        if inner_mode:
+            P1[0] *= 0.8   # 1削る
+            P1[1] *= 1.15  # 2上げる（重要）
+            P1[2] *= 1.2   # 3上げる
+        
+        # 再正規化（必須）
+        total_p1 = sum(P1)
+        if total_p1 > 0:
+            P1 = [p / total_p1 for p in P1]
         
         # ★ ここに追加
         if (
@@ -3805,6 +3822,17 @@ if st.button("計算"):
             
 
             second_scores = [SecondAdj_local[i] for i in remain1]
+            
+            # ===== 内繰り上がり補正（SECOND）=====
+            if inner_mode:
+                for idx, i in enumerate(remain1):
+                    if i == 1:   # 2号艇
+                        second_scores[idx] *= 1.2
+                    elif i == 2: # 3号艇
+                        second_scores[idx] *= 1.15
+                    elif i == 5: # 6号艇
+                        second_scores[idx] *= 0.7
+            
             total2 = sum(second_scores)
             if total2 <= 0:
                 total2 = 1e-6
