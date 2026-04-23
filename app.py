@@ -1796,8 +1796,14 @@ if st.button("計算"):
         w_no = 0.4
         w_at = 0.6
         
+        P1 = [
+            w_no * P1_no[i] + w_at * P1_at[i]
+            for i in range(6)
+        ]
+        
+        # ★ここに入れる
         if NoAttackFlag == 0 and DAS > 0.08:
-
+        
             reduction = 0.90 - 0.25 * (DAS - 0.08)
             reduction = max(0.80, reduction)
         
@@ -1805,13 +1811,8 @@ if st.button("計算"):
                 reduction += 0.03
         
             P1[0] *= reduction
-    
-        P1 = [
-            w_no * P1_no[i] + w_at * P1_at[i]
-            for i in range(6)
-        ]
         
-        # 最後にもう一回正規化
+        # 最後に正規化（これ必須）
         P1 = normalize_sum(P1)
                 
         # ===============================
