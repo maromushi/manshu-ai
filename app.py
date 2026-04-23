@@ -2149,10 +2149,6 @@ if st.button("計算"):
                     P1[i] *= 1.05   # ←弱める
                 else:
                     P1[i] *= 1.02   # ←ほぼ消す
-        # ===== 正規化 =====
-        total_p1 = sum(P1)
-        if total_p1 > 0:
-            P1 = [p / total_p1 for p in P1]
             
         # ===== 内繰り上がり補正（ここに入れる）=====
         inner_mode = (
@@ -2166,11 +2162,6 @@ if st.button("計算"):
             P1[1] *= 1.15  # 2上げる（重要）
             P1[2] *= 1.2   # 3上げる
         
-        # 再正規化（必須）
-        total_p1 = sum(P1)
-        if total_p1 > 0:
-            P1 = [p / total_p1 for p in P1]
-        
         # ★ ここに追加
         if (
             AttackSuccess == 1
@@ -2179,21 +2170,24 @@ if st.button("計算"):
             and Turn[0] < Turn[2]   # ←これ追加すると神精度
         ):
             P1[0] *= 0.88
-        
-        # 再正規化（必須）
-        total_p1 = sum(P1)
-        if total_p1 > 0:
-            P1 = [p / total_p1 for p in P1]
             
-        for i in range(4,6):
-
-            if not outer_ok[i]:
+        # ===============================
+        # ★ FINAL P1（ここが正解）
+        # ===============================
         
-                if DAS < 0.08:
-                    P1[i] *= 0.5
-                else:
-                    P1[i] *= 0.7
-            
+        # ① 強制（2頭に寄せる）
+        for i in force_heads:
+            P1[i] *= 1.35   # ←効かなければ1.4〜1.5までOK
+        
+        # ② 差分分散（これが効く）
+        top = max(P1)
+        for i in range(6):
+            if P1[i] >= top * 0.7:
+                P1[i] += 0.03   # ←ここがミソ（倍率じゃなく加算）
+        
+        # ③ 最後に1回だけ正規化
+        P1 = normalize_sum(P1)
+        
         # ===============================
         # ★ 1位保護（条件付き）
         # ===============================
