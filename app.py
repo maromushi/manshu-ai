@@ -1725,6 +1725,7 @@ if st.button("計算"):
             and AttackSuccess == 1
             and CPI[1] >= CPI[0] - 0.05
             and Start[1] <= Start[0] + 0.04
+            
         ):
             DynamicInsideFactor *= 0.92
 
@@ -2158,14 +2159,25 @@ if st.button("計算"):
         for i in range(6):
             if P1[i] == top:
                 if ChaosScore < 0.45:
-                    P1[i] *= 1.07   # 固いときだけ強化
+                    P1[i] *= 1.05   # ←弱める
                 else:
-                    P1[i] *= 1.05   # 荒れはそのまま
-
+                    P1[i] *= 1.02   # ←ほぼ消す
         # ===== 正規化 =====
-
         total_p1 = sum(P1)
-
+        if total_p1 > 0:
+            P1 = [p / total_p1 for p in P1]
+        
+        # ★ ここに追加
+        if (
+            AttackSuccess == 1
+            and DAS > 0.13
+            and Start[0] < Start[2]
+            and Turn[0] < Turn[2]   # ←これ追加すると神精度
+        ):
+            P1[0] *= 0.88
+        
+        # 再正規化（必須）
+        total_p1 = sum(P1)
         if total_p1 > 0:
             P1 = [p / total_p1 for p in P1]
             
