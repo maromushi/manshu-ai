@@ -1953,11 +1953,14 @@ if st.button("計算"):
         if total == 0:
             total = 1e-6
         
-        P1 = (
-            (w_no_eff   / total) * P1_no +
-            (w_weak_eff / total) * P1_weak +
-            (w_at_eff   / total) * P1_attack
-        )
+        P1 = [0.0] * 6
+
+        for i in range(6):
+            P1[i] = (
+                (w_no_eff   / total) * P1_no[i] +
+                (w_weak_eff / total) * P1_weak[i] +
+                (w_at_eff   / total) * P1_attack[i]
+            )
         
         for i in range(6):
             if BadST[i] == 1 and i in attackers and i >= 4:
