@@ -1943,26 +1943,22 @@ if st.button("計算"):
         w_no = 0.4
         w_at = 0.6
         
-        P1 = [
-            w_no * P1_no[i] + w_at * P1_at[i]
-            for i in range(6)
-        ]
+        w_no_eff   = w_no   * NoAttackProb
+        w_weak_eff = w_weak * AttackWeak
+        w_at_eff   = w_at   * AttackSuccess
+        
+        total = w_no_eff + w_weak_eff + w_at_eff
+        
+        P1 = (
+            (w_no_eff   / total) * P1_no +
+            (w_weak_eff / total) * P1_weak +
+            (w_at_eff   / total) * P1_attack
+        )
         
         for i in range(6):
             if BadST[i] == 1 and i in attackers and i >= 4:
                 P1[i] *= 0.80
-        # =========================
-        # ★ 中DAS補正（イン弱体）
-        # =========================
-        if NoAttackFlag == 0 and DAS > 0.08:
-        
-            reduction = 0.95 - 0.15 * (DAS - 0.08)
-            reduction = max(0.88, reduction)
-        
-            if InsideSurvival[0] > 0.55:
-                reduction += 0.02
-        
-            P1[0] *= reduction
+
         
         # =========================
         # ★ DAS強補正（まとめて）
@@ -3062,7 +3058,9 @@ if st.button("計算"):
         ):
             SecondAdj[0] *= 1.10
             ThirdAdj[0]  *= 1.06
+            
         
+        SecondAdj[i] *= (0.6 + 0.7 * CPI[i])
         
         SecondAdj_final = SecondAdj.copy()
         ThirdAdj_final = ThirdAdj.copy()
