@@ -1043,6 +1043,11 @@ if st.button("計算"):
         for i in range(6):
             if i == 0:
                 AttackIndex[i] = 0.0
+                
+        print("AttackIndex final:", AttackIndex)
+        print("DEBUG attack vs CPI")
+        for i in range(6):
+            print(i, AttackIndex[i], CPI[i])
     
         # ===============================
         # ★ attackers決定（最終版）
