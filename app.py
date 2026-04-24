@@ -1940,8 +1940,9 @@ if st.button("計算"):
         P1_no = normalize_sum(FirstScore_no)
         P1_at = normalize_sum(FirstScore_attack)
         
-        w_no = 0.4
-        w_at = 0.6
+        w_no   = 0.25
+        w_weak = 0.30
+        w_at   = 0.45
         
         w_no_eff   = w_no   * (1 - AttackSuccess)
         w_weak_eff = w_weak * AttackWeak
