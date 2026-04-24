@@ -1029,16 +1029,16 @@ if st.button("計算"):
                 continue
         
             # ===== 到達条件 =====
-            delta_st = Start[i] - Start[i-1]
+            delta_st = Start[i-1] - Start[i]
         
             if delta_st > 0.03:
-                reach = 0.4
+                reach = 1.1   # かなり速い
             elif delta_st > 0.015:
-                reach = 0.7
+                reach = 1.0
             elif delta_st > 0.005:
                 reach = 0.9
             else:
-                reach = 1.1
+                reach = 0.7   # 遅い
         
             # ===== 突破条件 =====
             wall = AttackRaw[i-1] - AttackRaw[i]
@@ -1055,13 +1055,12 @@ if st.button("計算"):
             # ===== 連鎖条件 =====
             chain = 1.0
             if i >= 2:
-                delta_front = Start[i-1] - Start[i-2]
+                delta_front = Start[i-2] - Start[i-1]
         
-                if delta_front > 0.015:
-                    chain *= 1.1
-                elif delta_front < -0.01:
-                    chain *= 0.9
-        
+                if delta_front < -0.015:
+                    chain *= 1.1   # 前が遅れてる → 展開広がる
+                elif delta_front > 0.01:
+                    chain *= 0.9   # 前が速い → 壁になる
             # ===== 統合 =====
             PositionFactor = reach * break_factor * chain
             PositionFactor = max(0.3, min(1.2, PositionFactor))
