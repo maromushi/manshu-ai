@@ -774,6 +774,15 @@ if st.button("計算"):
                     or AttackWeak == 1
                 )
             )
+            
+        # --- 並び順作成（0-index）---
+
+        entry_order = [x-1 for x in ExEntry]
+        # 逆引き（どの艇が何番目か）
+        pos = [0]*6
+        for i, boat in enumerate(entry_order):
+        
+            pos[boat] = i
         
         
         # --- 壁強度（進入順ベース）---
