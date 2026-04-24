@@ -1053,15 +1053,31 @@ if st.button("計算"):
             delta_st = Start[i] - Start[i-1]
             
             # ===============================
-            # ■ 到達判定（ここが本質）
+            # ■ 到達判定（完成版）
             # ===============================
-            can_reach = (
-                delta_st > 0
-                or Turn[i] > Turn[i-1] + 0.03
-                or Foot[i] > Foot[i-1] + 0.05
-                or AttackCPI[i] > AttackCPI[i-1] + 0.04
-            )
             
+            if i == 5:
+                # 6コースは最も厳しい（ほぼST勝ち必須）
+                can_reach = (
+                    delta_st > 0.015
+                    and Turn[i] >= Turn[i-1]
+                )
+            
+            elif i >= 4:
+                # 5コースはST主導＋最低限の足
+                can_reach = (
+                    delta_st > 0.01
+                    and Turn[i] >= Turn[i-1] - 0.01
+                )
+            
+            else:
+                # 内〜センターは従来ロジック
+                can_reach = (
+                    delta_st > 0
+                    or Turn[i] > Turn[i-1] + 0.03
+                    or Foot[i] > Foot[i-1] + 0.05
+                    or AttackCPI[i] > AttackCPI[i-1] + 0.04
+                )
             # ===============================
             # ■ reach補正
             # ===============================
@@ -1074,11 +1090,22 @@ if st.button("計算"):
             else:
                 AttackIndex[i] *= 1.05
             
+            
             # ===============================
             # ■ 壁＋連動
             # ===============================
             attack_pos = break_factor * chain
             AttackIndex[i] *= attack_pos
+            
+            # ===============================
+            # ■ 外の位置ペナルティ
+            # ===============================
+            if i >= 4:
+                AttackIndex[i] *= 0.85
+            
+            if i == 5:
+                AttackIndex[i] *= 0.85
+            
             # ===============================
             # ★ 1号艇は攻めない（ここで固定）
             # ===============================
@@ -1089,6 +1116,12 @@ if st.button("計算"):
         print("DEBUG attack vs CPI")
         for i in range(6):
             print(i, AttackIndex[i], CPI[i])
+            
+        # ===============================
+        # ■ 壁による攻め制限（最重要）
+        # ===============================
+        for i in range(6):
+            AttackIndex[i] *= (1 - 0.4 * Wall[i])
     
         # ===============================
         # ★ attackers決定（最終版）
