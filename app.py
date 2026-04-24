@@ -1012,10 +1012,7 @@ if st.button("計算"):
         AttackIndex = [0.0]*6
         AttackRaw = [0.0]*6
         
-        # こう直す
-        for i in range(6):
-            if BadST[i] == 1 and i in attackers:
-                AttackIndex[i] *= 0.90
+        
         
         for i in range(6):
         
@@ -1141,6 +1138,11 @@ if st.button("計算"):
         
         # 重複削除
         attackers = list(set(attackers))
+        
+        # こう直す
+        for i in range(6):
+            if BadST[i] == 1 and i in attackers:
+                AttackIndex[i] *= 0.90
                     
         # ===============================
         # ★ DoubleAttackScore（最終版）
