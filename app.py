@@ -1066,9 +1066,35 @@ if st.button("計算"):
                 elif delta_front > 0.01:
                     chain *= 0.9
         
-            # ===== 統合 =====
-            attack_pos = reach * break_factor * chain
-            attack_pos = max(0.3, min(1.2, attack_pos))
+            delta_st = Start[i] - Start[i-1]
+            
+            # ===============================
+            # ■ 到達判定（ここが本質）
+            # ===============================
+            can_reach = (
+                delta_st > 0
+                or Turn[i] > Turn[i-1] + 0.03
+                or Foot[i] > Foot[i-1] + 0.05
+                or AttackCPI[i] > AttackCPI[i-1] + 0.04
+            )
+            
+            # ===============================
+            # ■ reach補正
+            # ===============================
+            if not can_reach:
+                AttackIndex[i] *= 0.6
+            elif delta_st < 0.01:
+                AttackIndex[i] *= 0.85
+            elif delta_st < 0.02:
+                AttackIndex[i] *= 0.95
+            else:
+                AttackIndex[i] *= 1.05
+            
+            # ===============================
+            # ■ 壁＋連動
+            # ===============================
+            attack_pos = break_factor * chain
+            AttackIndex[i] *= attack_pos
             
             AttackIndex[i] *= attack_pos
         print("AttackIndex final:", AttackIndex)
@@ -1153,17 +1179,9 @@ if st.button("計算"):
                    
         attackers = sorted(
             attackers,
-            key=lambda x: (
-                0.35 * AttackIndex[x]
-                + 0.25 * Start[x]
-                + 0.20 * Turn[x]
-                + 0.15 * Foot[x]
-                + 0.05 * Engine[x]
-                + (0.05 * max(0, Start[x] - Start[x-1]) if x > 0 else 0)
-            ),
+            key=lambda x: AttackIndex[x],
             reverse=True
         )
-        
                 
         AttackSuccess = 0
         AttackFail = 0
