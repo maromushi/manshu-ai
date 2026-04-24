@@ -679,8 +679,6 @@ if st.button("計算"):
         # START（精度版）
         # ===============================
         
-        is_attacker = i in attackers
-        
         adj_exst = []
 
         for i in range(6):
@@ -698,8 +696,7 @@ if st.button("計算"):
 
         # ===============================
         # ① 展示信頼度
-        # ===============================
-        is_attacker = i in attackers
+        # ==============================
         
         trust = []
         
@@ -1015,8 +1012,10 @@ if st.button("計算"):
         AttackIndex = [0.0]*6
         AttackRaw = [0.0]*6
         
-        if BadST[i] == 1 and i in attackers:
-            AttackIndex[i] *= 0.90
+        # こう直す
+        for i in range(6):
+            if BadST[i] == 1 and i in attackers:
+                AttackIndex[i] *= 0.90
         
         for i in range(6):
         
@@ -1793,7 +1792,7 @@ if st.button("計算"):
             0.05+(0.45*(1-DynamicInsideFactor)*0.04)*(1+0.40*ChaosScore)
         
         ]
-        
+     
         # ===============================
         # ★ イン補正の展開連動（調整版）
         # ===============================
@@ -1804,6 +1803,13 @@ if st.button("計算"):
             
             elif DAS > 0.09:
                 LaneWin[0] *= 0.90
+                
+            print("DEBUG LaneWin:", LaneWin)
+            print("DEBUG type:", type(LaneWin))
+            
+            assert isinstance(LaneWin, list), f"LaneWin壊れてる: {LaneWin}"
+            
+            LaneWin[0] *= 0.90
         
             # 横並びだけ軽く追加
             if abs(Start[0] - Start[2]) < 0.015:
@@ -1896,9 +1902,9 @@ if st.button("計算"):
             for i in range(6)
         ]
         
-        if BadST[i] == 1 and i in attackers and i >= 4:
-            P1[i] *= 0.80
-        
+        for i in range(6):
+            if BadST[i] == 1 and i in attackers and i >= 4:
+                P1[i] *= 0.80
         # =========================
         # ★ 中DAS補正（イン弱体）
         # =========================
