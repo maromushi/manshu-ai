@@ -784,6 +784,35 @@ if st.button("計算"):
         
             pos[boat] = i
         
+        # --- Class係数 ---
+
+        ClassCoef = []
+        for c in CLS:
+            if c == "A1":
+                ClassCoef.append(1.15)
+        
+            elif c == "A2":
+                ClassCoef.append(1.05)
+        
+            elif c == "B1":
+                ClassCoef.append(0.95)
+        
+            else:
+                ClassCoef.append(0.85)
+        
+        # --- Fペナルティ ---
+        
+        FPenalty = []
+        
+        for f in Fcount:
+            if f >= 2:
+                FPenalty.append(0.75)
+        
+            elif f == 1:
+                FPenalty.append(0.88)
+        
+            else:
+                FPenalty.append(1.0)
         
         # --- 壁強度（進入順ベース）---
         Wall = [0]*6
