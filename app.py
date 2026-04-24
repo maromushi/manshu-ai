@@ -1140,89 +1140,86 @@ if st.button("計算"):
 
         for i in range(1,6):
 
-            # ===============================
-            # ★ 外の到達不能は即除外
-            # ===============================
-            if i >= 4:
-                if Start[i] < Start[i-1] - 0.01:
-                    continue
-        
-            # ===============================
-            # ★ 到達判定（ここが本質）
-            # ===============================
-            start_attack = (
-                Start[i] > Start[i-1] + 0.015
+        # ===============================
+        # 基本判定
+        # ===============================
+        can_reach_strict = (
+            Start[i] >= Start[i-1] - 0.005
+        )
+    
+        can_attack = (
+            can_reach_strict
+            and AttackIndex[i] >= AttackIndex[i-1] - 0.01
+        )
+    
+        chance_flag = (
+            CPI[i] >= CPI[i-1] - 0.04
+            and (
+                Foot[i] > Foot[i-1]
+                or Engine[i] > Engine[i-1]
             )
-            if i >= 4:
-                # 外は厳しく（並び負けは攻め不可）
-                can_reach_strict = (
-                    Start[i] >= Start[i-1]
-                )
-            else:
-                # 内〜センターは多少許容
-                can_reach_strict = (
-                    Start[i] > Start[i-1] - 0.005
-                )
-        
-            # ===============================
-            # ★ 攻め判定
-            # ===============================
-            can_attack = (
-                can_reach_strict
-                and (
-                    AttackIndex[i] >= AttackIndex[i-1] - 0.01
-                )
-            )
-        
-            chance_flag = (
-                CPI[i] >= CPI[i-1] - 0.04
-                and (
-                    Foot[i] > Foot[i-1]
-                    or Engine[i] > Engine[i-1]
-                )
-            )
-        
-            strong = (
-                AttackIndex[i] >= max(AttackIndex) - 0.05
-                or Turn[i] >= max(Turn) - 0.03
-            )
+        )
+    
+        strong = (
+            AttackIndex[i] >= max(AttackIndex) - 0.05
+            or Turn[i] >= max(Turn) - 0.03
+        )
+    
+        # ===============================
+        # ★ 1号艇は攻撃禁止（壁専念）
+        # ===============================
+        if i == 0:
+            can_attack = False
+            start_attack = False
+            chance_flag = False
+    
+        # ===============================
+        # ★ 4号艇（index=3）は半到達OK
+        # ===============================
+        if i == 3:
+            reach = Start[i] >= Start[i-1] - 0.01
+    
+            if not reach:
+                can_attack = False
+    
+        # ===============================
+        # ★ 5・6号艇（index=4,5）は到達必須
+        # ===============================
+        if i >= 4:
+            reach = Start[i] >= Start[i-1]
+    
+            if not reach:
+                can_attack = False
+                start_attack = False
+                chance_flag = False
             
-            
         
-            # ===============================
-            # 外の壁チェック（ここに入れる）
-            # ===============================
-            if i >= 4:
+        # ===============================
+        # 外の壁チェック（ここに入れる）
+        # ===============================
+        if i >= 4:
         
-                wall_block = (
-                    CPI[i] < CPI[i-1] - 0.02
-                    or Turn[i] < Turn[i-1] - 0.01
-                )
+            wall_block = (
+                CPI[i] < CPI[i-1] - 0.02
+                or Turn[i] < Turn[i-1] - 0.01
+            )
         
-                weak_start = (
-                    Start[i] > Start[i-1] + 0.01
-                )
+            weak_start = (
+                Start[i] > Start[i-1] + 0.01
+            )
         
-                if wall_block and weak_start:
-                    continue
+            if wall_block and weak_start:
+                continue
         
-            # ===============================
-            # 攻め判定
-            # ===============================
-            if (
-                can_attack
-                or (start_attack and strong)
-                or (chance_flag and strong)
-            ):
-                attackers.append(i)
-        
-        # 重複削除
-        attackers = list(set(attackers))
-        
-        # こう直す
-        for i in range(6):
-            if BadST[i] == 1 and i in attackers:
-                AttackIndex[i] *= 0.90
+        # ===============================
+        # 攻め判定
+        # ===============================
+        if (
+            can_attack
+            or (start_attack and strong)
+            or (chance_flag and strong)
+        ):
+            attackers.append(i)
                     
         # ===============================
         # ★ DoubleAttackScore（最終版）
