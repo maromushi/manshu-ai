@@ -1216,7 +1216,6 @@ if st.button("計算"):
             # ===============================
             if (
                 can_attack
-                or (start_attack and strong)
                 or (chance_flag and strong)
             ):
                 attackers.append(i)
