@@ -1067,11 +1067,10 @@ if st.button("計算"):
                     chain *= 0.9
         
             # ===== 統合 =====
-            pos = reach * break_factor * chain
-            pos = max(0.3, min(1.2, pos))
-        
-            # ★既存AttackIndexに掛けるだけ
-            AttackIndex[i] *= pos
+            attack_pos = reach * break_factor * chain
+            attack_pos = max(0.3, min(1.2, attack_pos))
+            
+            AttackIndex[i] *= attack_pos
         print("AttackIndex final:", AttackIndex)
         print("DEBUG attack vs CPI")
         for i in range(6):
