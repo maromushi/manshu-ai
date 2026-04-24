@@ -1039,6 +1039,10 @@ if st.button("計算"):
             # 良ST
             elif GoodST[i] == 1:
                 AttackIndex[i] *= 1.05
+                
+        for i in range(6):
+            if i == 0:
+                AttackIndex[i] = 0.0
     
         # ===============================
         # ★ attackers決定（最終版）
@@ -1824,9 +1828,10 @@ if st.button("計算"):
                 +0.12*LaneWin[i]
             )
             
-            if AttackFlag:
-                boost = max(0, AttackIndex[i] - AttackIndex[1])  # ←2基準
-                val *= (1 + 0.10 * boost)
+            if i == 0:
+                boost = 0   # 1は攻めない
+            else:
+                boost = max(0, AttackIndex[i] - AttackIndex[1])
             # ノーアタック世界
             val_no = val
             if i >= 4:
