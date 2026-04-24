@@ -1015,22 +1015,20 @@ if st.button("計算"):
         
             # --- 攻撃性能 ---
             AttackRaw[i] = (
-                0.20*Start[i]
-                + 0.45*Foot[i]
-                + 0.25*Turn[i]
-                + 0.10*Engine[i]
+                0.35*Start[i] +
+                0.40*Foot[i] +
+                0.20*Turn[i] +
+                0.05*Engine[i]
             )
-        
+            
         for i in range(6):
-        
-            # インは攻めない
+
             if i == 0:
-                AttackIndex[i] = 0.0
                 continue
         
-            # ===== 到達条件 =====
-            delta_st = Start[i-1] - Start[i]
-
+            # ===== reach =====
+            delta_st = Start[i] - Start[i-1]
+        
             if delta_st > 0.03:
                 reach = 1.05
             elif delta_st > 0.015:
@@ -1040,7 +1038,7 @@ if st.button("計算"):
             else:
                 reach = 0.85
         
-            # ===== 突破条件 =====
+            # ===== break =====
             wall = AttackCPI[i-1] - AttackCPI[i]
         
             if wall > 0.05:
@@ -1052,20 +1050,22 @@ if st.button("計算"):
             else:
                 break_factor = 1.1
         
-            # ===== 連鎖条件 =====
+            # ===== chain =====
             chain = 1.0
             if i >= 2:
-                delta_front = Start[i-2] - Start[i-1]
-            
+                delta_front = Start[i-1] - Start[i-2]
+        
                 if delta_front < -0.015:
                     chain *= 1.1
                 elif delta_front > 0.01:
                     chain *= 0.9
+        
             # ===== 統合 =====
-            PositionFactor = reach * break_factor * chain
-            PositionFactor = max(0.3, min(1.2, PositionFactor))
-            
-            AttackIndex[i] = AttackRaw[i] * PositionFactor
+            pos = reach * break_factor * chain
+            pos = max(0.3, min(1.2, pos))
+        
+            # ★既存AttackIndexに掛けるだけ
+            AttackIndex[i] *= pos
         print("AttackIndex final:", AttackIndex)
         print("DEBUG attack vs CPI")
         for i in range(6):
