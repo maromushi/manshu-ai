@@ -676,175 +676,86 @@ if st.button("計算"):
         Active_local = [Active[i] for i in order]
 
 
-        # ===============================
-        # START（精度版）
-        # ===============================
-        
-        adj_exst = []
-
-        for i in range(6):
-        
-            x = EST[i]
-        
-            # ★ ここだけにする（唯一のF処理）
-            if BadST[i] == 1:
-                x = max(0.12, x + 0.06)
-        
-            x = convert_exst(x)
-        
-            adj_exst.append(x)
-        
-
-        # ===============================
-        # ① 展示信頼度
-        # ==============================
-        
-        trust = []
-        
-        for i in range(6):
-
-            diff = abs(EST[i] - ST[i])
-        
-            t = 1.0
-        
-            if diff > 0.12:
-                t *= 0.7
-        
-            if diff > 0.20:
-                t *= 0.5
-        
-            if EST[i] >= 0.30:
-                t *= 0.4
-        
-            elif EST[i] <= 0.10:
-                t *= 1.05
-        
-            if CLS[i] in ["B1","B2"] and EST[i] >= 0.25:
-                t *= 0.8
-        
-            # ★ ここに入れる（これが正解）
-            if BadST[i] == 1:
-        
-                if CLS[i] == "A1":
-                    t *= 0.7
-        
-                elif CLS[i] == "A2":
-                    t *= 0.6
-        
-                elif CLS[i] == "B1":
-
-                    if Foot[i] >= 0.45:
-                        t *= 0.7
-                    else:
-                        t *= 0.5
-                        
-                else:
-                    t *= 0.45
-        
-            trust.append(t)
-                
-        # ===============================
-        # ② Start計算
-        # ===============================
         Start = []
-        
+
         for i in range(6):
         
             avg = 0.30 - ST[i]
-            ex  = 0.30 - adj_exst[i]
+            ex  = 0.30 - EST[i]
         
-            t = trust[i]
-        
-            val = (1 - t)*avg + t*ex
-        
-            Start.append(val)
-            
-        # ===============================
-        # ★ 疑似攻め
-        # ===============================
-        PseudoAttackFlag = (
-            max(Start[2] - Start[1], Start[3] - Start[2]) > 0.015
-        )
-        
-        # ===============================
-        # ★ 展示STフラグ（分離）
-        # ===============================
-        BadST_flag = [
-            1 if (BadST[i] == 1 or EST[i] >= 0.30) else 0
-            for i in range(6)
-        ]
-        GoodST = [1 if x <= 0.10 else 0 for x in EST]
-        
-        # ===============================
-        # ★ Start補正（軽量）
-        # ===============================
-        for i in range(6):
-        
+            diff = avg - ex
             cls = CLS[i]
         
-            factor = 1.0
-        
-            if FC[i] == 1:
-                factor = F_TABLE[cls]["F1"]
-        
-            elif FC[i] >= 2:
-                factor = F_TABLE[cls]["F2"]
-        
-            # ★ 弱く効かせる（重要）
-            Start[i] *= (0.9 + 0.1 * factor)
-        
-            # 展示STは別処理
-            if EST[i] <= 0.10:
-                Start[i] *= 1.03
-        
-            elif EST[i] <= 0.13:
-                Start[i] *= 1.02
-        
-            elif EST[i] >= 0.20:
-                Start[i] *= 0.95   
-                
-        # ===============================
-        # ★ スタート崩壊検知
-        # ===============================
-        StartCollapse = 0
-        
-        if Start[0] < max(Start[1:4]) - 0.03:
-            StartCollapse = 1
-            
-            
-        
-            
-        # --- 並び順作成（0-index）---
-        entry_order = [x-1 for x in ExEntry]
-        
-        # 逆引き（どの艇が何番目か）
-        pos = [0]*6
-        for i, boat in enumerate(entry_order):
-            pos[boat] = i
-        
-        
-        # --- Class係数 ---
-        ClassCoef = []
-        for c in Class:
-            if c == "A1":
-                ClassCoef.append(1.15)
-            elif c == "A2":
-                ClassCoef.append(1.05)
-            elif c == "B1":
-                ClassCoef.append(0.95)
+            # ===============================
+            # 状態判定
+            # ===============================
+            if cls == "A1":
+                atk_th = 0.025
+                bad_th = -0.02
+            elif cls == "A2":
+                atk_th = 0.03
+                bad_th = -0.025
+            elif cls == "B1":
+                atk_th = 0.035
+                bad_th = -0.03
             else:
-                ClassCoef.append(0.85)
+                atk_th = 0.04
+                bad_th = -0.035
         
-        
-        # --- Fペナルティ ---
-        FPenalty = []
-        for f in Fcount:
-            if f >= 2:
-                FPenalty.append(0.75)
-            elif f == 1:
-                FPenalty.append(0.88)
+            if BadST[i] == 1:
+                state = "bad"
+            elif diff > atk_th:
+                state = "attack"
+            elif diff < bad_th:
+                state = "bad"
             else:
-                FPenalty.append(1.0)
+                state = "normal"
+        
+            # ===============================
+            # trust
+            # ===============================
+            t = 1.0
+        
+            if abs(diff) > 0.12:
+                t *= 0.7
+            if abs(diff) > 0.20:
+                t *= 0.5
+        
+            if ex >= 0.30:
+                t *= 0.4
+            elif ex <= 0.10:
+                t *= 1.05
+        
+            if cls == "A1":
+                t *= 1.10
+            elif cls == "A2":
+                t *= 1.05
+            elif cls == "B1":
+                t *= 0.95
+            else:
+                t *= 0.90
+        
+            if BadST[i] == 1:
+                if cls in ["A1","A2"]:
+                    t *= 0.7
+                else:
+                    t *= 0.5
+        
+            t = max(0.3, min(1.2, t))
+        
+            # ===============================
+            # Start生成
+            # ===============================
+            if state == "attack":
+                val = avg + t * diff
+        
+            elif state == "normal":
+                val = avg + 0.2 * t * diff
+        
+            else:  # bad
+                val = avg - t * abs(diff)
+        
+            Start.append(val)
                 
         # ===============================
         # ★ 外統一判定（追加）
