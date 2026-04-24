@@ -895,7 +895,7 @@ if st.button("計算"):
                 Turn[i] *= penalty
                 Lap[i]  *= penalty
         
-                Start[i] += 0.015 * Wall[i]
+                Start[i] -= 0.015 * Wall[i]
         
         
         # --- 外上限 ---
