@@ -1121,6 +1121,10 @@ if st.button("計算"):
             # ===============================
             attack_pos = break_factor * chain
             AttackIndex[i] *= attack_pos
+            # ===============================
+            # ★ 1号艇は攻めない（ここで固定）
+            # ===============================
+            AttackIndex[0] = 0.0
             
             AttackIndex[i] *= attack_pos
         print("AttackIndex final:", AttackIndex)
