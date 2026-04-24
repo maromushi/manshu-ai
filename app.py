@@ -1008,42 +1008,65 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        AttackIndex = [
-            0.20*Start[i] +
-            0.45*Foot[i] +
-            0.25*Turn[i] +
-            0.10*Engine[i]
-            for i in range(6)
-        ]
+        AttackIndex = [0.0]*6
+        AttackRaw = [0.0]*6
         
-        
-        # ===============================
-        # ★ AttackIndex補正（統合）
-        # ===============================
         for i in range(6):
         
-            # モーター（条件付きで強化）
-            if MotorScore[i] > 0.60 and Foot[i] > 0.50:
-                AttackIndex[i] += 0.03
-            elif MotorScore[i] > 0.55:
-                AttackIndex[i] += 0.02
+            # --- 攻撃性能 ---
+            AttackRaw[i] = (
+                0.20*Start[i]
+                + 0.45*Foot[i]
+                + 0.25*Turn[i]
+                + 0.10*Engine[i]
+            )
         
-            # 展示F
-            if BadST[i] == 1:
-        
-                if Foot[i] > 0.50 and Turn[i] > 0.50:
-                    AttackIndex[i] *= 1.02
-                else:
-                    AttackIndex[i] *= 0.90
-        
-            # 良ST
-            elif GoodST[i] == 1:
-                AttackIndex[i] *= 1.05
-                
         for i in range(6):
+        
+            # インは攻めない
             if i == 0:
                 AttackIndex[i] = 0.0
-                
+                continue
+        
+            # ===== 到達条件 =====
+            delta_st = Start[i] - Start[i-1]
+        
+            if delta_st > 0.03:
+                reach = 0.4
+            elif delta_st > 0.015:
+                reach = 0.7
+            elif delta_st > 0.005:
+                reach = 0.9
+            else:
+                reach = 1.1
+        
+            # ===== 突破条件 =====
+            wall = AttackRaw[i-1] - AttackRaw[i]
+        
+            if wall > 0.05:
+                break_factor = 0.6
+            elif wall > 0.02:
+                break_factor = 0.8
+            elif wall > -0.02:
+                break_factor = 1.0
+            else:
+                break_factor = 1.1
+        
+            # ===== 連鎖条件 =====
+            chain = 1.0
+            if i >= 2:
+                delta_front = Start[i-1] - Start[i-2]
+        
+                if delta_front > 0.015:
+                    chain *= 1.1
+                elif delta_front < -0.01:
+                    chain *= 0.9
+        
+            # ===== 統合 =====
+            PositionFactor = reach * break_factor * chain
+            PositionFactor = max(0.3, min(1.2, PositionFactor))
+        
+            AttackIndex[i] = AttackRaw[i] * PositionFactor
         print("AttackIndex final:", AttackIndex)
         print("DEBUG attack vs CPI")
         for i in range(6):
