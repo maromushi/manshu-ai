@@ -1139,16 +1139,22 @@ if st.button("計算"):
         attackers = []
 
         for i in range(1,6):
+
+        # ===============================
+        # ★ 外の到達不能は即除外（これを追加）
+        # ===============================
+        if i >= 4:
+            if Start[i] < Start[i-1] - 0.01:
+                continue
         
-            start_attack = (
-                Start[i] > Start[i-1] + 0.015
+            can_reach_strict = (
+                Start[i] > Start[i-1] - 0.005
             )
         
             can_attack = (
-                AttackIndex[i] >= AttackIndex[i-1] - 0.02
+                can_reach_strict
                 and (
-                    Foot[i] >= Foot[i-1] - 0.03
-                    or Turn[i] >= Turn[i-1] - 0.02
+                    AttackIndex[i] >= AttackIndex[i-1] - 0.01
                 )
             )
         
@@ -1164,6 +1170,8 @@ if st.button("計算"):
                 AttackIndex[i] >= max(AttackIndex) - 0.05
                 or Turn[i] >= max(Turn) - 0.03
             )
+            
+            
         
             # ===============================
             # 外の壁チェック（ここに入れる）
