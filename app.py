@@ -1943,11 +1943,14 @@ if st.button("計算"):
         w_no = 0.4
         w_at = 0.6
         
-        w_no_eff   = w_no   * NoAttackProb
+        w_no_eff   = w_no   * (1 - AttackSuccess)
         w_weak_eff = w_weak * AttackWeak
-        w_at_eff   = w_at   * AttackSuccess
+        w_at_eff   = w_at   * AttackSuccess        
         
         total = w_no_eff + w_weak_eff + w_at_eff
+
+        if total == 0:
+            total = 1e-6
         
         P1 = (
             (w_no_eff   / total) * P1_no +
