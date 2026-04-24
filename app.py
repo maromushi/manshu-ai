@@ -679,6 +679,8 @@ if st.button("計算"):
         # START（精度版）
         # ===============================
         
+        is_attacker = i in attackers
+        
         adj_exst = []
 
         for i in range(6):
@@ -697,6 +699,8 @@ if st.button("計算"):
         # ===============================
         # ① 展示信頼度
         # ===============================
+        is_attacker = i in attackers
+        
         trust = []
         
         for i in range(6):
@@ -1011,6 +1015,9 @@ if st.button("計算"):
         AttackIndex = [0.0]*6
         AttackRaw = [0.0]*6
         
+        if BadST[i] == 1 and i in attackers:
+            AttackIndex[i] *= 0.90
+        
         for i in range(6):
         
             # --- 攻撃性能 ---
@@ -1020,6 +1027,8 @@ if st.button("計算"):
                 0.20*Turn[i] +
                 0.05*Engine[i]
             )
+            
+        AttackIndex = AttackRaw.copy()
             
         for i in range(6):
 
@@ -1886,6 +1895,9 @@ if st.button("計算"):
             w_no * P1_no[i] + w_at * P1_at[i]
             for i in range(6)
         ]
+        
+        if BadST[i] == 1 and i in attackers and i >= 4:
+            P1[i] *= 0.80
         
         # =========================
         # ★ 中DAS補正（イン弱体）
