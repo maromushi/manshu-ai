@@ -1030,18 +1030,18 @@ if st.button("計算"):
         
             # ===== 到達条件 =====
             delta_st = Start[i-1] - Start[i]
-        
+
             if delta_st > 0.03:
-                reach = 1.1   # かなり速い
+                reach = 1.05
             elif delta_st > 0.015:
                 reach = 1.0
             elif delta_st > 0.005:
-                reach = 0.9
+                reach = 0.95
             else:
-                reach = 0.7   # 遅い
+                reach = 0.85
         
             # ===== 突破条件 =====
-            wall = AttackRaw[i-1] - AttackRaw[i]
+            wall = AttackCPI[i-1] - AttackCPI[i]
         
             if wall > 0.05:
                 break_factor = 0.6
@@ -1056,15 +1056,15 @@ if st.button("計算"):
             chain = 1.0
             if i >= 2:
                 delta_front = Start[i-2] - Start[i-1]
-        
+            
                 if delta_front < -0.015:
-                    chain *= 1.1   # 前が遅れてる → 展開広がる
+                    chain *= 1.1
                 elif delta_front > 0.01:
-                    chain *= 0.9   # 前が速い → 壁になる
+                    chain *= 0.9
             # ===== 統合 =====
             PositionFactor = reach * break_factor * chain
             PositionFactor = max(0.3, min(1.2, PositionFactor))
-        
+            
             AttackIndex[i] = AttackRaw[i] * PositionFactor
         print("AttackIndex final:", AttackIndex)
         print("DEBUG attack vs CPI")
