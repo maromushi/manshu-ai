@@ -1001,6 +1001,32 @@ if st.button("計算"):
             0.18*Velocity[i]
             for i in range(6)
         ]
+        
+        delta_st = Start[i] - Start[i-1]
+
+        reach_score = 1.0
+        
+        # ST差（メイン軸）
+        if delta_st > 0.02:
+            reach_score *= 1.05
+        elif delta_st > 0.01:
+            reach_score *= 1.0
+        elif delta_st > -0.005:
+            reach_score *= 0.9
+        else:
+            reach_score *= 0.75
+        
+        # 足で補正
+        reach_score *= (
+            0.5
+            + 0.25 * (Turn[i] - Turn[i-1] + 0.05)
+            + 0.25 * (Foot[i] - Foot[i-1] + 0.05)
+        )
+        
+        # clamp
+        reach_score = max(0.6, min(1.1, reach_score))
+        
+        CPI[i] *= reach_score
 
         AttackCPI=[
         0.35*Foot[i]+
