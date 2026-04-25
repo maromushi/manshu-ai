@@ -1133,6 +1133,23 @@ if st.button("計算"):
             else:
                 # 1〜3コースはほぼ無視（重要）
                 AttackIndex[i] *= (1 - 0.05 * Wall[i])
+                
+        # ===============================
+        # ■ 距離ペナルティ（最終）
+        # ===============================
+        for i in range(6):
+        
+            if i == 0:
+                continue
+        
+            # 非線形距離減衰
+            distance_penalty = 1 / (1 + 0.18 * (i ** 1.7))
+        
+            # 外コースはST負けで致命傷
+            if i >= 4 and Start[i] < Start[i-1]:
+                distance_penalty *= 0.7
+        
+            AttackIndex[i] *= distance_penalty
         # ===============================
         # ★ attackers決定（最終版）
         # ===============================
