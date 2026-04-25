@@ -1142,11 +1142,30 @@ if st.button("計算"):
         for i in range(1,6):
 
             # ===============================
-            # 基本判定
+            # ■ 到達スコア（ここに入れる）
             # ===============================
-            can_reach_strict = (
-                Start[i] >= Start[i-1] - 0.005
+            
+            d_st   = Start[i-1] - Start[i]
+            d_turn = Turn[i-1] - Turn[i]
+            d_foot = Foot[i] - Foot[i-1]
+            d_cpi  = CPI[i] - CPI[i-1]
+            
+            st_score   = d_st / 0.02
+            turn_score = d_turn / 0.05
+            foot_score = d_foot / 0.06
+            cpi_score  = d_cpi / 0.04
+            
+            reach_score = (
+                0.35 * st_score +
+                0.25 * turn_score +
+                0.20 * foot_score +
+                0.20 * cpi_score
             )
+            
+            lane_decay = [1.0, 0.95, 0.90, 0.80, 0.65, 0.50]
+            reach_score *= lane_decay[i]
+            
+            can_reach_strict = reach_score > 0.15
         
             can_attack = (
                 can_reach_strict
