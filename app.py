@@ -1156,107 +1156,52 @@ if st.button("計算"):
         
         attackers = []
 
+        max_attack = max(AttackIndex)
+        avg_attack = sum(AttackIndex) / len(AttackIndex)
+        
         for i in range(1,6):
-
-            # ===============================
-            # ■ 到達スコア（ここに入れる）
-            # ===============================
-            
-            d_st   = Start[i-1] - Start[i]
-            d_turn = Turn[i-1] - Turn[i]
-            d_foot = Foot[i] - Foot[i-1]
-            d_cpi  = CPI[i] - CPI[i-1]
-            
-            st_score   = d_st / 0.02
-            turn_score = d_turn / 0.05
-            foot_score = d_foot / 0.06
-            cpi_score  = d_cpi / 0.04
-            
-            reach_score = (
-                0.35 * st_score +
-                0.25 * turn_score +
-                0.20 * foot_score +
-                0.20 * cpi_score
-            )
-            
-            lane_decay = [1.0, 0.95, 0.90, 0.80, 0.65, 0.50]
-            reach_score *= lane_decay[i]
-            
-            can_reach_strict = reach_score > 0.15
-        
-            can_attack = (
-                can_reach_strict
-                and AttackIndex[i] >= AttackIndex[i-1] - 0.01
-            )
-        
-            chance_flag = (
-                CPI[i] >= CPI[i-1] - 0.04
-                and (
-                    Foot[i] > Foot[i-1]
-                    or Engine[i] > Engine[i-1]
-                )
-            )
-        
-            strong = (
-                AttackIndex[i] >= max(AttackIndex) - 0.05
-                or Turn[i] >= max(Turn) - 0.03
-            )
         
             # ===============================
-            # ★ 1号艇は攻撃禁止（壁専念）
+            # ■ 到達（最低条件）
             # ===============================
-            if i == 0:
-                can_attack = False
-                start_attack = False
-                chance_flag = False
+            reach = Start[i] >= Start[i-1] - 0.01
         
-            # ===============================
-            # ★ 4号艇（index=3）は半到達OK
-            # ===============================
-            if i == 3:
-                reach = Start[i] >= Start[i-1] - 0.01
-        
-                if not reach:
-                    can_attack = False
-        
-            # ===============================
-            # ★ 5・6号艇（index=4,5）は到達必須
-            # ===============================
+            # 外は厳格
             if i >= 4:
                 reach = Start[i] >= Start[i-1]
         
-                if not reach:
-                    can_attack = False
-                    start_attack = False
-                    chance_flag = False
-                
-            
             # ===============================
-            # 外の壁チェック（ここに入れる）
+            # ■ 相対攻撃力
             # ===============================
+            relative = AttackIndex[i] / max_attack
+        
+            # ===============================
+            # ■ 壁補正（減点）
+            # ===============================
+            wall_penalty = 1.0 - 0.6 * Wall[i]
+            effective = relative * wall_penalty
+        
+            # ===============================
+            # ■ 可変閾値
+            # ===============================
+            base_threshold = 0.3 + 0.4 * (avg_attack / max_attack)
+        
+            # ===============================
+            # ■ 判定
+            # ===============================
+            can_attack = (
+                reach
+                and effective > base_threshold
+            )
+        
             if i >= 4:
-            
-                wall_block = (
-                    CPI[i] < CPI[i-1] - 0.02
-                    or Turn[i] < Turn[i-1] - 0.01
+                can_attack = (
+                    reach
+                    and effective > base_threshold + 0.1
                 )
-            
-                weak_start = (
-                    Start[i] > Start[i-1] + 0.01
-                )
-            
-                if wall_block and weak_start:
-                    continue
-            
-            # ===============================
-            # 攻め判定
-            # ===============================
-            if (
-                can_attack
-                or (chance_flag and strong)
-            ):
+        
+            if can_attack:
                 attackers.append(i)
-                    
         # ===============================
         # ★ DoubleAttackScore（最終版）
         # ===============================
