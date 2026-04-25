@@ -1010,6 +1010,20 @@ if st.button("計算"):
             )
             
         AttackIndex = AttackRaw.copy()
+
+        # ===============================
+        # ■ 前壁差（ここに追加）
+        # ===============================
+        for i in range(1,6):
+        
+            front_diff = AttackRaw[i] - AttackRaw[i-1]
+        
+            if front_diff < -0.02:
+                AttackIndex[i] *= 0.8
+            elif front_diff < -0.01:
+                AttackIndex[i] *= 0.9
+            elif front_diff < 0:
+                AttackIndex[i] *= 0.95
             
         for i in range(6):
 
@@ -1078,6 +1092,8 @@ if st.button("計算"):
                 distance_penalty *= 0.7
         
             AttackIndex[i] *= distance_penalty
+            
+            
         # ===============================
         # ★ attackers決定（最終版）
         # ===============================
