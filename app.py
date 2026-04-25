@@ -1155,53 +1155,34 @@ if st.button("計算"):
         # ===============================
         
         attackers = []
-
-        max_attack = max(AttackIndex)
-        avg_attack = sum(AttackIndex) / len(AttackIndex)
         
-        for i in range(1,6):
+        sorted_idx = sorted(range(6), key=lambda x: AttackIndex[x], reverse=True)
+        
+        # 上位グループ（ここが本質）
+        top_group = sorted_idx[:3]   # 上位3まで取る
+        
+        for i in top_group:
+        
+            if i == 0:
+                continue
         
             # ===============================
-            # ■ 到達（最低条件）
+            # 到達
             # ===============================
             reach = Start[i] >= Start[i-1] - 0.01
-        
-            # 外は厳格
             if i >= 4:
                 reach = Start[i] >= Start[i-1]
         
-            # ===============================
-            # ■ 相対攻撃力
-            # ===============================
-            relative = AttackIndex[i] / max_attack
+            if not reach:
+                continue
         
             # ===============================
-            # ■ 壁補正（減点）
+            # 壁で削る（ここは軽く）
             # ===============================
-            wall_penalty = 1.0 - 0.6 * Wall[i]
-            effective = relative * wall_penalty
+            if Wall[i] > 0.6:
+                continue
         
-            # ===============================
-            # ■ 可変閾値
-            # ===============================
-            base_threshold = 0.3 + 0.4 * (avg_attack / max_attack)
-        
-            # ===============================
-            # ■ 判定
-            # ===============================
-            can_attack = (
-                reach
-                and effective > base_threshold
-            )
-        
-            if i >= 4:
-                can_attack = (
-                    reach
-                    and effective > base_threshold + 0.1
-                )
-        
-            if can_attack:
-                attackers.append(i)
+            attackers.append(i)
         # ===============================
         # ★ DoubleAttackScore（最終版）
         # ===============================
