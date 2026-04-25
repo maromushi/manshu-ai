@@ -1016,40 +1016,6 @@ if st.button("計算"):
             if i == 0:
                 continue
         
-            # ===== reach =====
-            delta_st = Start[i] - Start[i-1]
-        
-            if delta_st > 0.03:
-                reach = 1.05
-            elif delta_st > 0.015:
-                reach = 1.0
-            elif delta_st > 0.005:
-                reach = 0.95
-            else:
-                reach = 0.85
-        
-            # ===== break =====
-            wall = AttackCPI[i-1] - AttackCPI[i]
-        
-            if wall > 0.05:
-                break_factor = 0.6
-            elif wall > 0.02:
-                break_factor = 0.8
-            elif wall > -0.02:
-                break_factor = 1.0
-            else:
-                break_factor = 1.1
-        
-            # ===== chain =====
-            chain = 1.0
-            if i >= 2:
-                delta_front = Start[i-1] - Start[i-2]
-        
-                if delta_front < -0.015:
-                    chain *= 1.1
-                elif delta_front > 0.01:
-                    chain *= 0.9
-        
             delta_st = Start[i] - Start[i-1]
             
             # ===============================
@@ -1089,23 +1055,7 @@ if st.button("計算"):
         for i in range(6):
             print(i, AttackIndex[i], CPI[i])
             
-        # ===============================
-        # ■ 壁による攻め制限（修正版）
-        # ===============================
-        for i in range(6):
         
-            if i >= 4:
-                # 外は強く効かせる
-                AttackIndex[i] *= (1 - 0.4 * Wall[i])
-        
-            elif i == 3:
-                # 4コースは軽め
-                AttackIndex[i] *= (1 - 0.2 * Wall[i])
-        
-            else:
-                # 1〜3コースはほぼ無視（重要）
-                AttackIndex[i] *= (1 - 0.05 * Wall[i])
-                
         # ===============================
         # ■ 距離ペナルティ（最終）
         # ===============================
