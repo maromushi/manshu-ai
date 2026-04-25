@@ -1078,40 +1078,12 @@ if st.button("計算"):
                     or Foot[i] > Foot[i-1] + 0.05
                     or AttackCPI[i] > AttackCPI[i-1] + 0.04
                 )
-            # ===============================
-            # ■ reach補正
-            # ===============================
-            if not can_reach:
-                AttackIndex[i] *= 0.6
-            elif delta_st < 0.01:
-                AttackIndex[i] *= 0.85
-            elif delta_st < 0.02:
-                AttackIndex[i] *= 0.95
-            else:
-                AttackIndex[i] *= 1.05
-            
-            
-            # ===============================
-            # ■ 壁＋連動
-            # ===============================
-            attack_pos = break_factor * chain
-            AttackIndex[i] *= attack_pos
-            
-            # ===============================
-            # ■ 外の位置ペナルティ
-            # ===============================
-            if i >= 4:
-                AttackIndex[i] *= 0.85
-            
-            if i == 5:
-                AttackIndex[i] *= 0.85
             
             # ===============================
             # ★ 1号艇は攻めない（ここで固定）
             # ===============================
             AttackIndex[0] = 0.0
-            
-            AttackIndex[i] *= attack_pos
+        
         print("AttackIndex final:", AttackIndex)
         print("DEBUG attack vs CPI")
         for i in range(6):
@@ -1162,24 +1134,17 @@ if st.button("計算"):
         top_group = sorted_idx[:3]   # 上位3まで取る
         
         for i in top_group:
-        
+
             if i == 0:
                 continue
         
             # ===============================
             # 到達
             # ===============================
-            reach = Start[i] >= Start[i-1] - 0.01
-            if i >= 4:
-                reach = Start[i] >= Start[i-1]
+            reach_margin = [0.01, 0.01, 0.01, 0.015, 0.02, 0.025]
+            reach = Start[i] >= Start[i-1] - reach_margin[i]
         
             if not reach:
-                continue
-        
-            # ===============================
-            # 壁で削る（ここは軽く）
-            # ===============================
-            if Wall[i] > 0.6:
                 continue
         
             attackers.append(i)
