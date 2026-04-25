@@ -1055,6 +1055,12 @@ if st.button("計算"):
         for i in range(6):
             print(i, AttackIndex[i], CPI[i])
             
+        #壁
+        for i in range(6):
+            if i == 0:
+                continue
+            AttackIndex[i] *= (1 - 0.3 * Wall[i])
+            
         
         # ===============================
         # ■ 距離ペナルティ（最終）
