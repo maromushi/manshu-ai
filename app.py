@@ -1115,7 +1115,7 @@ if st.button("計算"):
             elif i == 2:
                 AttackIndex[i] *= (1 - 0.4 * Wall[i])
             else:
-    AttackIndex[i] *= (1 - 0.25 * Wall[i])
+                AttackIndex[i] *= (1 - 0.25 * Wall[i])
             
         
         # ===============================
