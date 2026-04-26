@@ -988,6 +988,8 @@ if st.button("計算"):
             
         AttackIndex = AttackRaw.copy()
         
+        AttackIndex[0] *= 0.3
+        
         # ===============================
         # ■ 前2艇に対する突破力（完成版）
         # ===============================
@@ -1004,9 +1006,9 @@ if st.button("計算"):
                 d_foot = Foot[i] - Foot[j]
         
                 score = (
-                    0.5*(d_st / 0.02) +
-                    0.3*(d_turn / 0.05) +
-                    0.2*(d_foot / 0.06)
+                    0.5*(d_st / 0.04) +
+                    0.3*(d_turn / 0.08) +
+                    0.2*(d_foot / 0.10)
                 )
         
                 # 直前は重い、それ以外は軽い
@@ -1018,7 +1020,7 @@ if st.button("計算"):
             local_score = total / weight_sum
         
             # clamp
-            local_score = max(-1.0, min(1.0, local_score))
+            local_score = max(-0.6, min(0.6, local_score))
         
             # 係数化（ここが“確率っぽい動き”）
             local_factor = 1 + local_score * 0.4
