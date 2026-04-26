@@ -1010,6 +1010,43 @@ if st.button("計算"):
             )
             
         AttackIndex = AttackRaw.copy()
+        
+        # ===============================
+        # ■ 前2艇に対する突破力（完成版）
+        # ===============================
+        
+        for i in range(1,6):
+        
+            total = 0.0
+            weight_sum = 0.0
+        
+            for j in range(max(0, i-2), i):
+        
+                d_st = Start[i] - Start[j]
+                d_turn = Turn[i] - Turn[j]
+                d_foot = Foot[i] - Foot[j]
+        
+                score = (
+                    0.5*(d_st / 0.02) +
+                    0.3*(d_turn / 0.05) +
+                    0.2*(d_foot / 0.06)
+                )
+        
+                # 直前は重い、それ以外は軽い
+                w = 1.2 if j == i-1 else 0.8
+        
+                total += score * w
+                weight_sum += w
+        
+            local_score = total / weight_sum
+        
+            # clamp
+            local_score = max(-1.0, min(1.0, local_score))
+        
+            # 係数化（ここが“確率っぽい動き”）
+            local_factor = 1 + local_score * 0.4
+        
+            AttackIndex[i] *= local_factor
 
         # ===============================
         # ■ 前壁差（ここに追加）
@@ -1073,7 +1110,12 @@ if st.button("計算"):
         for i in range(6):
             if i == 0:
                 continue
-            AttackIndex[i] *= (1 - 0.3 * Wall[i])
+            if i == 1:
+                AttackIndex[i] *= (1 - 0.6 * Wall[i])
+            elif i == 2:
+                AttackIndex[i] *= (1 - 0.4 * Wall[i])
+            else:
+    AttackIndex[i] *= (1 - 0.25 * Wall[i])
             
         
         # ===============================
@@ -1092,6 +1134,13 @@ if st.button("計算"):
                 distance_penalty *= 0.7
         
             AttackIndex[i] *= distance_penalty
+            
+        for i in range(1,6):
+            diff = (
+                0.4*(Foot[i] - Foot[i-1]) +
+                0.3*(Turn[i] - Turn[i-1])
+            )
+            AttackIndex[i] *= (1 + diff)
             
             
         # ===============================
