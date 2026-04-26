@@ -960,31 +960,6 @@ if st.button("計算"):
             for i in range(6)
         ]
         
-        delta_st = Start[i] - Start[i-1]
-
-        reach_score = 1.0
-        
-        # ST差（メイン軸）
-        if delta_st > 0.02:
-            reach_score *= 1.05
-        elif delta_st > 0.01:
-            reach_score *= 1.0
-        elif delta_st > -0.005:
-            reach_score *= 0.9
-        else:
-            reach_score *= 0.75
-        
-        # 足で補正
-        reach_score *= (
-            0.5
-            + 0.25 * (Turn[i] - Turn[i-1] + 0.05)
-            + 0.25 * (Foot[i] - Foot[i-1] + 0.05)
-        )
-        
-        # clamp
-        reach_score = max(0.6, min(1.1, reach_score))
-        
-        CPI[i] *= reach_score
 
         AttackCPI=[
         0.35*Foot[i]+
@@ -998,10 +973,12 @@ if st.button("計算"):
         AttackRaw = [0.0]*6
         
         
-        
         for i in range(6):
         
             # --- 攻撃性能 ---
+            # ===============================
+            # ■ AttackRaw
+            # ===============================
             AttackRaw[i] = (
                 0.35*Start[i] +
                 0.40*Foot[i] +
@@ -1047,100 +1024,38 @@ if st.button("計算"):
             local_factor = 1 + local_score * 0.4
         
             AttackIndex[i] *= local_factor
-
-        # ===============================
-        # ■ 前壁差（ここに追加）
-        # ===============================
-        for i in range(1,6):
-        
-            front_diff = AttackRaw[i] - AttackRaw[i-1]
-        
-            if front_diff < -0.02:
-                AttackIndex[i] *= 0.8
-            elif front_diff < -0.01:
-                AttackIndex[i] *= 0.9
-            elif front_diff < 0:
-                AttackIndex[i] *= 0.95
-            
-        for i in range(6):
-
-            if i == 0:
-                continue
-        
-            delta_st = Start[i] - Start[i-1]
-            
-            # ===============================
-            # ■ 到達判定（完成版）
-            # ===============================
-            
-            if i == 5:
-                # 6コースは最も厳しい（ほぼST勝ち必須）
-                can_reach = (
-                    delta_st > 0.015
-                    and Turn[i] >= Turn[i-1]
-                )
-            
-            elif i >= 4:
-                # 5コースはST主導＋最低限の足
-                can_reach = (
-                    delta_st > 0.01
-                    and Turn[i] >= Turn[i-1] - 0.01
-                )
-            
-            else:
-                # 内〜センターは従来ロジック
-                can_reach = (
-                    delta_st > 0
-                    or Turn[i] > Turn[i-1] + 0.03
-                    or Foot[i] > Foot[i-1] + 0.05
-                    or AttackCPI[i] > AttackCPI[i-1] + 0.04
-                )
-            
-            # ===============================
-            # ★ 1号艇は攻めない（ここで固定）
-            # ===============================
-            AttackIndex[0] = 0.0
         
         print("AttackIndex final:", AttackIndex)
         print("DEBUG attack vs CPI")
         for i in range(6):
             print(i, AttackIndex[i], CPI[i])
             
-        #壁
-        for i in range(6):
-            if i == 0:
-                continue
-            if i == 1:
-                AttackIndex[i] *= (1 - 0.6 * Wall[i])
-            elif i == 2:
-                AttackIndex[i] *= (1 - 0.4 * Wall[i])
-            else:
-                AttackIndex[i] *= (1 - 0.25 * Wall[i])
-            
+        Wall = [0.0]*6
+
+        for i in range(1,6):
         
-        # ===============================
-        # ■ 距離ペナルティ（最終）
-        # ===============================
-        for i in range(6):
+            # 前の艇の“防御力”
+            front_power = (
+                0.5 * Start[i-1] +   # ST（最重要）
+                0.3 * Turn[i-1] +    # 回り足
+                0.2 * Foot[i-1]      # 伸び
+            )
         
-            if i == 0:
-                continue
+            # 自分の攻撃力
+            self_power = (
+                0.5 * Start[i] +
+                0.3 * Turn[i] +
+                0.2 * Foot[i]
+            )
         
-            # 非線形距離減衰
-            distance_penalty = 1 / (1 + 0.18 * (i ** 1.7))
+            # 差で壁強度
+            diff = front_power - self_power
         
-            # 外コースはST負けで致命傷
-            if i >= 4 and Start[i] < Start[i-1]:
-                distance_penalty *= 0.7
-        
-            AttackIndex[i] *= distance_penalty
+            # 正規化
+            Wall[i] = max(0.0, min(1.0, diff * 3))
             
         for i in range(1,6):
-            diff = (
-                0.4*(Foot[i] - Foot[i-1]) +
-                0.3*(Turn[i] - Turn[i-1])
-            )
-            AttackIndex[i] *= (1 + diff)
+            AttackIndex[i] *= (1 - 0.5 * Wall[i])
             
             
         # ===============================
