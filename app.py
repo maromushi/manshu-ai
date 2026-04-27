@@ -317,6 +317,8 @@ if st.button("計算"):
     # =====================================
     # AI CORE
     # =====================================
+    
+    def run_core(order, mode):
 
     def run_no_attack(order):
         return run_core(order, mode="no")
@@ -330,13 +332,6 @@ if st.button("計算"):
     def normalize(arr):
         s = sum(arr) + 1e-6
         return [x/s for x in arr]
-        
-    def run_no_attack(order):
-        return run_core(order, mode="no")
-    def run_weak(order):
-        return run_core(order, mode="weak")
-    def run_attack(order):
-        return run_core(order, mode="attack")
     
             
         attackers = []
