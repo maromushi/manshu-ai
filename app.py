@@ -3857,29 +3857,31 @@ if st.button("計算"):
     Start = Start_a
     
     
-    def detect_state(debug_log, DAS):
-    
-        MID = 0.09 
+    def detect_state(debug_log, DAS, AttackWeak_input):
 
+        MID = 0.09 
+    
         AttackSuccess = 0
     
         for item in debug_log:
     
-            # ★ これ追加
             if not isinstance(item, tuple) or len(item) != 2:
                 continue
     
             name, val = item
-            
+    
             if name == "AttackSuccess":
                 AttackSuccess = val
     
         NoAttackProb = max(0, min(1, 1 - (DAS / MID)))
     
-        return AttackWeak, AttackSuccess, NoAttackProb
+        return AttackWeak_input, AttackSuccess, NoAttackProb
     
-    
-    AttackWeak, AttackSuccess, NoAttackProb = detect_state(debug_log_ex, DoubleAttackScore)
+    AttackWeak, AttackSuccess, NoAttackProb = detect_state(
+        debug_log_ex,
+        DoubleAttackScore,
+        AttackWeak   # ← これ渡す
+    )
     # =====================================
     # 合成
     # =====================================
