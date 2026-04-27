@@ -3832,12 +3832,9 @@ if st.button("計算"):
         order_ex = [0,1,2,3,4,5]
     
     try:
-        res_base, chaos1, P1_base, DAS_base, IS_base, debug_log_base, Start_base = run_no_attack(order_waku)
-        
-        res_no, chaos_no, P1_no, DAS_no, IS_no, debug_no, _ = run_no_attack(order_ex)
-    
-        res_weak, chaos_w, P1_w, DAS_w, IS_w, debug_w, _ = run_weak(order_ex)
-    
+        res_base, chaos1, P1_base, DAS_base, IS_base, debug_log_base, Start_base, _ = run_no_attack(order_waku)
+        res_no, chaos_no, P1_no, DAS_no, IS_no, debug_no, _, _ = run_no_attack(order_ex) 
+        res_weak, chaos_w, P1_w, DAS_w, IS_w, debug_w, _, _ = run_weak(order_ex)   
         res_attack, chaos_a, P1_a, DAS_a, IS_a, debug_a, Start_a, AttackWeak = run_attack(order_ex)
     except Exception as e:
         import traceback
