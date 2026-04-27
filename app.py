@@ -337,16 +337,7 @@ if st.button("計算"):
         return run_core(order, mode="weak")
     def run_attack(order):
         return run_core(order, mode="attack")
-        
-        debug_log.append(("ExhibitionF_raw", ExhibitionF))
-        
-        debug_log.append((
-            "ExF_detail",
-            [
-                {"lane": i+1, "ExST": round(EST[i],3), "F": ExF[i]}
-                for i in range(6)
-            ]
-        ))
+    
             
         attackers = []
         AttackWeak = 0
@@ -362,6 +353,22 @@ if st.button("計算"):
         FC=[Fcount[i] for i in order]
         CLS=[Class[i] for i in order]
         ExF = [ExhibitionF[i] for i in order]
+
+        # ★ここに追加（この1ブロックだけ）
+        debug_log.append(("order", order))
+        
+        debug_log.append((
+            "ExF_check",
+            [
+                {
+                    "lane": i+1,
+                    "boat": boats[i],
+                    "ExST": round(EST[i],3),
+                    "F": ExF[i]
+                }
+                for i in range(6)
+            ]
+        ))
         
         boats = [
             Boat[i] if Active[i]==1 else -1
