@@ -969,30 +969,11 @@ if st.button("計算"):
         for i in range(6)
         ]
 
-        AttackIndex = [0.0]*6
-        AttackRaw = [0.0]*6
-        
-        
-        for i in range(6):
-        
-            # --- 攻撃性能 ---
-            # ===============================
-            # ■ AttackRaw
-            # ===============================
-            AttackRaw[i] = (
-                0.35*Start[i] +
-                0.40*Foot[i] +
-                0.20*Turn[i] +
-                0.05*Engine[i]
-            )
-            
-        AttackIndex = AttackRaw.copy()
-        
-        AttackIndex[0] *= 0.3
-        
         # ===============================
-        # ■ 前2艇に対する突破力（完成版）
+        # ■ 前2艇に対する突破力（修正版）
         # ===============================
+        
+        AttackIndex = [0.0]*6   # ← 初期化（重要）
         
         for i in range(1,6):
         
@@ -1001,65 +982,67 @@ if st.button("計算"):
         
             for j in range(max(0, i-2), i):
         
+                # ===============================
+                # 到達してないなら無効（最重要）
+                # ===============================
+                if Start[i] < Start[j] - 0.015:
+                    continue
+        
                 d_st = Start[i] - Start[j]
                 d_turn = Turn[i] - Turn[j]
                 d_foot = Foot[i] - Foot[j]
         
                 score = (
-                    0.5*(d_st / 0.04) +
-                    0.3*(d_turn / 0.08) +
-                    0.2*(d_foot / 0.10)
+                    0.6*(d_st / 0.04) +
+                    0.25*(d_turn / 0.08) +
+                    0.15*(d_foot / 0.10)
                 )
         
-                # 直前は重い、それ以外は軽い
                 w = 1.2 if j == i-1 else 0.8
         
                 total += score * w
                 weight_sum += w
         
+            if weight_sum == 0:
+                continue
+        
             local_score = total / weight_sum
         
-            # clamp
-            local_score = max(-0.6, min(0.6, local_score))
+            # clamp（暴走防止）
+            local_score = max(-0.4, min(0.4, local_score))
         
-            # 係数化（ここが“確率っぽい動き”）
-            local_factor = 1 + local_score * 0.4
+            # ===============================
+            # ★ 乗算やめて「直接代入」
+            # ===============================
+            AttackIndex[i] = max(0.0, local_score * 0.6)
         
-            AttackIndex[i] *= local_factor
         
-        print("AttackIndex final:", AttackIndex)
-        print("DEBUG attack vs CPI")
-        for i in range(6):
-            print(i, AttackIndex[i], CPI[i])
-            
+        # ===============================
+        # ■ 壁補正（弱める方向のみ）
+        # ===============================
+        
         Wall = [0.0]*6
-
+        
         for i in range(1,6):
         
-            # 前の艇の“防御力”
             front_power = (
-                0.5 * Start[i-1] +   # ST（最重要）
-                0.3 * Turn[i-1] +    # 回り足
-                0.2 * Foot[i-1]      # 伸び
+                0.5 * Start[i-1] +
+                0.3 * Turn[i-1] +
+                0.2 * Foot[i-1]
             )
         
-            # 自分の攻撃力
             self_power = (
                 0.5 * Start[i] +
                 0.3 * Turn[i] +
                 0.2 * Foot[i]
             )
         
-            # 差で壁強度
             diff = front_power - self_power
         
-            # 正規化
             Wall[i] = max(0.0, min(1.0, diff * 3))
-            
+        
         for i in range(1,6):
-            AttackIndex[i] *= (1 - 0.5 * Wall[i])
-            
-            
+            AttackIndex[i] *= (1 - 0.5 * Wall[i])    
         # ===============================
         # ★ attackers決定（最終版）
         # ===============================
