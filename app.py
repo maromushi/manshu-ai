@@ -331,6 +331,13 @@ if st.button("計算"):
         s = sum(arr) + 1e-6
         return [x/s for x in arr]
         
+    def run_no_attack(order):
+        return run_core(order, mode="no")
+    def run_weak(order):
+        return run_core(order, mode="weak")
+    def run_attack(order):
+        return run_core(order, mode="attack")
+        
         debug_log.append(("ExhibitionF_raw", ExhibitionF))
         
         debug_log.append((
