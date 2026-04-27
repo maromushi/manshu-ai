@@ -1485,15 +1485,17 @@ if st.button("計算"):
         if NoAttackFlag == 1:
             RaceMode = "no_attack"
         
-        elif has_attack and AttackSuccess == 1:
+        elif AttackSuccess == 1:
             RaceMode = "attack_success"
         
-        elif (
-            AttackWeak == 1
-            and WEAK < DAS < MID
-            and Start[1] >= Start[0] - 0.02
-        ):
-            RaceMode = "attack_weak"
+        elif DAS > WEAK:
+        
+            if (
+                AttackWeak == 1
+                and DAS < MID
+                and Start[1] >= Start[0] - 0.02
+            ):
+                RaceMode = "attack_weak"
         
             else:
                 crash_flag = any(
@@ -1514,9 +1516,6 @@ if st.button("計算"):
                 
         atk = attackers[0] if len(attackers) > 0 else None
 
-        Attack2 = 0
-        Attack3 = 0
-        Attack3Power = 0
         InsideBreak = 0
         
         if (
