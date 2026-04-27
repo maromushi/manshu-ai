@@ -330,13 +330,17 @@ if st.button("計算"):
     def normalize(arr):
         s = sum(arr) + 1e-6
         return [x/s for x in arr]
-            
-    def run_core(order, mode):
-        print("=== CHECK ExhibitionF ===")
-        for i in range(6):
-            print(f"{i+1}号艇  ExST={ExST[i]}  F={ExhibitionF[i]}")
-        print("========================")
         
+        debug_log.append(("ExhibitionF_raw", ExhibitionF))
+        
+        debug_log.append((
+            "ExF_detail",
+            [
+                {"lane": i+1, "ExST": round(EST[i],3), "F": ExF[i]}
+                for i in range(6)
+            ]
+        ))
+            
         attackers = []
         AttackWeak = 0
         AttackSuccess = 0
