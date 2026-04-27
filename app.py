@@ -1086,9 +1086,6 @@ if st.button("計算"):
         # ===============================
         # ★ DoubleAttackScore（最終版）
         # ===============================
-        
-        if len(attackers) == 0:
-            DAS = 0
                    
         attackers = sorted(
             attackers,
@@ -1096,7 +1093,6 @@ if st.button("計算"):
             reverse=True
         )
                 
-        AttackSuccess = 0
         AttackFail = 0
         
         if len(attackers) > 0:
@@ -1166,7 +1162,6 @@ if st.button("計算"):
         # ===============================
         if mode == "no":
             DAS = 0
-            AttackSuccess = 0
             AttackWeak = 0
         
         elif mode == "weak":
