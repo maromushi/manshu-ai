@@ -3779,7 +3779,7 @@ if st.button("計算"):
                 
             DoubleAttackScore = DAS
             
-        return results, ChaosScore, P1, DAS, InsideSurvival, debug_log, Start
+        return results, ChaosScore, P1, DAS, InsideSurvival, debug_log, Start, AttackWeak
                 
     def run_zure_ai(order, NoAttackProb):
 
@@ -3838,8 +3838,7 @@ if st.button("計算"):
     
         res_weak, chaos_w, P1_w, DAS_w, IS_w, debug_w, _ = run_weak(order_ex)
     
-        res_attack, chaos_a, P1_a, DAS_a, IS_a, debug_a, Start_a = run_attack(order_ex)
-    
+        res_attack, chaos_a, P1_a, DAS_a, IS_a, debug_a, Start_a, AttackWeak = run_attack(order_ex)
     except Exception as e:
         import traceback
         st.write("ERROR:", e)
