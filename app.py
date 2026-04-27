@@ -1554,41 +1554,28 @@ if st.button("計算"):
         else:
             RaceMode = "no_attack"
                 
-        # ===============================
-        # 攻め主体判定（改良版）
-        # ===============================
+        atk = attackers[0] if len(attackers) > 0 else None
 
-        Attack2 = 1 if (
-            Start[1] >= Start[0] - 0.01
-            and AttackIndex[1] > AttackIndex[0]
-            and (Foot[1] >= Foot[0] or Engine[1] >= Engine[0])
-        ) else 0
+        Attack2 = 0
+        Attack3 = 0
+        Attack3Power = 0
+        InsideBreak = 0
         
+        if atk is not None:
         
-        Attack3 = 1 if (
-            Start[2] >= Start[1] - 0.01
-            and AttackIndex[2] > AttackIndex[1]
-            and (Foot[2] >= Foot[1] or Engine[2] >= Engine[1])
-            and (
-                CLS[2] in ["A1","A2"]
-                or (
-                    ExST[2] <= 0.08
+            if atk == 1:
+                Attack2 = 1
+        
+            if atk == 2:
+                Attack3 = 1
+                Attack3Power = (
+                    0.5 * max(0, Start[2] - Start[1]) +
+                    0.3 * max(0, AttackIndex[2] - AttackIndex[1]) +
+                    0.2 * max(0, Turn[2] - Turn[1])
                 )
-            )
-        ) else 0
         
-        
-        Attack3Power = (
-            0.5 * max(0, Start[2] - Start[1]) +
-            0.3 * max(0, AttackIndex[2] - AttackIndex[1]) +
-            0.2 * max(0, Turn[2] - Turn[1])
-        )
-        
-        
-        InsideBreak = 1 if (
-            Start[0] < Start[1] - 0.02
-            and Attack3 == 1
-        ) else 0
+                if DAS > 0.10 and Attack3Power > 0.02:
+                    InsideBreak = 1
         
         # ===============================
         # CHAOS CORE
