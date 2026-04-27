@@ -1164,50 +1164,6 @@ if st.button("計算"):
                 ):
                     AttackFail = 1
                     
-        AttackWeak = 0
-
-        if len(attackers) > 0:
-        
-            atk = attackers[0]
-        
-            if atk > 0:
-        
-                # ===============================
-                # ■ 攻めてるか
-                # ===============================
-                attack_try = (
-                    Start[atk] >= Start[atk-1] - 0.02
-                    or Turn[atk] >= Turn[atk-1] - 0.02
-                )
-        
-                # ===============================
-                # ■ 勝ち切れてない
-                # ===============================
-                not_win = (AttackSuccess == 0)
-        
-                # ===============================
-                # ■ 完全失敗ではない
-                # ===============================
-                not_fail = not (
-                    Start[atk] < Start[atk-1] - 0.03
-                    and Turn[atk] < Turn[atk-1] - 0.03
-                )
-        
-                # ===============================
-                # ★ 弱攻め成立
-                # ===============================
-                if attack_try and not_win and not_fail:
-                    AttackWeak = 1
-                    
-        # ★ 弱攻めフィルター（ここに入れる）
-        if AttackWeak == 1:
-        
-            if (
-                AttackIndex[atk] < AttackIndex[atk-1] - 0.07
-                and Foot[atk] < Foot[atk-1] - 0.05
-            ):
-                AttackWeak = 0
-                    
         # ===============================
         # ★ モード初期制御（ここ重要）
         # ===============================
@@ -1225,23 +1181,6 @@ if st.button("計算"):
         
         elif mode == "attack":
             pass
-                    
-        # ===============================
-        # ★ 弱攻め判定（追加）
-        # ===============================
-        
-        atk = attackers[0] if len(attackers) > 0 else 0
-        
-        if atk > 0:
-
-            st_cond = Start[atk] > Start[atk-1] + 0.005
-            turn_cond = Turn[atk] > Turn[atk-1] + 0.01
-        
-            if st_cond or turn_cond:
-        
-                # ★ 弱すぎる攻めは除外
-                if AttackIndex[atk] > AttackIndex[atk-1] - 0.05:
-                    AttackWeak = 1
                 
         # ===============================
         # ★ 疑似主役（弱攻め）
@@ -1400,6 +1339,23 @@ if st.button("計算"):
             AttackLevel = 1
         else:
             AttackLevel = 2
+            
+        # ===============================
+        # ★ AttackWeak 確定（ここだけ）
+        # ===============================
+        AttackWeak = 0
+        
+        if len(attackers) > 0:
+            atk = attackers[0]
+        
+            if atk > 0:
+                if (
+                    Start[atk] >= Start[atk-1] - 0.01
+                    and AttackIndex[atk] >= AttackIndex[atk-1] - 0.03
+                    and DAS > 0.05
+                    and AttackSuccess == 0
+                ):
+                    AttackWeak = 1
         
         # ===============================
         # ★ 崩れは攻め扱い（主トリガー）
@@ -1532,10 +1488,12 @@ if st.button("計算"):
         elif has_attack and AttackSuccess == 1:
             RaceMode = "attack_success"
         
-        elif has_attack and AttackSuccess == 0:
-        
-            if AttackWeak == 1 and DAS < MID:
-                RaceMode = "attack_weak"
+        elif (
+            AttackWeak == 1
+            and WEAK < DAS < MID
+            and Start[1] >= Start[0] - 0.02
+        ):
+            RaceMode = "attack_weak"
         
             else:
                 crash_flag = any(
@@ -1561,21 +1519,14 @@ if st.button("計算"):
         Attack3Power = 0
         InsideBreak = 0
         
-        if atk is not None:
-        
-            if atk == 1:
-                Attack2 = 1
-        
-            if atk == 2:
-                Attack3 = 1
-                Attack3Power = (
-                    0.5 * max(0, Start[2] - Start[1]) +
-                    0.3 * max(0, AttackIndex[2] - AttackIndex[1]) +
-                    0.2 * max(0, Turn[2] - Turn[1])
-                )
-        
-                if DAS > 0.10 and Attack3Power > 0.02:
-                    InsideBreak = 1
+        if (
+            DAS > 0.10
+            and (
+                Start[0] < max(Start[1:3]) - 0.02
+                or InsideSurvival[0] < 0.55
+            )
+        ):
+            InsideBreak = 1
         
         # ===============================
         # CHAOS CORE
@@ -3982,8 +3933,7 @@ if st.button("計算"):
     def detect_state(debug_log, DAS):
     
         MID = 0.09 
-    
-        AttackWeak = 0
+
         AttackSuccess = 0
     
         for item in debug_log:
@@ -3993,9 +3943,7 @@ if st.button("計算"):
                 continue
     
             name, val = item
-    
-            if name == "AttackWeak":
-                AttackWeak = val
+            
             if name == "AttackSuccess":
                 AttackSuccess = val
     
