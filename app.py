@@ -1065,24 +1065,23 @@ if st.button("計算"):
             reach_margin = [0.01, 0.01, 0.01, 0.015, 0.02, 0.025]
             
             if i == 0:
-                reach = False
+                continue
             
-            elif i == 1:
-                reach = Start[i] >= Start[i-1] - reach_margin[i]
+            # まず直前だけチェック
+            reach = Start[i] >= Start[i-1] - reach_margin[i]
             
-            else:
-                reach = (
-                    Start[i] >= Start[i-1] - reach_margin[i]
-                    and Start[i] >= Start[i-2] - (reach_margin[i] + 0.005)
-                )
+            # 2枚目は“補助条件”にする
+            if i >= 2:
+                if Start[i] < Start[i-2] - (reach_margin[i] + 0.01):
+                    reach = False
             
-            # 外はさらに厳しく
+            # 外だけ少し厳しく
             if i >= 4:
-                reach = reach and (Start[i] >= Start[i-2] - reach_margin[i]*0.5)
+                if Start[i] < Start[i-1] - (reach_margin[i] * 0.7):
+                    reach = False
             
             if not reach:
                 continue
-            
             attackers.append(i)
         # ===============================
         # ★ DoubleAttackScore（最終版）
