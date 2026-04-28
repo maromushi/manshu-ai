@@ -53,7 +53,63 @@ def calc_features(data):
 # =====================================
 # ② STATE（展開だけ）
 # =====================================
-def detect_state(f):
+def calc_start(data):
+
+    AvgST = data["AvgST"]
+    ExST  = data["ExST"]
+    Class = data["Class"]
+    Fcount = data["Fcount"]
+    ExF = data["ExhibitionF"]
+
+    Start = []
+
+    for i in range(6):
+
+        st = AvgST[i]
+        ex = ExST[i]
+
+        # =====================
+        # ① 展示補正
+        # =====================
+        if ex <= 0:
+            ex = 0.18
+
+        if ex < 0.10:
+            ex = ex * 0.85 + 0.015
+        elif ex < 0.20:
+            ex = ex * 0.90 + 0.01
+
+        # =====================
+        # ② trust
+        # =====================
+        diff = abs(ex - st)
+
+        t = 1.0
+
+        if diff > 0.12:
+            t *= 0.7
+        if diff > 0.20:
+            t *= 0.5
+
+        # =====================
+        # ③ F補正
+        # =====================
+        if ExF[i] == 1:
+            ex = max(0.12, ex + 0.05)
+            t *= 0.7
+
+        if Fcount[i] >= 1:
+            t *= 0.9
+
+        # =====================
+        # ④ 合成
+        # =====================
+        val = (1 - t)*(0.30 - st) + t*(0.30 - ex)
+
+        Start.append(val)
+
+    return normalize_sum(Start)
+    
 
     Start = f["Start"]
     CPI = f["CPI"]
