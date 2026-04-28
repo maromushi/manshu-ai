@@ -51,7 +51,7 @@ def calc_features(data):
     }
     
 # =====================================
-# ② STATE（展開だけ）
+# ② スタート計算
 # =====================================
 def calc_start(data):
 
@@ -129,29 +129,158 @@ def calc_start(data):
 
     return normalize_sum(Start)
     
+# =====================================
+# ② STATE（展開だけ）
+# =====================================
+    
+def detect_state(f):
 
     Start = f["Start"]
-    CPI = f["CPI"]
+    Turn  = f["Turn"]
+    Foot  = f["Foot"]
+    Engine= f["Engine"]
+    ExST  = f["ExST"]
+    Class = f["Class"]
+    ExEntry = f["ExEntry"]
 
-    DAS = max(Start) - min(Start)
+    # ① 並び
+    StartCollapse = 0
+        
+        if Start[0] < max(Start[1:4]) - 0.03:
+            StartCollapse = 1
+            
+        # --- 並び順作成（0-index）---
+        entry_order = [x-1 for x in ExEntry]
+        
+        # 逆引き（どの艇が何番目か）
+        pos = [0]*6
+        for i, boat in enumerate(entry_order):
+            pos[boat] = i
+        
+        # --- Class係数 ---
+        ClassCoef = []
+        for c in Class:
+            if c == "A1":
+                ClassCoef.append(1.15)
+            elif c == "A2":
+                ClassCoef.append(1.05)
+            elif c == "B1":
+                ClassCoef.append(0.95)
+            else:
+                ClassCoef.append(0.85)
+        
+        # --- Fペナルティ ---
+        FPenalty = []
+        for f in Fcount:
+            if f >= 2:
+                FPenalty.append(0.75)
+            elif f == 1:
+                FPenalty.append(0.88)
+            else:
+                FPenalty.append(1.0)
 
-    AttackSuccess = 1 if (
-        Start[1] > Start[0] + 0.02
-        or Start[2] > Start[1] + 0.02
-    ) else 0
+    # ② 基本差分（Spread系）
+    
+    # ③ 壁（Wall / Break）
+    #===============================
+    # ★ 外統一判定（追加）
+    # ===============================
+    outer_ok = [False]*6
+        
+    for i in range(1,6):
+        is_fast = Start[i] > Start[i-1] + 0.01
+        
+        outer_ok[i] = (
+            is_fast
+            and (
+                DAS < 0.12
+                or AttackSuccess == 1
+                or AttackWeak == 1
+            )
+        )
+        
+        
+    # --- 壁強度（進入順ベース）---
+    Wall = [0]*6
+        
+    for i in range(6):
+        p = pos[i]
+        
+        if p == 0:
+            Wall[i] = 0
+        else:
+            w = 0
+            for k in range(p):
+                j = entry_order[k]
+        
+                base = (0.6*Start[j] + 0.4*Foot[j])
+                base *= ClassCoef[j]
+                base *= FPenalty[j]
+        
+                w += base
+        
+            Wall[i] = w / p
+        
+        
+    # --- 壁制約 ---
+    for i in range(6):
+        if pos[i] >= 3:
+            penalty = 1 - (0.35 * Wall[i])
+        
+            Turn[i] *= penalty
+            Lap[i]  *= penalty
+        
+            Start[i] -= 0.015 * Wall[i]
+        
+        
+    # --- 外上限 ---
+    for i in range(6):
+        if pos[i] >= 4:
+            Foot[i] = min(Foot[i], 0.55)
+        
+    # ===============================
+    # ★ 壁崩れ検知
+    # ===============================
+    # --- 壁崩れ ---
+    WallBreak = [0]*6
+        
+    for i in range(6):
+        p = pos[i]
+        
+        if p == 0:
+            continue
+        
+        score = 0
+        
+        for k in range(p):
+            j = entry_order[k]
+        
+            st_diff = Start[i] - Start[j]
+            f_factor = 1 - FPenalty[j]
+            foot_diff = Foot[i] - Foot[j]
+        
+            score += 0.5*st_diff + 0.3*f_factor + 0.2*foot_diff
+        
+        WallBreak[i] = max(0, score)
+        
+        
+    # --- 壁緩和 ---
+    for i in range(6):
+        if pos[i] >= 3:
+            relax = 1 + 0.5 * WallBreak[i]
+        
+            Turn[i] *= relax
+            Lap[i]  *= relax
+                
+    # ④ 攻め候補（AttackIndex → attackers）
+    
+    
+    # ⑤ 成否判定（Success / Weak / Fail）
+    # ⑥ DAS
+    # ⑦ 崩壊・ズレ・無風フラグ
+    # ⑧ RaceMode
 
-    AttackWeak = 1 if (
-        DAS > 0.04 and AttackSuccess == 0
-    ) else 0
-
-    NoAttackProb = max(0, min(1, 1 - DAS/0.1))
-
-    return {
-        "DAS": DAS,
-        "AttackSuccess": AttackSuccess,
-        "AttackWeak": AttackWeak,
-        "NoAttackProb": NoAttackProb
-    }
+    return state
     
 # =====================================
 # 世界①（1逃げ）
