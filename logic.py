@@ -58,19 +58,53 @@ def calc_start(data):
     AvgST = data["AvgST"]
     ExST  = data["ExST"]
     Class = data["Class"]
-    Fcount = data["Fcount"]
-    ExF = data["ExhibitionF"]
+    ExF   = data["ExhibitionF"]
 
+    # ===============================
+    # ① F補正（先に1回だけ）
+    # ===============================
+    BadST = [0]*6
+    AdjExST = ExST.copy()
+
+    for i in range(6):
+
+        is_f = ExF[i] == 1
+        is_abnormal = ExST[i] <= 0.02
+
+        if is_f:
+
+            BadST[i] = 1
+
+            base = 0.20
+            if Class[i] == "A1":
+                base = 0.16
+            elif Class[i] == "A2":
+                base = 0.18
+
+            AdjExST[i] = 0.7 * base + 0.3 * max(ExST[i], 0.05)
+
+        elif is_abnormal:
+
+            BadST[i] = 1
+
+            if Class[i] == "A1":
+                AdjExST[i] = max(0.11, ExST[i] * 0.5 + 0.07)
+            elif Class[i] == "A2":
+                AdjExST[i] = max(0.115, ExST[i] * 0.5 + 0.075)
+            else:
+                AdjExST[i] = max(0.13, ExST[i] * 0.5 + 0.09)
+
+    # ===============================
+    # ② Start算出
+    # ===============================
     Start = []
 
     for i in range(6):
 
         st = AvgST[i]
-        ex = ExST[i]
+        ex = AdjExST[i]
 
-        # =====================
-        # ① 展示補正
-        # =====================
+        # 展示補正
         if ex <= 0:
             ex = 0.18
 
@@ -79,31 +113,16 @@ def calc_start(data):
         elif ex < 0.20:
             ex = ex * 0.90 + 0.01
 
-        # =====================
-        # ② trust
-        # =====================
+        # trust
         diff = abs(ex - st)
 
         t = 1.0
-
         if diff > 0.12:
             t *= 0.7
         if diff > 0.20:
             t *= 0.5
 
-        # =====================
-        # ③ F補正
-        # =====================
-        if ExF[i] == 1:
-            ex = max(0.12, ex + 0.05)
-            t *= 0.7
-
-        if Fcount[i] >= 1:
-            t *= 0.9
-
-        # =====================
-        # ④ 合成
-        # =====================
+        # 合成
         val = (1 - t)*(0.30 - st) + t*(0.30 - ex)
 
         Start.append(val)
