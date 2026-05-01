@@ -135,6 +135,10 @@ def calc_start(data):
 
     return normalize_sum(Start)
     
+# =====================================
+# ③展開計算
+# =====================================
+    
 def detect_state(f):
 
     Start = f["Start"]
@@ -258,6 +262,7 @@ def detect_state(f):
         "RaceMode": RaceMode
     }
     
+    
 # =====================================
 # 世界①（1逃げ）
 # =====================================
@@ -265,17 +270,52 @@ def detect_state(f):
 def sim_no_attack(f):
 
     CPI = f["CPI"]
+    Start = f["Start"]
+    Foot = f["Foot"]
 
-    P1 = normalize_sum([
-        1.2*CPI[0],  # イン強化
-        CPI[1],
-        CPI[2],
-        CPI[3],
-        0.7*CPI[4],
-        0.5*CPI[5],
-    ])
+    P = [0]*6
 
-    return P1
+    for i in range(6):
+
+        score = 0
+
+        # ===============================
+        # ① 基本能力
+        # ===============================
+        score += 0.45 * CPI[i]
+
+        # ===============================
+        # ② イン補正（超重要）
+        # ===============================
+        if i == 0:
+            score *= 1.25
+        elif i == 1:
+            score *= 1.10
+        elif i == 2:
+            score *= 1.05
+        elif i >= 4:
+            score *= 0.85
+
+        # ===============================
+        # ③ スタート安定
+        # ===============================
+        if Start[i] > Start[0] - 0.02:
+            score *= 1.05
+
+        # ===============================
+        # ④ 外減衰（弱め）
+        # ===============================
+        if i >= 3:
+            score *= 0.92
+
+        # ===============================
+        # ⑤ 足で微調整
+        # ===============================
+        score *= (0.9 + 0.2 * Foot[i])
+
+        P[i] = score
+
+    return normalize_sum(P)
     
 # =====================================
 # 世界②（攻め）
@@ -283,19 +323,90 @@ def sim_no_attack(f):
 
 def sim_attack(f):
 
-    Start = f["Start"]
     CPI = f["CPI"]
+    Start = f["Start"]
+    Foot = f["Foot"]
+    Turn = f["Turn"]
 
-    P1 = normalize_sum([
-        0.7*CPI[0],
-        1.2*CPI[1] if Start[1] > Start[0] else CPI[1],
-        1.2*CPI[2] if Start[2] > Start[1] else CPI[2],
-        CPI[3],
-        CPI[4],
-        CPI[5],
-    ])
+    P = [0]*6
 
-    return P1
+    # ===============================
+    # ① 攻め主役探す
+    # ===============================
+    atk = 1
+
+    best_score = -1
+
+    for i in range(1,5):
+
+        score = (
+            0.45 * Start[i] +
+            0.35 * Foot[i] +
+            0.20 * Turn[i]
+        )
+
+        # 到達できないやつは弱体化
+        if Start[i] < Start[i-1] - 0.01:
+            score *= 0.7
+
+        if score > best_score:
+            best_score = score
+            atk = i
+
+    # ===============================
+    # ② 各艇スコア
+    # ===============================
+    for i in range(6):
+
+        score = 0
+
+        # ===============================
+        # 主役
+        # ===============================
+        if i == atk:
+            score = (
+                0.6 * Start[i] +
+                0.3 * Foot[i] +
+                0.1 * Turn[i]
+            ) * 1.3
+
+        # ===============================
+        # イン（潰される）
+        # ===============================
+        elif i == 0:
+            score = CPI[i] * 0.6
+
+        # ===============================
+        # 攻めの直後（差しゾーン）
+        # ===============================
+        elif i == atk + 1:
+            score = (
+                0.4 * Turn[i] +
+                0.3 * Foot[i] +
+                0.3 * CPI[i]
+            ) * 1.2
+
+        # ===============================
+        # その後ろ（連動）
+        # ===============================
+        elif i > atk:
+            score = CPI[i] * 1.05
+
+        # ===============================
+        # 攻められる側
+        # ===============================
+        else:
+            score = CPI[i] * 0.85
+
+        # ===============================
+        # 外軽減
+        # ===============================
+        if i >= 4:
+            score *= 0.9
+
+        P[i] = score
+
+    return normalize_sum(P)
     
 # =====================================
 # 世界②（弱攻め
@@ -303,17 +414,92 @@ def sim_attack(f):
 def sim_weak(f):
 
     CPI = f["CPI"]
+    Start = f["Start"]
+    Foot = f["Foot"]
+    Turn = f["Turn"]
 
-    P1 = normalize_sum([
-        0.9*CPI[0],
-        1.05*CPI[1],
-        1.05*CPI[2],
-        CPI[3],
-        CPI[4],
-        CPI[5],
-    ])
+    P = [0]*6
 
-    return P1
+    # ===============================
+    # ① ズレ主役候補
+    # ===============================
+    weak_leader = 1
+    best = -1
+
+    for i in range(1,5):
+
+        score = (
+            0.35 * Start[i] +
+            0.35 * Foot[i] +
+            0.30 * Turn[i]
+        )
+
+        # 到達できないのは弱め
+        if Start[i] < Start[i-1] - 0.015:
+            score *= 0.8
+
+        if score > best:
+            best = score
+            weak_leader = i
+
+    # ===============================
+    # ② 各艇スコア
+    # ===============================
+    for i in range(6):
+
+        score = 0
+
+        # ===============================
+        # イン（残るが弱い）
+        # ===============================
+        if i == 0:
+            score = CPI[i] * 0.95
+
+            # スタート悪いと落とす
+            if Start[i] < Start[1] - 0.02:
+                score *= 0.85
+
+        # ===============================
+        # ズレ主役
+        # ===============================
+        elif i == weak_leader:
+            score = (
+                0.4 * Start[i] +
+                0.3 * Foot[i] +
+                0.3 * Turn[i]
+            ) * 1.15
+
+        # ===============================
+        # 差しゾーン
+        # ===============================
+        elif i == weak_leader + 1:
+            score = (
+                0.35 * Turn[i] +
+                0.35 * Foot[i] +
+                0.30 * CPI[i]
+            ) * 1.1
+
+        # ===============================
+        # 内側（巻き込まれ）
+        # ===============================
+        elif i < weak_leader:
+            score = CPI[i] * 0.9
+
+        # ===============================
+        # 外（連動だけ）
+        # ===============================
+        else:
+            score = CPI[i] * 1.0
+
+        # ===============================
+        # 外減衰（軽め）
+        # ===============================
+        if i >= 4:
+            score *= 0.93
+
+        P[i] = score
+
+    return normalize_sum(P)
     
 # =====================================
 # 合成
@@ -321,17 +507,62 @@ def sim_weak(f):
     
 def merge(P_no, P_weak, P_at, state):
 
-    w_no = state["NoAttackProb"]
-    w_at = 1 - w_no
-    w_weak = 0.3
+    DAS = state["DAS"]
+    AttackSuccess = state["AttackSuccess"]
+    AttackWeak = state["AttackWeak"]
+    NoAttackFlag = state["NoAttackFlag"]
+    StartCollapse = state["StartCollapse"]
 
+    # ===============================
+    # ① 重み決定（ここが全て）
+    # ===============================
+    w_no = 0
+    w_at = 0
+    w_weak = 0
+
+    # ■ 完全イン戦
+    if NoAttackFlag == 1:
+        w_no = 1.0
+
+    # ■ 攻め成功
+    elif AttackSuccess == 1:
+        w_at = 1.0
+
+    # ■ スタート崩壊（かなり重要）
+    elif StartCollapse == 1:
+        w_at = 0.6
+        w_weak = 0.4
+
+    # ■ 弱攻め
+    elif AttackWeak == 1:
+        w_weak = 0.7
+        w_at = 0.3
+
+    # ■ 中間（DASベース）
+    else:
+        if DAS < 0.06:
+            w_no = 0.7
+            w_weak = 0.3
+
+        elif DAS < 0.10:
+            w_no = 0.3
+            w_weak = 0.5
+            w_at = 0.2
+
+        else:
+            w_at = 0.7
+            w_weak = 0.3
+
+    # ===============================
+    # ② 合成
+    # ===============================
     P = [0]*6
 
     for i in range(6):
         P[i] = (
             w_no * P_no[i] +
-            w_at * P_at[i] +
-            w_weak * P_weak[i]
+            w_weak * P_weak[i] +
+            w_at * P_at[i]
         )
 
     return normalize_sum(P)
