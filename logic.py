@@ -9,30 +9,35 @@ def normalize_sum(arr):
 # CORE
 # ===============================
 def run_ai(data, venue):
-    f = calc_features(data)
+
+    Start = calc_start(data)
+
+    f = calc_features(data, Start)
+
     state = detect_state(f)
+
     P_no = sim_no_attack(f)
     P_weak = sim_weak(f)
     P_at = sim_attack(f)
+
     P = merge(P_no, P_weak, P_at, state)
+
     return P
     
 # =====================================
 # ① FEATURES（能力だけ）
 # =====================================
-def calc_features(data):
+def calc_features(data, Start):
 
-    # 必要最低限だけ（まずは軽く）
     Skill = data["WinRate"]
     Engine = data["Motor2"]
-    Start = data["Start"]
-    Foot = data["Foot"]
 
-    # 正規化だけ
+    # 仮：FootとTurnはまだ軽く作る
+    Turn = normalize_sum(data["TurnTime"])
+    Foot = normalize_sum(data["LapTime"])
+
     Skill = normalize_sum(Skill)
     Engine = normalize_sum(Engine)
-    Start = normalize_sum(Start)
-    Foot = normalize_sum(Foot)
 
     CPI = [
         0.25*Skill[i] +
@@ -47,6 +52,7 @@ def calc_features(data):
         "Engine": Engine,
         "Start": Start,
         "Foot": Foot,
+        "Turn": Turn,
         "CPI": CPI
     }
     
