@@ -1,3 +1,5 @@
+import streamlit as st
+
 from logic import run_ai
 
 if st.button("計算"):
