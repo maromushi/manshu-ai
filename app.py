@@ -1,63 +1,98 @@
 import streamlit as st
 from logic import run_ai
-import ast
 
 st.title("ボートAI")
 
 # ===============================
-# コピペ入力欄
+# 入力（とりあえず固定でもOK）
 # ===============================
-raw_input = st.text_area(
-    "データ貼り付け（そのままコピペ）",
-    height=300
-)
+data = {
+    "WinRate":[6.36,5.59,5.93,5.64,6.57,5.91],
+    "PlaceRate":[43.86,34.65,31.68,33.61,47.01,39.81],
+    "AvgST":[0.13,0.15,0.13,0.16,0.16,0.15],
+    "Motor2":[0.0,0.0,0.0,0.0,0.0,0.0],
+    "Boat2":[0.0,0.0,0.0,0.0,0.0,0.0],
+    "ExTime":[6.65,6.79,6.74,6.74,6.70,6.55],
+    "ExST":[0.02,0.00,0.01,0.01,0.06,0.08],
+    "TurnTime":[5.68,5.87,5.84,5.80,5.83,5.73],
+    "LapTime":[37.00,37.08,37.52,37.77,37.47,36.73],
+    "StraightTime":[7.97,7.94,7.93,8.07,8.11,7.91],
+    "Class":["A2","A2","A1","A2","A1","A2"],
+    "Fcount":[0,1,0,0,0,0],
+    "ExhibitionF":[0,0,0,0,1,1],
+    "ExEntry":[1,2,3,4,5,6]
+}
+
+venue = "omura"
 
 # ===============================
-# 計算
+# 実行
 # ===============================
 if st.button("計算"):
 
-    try:
-        # ---------------------------
-        # ① 文字列 → 辞書化
-        # ---------------------------
-        local_vars = {}
+    # ★ run_aiは (P, state) を返す前提
+    result, state = run_ai(data, venue)
 
-        exec(raw_input, {}, local_vars)
+    # ===============================
+    # 表示（見る用）
+    # ===============================
+    st.subheader("結果")
+    for i in range(6):
+        st.write(f"{i+1}号艇: {round(result[i],3)}")
 
-        # 必要なキーだけ抽出
-        data = {
-            "WinRate": local_vars["WinRate"],
-            "AvgST": local_vars["AvgST"],
-            "ExST": local_vars["ExST"],
-            "TurnTime": local_vars["TurnTime"],
-            "LapTime": local_vars["LapTime"],
-            "Class": local_vars["Class"],
-            "ExhibitionF": local_vars["ExhibitionF"],
-            "Motor2": [0]*6
-        }
+    st.subheader("状態")
+    st.write(state)
 
-        # ---------------------------
-        # ② 実行
-        # ---------------------------
-        result = run_ai(data, venue=None)
+    # ===============================
+    # 入力テキスト
+    # ===============================
+    input_text = "\n".join([
+        f"WinRate={data['WinRate']}",
+        f"PlaceRate={data['PlaceRate']}",
+        f"AvgST={data['AvgST']}",
+        f"Motor2={data['Motor2']}",
+        f"Boat2={data['Boat2']}",
+        f"ExTime={data['ExTime']}",
+        f"ExST={data['ExST']}",
+        f"TurnTime={data['TurnTime']}",
+        f"LapTime={data['LapTime']}",
+        f"StraightTime={data['StraightTime']}",
+        f"Class={data['Class']}",
+        f"Fcount={data['Fcount']}",
+        f"ExhibitionF={data['ExhibitionF']}",
+        f"ExEntry={data['ExEntry']}",
+    ])
 
-        # ---------------------------
-        # ③ 出力
-        # ---------------------------
-        st.write("1着確率")
-        for i in range(6):
-            st.write(f"{i+1}号艇: {round(result[i],3)}")
+    # ===============================
+    # 出力テキスト
+    # ===============================
+    result_text = "\n".join([
+        f"{i+1}号艇: {round(result[i],3)}"
+        for i in range(6)
+    ])
 
-        # ===============================
-        # コピー用テキスト
-        # ===============================
-        st.write("結果")
+    # ===============================
+    # デバッグテキスト
+    # ===============================
+    debug_text = "\n".join([
+        f"Attackers={state['attackers']}",
+        f"AttackSuccess={state['AttackSuccess']}",
+        f"AttackWeak={state['AttackWeak']}",
+        f"DAS={round(state['DAS'],3)}",
+        f"RaceMode={state['RaceMode']}"
+    ])
 
-        for i in range(6):
-            st.write(f"{i+1}号艇: {round(result[i],3)}")
-        
-        st.code(output_text)
+    # ===============================
+    # ★ 全部まとめ（これが本体）
+    # ===============================
+    full_text = (
+        "【INPUT】\n" + input_text +
+        "\n\n【STATE】\n" + debug_text +
+        "\n\n【OUTPUT】\n" + result_text
+    )
 
-    except Exception as e:
-        st.error(f"エラー: {e}")
+    # ===============================
+    # コピー用
+    # ===============================
+    st.subheader("コピー用")
+    st.code(full_text)
