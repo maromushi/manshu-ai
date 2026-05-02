@@ -566,3 +566,17 @@ def merge(P_no, P_weak, P_at, state):
         )
 
     return normalize_sum(P)
+    
+    
+    # ===============================
+    # 出力用
+    # ===============================
+def run_ai(data, venue):
+    f = calc_features(data)
+    state = detect_state(f)
+    P_no = sim_no_attack(f)
+    P_weak = sim_weak(f)
+    P_at = sim_attack(f)
+    P = merge(P_no, P_weak, P_at, state)
+
+    return P, state
