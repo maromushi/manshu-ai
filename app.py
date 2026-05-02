@@ -49,5 +49,15 @@ if st.button("計算"):
         for i in range(6):
             st.write(f"{i+1}号艇: {round(result[i],3)}")
 
+        # ===============================
+        # コピー用テキスト
+        # ===============================
+        st.write("結果")
+
+        for i in range(6):
+            st.write(f"{i+1}号艇: {round(result[i],3)}")
+        
+        st.code(output_text)
+
     except Exception as e:
         st.error(f"エラー: {e}")
