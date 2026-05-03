@@ -51,7 +51,7 @@ if st.button("計算"):
     # ===============================
     # AI実行
     # ===============================
-    result, state = run_ai(data, "omura")
+    result, state = run_ai(data, None)
 
     # ===============================
     # 順位
