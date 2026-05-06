@@ -9,7 +9,15 @@ def normalize_sum(arr):
 # CORE
 # ===============================
 def run_ai(data, venue):
+
+    # ★ Start先に計算
+    data["Start"] = calc_start(data)
+
+    # ★ 仮Foot（あとで作る）
+    data["Foot"] = [0.5]*6
+
     f = calc_features(data)
+
     state = detect_state(f)
 
     P_no = sim_no_attack(f)
@@ -18,7 +26,7 @@ def run_ai(data, venue):
 
     P = merge(P_no, P_weak, P_at, state)
 
-    return P, state   # ←★ここ
+    return P, state
     
 # =====================================
 # ① FEATURES（能力だけ）
