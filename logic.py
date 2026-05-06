@@ -10,11 +10,13 @@ def normalize_sum(arr):
 # ===============================
 def run_ai(data, venue):
 
-    # ★ Start先に計算
-    data["Start"] = calc_start(data)
+    if "Motor2" not in data:
+        data["Motor2"] = [0]*6
 
-    # ★ 仮Foot（あとで作る）
-    data["Foot"] = [0.5]*6
+    if "Foot" not in data:
+        data["Foot"] = [0.5]*6
+
+    data["Start"] = calc_start(data)
 
     f = calc_features(data)
 
