@@ -38,9 +38,12 @@ def calc_features(data, Start):
     Skill = data["WinRate"]
     Engine = data["Motor2"]
 
-    # 仮：FootとTurnはまだ軽く作る
-    Turn = normalize_sum(data["TurnTime"])
-    Foot = normalize_sum(data["LapTime"])
+    # タイムは逆数化（小さいほど強い）
+    TurnRaw = [1/x for x in data["TurnTime"]]
+    FootRaw = [1/x for x in data["LapTime"]]
+
+    Turn = normalize_sum(TurnRaw)
+    Foot = normalize_sum(FootRaw)
 
     Skill = normalize_sum(Skill)
     Engine = normalize_sum(Engine)
@@ -415,7 +418,7 @@ def sim_attack(f):
     return normalize_sum(P)
     
 # =====================================
-# 世界②（弱攻め
+# 世界②（弱攻め)
 # =====================================
 def sim_weak(f):
 
