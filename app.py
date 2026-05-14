@@ -46,6 +46,9 @@ if st.button("計算"):
     # AI実行
     # ===============================
     result = logic.run_ai(data, None)
+    
+    st.write(result)
+    st.stop()
 
     state = result["state"]
 
