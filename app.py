@@ -35,7 +35,7 @@ if st.button("計算"):
 
     data = parse_input(input_text)
 
-    result, state = run_ai(data, None)
+    result = run_ai(data, None)
 
     # ===============================
     # ① 買い目
@@ -43,8 +43,20 @@ if st.button("計算"):
     ranking = sorted(range(6), key=lambda i: result[i], reverse=True)
     buy = f"{ranking[0]+1}-{ranking[1]+1}-{ranking[2]+1}"
 
-    st.subheader("買い目")
-    st.write(buy)
+    st.subheader("最終順位")
+    st.write(result["rank_final"])
+    
+    st.subheader("無風世界")
+    st.write(result["rank_no"])
+    
+    st.subheader("弱攻め世界")
+    st.write(result["rank_weak"])
+    
+    st.subheader("攻め世界")
+    st.write(result["rank_at"])
+    
+    st.subheader("STATE")
+    st.write(result["state"])
 
     # ===============================
     # ② コピペ用
