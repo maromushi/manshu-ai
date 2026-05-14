@@ -37,24 +37,27 @@ if st.button("計算"):
 
     result = run_ai(data, None)
 
+    state = result["state"]
+
     # ===============================
     # ① 買い目
     # ===============================
-    ranking = sorted(range(6), key=lambda i: result[i], reverse=True)
-    buy = f"{ranking[0]+1}-{ranking[1]+1}-{ranking[2]+1}"
+    final_rank = result["rank_final"]
+
+    buy = f"{final_rank[0]}-{final_rank[1]}-{final_rank[2]}"
 
     st.subheader("最終順位")
     st.write(result["rank_final"])
-    
+
     st.subheader("無風世界")
     st.write(result["rank_no"])
-    
+
     st.subheader("弱攻め世界")
     st.write(result["rank_weak"])
-    
+
     st.subheader("攻め世界")
     st.write(result["rank_at"])
-    
+
     st.subheader("STATE")
     st.write(result["state"])
 
