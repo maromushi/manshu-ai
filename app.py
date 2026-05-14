@@ -13,7 +13,7 @@ input_text = st.text_area(
 )
 
 # ===============================
-# テキスト→dict変換
+# テキスト → dict
 # ===============================
 def parse_input(text):
 
@@ -42,6 +42,9 @@ if st.button("計算"):
 
     data = parse_input(input_text)
 
+    # ===============================
+    # AI実行
+    # ===============================
     result = run_ai(data, None)
 
     state = result["state"]
@@ -98,5 +101,4 @@ if st.button("計算"):
     )
 
     st.subheader("コピペ用")
-
     st.code(full_text)
