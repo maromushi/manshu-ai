@@ -4,18 +4,25 @@ from logic import run_ai
 st.title("ボートAI")
 
 # ===============================
-# 入力（完全コピペ・空）
+# 入力欄
 # ===============================
-input_text = st.text_area("ここに貼る", "", height=250)
+input_text = st.text_area(
+    "ここに貼る",
+    "",
+    height=300
+)
 
 # ===============================
-# テキスト → data変換
+# テキスト→dict変換
 # ===============================
 def parse_input(text):
+
     data = {}
+
     lines = text.split("\n")
 
     for line in lines:
+
         if "=" not in line:
             continue
 
@@ -40,11 +47,21 @@ if st.button("計算"):
     state = result["state"]
 
     # ===============================
-    # ① 買い目
+    # 買い目
     # ===============================
     final_rank = result["rank_final"]
 
-    buy = f"{final_rank[0]}-{final_rank[1]}-{final_rank[2]}"
+    buy = (
+        f"{final_rank[0]}-"
+        f"{final_rank[1]}-"
+        f"{final_rank[2]}"
+    )
+
+    # ===============================
+    # 表示
+    # ===============================
+    st.subheader("買い目")
+    st.write(buy)
 
     st.subheader("最終順位")
     st.write(result["rank_final"])
@@ -59,10 +76,10 @@ if st.button("計算"):
     st.write(result["rank_at"])
 
     st.subheader("STATE")
-    st.write(result["state"])
+    st.write(state)
 
     # ===============================
-    # ② コピペ用
+    # コピペ用
     # ===============================
     state_text = "\n".join([
         f"Attackers={state['attackers']}",
@@ -73,11 +90,13 @@ if st.button("計算"):
     ])
 
     full_text = (
-        input_text.strip() +
-        "\n\n" +
-        state_text +
-        "\n\nBUY=" + buy
+        input_text.strip()
+        + "\n\n"
+        + state_text
+        + "\n\nBUY="
+        + buy
     )
 
     st.subheader("コピペ用")
+
     st.code(full_text)
