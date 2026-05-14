@@ -1,5 +1,5 @@
 import streamlit as st
-from logic import run_ai
+import logic
 
 st.title("ボートAI")
 
@@ -45,7 +45,7 @@ if st.button("計算"):
     # ===============================
     # AI実行
     # ===============================
-    result = run_ai(data, None)
+    result = logic.run_ai(data, None)
 
     state = result["state"]
 
