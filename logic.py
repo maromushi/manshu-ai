@@ -27,9 +27,21 @@ def run_ai(data, venue):
     P_at = sim_attack(f)
 
     P = merge(P_no, P_weak, P_at, state)
-
-    return P, state
     
+    rank_no = rank_probs(P_no)
+    rank_weak = rank_probs(P_weak)
+    rank_at = rank_probs(P_at)
+    rank_final = rank_probs(P)
+    
+    return {
+        "P": P,
+        "state": state,
+        "rank_no": rank_no,
+        "rank_weak": rank_weak,
+        "rank_at": rank_at,
+        "rank_final": rank_final
+    }
+        
 # =====================================
 # ① FEATURES（能力だけ）
 # =====================================
