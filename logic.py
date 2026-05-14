@@ -575,3 +575,16 @@ def merge(P_no, P_weak, P_at, state):
         )
 
     return normalize_sum(P)
+    
+# =====================================
+# 順位化
+# =====================================
+def rank_probs(P):
+
+    order = sorted(
+        range(6),
+        key=lambda i: P[i],
+        reverse=True
+    )
+
+    return [x+1 for x in order]
