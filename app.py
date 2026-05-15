@@ -1,6 +1,8 @@
 import streamlit as st
 import logic
 
+st.write(logic.__file__)
+
 st.title("ボートAI")
 
 # ===============================
