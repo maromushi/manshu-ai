@@ -209,13 +209,44 @@ def detect_state(f):
     # ===============================
     # ④ DAS（攻め強度）
     # ===============================
-    DAS = (
+    
+    start_push = (
         max(0, Start[2] - Start[1]) +
         max(0, Start[3] - Start[2]) +
         max(0, Start[4] - Start[3])
     )
-
-    DAS += StartSpread * 0.5
+    
+    turn_push = (
+        max(0, Turn[2] - Turn[1]) +
+        max(0, Turn[3] - Turn[2]) +
+        max(0, Turn[4] - Turn[3])
+    )
+    
+    foot_push = (
+        max(0, Foot[2] - Foot[1]) +
+        max(0, Foot[3] - Foot[2]) +
+        max(0, Foot[4] - Foot[3])
+    )
+    
+    inside_weak = max(
+        0,
+        max(Start[1:4]) - Start[0]
+    )
+    
+    # ★ 展示F持ちは守備低下
+    f_risk = 0
+    if data["ExhibitionF"][0] == 1:
+        f_risk += 0.03
+    
+    DAS = (
+        0.45 * start_push +
+        0.25 * turn_push +
+        0.15 * foot_push +
+        0.15 * inside_weak +
+        f_risk
+    )
+    
+    DAS += StartSpread * 0.3
 
     # ===============================
     # ⑤ スタート崩壊
@@ -546,11 +577,10 @@ def merge(P_no, P_weak, P_at, state):
     # ■ 完全イン戦
     if NoAttackFlag == 1:
 
-        if AttackWeak == 1:
-            w_no = 0.75
-            w_weak = 0.25
-        else:
-            w_no = 1.0
+        weak_ratio = min(0.35, DAS * 3)
+    
+        w_no = 1.0 - weak_ratio
+        w_weak = weak_ratio
 
     # ■ 攻め成功
     elif AttackSuccess == 1:
