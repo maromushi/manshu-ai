@@ -545,7 +545,12 @@ def merge(P_no, P_weak, P_at, state):
 
     # ■ 完全イン戦
     if NoAttackFlag == 1:
-        w_no = 1.0
+
+        if AttackWeak == 1:
+            w_no = 0.75
+            w_weak = 0.25
+        else:
+            w_no = 1.0
 
     # ■ 攻め成功
     elif AttackSuccess == 1:
